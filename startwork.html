@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YT Promotion Community</title>
+
+<!-- Bootstrap 5 CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.hero-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 40px;
+}
+.feature-card {
+    border-radius: 14px;
+
+    padding: 25px;
+    
+}
+.footer-box {
+    background: #111;
+    padding: 30px 0;
+}
+.footer-box i {
+    font-size: 28px;
+    margin: 0 12px;
+    color: #fff;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+ 
+}
+
+/* ---------- Card Base ---------- */
+.card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 950px;
+  
+}
+
+/* ---------- Buttons & Inputs ---------- */
+.btn {
+  padding: 10px 18px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn:hover { background: black; }
+
+.input-box {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  width: 260px;
+  margin-right: 8px;
+}
+
+/* ---------- Member Info Tile ---------- */
+.playlist-tile {
+  background: #fff;
+  border-radius: 12px;
+
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.playlist-tile h3 { margin: 0 0 10px; font-size: 20px; color: #111; }
+.playlist-tile p { margin: 4px 0; font-size: 14px; color: #374151; }
+
+.badge-green {
+  display:inline-block;
+  background:#dcfce7;
+  color:#166534;
+  font-weight:bold;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:13px;
+  margin-top:6px;
+}
+.badge-red {
+  display:inline-block;
+  background:#fee2e2;
+  color:#991b1b;
+  font-weight:bold;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:13px;
+  margin-top:6px;
+}
+
+/* ---------- Tabs ---------- */
+.tab-bar {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+ 
+  margin: 20px auto 10px;
+ 
+}
+
+.tab-btn {
+   border: 1px solid #ddd; background: #f2f2f2; padding: 8px 14px; cursor: pointer; border-radius: 6px; font-size: 14px;
+}
+  .mr-tab-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.mr-tab-button { border: 1px solid #ddd; background: #f2f2f2; padding: 8px 14px; cursor: pointer; border-radius: 6px; font-size: 14px; }
+.mr-tab-button.active { background: black; color: white; border-color: black; }
+.tab-btn.active {
+  background: black; color: white; border-color: black;
+}
+.tab-content {
+  display: none;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px 12px 12px 12px;
+  padding: 20px;
+  
+  margin: 0 auto 40px;
+  
+}
+.tab-content.active { display: block; }
+
+/* ---------- Proof Cards ---------- */
+.proof-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.proof-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 15px;
+}
+.proof-card p {
+  margin: 5px 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .tab-bar { flex-wrap: wrap; justify-content: center; }
+}
+
+
+</style>
+</head>
+
+<body style="background:#fff">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container" style="
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;">
+    <a class="navbar-brand" href="#"><img src="images/logo.png" width="50" alt="YT Promotion"></a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="startwork.html">Start Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="membersworking.html">Members Working</a></li>
+        <li class="nav-item"><a class="nav-link" href="howtowork.html">How To Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="QandA.html">Q&A</a></li>
+      </ul>
+
+      <!-- User Icon -->
+  <a href="profile.html" class="me-3">
+    <i class="bi bi-person-circle" style="font-size: 28px;"></i>
+  </a>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-0" style="background-color:#F3F9FF; padding:16px; border-radius:10px;">
+
+  <!-- Header -->
+  <h6 style="
+    margin:0 0 10px 0;
+    color:#005EA6;
+    border-left:4px solid #005EA6;
+    padding-left:10px;
+  ">
+    Message From Admin
+  </h6>
+
+  <!-- Message Box -->
+  <p id="ggggggggggggggggg" style="
+    background:white;
+    border:1px solid #d6e6f5;
+    border-radius:8px;
+    padding:12px 15px;
+    color:#1b1b1b;
+   
+    margin:0;
+  
+  ">
+    <strong>Fetching message from admin, please wait...</strong>
+  </p>
+
+</div>
+
+
+
+<script>
+  const webAppUrl = 'https://script.google.com/macros/s/AKfycbyKgI-pUvKntIvFsvniq-DebIT8I5xB74ldyEkVBveVtFhogBuFhnsFhN0HmdAI00M8kw/exec'; // your script URL
+
+  fetch(webAppUrl)
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('ggggggggggggggggg').innerHTML = html;
+    })
+    .catch(err => {
+      document.getElementById('ggggggGGGGGGGGGG').innerHTML = "<p>Failed to load content.</p>";
+      console.error(err);
+    });
+</script>
+
+
+  
+  
+<!-- ---------- Search Box ---------- -->
+<div class="container my-4" style="padding:16px; border-radius:10px;  background:white;
+    border:1px solid #d6e6f5;
+    border-radius:8px;
+    padding:12px 15px;
+    color:#1b1b1b;">
+  <h6>Enter Channel Handle</h6>
+  <p>Please enter your main channel handle. This must be your register channel handle.</p>
+    <p>Note : Your saved channel handle will load automatically</p>
+  <input type="text" id="channelHandleInput" class="input-box" placeholder="@yourchannelhandle">
+  <button class="btn" onclick="saveAndFetchMember()">Open My Work</button>
+</div>
+
+<!-- ---------- Member Info Section ---------- -->
+<div id="memberInfoContainer" class="container my-4" style="padding:16px; border-radius:10px;  background:white;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    padding:12px 15px;
+    color:#1b1b1b;">
+  <p style="color:#555;">Your channel info will appear here...</p>
+</div>
+
+<!-- ---------- Tabs ---------- -->
+<div class="tab-bar container my-4" style="padding:16px; border-radius:10px;  background:white;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    padding:12px 15px;
+    color:#1b1b1b;">
+  <button class="tab-btn active" onclick="openTab('playlist')">Playlist Tasks</button>
+  <button class="tab-btn" onclick="openTab('subs')">Subscribers Tasks</button>
+  <button class="tab-btn" onclick="openTab('proof')">Who Watch My Playlist</button>
+  <button class="tab-btn" onclick="openTab('others')">Others</button>
+</div>
+
+<!-- ---------- Tab Contents ---------- -->
+<div id="playlist" class="tab-content active container my-4">
+  <div id="playlistTasksContainer"><p style="color:#555;">No tasks yet...</p></div>
+</div>
+
+<div id="subs" class="tab-content container my-4">
+  <p style="color:#555;">Subscriber-related tasks or bonuses will appear here in the future.</p>
+</div>
+
+<div id="proof" class="tab-content container my-4">
+  <div id="proofRecordsContainer"><p style="color:#555;">No proof data yet...</p></div>
+</div>
+
+<div id="others" class="tab-content container my-4">
+  <p style="color:#555;">Other data or reports will appear here later.</p>
+</div>
+  
+<script>
+// ---------- CONFIG ----------
+const MEMBER_INFO_URL = "https://script.google.com/macros/s/AKfycbwVfpdWRxswag1qJG6Hdjx0qE-ZE02QInbObJMnOMMW_88pihRGLDXB4IJOgP5Mq06N/exec";
+const TASKS_INFO_URL = "https://script.google.com/macros/s/AKfycbylrju3IY0HagSp4g4qiACSz3i0Ypxmi3ePH3UnxHU_v8bSaquWLcmimxZ4T6_0--_Z3g/exec";
+const PROOF_INFO_URL = "https://script.google.com/macros/s/AKfycbweTJIWsAdxAVfUCesyzxbZSV0rQqAuXdgq4vjfxKQv6WNnOM7VV4Ls4kCaxwW-ob2UCg/exec";
+
+// ---------- Handle Save + Load ----------
+function saveAndFetchMember() {
+  const handle = document.getElementById('channelHandleInput').value.trim();
+  if (!handle) return alert("Please enter a valid channel handle (e.g. @ekanogaming)");
+  localStorage.setItem('channelHandle', handle);
+  fetchMemberInfo(handle);
+  fetchPlaylistTasks(handle);
+  fetchProofRecords(handle);
+}
+window.onload = function() {
+  const savedHandle = localStorage.getItem('channelHandle');
+  if (savedHandle) {
+    document.getElementById('channelHandleInput').value = savedHandle;
+    fetchMemberInfo(savedHandle);
+    fetchPlaylistTasks(savedHandle);
+    fetchProofRecords(savedHandle);
+  }
+};
+
+// ---------- Tab Switch ----------
+function openTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelector(`.tab-btn[onclick="openTab('${tabName}')"]`).classList.add('active');
+  document.getElementById(tabName).classList.add('active');
+}
+
+// ---------- Member Info ----------
+function fetchMemberInfo(handle) {
+  const container = document.getElementById('memberInfoContainer');
+  container.innerHTML = "<p style='color:#555;'>Fetching member info...</p>";
+
+  fetch(`${MEMBER_INFO_URL}?handle=${encodeURIComponent(handle)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.Username) {
+        container.innerHTML = "<p style='color:red;'>No record found for this handle.</p>";
+        return;
+      }
+
+      let promotionHTML = "";
+      if (data["WatchTime Promotion"]) {
+        const promo = data["WatchTime Promotion"].toString().trim().toLowerCase();
+        promotionHTML = promo === "yes"
+          ? `<span class="badge-green">WatchTime Promotion Is On</span>`
+          : `<span class="badge-red">WatchTime Promotion Stopped</span>`;
+      }
+
+      container.innerHTML = `
+        <div class="playlist-tile">
+          <h3>Member Info</h3>
+          <p><strong>Username:</strong> ${data.Username}</p>
+          <p><strong>Channel Name:</strong> ${data["Channel Name"]}</p>
+          <p><strong>Channel Handle:</strong> ${data["Channel Handle"]}</p>
+          <p><strong>Playlist Pending Work:</strong> ${data["Playlist Pending Work"]}</p>
+          <p><strong>Playlist Pending By Others:</strong> ${data["Playlist Pending By Others"]}</p>
+           <p><strong>Total Playlist Watch:</strong> ${data["Total Playlists Watch"]}</p>
+          <p><strong>Last Time Work:</strong> ${data["Last Time Work"]}</p>
+         
+          ${promotionHTML}
+        </div>`;
+    })
+    .catch(() => container.innerHTML = "<p style='color:red;'>Error loading member info.</p>");
+}
+
+// ---------- Playlist Tasks ----------
+function fetchPlaylistTasks(handle) {
+  const container = document.getElementById('playlistTasksContainer');
+  container.innerHTML = "<p style='color:#555;'>Fetching playlist tasks...</p>";
+
+  fetch(`${TASKS_INFO_URL}?handle=${encodeURIComponent(handle)}`)
+    .then(res => res.json())
+    .then(tasks => {
+      if (!Array.isArray(tasks) || tasks.length === 0) {
+        container.innerHTML = "<p style='color:#777;'>No playlist tasks assigned.</p>";
+        return;
+      }
+
+      container.innerHTML = tasks.map((t, i) => `
+        <div class="playlist-tile">
+          <h3>Playlist Task #${i + 1}</h3>
+          <p><strong>Target Channel:</strong> ${t.TargetHandle}</p>
+          <p><strong>Issued Date:</strong> ${t.DateOfIssue}</p>
+          <a href="https://www.youtube.com/playlist?list=${t.PlaylistID}" target="_blank" class="btn">Open Playlist</a>
+        </div>
+      `).join("");
+    })
+    .catch(() => container.innerHTML = "<p style='color:red;'>Error loading tasks.</p>");
+}
+function formatDuration(seconds) {
+  if (!seconds || isNaN(seconds)) return seconds;
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}m ${secs}s`;
+}
+// ---------- Proof Records ----------
+// ---------- Proof Records ----------
+function fetchProofRecords(handle) {
+  const container = document.getElementById('proofRecordsContainer');
+  container.innerHTML = "<p style='color:#555;'>Fetching proof records...</p>";
+
+  fetch(`${PROOF_INFO_URL}?handle=${encodeURIComponent(handle)}`)
+    .then(res => res.json())
+    .then(records => {
+      if (!Array.isArray(records) || records.length === 0) {
+        container.innerHTML = "<p style='color:#777;'>No proof records found.</p>";
+        return;
+      }
+
+      // ✅ Sort newest first (by timestamp)
+      records.sort((a, b) => new Date(b.TimeStamp) - new Date(a.TimeStamp));
+
+      // ✅ Limit to top 30
+      const topRecords = records.slice(0, 30);
+
+      container.innerHTML = `
+        <div class="proof-container">
+          ${topRecords.map(r => `
+            <div class="proof-card">
+              <p><strong>Time:</strong> ${r.TimeStamp}</p>
+              <p><strong>Channel Handle:</strong> ${r.WorkerHandle}</p>
+              <p><strong>Video Title:</strong> ${r.TargetVideoTitle}</p>
+              <p><strong>Duration:</strong> ${r.VideoDuration}</p>
+              <p><strong>Play Count:</strong> ${r.PlayCount}</p>
+              <p><strong>Work Done:</strong> ${r.ProofWorkDone}</p>
+              <button class="btn" onclick="openImages(['${r.Image1}','${r.Image2}','${r.Image3}','${r.Image4}','${r.Image5}'])">Open All Images</button>
+            </div>
+          `).join("")}
+        </div>`;
+    })
+    .catch(() => container.innerHTML = "<p style='color:red;'>Error loading proofs.</p>");
+}
+
+function openImages(images) {
+  images.filter(Boolean).forEach(url => window.open(url, '_blank'));
+}
+  
+  
+  
+</script>
+  
+
+
+
+<!-- FOOTER -->
+<div class="footer-box text-center">
+    <i class="bi bi-facebook"></i>
+    <i class="bi bi-whatsapp"></i>
+    <i class="bi bi-discord"></i>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</body>
+</html>

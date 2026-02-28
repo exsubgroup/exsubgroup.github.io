@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Member Profile</title>
+
+<!-- Bootstrap 5 CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* ---------- Card Base ---------- */
+.card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px auto;
+  max-width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 10px 18px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+  margin-top: 12px;
+}
+.btn:hover { background: #1e40af; }
+
+/* ---------- Member Info ---------- */
+.playlist-tile {
+  background: #fff;
+ 
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.playlist-tile h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #111;
+}
+.playlist-tile p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #374151;
+}
+
+/* ---------- Badges ---------- */
+.badge-green {
+  display:inline-block;
+  background:#dcfce7;
+  color:#166534;
+  font-weight:bold;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:13px;
+  margin-top:6px;
+}
+.badge-red {
+  display:inline-block;
+  background:#fee2e2;
+  color:#991b1b;
+  font-weight:bold;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:13px;
+  margin-top:6px;
+}
+
+/* ---------- Header ---------- */
+.page-header {
+  text-align: center;
+  margin-top: 30px;
+}
+.page-header h1 {
+  color: #2563eb;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.page-header p {
+  color: #555;
+  font-size: 15px;
+}
+
+.hero-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 40px;
+}
+.feature-card {
+    border-radius: 14px;
+
+    padding: 25px;
+    
+}
+.footer-box {
+    background: #111;
+    padding: 30px 0;
+}
+.footer-box i {
+    font-size: 28px;
+    margin: 0 12px;
+    color: #fff;
+}
+</style>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container" style="
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;">
+    <a class="navbar-brand" href="#"><img src="images/logo.png" width="50" alt="YT Promotion"></a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="startwork.html">Start Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="membersworking.html">Members Working</a></li>
+        <li class="nav-item"><a class="nav-link" href="howtowork.html">How To Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="QandA.html">Q&A</a></li>
+      </ul>
+
+      <!-- User Icon -->
+  <a href="profile.html" class="me-3">
+    <i class="bi bi-person-circle" style="font-size: 28px;"></i>
+  </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ---------- Member Info Card ---------- -->
+<div id="memberInfoContainer" class="container my-2" style="
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;">
+  <p style="color:#555;">Loading your info...</p>
+</div>
+
+<!-- ---------- Buttons Section ---------- -->
+<div style="text-align:center;">
+  <button class="btn" id="logoutBtn" style="display:none;">🚪 Logout</button>
+  <button class="btn" id="loginBtn" style="display:none;">🔑 Login / Register</button>
+</div>
+
+<script>
+// ---------- CONFIG ----------
+const MEMBER_INFO_URL = "https://script.google.com/macros/s/AKfycbwVfpdWRxswag1qJG6Hdjx0qE-ZE02QInbObJMnOMMW_88pihRGLDXB4IJOgP5Mq06N/exec";
+const HOME_URL = "https://ytpromotion.github.io";
+const LOGIN_URL = "https://ytpromotion.github.io/loginOrRegister.html";
+
+// ---------- Load Member Info ----------
+window.onload = function() {
+  const handle = localStorage.getItem('channelHandle');
+  const container = document.getElementById('memberInfoContainer');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const loginBtn = document.getElementById('loginBtn');
+
+  // 🟠 If not logged in → show Login button
+  if (!handle) {
+    container.innerHTML = "<p style='color:red;'>No user found. Please log in below.</p>";
+    loginBtn.style.display = "inline-block";
+    return;
+  }
+
+  // 🟢 If logged in → show Logout button
+  logoutBtn.style.display = "inline-block";
+  container.innerHTML = "<p style='color:#555;'>Fetching member info...</p>";
+
+  fetch(`${MEMBER_INFO_URL}?handle=${encodeURIComponent(handle)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.Username) {
+        container.innerHTML = "<p style='color:red;'>No record found for this handle.</p>";
+        return;
+      }
+
+      let promotionHTML = "";
+      if (data["WatchTime Promotion"]) {
+        const promo = data["WatchTime Promotion"].toString().trim().toLowerCase();
+        promotionHTML = promo === "yes"
+          ? `<span class="badge-green">WatchTime Promotion Is On</span>`
+          : `<span class="badge-red">WatchTime Promotion Stopped</span>`;
+      }
+
+      container.innerHTML = `
+        <div class="playlist-tile">
+          <h3>Member Profile</h3>
+           <p><strong>Username:</strong> ${data.Username}</p>
+          <p><strong>Channel Name:</strong> ${data["Channel Name"]}</p>
+          <p><strong>Channel Handle:</strong> ${data["Channel Handle"]}</p>
+          <p><strong>Playlist Pending Work:</strong> ${data["Playlist Pending Work"]}</p>
+          <p><strong>Playlist Pending By Others:</strong> ${data["Playlist Pending By Others"]}</p>
+           <p><strong>Total Playlist Watch:</strong> ${data["Total Playlists Watch"]}</p>
+          <p><strong>Last Time Work:</strong> ${data["Last Time Work"]}</p>
+          ${promotionHTML}
+        </div>`;
+    })
+    .catch(() => container.innerHTML = "<p style='color:red;'>Error loading member info.</p>");
+};
+
+// ---------- Logout ----------
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("channelHandle");
+  window.location.href = HOME_URL;
+});
+
+// ---------- Login ----------
+document.getElementById("loginBtn").addEventListener("click", () => {
+  window.location.href = LOGIN_URL;
+});
+</script>
+
+<!-- FOOTER -->
+<div class="footer-box text-center">
+    <i class="bi bi-facebook"></i>
+    <i class="bi bi-whatsapp"></i>
+    <i class="bi bi-discord"></i>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+</html>
