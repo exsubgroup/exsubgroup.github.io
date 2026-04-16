@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exsub Members</title>
+
+<!-- Bootstrap 5 CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+    .ygm-wrapper{max-width:1100px;margin:30px auto;padding:15px;}
+.ygm-card{background:#fff;border-radius:20px;padding:20px;}
+.ygm-title{text-align:center;margin-bottom:25px;}
+.ygm-search{text-align:center;margin-bottom:25px;}
+
+.ygm-input{width:100%;max-width:400px;padding:12px 18px;border-radius:30px;border:1px solid #ddd;}
+.ygm-btn-main{margin-top:10px;padding:10px 25px;border:none;border-radius:30px;background:#2962ff;color:#fff;cursor:pointer;}
+
+.ygm-counter-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  justify-content:center;
+  margin-bottom:25px;
+}
+
+.ygm-counter{
+  background:#f1f3f5;
+  padding:14px 28px;
+  border-radius:15px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.ygm-counter span{
+  display:block;
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.ygm-counter strong{
+  display:block;
+  font-size:18px;
+}
+
+.ygm-counter.active{background:#2962ff;color:#fff;}
+
+.ygm-task-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;}
+
+.ygm-task-card{
+  background:#fff;
+  border-radius:15px;
+  padding:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+}
+
+.ygm-badge{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+.ygm-pending{background:#fff3cd;color:#856404;}
+.ygm-watched{background:#d4edda;color:#155724;}
+.ygm-urgent{background:#fce5cd;color:#9c3f00;}
+.ygm-rejected{background:#f8d7da;color:#721c24;}
+
+.ygm-btn{padding:6px 12px;border:none;border-radius:20px;color:#fff;cursor:pointer;font-size:12px;}
+.btn-video{background:#2962ff;}
+.btn-channel{background:#6c757d;}
+.btn-submit{background:#28a745;}
+.btn-done{background:#9e9e9e;cursor:not-allowed;}
+
+#consolePanel{
+position:fixed;
+bottom:0;
+width:100%;
+max-height:200px;
+overflow:auto;
+background:#1e1e1e;
+color:#0f0;
+font-family:monospace;
+padding:10px;
+}
+
+/* 🔥 STATS BOXES */
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+   margin-top:10px;
+    margin-bottom:25px;
+}
+
+.stat-box{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.stat-box h3{
+    margin:5px 0;
+    color:#2563eb;
+}
+
+.stat-box p{
+    font-size:14px;
+    color:#555;
+}
+
+/* EXISTING UI */
+.search-box{text-align:center;margin-bottom:25px;}
+.search-box input{
+    width:300px;padding:12px;border-radius:30px;
+}
+
+.member-list{display:flex;flex-direction:column;gap:20px;}
+
+.member-card{
+    display:flex;align-items:center;background:white;
+    border-radius:15px;padding:15px;
+  margin-bottom:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+.member-card img{
+    width:120px;height:120px;border-radius:12px;
+    margin-right:20px;
+}
+
+.badge-on{color:green;font-weight:bold;}
+.badge-off{color:red;font-weight:bold;}
+
+
+.hero-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 40px;
+}
+.feature-card {
+    border-radius: 14px;
+
+    padding: 25px;
+    
+}
+.footer-box {
+    background: #111;
+    padding: 30px 0;
+}
+.footer-box i {
+    font-size: 28px;
+    margin: 0 12px;
+    color: #fff;
+}
+</style>
+</head>
+
+<body style="background:#f7f7f7">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container" style="
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;">
+    <a class="navbar-brand" href="#"><img src="images/logo.png" width="50" alt="YT Promotion"><span style="margin-left:10px; font-weight:600; font-size:20px;">
+    Exsub Group
+  </span></a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="startwork.html">Start Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="membersworking.html">Members Working</a></li>
+        <li class="nav-item"><a class="nav-link" href="howtowork.html">How To Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="QandA.html">Q&A</a></li>
+      </ul>
+
+      <!-- User Icon -->
+  <a href="profile.html" class="me-3">
+    <i class="bi bi-person-circle" style="font-size: 28px;"></i>
+  </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<div class="container my-2"  style=" background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 10px auto;">
+
+<div class="ygm-wrapper">
+<div class="ygm-card">
+
+<h3 class="ygm-title">Video Watching Work</h3>
+
+<div class="ygm-search">
+<input type="text" id="handleInput" class="ygm-input" placeholder="Enter Channel Handle">
+<br>
+<button id="getBtn" class="ygm-btn-main" onclick="loadWork()">Get My Tasks</button>
+  <button id="getBtn" class="ygm-btn-main" style="background:#ffac63"><a href="https://exsubgroup.blogspot.com/p/my-video-watch-working-proof.html"style="Color:white;">My Activities</a></button>
+</div>
+  
+  <h4 class="ygm-title">Click any task category and start work</h4>
+  
+<div class="ygm-counter-row">
+  
+   <div class="ygm-counter" onclick="filterTasks('Urgent', this)">
+    <span>Urgent</span>
+    <strong id="urgent">0</strong>
+  </div>
+
+  <div class="ygm-counter" onclick="filterTasks('Rejected', this)">
+    <span>Rejected</span>
+    <strong id="rejected">0</strong>
+  </div>
+  
+  <div class="ygm-counter" onclick="filterTasks('Pending', this)">
+    <span>New</span>
+    <strong id="pending">0</strong>
+  </div>
+
+  <div class="ygm-counter" onclick="filterTasks('Watched', this)">
+    <span>Watched</span>
+    <strong id="watched">0</strong>
+  </div>
+
+ 
+
+  <div class="ygm-counter" onclick="filterTasks('All', this)">
+    <span>All</span>
+    <strong id="all">0</strong>
+  </div>
+</div>
+
+<div id="taskBody" class="ygm-task-grid"></div>
+
+</div>
+</div>
+
+<div id="consolePanel"></div>
+
+<script>
+
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbxoKgKSxeBiLdfU7mf8o90tYvLv_HZtilIE9H7OPCp9TnWpeyZb4Gr-kpPdxwI-vE0/exec";
+
+let allTasks=[];
+let currentFilter="All";
+
+function log(msg){
+  const panel=document.getElementById("consolePanel");
+  panel.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
+  panel.scrollTop=panel.scrollHeight;
+}
+
+  function formatDate(isoDate){
+    if(!isoDate) return "No Data";
+    const date = new Date(isoDate);
+    return date.toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+  
+window.addEventListener("load",()=>{
+  const saved=localStorage.getItem("channelHandle");
+  if(saved){
+    document.getElementById("handleInput").value=saved;
+    loadWork();
+  }
+});
+
+function loadWork(){
+
+  const handle=document.getElementById("handleInput").value.trim();
+  if(!handle){ alert("Enter handle"); return; }
+
+  localStorage.setItem("channelHandle",handle);
+
+  const btn=document.getElementById("getBtn");
+  btn.innerText="Please wait...";
+  btn.disabled=true;
+
+  log("Fetching tasks for: "+handle);
+
+  fetch(`${SCRIPT_URL}?handle=${encodeURIComponent(handle)}`)
+  .then(res=>res.json())
+  .then(data=>{
+    allTasks=data||[];
+    updateCounters();
+    displayTasks(currentFilter);
+  })
+  .catch(err=>{
+    log("ERROR: "+err);
+    alert("Error loading tasks");
+  })
+  .finally(()=>{
+    btn.innerText="Get My Tasks";
+    btn.disabled=false;
+  });
+}
+
+// ----------------- UPDATE COUNTERS -----------------
+function updateCounters(){
+
+  let pending=0,watched=0,urgent=0,rejected=0;
+
+  allTasks.forEach(row=>{
+    if(row.WorkStatus==="Pending") pending++;
+    if(row.WorkStatus==="Watched") watched++;
+    if(row.WorkStatus==="Urgent") urgent++;
+    if(row.WorkStatus==="Rejected") rejected++;
+  });
+
+  document.getElementById("pending").innerText=pending;
+  document.getElementById("watched").innerText=watched;
+  document.getElementById("urgent").innerText=urgent;
+  document.getElementById("rejected").innerText=rejected;
+  document.getElementById("all").innerText=allTasks.length;
+}
+
+// ----------------- FILTER TASKS -----------------
+function filterTasks(status, el){
+  currentFilter = status;
+  // remove active from all
+  document.querySelectorAll(".ygm-counter").forEach(c=>c.classList.remove("active"));
+  if(el) el.classList.add("active");
+  displayTasks(status);
+}
+
+// ----------------- DISPLAY TASKS -----------------
+function displayTasks(status){
+
+  const container=document.getElementById("taskBody");
+  container.innerHTML="";
+
+  allTasks.forEach(row=>{
+
+    if(status!=="All" && row.WorkStatus!==status) return;
+
+    let badgeClass=
+      row.WorkStatus==="Pending"?"ygm-badge ygm-pending":
+      row.WorkStatus==="Watched"?"ygm-badge ygm-watched":
+      row.WorkStatus==="Urgent"?"ygm-badge ygm-urgent":
+      row.WorkStatus==="Rejected"?"ygm-badge ygm-rejected":
+      "ygm-badge ygm-pending";
+
+    let submitBtn = row.WorkStatus==="Watched"
+      ? `<button class="ygm-btn btn-done">Done</button>`
+      : `<button class="ygm-btn btn-submit" onclick="markDone('${row.WorkId}', this)">Submit Task</button>`;
+
+    const searchQuery = encodeURIComponent(
+      (row.VideoTitle || '') + " " + (row.WorkWithChannelName || '')
+    );
+
+    const searchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+
+    const card=document.createElement("div");
+    card.className="ygm-task-card";
+
+    card.innerHTML=`
+      <img src="${row.WorkWithImage || 'https://via.placeholder.com/80'}"
+           style="width:100px;height:100px;border-radius:50%;object-fit:cover;">
+           <strong>${row.WorkWithChannelName || '-'}</strong>
+      <img src="${row.VideoThumbnail || 'https://via.placeholder.com/260x140'}"
+           style="width:100%;border-radius:10px;">
+      <strong>${row.VideoTitle || '-'}</strong>
+      <small>Duration ${row.VideoMinutes || '-'} Minutes</small>
+       <small>${formatDate(row.CreatedDate) || '-'}</small>
+      <span class="${badgeClass}">${row.WorkStatus==="Pending"?"New Task":row.WorkStatus}</span>
+      <button class="ygm-btn btn-video" onclick="window.open('${searchUrl}')">🔍 Search & Watch</button>
+      <button class="ygm-btn btn-channel" onclick="window.open('https://www.youtube.com/${row.WorkWithHandle}')">📺 Open Channel</button>
+      ${submitBtn}
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+// ----------------- MARK DONE -----------------
+function markDone(id,btn){
+  btn.innerText="Please wait...";
+  btn.disabled=true;
+
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body:JSON.stringify({action:"markDone",WorkId:id})
+  })
+  .then(res=>res.json())
+  .then(resp=>{
+    if(resp.success){
+      loadWork();
+    }else{
+      throw new Error("Update failed");
+    }
+  })
+  .catch(err=>{
+    log("Submit error: "+err);
+    alert("Failed");
+    btn.disabled=false;
+    btn.innerText="Submit Task";
+  });
+}
+
+</script>
+
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer-box text-center">
+    <i class="bi bi-facebook"></i>
+    <i class="bi bi-whatsapp"></i>
+    <i class="bi bi-discord"></i>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</body>
+</html>
