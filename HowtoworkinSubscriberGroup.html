@@ -55,13 +55,12 @@
 
 <script>
 
-/* ================= EXTENSION PART ================= */
+/* ================= LOCALSTORAGE VERSION ================= */
 document.addEventListener("DOMContentLoaded",()=>{
 
-chrome.storage.local.get(["channelHandle"],res=>{
-document.getElementById("savedHandle").innerText=
-res.channelHandle || "Not set";
-});
+// ✅ FIXED HERE
+const handle = localStorage.getItem("channelHandle");
+document.getElementById("savedHandle").innerText = handle || "Not set";
 
 document.getElementById("updateBtn").addEventListener("click",async()=>{
 
@@ -70,44 +69,22 @@ const list=document.getElementById("subList");
 
 status.innerText="Opening YouTube...";
 
-let tab=await chrome.tabs.create({
-url:"https://www.youtube.com/feed/channels",
-active:true
-});
+let tab=await window.open("https://www.youtube.com/feed/channels","_blank");
 
-/* WAIT UNTIL TAB LOADS PROPERLY */
-chrome.tabs.onUpdated.addListener(function listener(tabId,info){
+/* NOTE:
+   window.open cannot use chrome.scripting in normal web page
+   so scraping only works in extension mode
+*/
 
-if(tabId===tab.id && info.status==="complete"){
-chrome.tabs.onUpdated.removeListener(listener);
+status.innerText="⚠ Scraping requires Chrome Extension mode";
 
-status.innerText="Scraping subscriptions...";
-
-chrome.scripting.executeScript({
-target:{tabId:tab.id},
-function:scrapeSubscriptions
-},(res)=>{
-
-if(!res || !res[0]){
-status.innerText="Failed";
-return;
-}
-
-let data=res[0].result || [];
-
-status.innerText="Uploading...";
-
-renderList(data,list);
-sendToSheet(data,status);
-
-});
-}
-});
+// OPTIONAL DEMO LIST
+list.innerHTML = "<p>Open console for real scraping (extension required)</p>";
 
 });
 });
 
-/* ================= IMPROVED SCRAPER ================= */
+/* ================= SCRAPER (ONLY FOR EXTENSION USE) ================= */
 function scrapeSubscriptions(){
 return new Promise(resolve=>{
 
@@ -134,7 +111,6 @@ collected.push(handle);
 }
 });
 
-/* STOP ONLY WHEN STABLE */
 if(collected.length===lastCount){
 stableRounds++;
 }else{
@@ -142,7 +118,6 @@ stableRounds=0;
 lastCount=collected.length;
 }
 
-/* 3 stable scrolls = done */
 if(stableRounds>=3){
 clearInterval(timer);
 resolve(collected);
@@ -156,14 +131,15 @@ resolve(collected);
 /* ================= SEND TO SHEET ================= */
 function sendToSheet(data,status){
 
-chrome.storage.local.get(["channelHandle","userCode"],res=>{
+const handle = localStorage.getItem("channelHandle");
+const userCode = localStorage.getItem("userCode");
 
-if(!res.channelHandle){
+if(!handle){
 status.innerText="No handle saved";
 return;
 }
 
-if(!res.userCode){
+if(!userCode){
 status.innerText="No user code";
 return;
 }
@@ -172,8 +148,8 @@ fetch("https://script.google.com/macros/s/AKfycbwtukG0RXZmT8V53F-nWhSwgpAV2IzWlz
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-handle:res.channelHandle,
-userCode:res.userCode,
+handle:handle,
+userCode:userCode,
 subscriptions:data
 })
 })
@@ -185,10 +161,9 @@ status.innerText="Uploaded Successfully ✅";
 status.innerText="Upload Failed ❌";
 });
 
-});
 }
 
-/* ================= LIST RENDER ================= */
+/* ================= RENDER ================= */
 function renderList(data,list){
 list.innerHTML="";
 data.forEach(i=>{
@@ -198,6 +173,7 @@ div.innerText=i;
 list.appendChild(div);
 });
 }
+
 </script>
 
 </body>
