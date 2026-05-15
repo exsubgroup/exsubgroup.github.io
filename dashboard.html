@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bux.money — Marketplace for promoting websites and mobile apps</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg: #050508;
+            --card: #12141c;
+            --card-2: #0f1117;
+            --border: #1e212c;
+            --purple: #7c3aed;
+            --purple-2: #8b5cf6;
+            --text-muted: #8a8f9e;
+        }
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body {
+            background: var(--bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
+                        radial-gradient(ellipse at bottom, rgba(124,58,237,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-nav {
+            background: rgba(18, 20, 28, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .card {
+            background: linear-gradient(180deg, #151821 0%, #101219 100%);
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            border-color: rgba(124,58,237,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.2) inset;
+        }
+        .purple-glow {
+            box-shadow: 0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.3);
+        }
+        .btn-purple {
+            background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 0 30px rgba(124,58,237,0.4), 0 1px 0 rgba(255,255,255,0.2) inset;
+            transition: all 0.2s;
+        }
+        .btn-purple:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 40px rgba(124,58,237,0.6), 0 1px 0 rgba(255,255,255,0.2) inset;
+        }
+        .support-tab {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        .dashboard-frame {
+            background: #0a0b0f;
+            border: 1px solid #1a1d27;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05) inset;
+        }
+        .icon-glow {
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .gradient-text {
+            background: linear-gradient(180deg, #fff 0%, #c9cdd8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+  <script data-arena-recording="true">(function(){
+"use strict";
+var SK="__arena_rec",RRWEB_CDN="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js";
+var MAX_RECORDING_MS=600000,MAX_RRWEB_EVENTS=30000,MAX_INTERACTIONS=5000,MAX_CURSOR_POINTS=10000,recStopped=false;
+var stored=null;try{var raw=sessionStorage.getItem(SK);if(raw)stored=JSON.parse(raw);}catch(ex){}
+var meta=stored?stored.m||null:null,rrwebEvents=stored?stored.r||[]:[],rrwebStarted=false,startTime=stored?stored.st||Date.now():Date.now();
+var interactions=stored?stored.i||[]:[],cursorPath=stored?stored.c||[]:[],lastCursorSample=0,lastScrollSample=0;
+var pageHeight=document.documentElement.scrollHeight;
+var viewport={width:window.innerWidth,height:window.innerHeight};
+function isCapped(){if(recStopped)return true;if(Date.now()-startTime>=MAX_RECORDING_MS){recStopped=true;return true;}return false;}
+function persist(){try{var d=JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime});sessionStorage.setItem(SK,d);}catch(ex){rrwebEvents=rrwebEvents.slice(Math.floor(rrwebEvents.length/2));try{sessionStorage.setItem(SK,JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime}));}catch(ex2){}}}
+setInterval(persist,5000);
+window.addEventListener("resize",function(){viewport={width:window.innerWidth,height:window.innerHeight};pageHeight=document.documentElement.scrollHeight;});
+document.addEventListener("click",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var el=e.target;var tag=el.tagName?el.tagName.toLowerCase():"";var text=(el.textContent||"").trim().substring(0,80);var classes=el.className&&typeof el.className==="string"?el.className.substring(0,120):"";interactions.push({type:"click",t:Date.now()-startTime,x:Math.round(e.clientX),y:Math.round(e.clientY),element:{tag:tag,text:text,classes:classes}});},true);
+window.addEventListener("scroll",function(){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var now=Date.now();if(now-lastScrollSample<200)return;lastScrollSample=now;var scrollY=Math.round(window.scrollY||window.pageYOffset||0);var depthPct=pageHeight>viewport.height?Math.min(100,Math.round(((scrollY+viewport.height)/pageHeight)*100)):100;interactions.push({type:"scroll",t:now-startTime,y:scrollY,depth_pct:depthPct});},{passive:true});
+document.addEventListener("mousemove",function(e){if(isCapped()||cursorPath.length>=MAX_CURSOR_POINTS)return;var now=Date.now();if(now-lastCursorSample<250)return;lastCursorSample=now;cursorPath.push([Math.round(e.clientX),Math.round(e.clientY),now-startTime]);},{passive:true});
+document.addEventListener("keydown",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;interactions.push({type:"keydown",t:Date.now()-startTime,key:e.key});},true);
+function buildAnalytics(){if(!meta)return null;var ph=document.documentElement.scrollHeight;var maxScroll=0,clickElements={},firstClick=null,firstScroll=null,totalDistance=0;for(var i=0;i<interactions.length;i++){var ev=interactions[i];if(ev.type==="scroll"){if(ev.depth_pct>maxScroll)maxScroll=ev.depth_pct;if(!firstScroll)firstScroll=ev.t;}if(ev.type==="click"){if(!firstClick)firstClick=ev.t;var key=ev.element.tag+":"+ev.element.text.substring(0,30);clickElements[key]=true;}}for(var j=1;j<cursorPath.length;j++){var dx=cursorPath[j][0]-cursorPath[j-1][0];var dy=cursorPath[j][1]-cursorPath[j-1][1];totalDistance+=Math.sqrt(dx*dx+dy*dy);}var duration=Date.now()-startTime;var clickHeatmap=[];for(var k=0;k<interactions.length;k++){if(interactions[k].type==="click")clickHeatmap.push([interactions[k].x,interactions[k].y]);}return{generation_id:meta.generationId,tournament_id:meta.tournamentId,started_at:new Date(startTime).toISOString(),ended_at:new Date().toISOString(),duration_ms:duration,viewport:viewport,page_height:ph,interactions:interactions,cursor_path:cursorPath,click_heatmap:clickHeatmap,summary:{total_clicks:clickHeatmap.length,total_scrolls:interactions.filter(function(e){return e.type==="scroll";}).length,max_scroll_depth_pct:maxScroll,unique_elements_clicked:Object.keys(clickElements).length,time_to_first_click_ms:firstClick,time_to_first_scroll_ms:firstScroll,cursor_distance_px:Math.round(totalDistance),active_time_ms:duration}};}
+function loadRrweb(){if(rrwebStarted)return;rrwebStarted=true;var s=document.createElement("script");s.src=RRWEB_CDN;s.onload=function(){var rec=(window.rrweb&&window.rrweb.record)||window.rrwebRecord;if(!rec)return;rec({emit:function(event){if(rrwebEvents.length>=MAX_RRWEB_EVENTS||isCapped())return;rrwebEvents.push(event);}});};s.onerror=function(){};document.head.appendChild(s);}
+window.addEventListener("message",function(e){if(!e.data||typeof e.data.type!=="string")return;if(e.data.type==="arena:init"){if(!meta)startTime=Date.now();meta={generationId:e.data.generationId||e.data.modelId,tournamentId:e.data.tournamentId};persist();loadRrweb();if(e.source)e.source.postMessage({type:"arena:init-ack",generationId:meta.generationId},"*");}if(e.data.type==="arena:flush"){var resp={type:"arena:recording-data",generationId:meta?meta.generationId:null,rrwebEvents:rrwebEvents,analytics:buildAnalytics()};try{sessionStorage.removeItem(SK);}catch(ex){}if(e.source)e.source.postMessage(resp,"*");}});
+loadRrweb();
+})();</script>
+  <script data-arena-views="true">(function(){var isTop=false;try{isTop=window.self===window.top;}catch(e){}if(!isTop)return;window.__ARENA_META={generationId:"dune",tournamentId:"cb66842e-b9c2-45fd-95a1-8b518eb5ced6"};var payload={tournamentId:"cb66842e-b9c2-45fd-95a1-8b518eb5ced6",modelId:"dune"};try{var r=document.referrer;if(r){var u=new URL(r);payload.referrerDomain=u.hostname;}}catch(e){}try{var vid=null;try{vid=localStorage.getItem('arena_vid');}catch(e){}if(!vid){vid=typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,32);try{localStorage.setItem('arena_vid',vid);}catch(e){}}if(vid)payload.viewerId=vid;}catch(e){}try{fetch("https://www.designarena.ai/api/agon/page-views",{"method":"POST","headers":{"Content-Type":"application/json"},"body":JSON.stringify(payload),"keepalive":true});}catch(e){}})();</script>
+</head>
+<body class="relative">
+    <!-- Support tabs -->
+    <div class="fixed right-0 top-32 z-50 hidden lg:block">
+        <div class="bg-[#1e40af] text-white px-2 py-4 rounded-l-lg support-tab text-xs font-medium cursor-pointer hover:bg-[#1d4ed8] transition">
+            <span class="flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Support
+            </span>
+        </div>
+    </div>
+    <div class="fixed right-0 bottom-32 z-50 hidden lg:block">
+        <div class="bg-[#1e40af] text-white px-2 py-4 rounded-l-lg support-tab text-xs font-medium cursor-pointer hover:bg-[#1d4ed8] transition">
+            <span class="flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Support
+            </span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-40">
+        <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <span class="text-white font-semibold text-[17px] tracking-tight">bux.money</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-7 text-[13px]">
+                <a href="#" class="text-white font-medium">For users</a>
+                <a href="#" class="text-muted hover:text-white transition">Become a partner</a>
+                <a href="#" class="text-muted hover:text-white transition">Browser extension</a>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button class="text-[13px] text-muted hover:text-white transition hidden sm:block">Log In</button>
+                <button class="bg-white text-black text-[13px] font-medium px-4 py-[7px] rounded-full hover:bg-gray-100 transition">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 pt-28">
+        <!-- Hero -->
+        <section class="px-4 max-w-[1200px] mx-auto text-center">
+            <h1 class="text-[42px] sm:text-[56px] lg:text-[64px] font-[800] leading-[1.05] tracking-[-0.02em] gradient-text max-w-[800px] mx-auto">
+                Marketplace for<br>promoting websites<br>and mobile apps
+            </h1>
+            <p class="text-muted text-[14px] leading-relaxed mt-6 max-w-[620px] mx-auto">
+                New subscribers to your groups, likes, shares, mobile app installs, and positive feedback.<br class="hidden sm:block">
+                Create personalized tasks according to your individual conditions to grow your business.
+            </p>
+            <button class="btn-purple text-white font-medium text-[14px] px-7 py-[11px] rounded-full mt-8 purple-glow">
+                Launch ads
+            </button>
+        </section>
+
+        <!-- Small feature cards -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-28">
+            <div class="flex flex-wrap justify-center gap-3">
+                <div class="card rounded-xl px-4 py-3 flex items-center gap-3 min-w-[210px]">
+                    <div class="w-9 h-9 rounded-lg bg-[#1a1d27] flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-[13px] font-medium text-white">Custom tasks</div>
+                        <div class="text-[11px] text-muted">from 0.5 RUB for one completion of task</div>
+                    </div>
+                </div>
+                <div class="card rounded-xl px-4 py-3 flex items-center gap-3 min-w-[210px]">
+                    <div class="w-9 h-9 rounded-lg bg-[#1a1d27] flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-[13px] font-medium text-white">Banner ads</div>
+                        <div class="text-[11px] text-muted">from 15 RUB / 1,000 impressions</div>
+                    </div>
+                </div>
+                <div class="card rounded-xl px-4 py-3 flex items-center gap-3 min-w-[210px]">
+                    <div class="w-9 h-9 rounded-lg bg-[#1a1d27] flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-[13px] font-medium text-white">Teaser ads</div>
+                        <div class="text-[11px] text-muted">from 10 RUB / 1,000 impressions</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 mt-3">
+                <div class="card rounded-xl px-4 py-3 flex items-center gap-3 min-w-[210px] opacity-60">
+                    <div class="w-9 h-9 rounded-lg bg-[#1a1d27] flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-[13px] font-medium text-white">YouTube views</div>
+                    </div>
+                </div>
+                <div class="card rounded-xl px-4 py-3 flex items-center gap-3 min-w-[210px] opacity-60">
+                    <div class="w-9 h-9 rounded-lg bg-[#1a1d27] flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-[13px] font-medium text-white">Website surfing</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard mockup -->
+        <section class="px-4 max-w-[1100px] mx-auto mt-8">
+            <div class="dashboard-frame rounded-[20px] p-1.5 sm:p-2">
+                <div class="bg-[#0f1117] rounded-[16px] overflow-hidden">
+                    <img src="/public/dashboard.png" alt="Dashboard" class="w-full h-auto">
+                </div>
+            </div>
+        </section>
+
+        <!-- Clients waiting -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-28 text-center">
+            <h2 class="text-[28px] sm:text-[34px] font-bold tracking-[-0.01em]">Your clients are already waiting for you</h2>
+            <p class="text-muted text-[14px] mt-1">In the most popular services</p>
+            
+            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10">
+                <div class="w-12 h-12 rounded-xl bg-[#151821] border border-[#1e212c] opacity-30"></div>
+                <div class="w-12 h-12 rounded-xl bg-[#151821] border border-[#1e212c] opacity-30"></div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-white flex items-center justify-center icon-glow">
+                    <svg width="28" height="28" viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2c-.3-1.1-1.1-2-2.2-2.3C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.3.4C1.6 4.2.8 5.1.5 6.2.1 8.1.1 12 .1 12s0 3.9.4 5.8c.3 1.1 1.1 2 2.2 2.3 1.9.4 9.3.4 9.3.4s7.4 0 9.3-.4c1.1-.3 1.9-1.2 2.2-2.3.4-1.9.4-5.8.4-5.8s0-3.9-.4-5.8z"/><path fill="white" d="M9.8 15.5v-7l6.2 3.5-6.2 3.5z"/></svg>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#2AABEE] flex items-center justify-center icon-glow">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-white flex items-center justify-center icon-glow">
+                    <div class="w-7 h-7 rounded-full flex overflow-hidden">
+                        <div class="w-1/2 bg-[#4285F4]"></div>
+                        <div class="w-1/2 flex flex-col">
+                            <div class="h-1/2 bg-[#EA4335]"></div>
+                            <div class="h-1/2 flex">
+                                <div class="w-1/2 bg-[#FBBC05]"></div>
+                                <div class="w-1/2 bg-[#34A853]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#0077FF] flex items-center justify-center icon-glow">
+                    <span class="text-white font-bold text-[26px]">VK</span>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#9146FF] flex items-center justify-center icon-glow">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.428l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#0f1117] border border-[#2a2e3a] flex items-center justify-center icon-glow">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 0l2.8 8.6H24l-7.4 5.4 2.8 8.6L12 17.2 4.6 22.6l2.8-8.6L0 8.6h9.2z"/></svg>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-white flex items-center justify-center icon-glow">
+                    <svg width="28" height="28" viewBox="0 0 24 24"><path fill="#FF4500" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.071 1.605 0 .211.001.42.001.629 0 2.999-3.582 5.432-8 5.432S4 16.633 4 13.634c0-.209 0-.418.001-.629a1.75 1.75 0 0 1-.683-3.359c.477 0 .9.182 1.207.491.96-.694 2.252-1.176 3.672-1.397l.92-4.3c.022-.11.08-.21.165-.29l.01-.01a.57.57 0 0 1 .402-.165h.009l3.22.678c.032-.659.568-1.183 1.237-1.183zm-6.01 7.5c-.827 0-1.5.673-1.5 1.5s.673 1.5 1.5 1.5 1.5-.673 1.5-1.5-.673-1.5-1.5-1.5zm6 0c-.827 0-1.5.673-1.5 1.5s.673 1.5 1.5 1.5 1.5-.673 1.5-1.5-.673-1.5-1.5-1.5zm-5.44 3.75c-.09-.08-.208-.127-.334-.127-.126 0-.244.047-.334.127a.475.475 0 0 0 0 .67c.668.668 1.74 1.038 2.708 1.038.968 0 2.04-.37 2.708-1.038a.475.475 0 0 0 0-.67.474.474 0 0 0-.668 0c-.48.48-1.284.768-2.04.768-.756 0-1.56-.288-2.04-.768a.475.475 0 0 0 0-.67z"/></svg>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-[#151821] border border-[#1e212c] opacity-30"></div>
+                <div class="w-12 h-12 rounded-xl bg-[#151821] border border-[#1e212c] opacity-30"></div>
+            </div>
+
+            <div class="mt-8 inline-flex items-center gap-2 bg-[#151821] border border-[#1e212c] rounded-lg px-4 py-2">
+                <span class="text-white font-medium">+10%</span>
+            </div>
+            <p class="text-muted text-[13px] mt-2">to the amount of the first to-up</p>
+        </section>
+
+        <!-- Effective crowd marketing -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-32">
+            <h2 class="text-[28px] sm:text-[36px] font-bold text-center leading-tight tracking-[-0.01em]">Effective crowd marketing<br>and motivated traffic</h2>
+            
+            <div class="grid lg:grid-cols-3 gap-4 mt-12">
+                <!-- Website registrations -->
+                <div class="card card-hover rounded-[20px] p-6 lg:row-span-1">
+                    <h3 class="text-[18px] font-semibold">Website registrations</h3>
+                    <p class="text-muted text-[13px] leading-relaxed mt-2">Registrations by real people only. Any complexity, flexible settings, any website or service.</p>
+                    <div class="mt-6 bg-[#0a0b0f] rounded-xl p-4 border border-[#1a1d27]">
+                        <div class="text-[11px] text-[#8b5cf6] mb-3">Регистрация</div>
+                        <div class="flex gap-2 mb-3">
+                            <div class="flex-1 h-8 bg-[#151821] rounded-lg flex items-center justify-center"><img src="https://www.google.com/favicon.ico" class="w-4 h-4" alt=""></div>
+                            <div class="flex-1 h-8 bg-[#151821] rounded-lg flex items-center justify-center"><span class="text-[10px]">Я</span></div>
+                            <div class="flex-1 h-8 bg-[#151821] rounded-lg flex items-center justify-center"><span class="text-[10px] text-[#0077FF]">VK</span></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-8 bg-[#151821] rounded-lg px-3 flex items-center text-[11px] text-muted">Имя</div>
+                            <div class="h-8 bg-[#151821] rounded-lg px-3 flex items-center text-[11px] text-muted">Email</div>
+                            <div class="h-8 bg-[#151821] rounded-lg px-3 flex items-center text-[11px] text-muted">Пароль</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Behavioral metrics -->
+                <div class="card card-hover rounded-[20px] p-6 lg:col-span-2">
+                    <h3 class="text-[18px] font-semibold">Behavioral metrics</h3>
+                    <p class="text-muted text-[13px] leading-relaxed mt-2 max-w-[600px]">We will help you get leading positions on all platforms that have search engine results based on behavioral metrics: YouTube, Yandex, Avito, etc.</p>
+                    <div class="text-[12px] text-[#8b5cf6] mt-4">2 RUB for one completion of task</div>
+                    
+                    <div class="mt-5 bg-[#0a0b0f] rounded-xl p-4 border border-[#1a1d27]">
+                        <div class="flex items-center justify-between text-[10px] text-muted mb-3">
+                            <span>Search queries</span>
+                            <div class="flex gap-6">
+                                <span>01.06</span>
+                                <span>07.06</span>
+                                <span>14.06</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 bg-[#151821] rounded-lg p-2.5">
+                                <img src="https://www.youtube.com/favicon.ico" class="w-4 h-4" alt="">
+                                <span class="text-[12px] flex-1">Уроки английского</span>
+                                <div class="flex gap-3 text-[11px]">
+                                    <span class="text-muted">18 <span class="text-green-500">▲ 5</span></span>
+                                    <span class="text-muted">13 <span class="text-green-500">▲ 4</span></span>
+                                    <span class="text-muted">1 <span class="text-green-500">▲ 12</span></span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-[#151821] rounded-lg p-2.5">
+                                <img src="https://www.youtube.com/favicon.ico" class="w-4 h-4" alt="">
+                                <span class="text-[12px] flex-1">Уроки английского</span>
+                                <div class="flex gap-3 text-[11px]">
+                                    <span class="text-muted">18 <span class="text-green-500">▲ 5</span></span>
+                                    <span class="text-muted">13 <span class="text-green-500">▲ 4</span></span>
+                                    <span class="text-muted">1 <span class="text-green-500">▲ 12</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto Airdrops -->
+                <div class="card card-hover rounded-[20px] p-6 lg:col-span-3">
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <h3 class="text-[18px] font-semibold">Crypto Airdrops participants</h3>
+                            <p class="text-muted text-[13px] leading-relaxed mt-2">Found a generous referral program and want to be a leader there? Thousands of our users will gladly take part in the token giveaway and bring you to the top.</p>
+                            <div class="text-[12px] text-[#8b5cf6] mt-8">3 RUB for one completion of task</div>
+                        </div>
+                        <div class="relative h-[160px] flex items-center justify-center">
+                            <div class="absolute w-32 h-32">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-16 h-16 rounded-full bg-gradient-to-b from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center shadow-[0_0_40px_rgba(139,92,246,0.5)]">
+                                        <span class="text-2xl">₿</span>
+                                    </div>
+                                </div>
+                                <!-- Orbiting nodes -->
+                                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 bg-[#1a1d27] rounded-lg border border-[#2a2e3a]"></div>
+                                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-8 bg-[#1a1d27] rounded-lg border border-[#2a2e3a]"></div>
+                                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#1a1d27] rounded-lg border border-[#2a2e3a]"></div>
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#1a1d27] rounded-lg border border-[#2a2e3a]"></div>
+                                <div class="absolute top-4 right-4 w-7 h-7 bg-[#1a1d27] rounded-lg border border-[#2a2e3a]"></div>
+                                <div class="absolute bottom-4 left-4 w-7 h-7 bg-[#1a1d27] rounded-lg border border-[#2a2e3a]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social media activity -->
+                <div class="card card-hover rounded-[20px] p-6">
+                    <h3 class="text-[18px] font-semibold">Social media activity</h3>
+                    <p class="text-muted text-[13px] leading-relaxed mt-2">Subscribers, comments, shares, likes, and other activities in any social network. Get an opportunity to build advanced activity scenarios with a full control at every step.</p>
+                    <div class="text-[12px] text-[#8b5cf6] mt-3">0.5 RUB for one completion of task</div>
+                    
+                    <div class="mt-6 grid grid-cols-3 gap-2">
+                        <div class="bg-[#0a0b0f] rounded-xl p-3 border border-[#1a1d27]">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2c-.3-1.1-1.1-2-2.2-2.3C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.3.4C1.6 4.2.8 5.1.5 6.2.1 8.1.1 12 .1 12s0 3.9.4 5.8c.3 1.1 1.1 2 2.2 2.3 1.9.4 9.3.4 9.3.4s7.4 0 9.3-.4c1.1-.3 1.9-1.2 2.2-2.3.4-1.9.4-5.8.4-5.8s0-3.9-.4-5.8z"/><path fill="white" d="M9.8 15.5v-7l6.2 3.5-6.2 3.5z"/></svg></div>
+                                <span class="text-[10px] text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded">▲ 56%</span>
+                            </div>
+                            <div class="text-[11px] font-medium">YouTube</div>
+                            <div class="text-[9px] text-muted mt-1">+2 230,5K просмотров</div>
+                        </div>
+                        <div class="bg-[#0a0b0f] rounded-xl p-3 border border-[#1a1d27]">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div>
+                                <span class="text-[10px] text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded">▲ 23%</span>
+                            </div>
+                            <div class="text-[11px] font-medium">Instagram*</div>
+                            <div class="text-[9px] text-muted mt-1">+9.5K подписчиков</div>
+                        </div>
+                        <div class="bg-[#0a0b0f] rounded-xl p-3 border border-[#1a1d27]">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="w-8 h-8 bg-[#2AABEE] rounded-lg flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg></div>
+                                <span class="text-[10px] text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded">▲ 34%</span>
+                            </div>
+                            <div class="text-[11px] font-medium">Telegram</div>
+                            <div class="text-[9px] text-muted mt-1">+22.3K подписчиков</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Website reviews -->
+                <div class="card card-hover rounded-[20px] p-6">
+                    <h3 class="text-[18px] font-semibold">Website reviews</h3>
+                    <p class="text-muted text-[13px] leading-relaxed mt-2">Flexible options for working with your product's reputation, as well as building a positive image on various sites, forums, and services.</p>
+                    <div class="text-[12px] text-[#8b5cf6] mt-3">2 RUB for one completion of task</div>
+                    
+                    <div class="mt-6 space-y-2">
+                        <div class="bg-[#0a0b0f] rounded-xl p-3 border border-[#1a1d27] flex items-center gap-3">
+                            <div class="flex-1">
+                                <div class="text-[12px] font-medium">Car Point</div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <div class="flex text-[#f59e0b] text-[10px]">★★★★★</div>
+                                    <span class="text-[10px] text-muted">12 400 отзывов</span>
+                                </div>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-[#dc2626] flex items-center justify-center"><span class="text-white text-[14px] font-bold">Q</span></div>
+                        </div>
+                        <div class="bg-[#0a0b0f] rounded-xl p-3 border border-[#1a1d27] flex items-center gap-3">
+                            <div class="flex-1">
+                                <div class="text-[12px] font-medium">Flower Shop</div>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <div class="flex text-[#f59e0b] text-[10px]">★★★★★</div>
+                                    <span class="text-[10px] text-muted">5 760 отзывов</span>
+                                </div>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z"/><path d="M2 12h20M12 2c3 4 3 16 0 20M12 2c-3 4-3 16 0 20"/></svg></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile apps -->
+                <div class="card card-hover rounded-[20px] p-6 lg:col-span-3">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-[18px] font-semibold">Mobile apps</h3>
+                            <p class="text-muted text-[13px] leading-relaxed mt-2 max-w-[400px]">Any actions on the app's product page and inside the app: installs, reviews, activations, progress in games, and other activity. Combine them in any order, thus creating desired scenarios.</p>
+                            <div class="text-[12px] text-[#8b5cf6] mt-16">4 RUB for one completion of task</div>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute right-0 top-0 w-[220px]">
+                                <div class="bg-[#1a1d27] rounded-[24px] p-2 border border-[#2a2e3a] shadow-2xl">
+                                    <div class="bg-[#0a0b0f] rounded-[20px] overflow-hidden">
+                                        <div class="h-[340px] p-3">
+                                            <div class="flex items-center justify-between text-[10px] text-muted mb-3">
+                                                <span>9:41</span>
+                                                <div class="flex gap-1"><div class="w-3 h-1.5 bg-white rounded-sm"></div><div class="w-3 h-1.5 bg-white rounded-sm"></div><div class="w-3 h-1.5 bg-white rounded-sm"></div></div>
+                                            </div>
+                                            <div class="bg-[#151821] rounded-xl p-3">
+                                                <div class="flex items-start gap-2">
+                                                    <div class="w-8 h-8 rounded-lg bg-[#8b5cf6] flex-shrink-0"></div>
+                                                    <div class="flex-1">
+                                                        <div class="flex items-center justify-between">
+                                                            <span class="text-[11px] font-medium">Отлично!</span>
+                                                            <span class="text-[9px] text-muted">1 день назад</span>
+                                                        </div>
+                                                        <div class="flex text-[#f59e0b] text-[9px] my-1">★★★★★</div>
+                                                        <p class="text-[9px] text-muted leading-snug">Меня друг познакомил с этим приложением и теперь... невозможно не сканировать документы! Очень классно!</p>
+                                                        <p class="text-[9px] text-muted leading-snug mt-1">А мне как студенту постоянно приходится что-то копировать, сканировать. Очень выручает, спасибо! :)</p>
+                                                        <p class="text-[9px] text-muted mt-1">Борис Хабаров</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 flex items-center justify-between text-[9px]">
+                                                <span class="text-white">Рекомендации</span>
+                                                <span class="text-muted">Свежие</span>
+                                                <span class="text-muted">Рядом с</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Extensive opportunities -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-32">
+            <h2 class="text-[28px] sm:text-[36px] font-bold text-center leading-tight">
+                <span class="text-[#8b5cf6]">Extensive opportunities</span><br>to work with traffic
+            </h2>
+            
+            <div class="grid lg:grid-cols-3 gap-4 mt-12">
+                <div class="lg:row-span-2">
+                    <div class="card rounded-[20px] p-6 h-full">
+                        <div class="w-10 h-10 rounded-xl bg-[#1a1d27] flex items-center justify-center mb-4">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        </div>
+                        <h3 class="text-[17px] font-semibold">Teaser ads</h3>
+                        <p class="text-muted text-[13px] leading-relaxed mt-2">Upload an image, specify a title and text for it, and the system will automatically create an ad of available sizes.</p>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-2">
+                    <div class="card rounded-[20px] p-6">
+                        <h3 class="text-[17px] font-semibold">YouTube views</h3>
+                        <p class="text-muted text-[13px] leading-relaxed mt-2 max-w-[600px]">Are you just starting out or already an industry pro? Either way, you'll need views for your videos. We have an audience consisting of real people, guaranteed retention from 10 to 300 seconds, user attention control, without any penalties or removals from YouTube.</p>
+                        <div class="mt-5 bg-[#0a0b0f] rounded-xl p-3 border border-[#1a1d27]">
+                            <img src="https://images.unsplash.com/photo-1611162616305-c69af76a8c0a?w=800" alt="" class="w-full h-[180px] object-cover rounded-lg opacity-80">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:row-span-1">
+                    <div class="card rounded-[20px] p-6 h-full">
+                        <div class="w-10 h-10 rounded-xl bg-[#1a1d27] flex items-center justify-center mb-4">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.75"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        </div>
+                        <h3 class="text-[17px] font-semibold">Banner ads</h3>
+                        <p class="text-muted text-[13px] leading-relaxed mt-2">Upload your ad banners. Ads are displayed to users through a browser extension on top of the sites they visit.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card rounded-[20px] p-6 h-full">
+                        <h3 class="text-[17px] font-semibold">Website surfing</h3>
+                        <p class="text-muted text-[13px] leading-relaxed mt-2">The easiest and budget-friendly way to show your site to the world and attract potential users (referrals) to any project. Flexible audience targeting and control over the duration of visits are guaranteed.</p>
+                        <div class="mt-6 flex items-center justify-center">
+                            <div class="relative w-32 h-32">
+                                <svg class="transform -rotate-90 w-32 h-32">
+                                    <circle cx="64" cy="64" r="56" stroke="#1e212c" stroke-width="8" fill="none"/>
+                                    <circle cx="64" cy="64" r="56" stroke="#8b5cf6" stroke-width="8" fill="none" stroke-dasharray="263" stroke-dashoffset="65" stroke-linecap="round"/>
+                                    <circle cx="64" cy="64" r="56" stroke="#22c55e" stroke-width="8" fill="none" stroke-dasharray="263" stroke-dashoffset="210" stroke-linecap="round"/>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div class="text-[24px] font-light">5.24K</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card rounded-[20px] p-6 h-full">
+                        <h3 class="text-[17px] font-semibold">Improved positions<br>in Similar Web</h3>
+                        <p class="text-muted text-[13px] leading-relaxed mt-2">We help promote sites to high positions in the Similar Web rankings, as well as improve your metrics for traffic volume, depth, and duration of views. The source of visits can be any site, or even a group of sites in the right proportions.</p>
+                        <div class="mt-6">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-[28px] font-light">5.24K</span>
+                                <span class="text-[11px] text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full">▲ 29%</span>
+                            </div>
+                            <div class="mt-3 h-[60px] flex items-end gap-1">
+                                <svg viewBox="0 0 300 60" class="w-full h-full">
+                                    <path d="M0 45 C 30 40, 60 50, 90 35 S 150 20, 180 30 S 240 15, 300 5" fill="none" stroke="#8b5cf6" stroke-width="2" opacity="0.8"/>
+                                    <path d="M0 50 C 30 48, 60 52, 90 45 S 150 35, 180 40 S 240 30, 300 25" fill="none" stroke="#4b5563" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom task -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-32 text-center">
+            <h2 class="text-[28px] sm:text-[34px] font-bold leading-tight">
+                Couldn't find a suitable case?<br>
+                <span class="text-[#8b5cf6]">Create a custom task</span>
+            </h2>
+            <p class="text-muted text-[13px] leading-relaxed mt-4 max-w-[580px] mx-auto">
+                Each task can include up to 2 sub-tasks with an individual description, terms for review and execution conditions, while flexible targeting settings will allow you to reach a specific audience by a certain group of criteria.
+            </p>
+            <button class="btn-purple text-white font-medium text-[14px] px-7 py-[11px] rounded-full mt-8">
+                Compose a task
+            </button>
+        </section>
+
+        <!-- Benefits -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-32">
+            <h2 class="text-[28px] sm:text-[34px] font-bold text-center">Benefits</h2>
+            <p class="text-muted text-[13px] text-center mt-2 max-w-[500px] mx-auto">Extensive experience in crowd-marketing and promotion on social media allows us to provide high-quality services.</p>
+            
+            <div class="grid md:grid-cols-3 gap-4 mt-10">
+                <div class="card rounded-[20px] p-6">
+                    <h3 class="text-[15px] font-semibold">Real users only</h3>
+                    <p class="text-muted text-[12px] leading-relaxed mt-2">We don't use automation. All actions are performed by real users on their personal devices.</p>
+                    <div class="flex -space-x-2 mt-8">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80" class="w-10 h-10 rounded-full border-2 border-[#12141c] object-cover" alt="">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" class="w-10 h-10 rounded-full border-2 border-[#12141c] object-cover" alt="">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80" class="w-10 h-10 rounded-full border-2 border-[#12141c] object-cover" alt="">
+                    </div>
+                </div>
+                <div class="card rounded-[20px] p-6">
+                    <h3 class="text-[15px] font-semibold">Easy-to-use interface</h3>
+                    <p class="text-muted text-[12px] leading-relaxed mt-2">An easy-to-use interface lets you add an order in no time</p>
+                    <div class="mt-6 space-y-2">
+                        <div class="bg-[#0a0b0f] rounded-lg px-3 py-2 text-[11px] flex items-center gap-2 border border-[#1a1d27] w-fit">
+                            <div class="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                            Зарегистрируйтесь
+                        </div>
+                        <div class="bg-[#0a0b0f] rounded-lg px-3 py-2 text-[11px] flex items-center gap-2 border border-[#1a1d27] w-fit ml-6">
+                            <div class="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                            Пополните баланс
+                        </div>
+                        <div class="bg-[#0a0b0f] rounded-lg px-3 py-2 text-[11px] flex items-center gap-2 border border-[#1a1d27] w-fit ml-12">
+                            <div class="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                            Добавьте заказ
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded-[20px] p-6">
+                    <h3 class="text-[15px] font-semibold">Quick start</h3>
+                    <p class="text-muted text-[12px] leading-relaxed mt-2">Why wait? Get any activity straight after the launch.</p>
+                    <div class="mt-6 flex justify-center">
+                        <div class="relative w-24 h-24">
+                            <svg class="transform -rotate-90 w-24 h-24">
+                                <circle cx="48" cy="48" r="40" stroke="#1e212c" stroke-width="8" fill="none"/>
+                                <circle cx="48" cy="48" r="40" stroke="#22c55e" stroke-width="8" fill="none" stroke-dasharray="251" stroke-dashoffset="60" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16 max-w-[900px] mx-auto">
+                <div>
+                    <div class="text-[32px] font-bold">130 640</div>
+                    <div class="text-muted text-[13px] mt-1">Yesterday's ad views</div>
+                </div>
+                <div>
+                    <div class="flex items-baseline gap-3">
+                        <div class="text-[32px] font-bold">1 471 156</div>
+                        <div class="text-[12px] text-green-500 bg-green-500/10 px-2 py-1 rounded">+202</div>
+                    </div>
+                    <div class="text-muted text-[13px] mt-1">Total users</div>
+                </div>
+                <div>
+                    <div class="text-[32px] font-bold">5 863 798</div>
+                    <div class="text-muted text-[13px] mt-1">Completed tasks</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-20 mb-8">
+            <div class="relative overflow-hidden rounded-[28px]" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);">
+                <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 50%);"></div>
+                <div class="relative px-8 py-14 sm:py-16 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center mb-5">
+                        <div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#7c3aed"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                    </div>
+                    <h2 class="text-[28px] sm:text-[32px] font-bold leading-tight">Don't wait to enjoy<br>your first results</h2>
+                    <p class="text-white/80 text-[14px] mt-3 max-w-[420px] mx-auto">See the effectiveness of ads for yourself. Create an Advertiser's account in a few clicks and place an order</p>
+                    <button class="bg-white text-[#5b21b6] font-medium text-[14px] px-6 py-[10px] rounded-full mt-6 hover:bg-gray-100 transition">
+                        Add an order
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 text-[12px] text-muted px-2">
+                <div>© 2021—2026 bux.money</div>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">User Agreement</a>
+                </div>
+                <div class="flex items-center gap-1.5 cursor-pointer hover:text-white transition">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>English</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Button interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (btn.textContent.includes('Launch') || btn.textContent.includes('Sign Up') || btn.textContent.includes('Add an order') || btn.textContent.includes('Compose')) {
+                    e.preventDefault();
+                    btn.style.transform = 'scale(0.97)';
+                    setTimeout(() => btn.style.transform = '', 150);
+                }
+            });
+        });
+
+        // Parallax effect for dashboard
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const dashboard = document.querySelector('.dashboard-frame');
+            if (dashboard && scrolled < 1000) {
+                dashboard.style.transform = `translateY(${scrolled * 0.05}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
