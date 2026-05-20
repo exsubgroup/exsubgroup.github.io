@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exsub Group</title>
+<link rel="icon" href="/exsubgroup.github.io-main/images/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="exsub.css">
+    <style>
+        :root {
+            --bg: #050508;
+            --card: #12141c;
+            --card-2: #0f1117;
+            --border: #1e212c;
+            --purple: #7c3aed;
+            --purple-2: #8b5cf6;
+            --text-muted: #8a8f9e;
+        }
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body {
+            background: var(--bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
+                        radial-gradient(ellipse at bottom, rgba(124,58,237,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-nav {
+           background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+            color:white;
+        }
+        .card {
+            background: linear-gradient(180deg, #151821 0%, #101219 100%);
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            border-color: rgba(124,58,237,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.2) inset;
+        }
+        .purple-glow {
+            box-shadow: 0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.3);
+        }
+        .btn-purple {
+            background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 0 30px rgba(124,58,237,0.4), 0 1px 0 rgba(255,255,255,0.2) inset;
+            transition: all 0.2s;
+        }
+        .btn-purple:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 40px rgba(124,58,237,0.6), 0 1px 0 rgba(255,255,255,0.2) inset;
+        }
+        .support-tab {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        .dashboard-frame {
+            background: #0a0b0f;
+            border: 1px solid #1a1d27;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05) inset;
+        }
+        .icon-glow {
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .gradient-text {
+            background: linear-gradient(180deg, #fff 0%, #c9cdd8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+  <script data-arena-recording="true">(function(){
+"use strict";
+var SK="__arena_rec",RRWEB_CDN="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js";
+var MAX_RECORDING_MS=600000,MAX_RRWEB_EVENTS=30000,MAX_INTERACTIONS=5000,MAX_CURSOR_POINTS=10000,recStopped=false;
+var stored=null;try{var raw=sessionStorage.getItem(SK);if(raw)stored=JSON.parse(raw);}catch(ex){}
+var meta=stored?stored.m||null:null,rrwebEvents=stored?stored.r||[]:[],rrwebStarted=false,startTime=stored?stored.st||Date.now():Date.now();
+var interactions=stored?stored.i||[]:[],cursorPath=stored?stored.c||[]:[],lastCursorSample=0,lastScrollSample=0;
+var pageHeight=document.documentElement.scrollHeight;
+var viewport={width:window.innerWidth,height:window.innerHeight};
+function isCapped(){if(recStopped)return true;if(Date.now()-startTime>=MAX_RECORDING_MS){recStopped=true;return true;}return false;}
+function persist(){try{var d=JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime});sessionStorage.setItem(SK,d);}catch(ex){rrwebEvents=rrwebEvents.slice(Math.floor(rrwebEvents.length/2));try{sessionStorage.setItem(SK,JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime}));}catch(ex2){}}}
+setInterval(persist,5000);
+window.addEventListener("resize",function(){viewport={width:window.innerWidth,height:window.innerHeight};pageHeight=document.documentElement.scrollHeight;});
+document.addEventListener("click",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var el=e.target;var tag=el.tagName?el.tagName.toLowerCase():"";var text=(el.textContent||"").trim().substring(0,80);var classes=el.className&&typeof el.className==="string"?el.className.substring(0,120):"";interactions.push({type:"click",t:Date.now()-startTime,x:Math.round(e.clientX),y:Math.round(e.clientY),element:{tag:tag,text:text,classes:classes}});},true);
+window.addEventListener("scroll",function(){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var now=Date.now();if(now-lastScrollSample<200)return;lastScrollSample=now;var scrollY=Math.round(window.scrollY||window.pageYOffset||0);var depthPct=pageHeight>viewport.height?Math.min(100,Math.round(((scrollY+viewport.height)/pageHeight)*100)):100;interactions.push({type:"scroll",t:now-startTime,y:scrollY,depth_pct:depthPct});},{passive:true});
+document.addEventListener("mousemove",function(e){if(isCapped()||cursorPath.length>=MAX_CURSOR_POINTS)return;var now=Date.now();if(now-lastCursorSample<250)return;lastCursorSample=now;cursorPath.push([Math.round(e.clientX),Math.round(e.clientY),now-startTime]);},{passive:true});
+document.addEventListener("keydown",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;interactions.push({type:"keydown",t:Date.now()-startTime,key:e.key});},true);
+function buildAnalytics(){if(!meta)return null;var ph=document.documentElement.scrollHeight;var maxScroll=0,clickElements={},firstClick=null,firstScroll=null,totalDistance=0;for(var i=0;i<interactions.length;i++){var ev=interactions[i];if(ev.type==="scroll"){if(ev.depth_pct>maxScroll)maxScroll=ev.depth_pct;if(!firstScroll)firstScroll=ev.t;}if(ev.type==="click"){if(!firstClick)firstClick=ev.t;var key=ev.element.tag+":"+ev.element.text.substring(0,30);clickElements[key]=true;}}for(var j=1;j<cursorPath.length;j++){var dx=cursorPath[j][0]-cursorPath[j-1][0];var dy=cursorPath[j][1]-cursorPath[j-1][1];totalDistance+=Math.sqrt(dx*dx+dy*dy);}var duration=Date.now()-startTime;var clickHeatmap=[];for(var k=0;k<interactions.length;k++){if(interactions[k].type==="click")clickHeatmap.push([interactions[k].x,interactions[k].y]);}return{generation_id:meta.generationId,tournament_id:meta.tournamentId,started_at:new Date(startTime).toISOString(),ended_at:new Date().toISOString(),duration_ms:duration,viewport:viewport,page_height:ph,interactions:interactions,cursor_path:cursorPath,click_heatmap:clickHeatmap,summary:{total_clicks:clickHeatmap.length,total_scrolls:interactions.filter(function(e){return e.type==="scroll";}).length,max_scroll_depth_pct:maxScroll,unique_elements_clicked:Object.keys(clickElements).length,time_to_first_click_ms:firstClick,time_to_first_scroll_ms:firstScroll,cursor_distance_px:Math.round(totalDistance),active_time_ms:duration}};}
+function loadRrweb(){if(rrwebStarted)return;rrwebStarted=true;var s=document.createElement("script");s.src=RRWEB_CDN;s.onload=function(){var rec=(window.rrweb&&window.rrweb.record)||window.rrwebRecord;if(!rec)return;rec({emit:function(event){if(rrwebEvents.length>=MAX_RRWEB_EVENTS||isCapped())return;rrwebEvents.push(event);}});};s.onerror=function(){};document.head.appendChild(s);}
+window.addEventListener("message",function(e){if(!e.data||typeof e.data.type!=="string")return;if(e.data.type==="arena:init"){if(!meta)startTime=Date.now();meta={generationId:e.data.generationId||e.data.modelId,tournamentId:e.data.tournamentId};persist();loadRrweb();if(e.source)e.source.postMessage({type:"arena:init-ack",generationId:meta.generationId},"*");}if(e.data.type==="arena:flush"){var resp={type:"arena:recording-data",generationId:meta?meta.generationId:null,rrwebEvents:rrwebEvents,analytics:buildAnalytics()};try{sessionStorage.removeItem(SK);}catch(ex){}if(e.source)e.source.postMessage(resp,"*");}});
+loadRrweb();
+})();</script>
+  <script data-arena-views="true">(function(){var isTop=false;try{isTop=window.self===window.top;}catch(e){}if(!isTop)return;window.__ARENA_META={generationId:"dune",tournamentId:"cb66842e-b9c2-45fd-95a1-8b518eb5ced6"};var payload={tournamentId:"cb66842e-b9c2-45fd-95a1-8b518eb5ced6",modelId:"dune"};try{var r=document.referrer;if(r){var u=new URL(r);payload.referrerDomain=u.hostname;}}catch(e){}try{var vid=null;try{vid=localStorage.getItem('arena_vid');}catch(e){}if(!vid){vid=typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,32);try{localStorage.setItem('arena_vid',vid);}catch(e){}}if(vid)payload.viewerId=vid;}catch(e){}try{fetch("https://www.designarena.ai/api/agon/page-views",{"method":"POST","headers":{"Content-Type":"application/json"},"body":JSON.stringify(payload),"keepalive":true});}catch(e){}})();</script>
+</head>
+<body class="relative">
+    <!-- Support tabs
+    <div class="fixed right-0 top-32 z-50 hidden lg:block">
+        <div class="bg-[#1e40af] text-white px-2 py-4 rounded-l-lg support-tab text-xs font-medium cursor-pointer hover:bg-[#1d4ed8] transition">
+            <span class="flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Support
+            </span>
+        </div>
+    </div>
+    <div class="fixed right-0 bottom-32 z-50 hidden lg:block">
+        <div class="bg-[#1e40af] text-white px-2 py-4 rounded-l-lg support-tab text-xs font-medium cursor-pointer hover:bg-[#1d4ed8] transition">
+            <span class="flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Support
+            </span>
+        </div>
+    </div> -->
+
+    <!-- Navigation -->
+   <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-40" >
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <img src="images/logo.svg" alt="Exsub Group Logo" class="w-6 h-6 object-contain"/>
+      <span class="text-white font-semibold text-[17px] tracking-tight">Exsub Group</span>
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-7 text-[13px]">
+      <a href="/members" class="text-white font-medium">Members</a>
+      <a href="/how-to-work" class="transition">How to Work</a>
+      <a href="/browser-extension" class="transition">Browser Extension</a>
+    </div>
+
+    <!-- Right Buttons -->
+    <div class="flex items-center gap-3">
+      <a href="login.html" class="text-[13px] text-white transition hidden sm:block">
+        Log In
+      </a>
+
+      <a href="JoinExsubGroup.html"
+         class="bg-white text-black text-[13px] font-medium px-4 py-[7px] rounded-full  hover:bg-gray-100 transition">
+        Create Account
+      </a>
+
+      <!-- Mobile Menu Button -->
+      <button id="menuBtn" class="md:hidden ml-2 text-white">
+        <!-- Hamburger Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu"
+       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-4 flex flex-col gap-6 text-[14px]">
+
+    <a href="/members" class="text-white">Members</a>
+    <a href="/how-to-work" class="text-white">How to Work</a>
+    <a href="/browser-extension" class="text-white">Browser Extension</a>
+
+  <div class="mt-[5px] space-y-[16px]">
+            <a href="/signup/" class="button-md button-violet-2 cursor-pointer rounded-[60px]">Create Account</a>
+            <a href="/signin/" class="button-md button-white cursor-pointer rounded-[60px]">Log In</a>
+        </div>
+  </div>
+   </nav>
+
+
+    <main class="relative z-10 pt-28">
+        <!-- Hero -->
+        <section class="px-4 max-w-[1200px] mx-auto text-center">
+            <h1 class="text-[42px] sm:text-[56px] lg:text-[64px] font-[800] leading-[1.05] tracking-[-0.02em] gradient-text max-w-[800px] mx-auto">
+                Welcome ! To<br>Exsub Group
+            </h1>
+            <p class="text-muted text-[14px] leading-relaxed mt-6 max-w-[620px] mx-auto">
+                Exsub Group is a YouTube promotion community dedicated to supporting creators, increasing audience reach, and helping channels grow through collaboration, engagement, and exposure.<br class="hidden sm:block">
+            </p>
+            <button class="btn-purple text-white font-medium text-[14px] px-7 py-[11px] rounded-full mt-8 purple-glow">
+                Create Account & Join Today
+            </button>
+        </section>
+
+        <!-- Small feature cards -->
+    <!-- Small Feature Cards -->
+<section class="px-4 max-w-[1200px] mx-auto mt-28">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Card -->
+        <div class="card rounded-2xl p-5 flex items-start gap-4 min-h-[110px]">
+            
+            <div class="w-11 h-11 min-w-[44px] rounded-xl bg-[#1a1d27] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">
+                    <path fill="rgb(177, 151, 252)" d="M502.6 150.6l-96 96c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L402.7 160 32 160c-17.7 0-32-14.3-32-32S14.3 96 32 96l370.7 0-41.4-41.4c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l96 96c12.5 12.5 12.5 32.8 0 45.3zm-397.3 352l-96-96c-12.5-12.5-12.5-32.8 0-45.3l96-96c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3L109.3 352 480 352c17.7 0 32 14.3 32 32s-14.3 32-32 32l-370.7 0 41.4 41.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0z"/>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 class="text-[14px] font-semibold text-white">
+                    Real Exchange
+                </h3>
+
+                <p class="text-[12px] text-muted leading-relaxed mt-1">
+                    Exchange real subscribers with active creators and grow naturally.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Card -->
+        <div class="card rounded-2xl p-5 flex items-start gap-4 min-h-[110px]">
+
+            <div class="w-11 h-11 min-w-[44px] rounded-xl bg-[#1a1d27] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">
+                    <path fill="rgb(177, 151, 252)" d="M128 320L24.5 320c-24.9 0-40.2-27.1-27.4-48.5L50 183.3C58.7 168.8 74.3 160 91.2 160l95 0c76.1-128.9 189.6-135.4 265.5-124.3 12.8 1.9 22.8 11.9 24.6 24.6 11.1 75.9 4.6 189.4-124.3 265.5l0 95c0 16.9-8.8 32.5-23.3 41.2l-88.2 52.9c-21.3 12.8-48.5-2.6-48.5-27.4L192 384c0-35.3-28.7-64-64-64l-.1 0zM400 160a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 class="text-[14px] font-semibold text-white">
+                    Boost Engagement
+                </h3>
+
+                <p class="text-[12px] text-muted leading-relaxed mt-1">
+                    Increase views, audience reach, likes, and interaction on your videos.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Card -->
+        <div class="card rounded-2xl p-5 flex items-start gap-4 min-h-[110px]">
+
+            <div class="w-11 h-11 min-w-[44px] rounded-xl bg-[#1a1d27] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">
+                    <path fill="rgb(177, 151, 252)" d="M120 56c0-30.9 25.1-56 56-56l24 0c17.7 0 32 14.3 32 32l0 448c0 17.7-14.3 32-32 32l-32 0c-29.8 0-54.9-20.4-62-48-.7 0-1.3 0-2 0-44.2 0-80-35.8-80-80 0-18 6-34.6 16-48-19.4-14.6-32-37.8-32-64 0-30.9 17.6-57.8 43.2-71.1-7.1-12-11.2-26-11.2-40.9 0-44.2 35.8-80 80-80l0-24zm272 0l0 24c44.2 0 80 35.8 80 80 0 15-4.1 29-11.2 40.9 25.7 13.3 43.2 40.1 43.2 71.1 0 26.2-12.6 49.4-32 64 10 13.4 16 30 16 48 0 44.2-35.8 80-80 80-.7 0-1.3 0-2 0-7.1 27.6-32.2 48-62 48l-32 0c-17.7 0-32-14.3-32-32l0-448c0-17.7 14.3-32 32-32l24 0c30.9 0 56 25.1 56 56z"/>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 class="text-[14px] font-semibold text-white">
+                    Smart System
+                </h3>
+
+                <p class="text-[12px] text-muted leading-relaxed mt-1">
+                    Advanced verification system that checks completed engagement automatically.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Card -->
+        <div class="card rounded-2xl p-5 flex items-center gap-4 min-h-[90px] opacity-70">
+
+            <div class="w-11 h-11 min-w-[44px] rounded-xl bg-[#1a1d27] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="16" viewBox="0 0 576 512">
+                    <path fill="rgb(177, 151, 252)" d="M0 336c0 79.5 64.5 144 144 144l304 0c70.7 0 128-57.3 128-128 0-51.6-30.5-96.1-74.5-116.3 6.7-13.1 10.5-28 10.5-43.7 0-53-43-96-96-96-17.7 0-34.2 4.8-48.4 13.1-24.1-45.8-72.2-77.1-127.6-77.1-79.5 0-144 64.5-144 144 0 8 .7 15.9 1.9 23.5-56.9 19.2-97.9 73.1-97.9 136.5z"/>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 class="text-[14px] font-semibold text-white">
+                    24 Hours Online
+                </h3>
+            </div>
+
+        </div>
+
+        <!-- Card -->
+        <div class="card rounded-2xl p-5 flex items-center gap-4 min-h-[90px] opacity-70">
+
+            <div class="w-11 h-11 min-w-[44px] rounded-xl bg-[#1a1d27] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="16" viewBox="0 0 576 512">
+                    <path fill="rgb(177, 151, 252)" d="M224 8a120 120 0 1 1 0 240 120 120 0 1 1 0-240zM194.3 304l59.4 0c3.9 0 7.9 .1 11.8 .4-16.2 28.2-25.5 60.8-25.5 95.6 0 41.8 13.4 80.5 36 112L45.7 512C29.3 512 16 498.7 16 482.3 16 383.8 95.8 304 194.3 304zM288 400a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-80c-8.8 0-16 7.2-16 16l0 64c0 8.8 7.2 16 16 16l48 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-32 0 0-48c0-8.8-7.2-16-16-16z"/>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 class="text-[14px] font-semibold text-white">
+                    Work Any Time
+                </h3>
+            </div>
+
+        </div>
+
+        <!-- Extra Card -->
+        <div class="card rounded-2xl p-5 flex items-center gap-4 min-h-[90px] opacity-70">
+
+            <div class="w-11 h-11 min-w-[44px] rounded-xl bg-[#1a1d27] flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">
+                    <path fill="rgb(177, 151, 252)" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0z"/>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 class="text-[14px] font-semibold text-white">
+                    Fast Community Support
+                </h3>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- Dashboard mockup 
+        <section class="px-4 max-w-[1100px] mx-auto mt-8">
+            <div class="dashboard-frame rounded-[20px] p-1.5 sm:p-2">
+                <div class="bg-[#0f1117] rounded-[16px] overflow-hidden">
+                    <img src="/public/dashboard.png" alt="Dashboard" class="w-full h-auto">
+                </div>
+            </div>
+        </section>-->
+
+        <!-- Clients waiting -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-28 text-center">
+            <h2 class="text-[28px] sm:text-[34px] font-bold tracking-[-0.01em]">Get real views and follow while you are on a short break</h2>
+            <p class="text-muted text-[14px] mt-1">Non stop YouTube promotion</p>
+            
+            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10">
+
+                <div class="w-12 h-12 rounded-xl bg-[#151821] border border-[#1e212c] opacity-30"></div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-white flex items-center justify-center icon-glow">
+                   <svg xmlns="http://www.w3.org/2000/svg" height="25" width="30" viewBox="0 0 576 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="rgb(177, 151, 252)" d="M549.7 124.1C543.5 100.4 524.9 81.8 501.4 75.5 458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5C51.2 81.8 32.7 100.4 26.4 124.1 15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8 42.6 11.5 213.4 11.5 213.4 11.5s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6l0-162.4 142.7 81.2-142.7 81.2z"/></svg>    </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#2AABEE] flex items-center justify-center icon-glow">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="25" width="25" viewBox="0 0 448 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="rgb(255, 255, 255)" d="M91.2 36.9c-12.4-6.8-27.4-6.5-39.6 .7S32 57.9 32 72l0 368c0 14.1 7.5 27.2 19.6 34.4s27.2 7.5 39.6 .7l336-184c12.8-7 20.8-20.5 20.8-35.1s-8-28.1-20.8-35.1l-336-184z"/></svg>  </div>
+             
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#9146FF] flex items-center justify-center icon-glow">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="rgb(255, 255, 255)" d="M128 320L24.5 320c-24.9 0-40.2-27.1-27.4-48.5L50 183.3C58.7 168.8 74.3 160 91.2 160l95 0c76.1-128.9 189.6-135.4 265.5-124.3 12.8 1.9 22.8 11.9 24.6 24.6 11.1 75.9 4.6 189.4-124.3 265.5l0 95c0 16.9-8.8 32.5-23.3 41.2l-88.2 52.9c-21.3 12.8-48.5-2.6-48.5-27.4L192 384c0-35.3-28.7-64-64-64l-.1 0zM400 160a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/></svg>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-[#0f1117] border border-[#2a2e3a] flex items-center justify-center icon-glow">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 0l2.8 8.6H24l-7.4 5.4 2.8 8.6L12 17.2 4.6 22.6l2.8-8.6L0 8.6h9.2z"/></svg>
+                </div>
+                <div class="w-[52px] h-[52px] rounded-2xl bg-green-500 flex items-center justify-center icon-glow">
+                   <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="rgb(255, 255, 255)" d="M0 240c0 54.4 19.3 104.6 51.9 144.9L3.1 474.3c-2 3.7-3.1 7.9-3.1 12.2 0 14.1 11.4 25.5 25.5 25.5 4 0 7.8-.6 11.5-2.1L153.4 460c31.4 12.9 66.1 20 102.6 20 141.4 0 256-107.5 256-240S397.4 0 256 0 0 107.5 0 240zM94 407.9c9.3-17.1 7.4-38.1-4.8-53.2-26.1-32.3-41.2-71.9-41.2-114.7 0-103.2 90.2-192 208-192s208 88.8 208 192-90.2 192-208 192c-30.2 0-58.7-5.9-84.3-16.4-11.9-4.9-25.3-4.8-37.1 .3L76 440.9 94 407.9zM144 272a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm144-32a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm80 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>     </div>
+                <div class="w-12 h-12 rounded-xl bg-[#151821] border border-[#1e212c] opacity-30"></div>
+
+            </div>
+
+            <div class="mt-8 inline-flex items-center gap-2 bg-[#151821] border border-[#1e212c] rounded-lg px-4 py-2">
+                <span class="text-white font-medium">+10%</span>
+            </div>
+            <p class="text-muted text-[13px] mt-2">total of working</p>
+        </section>
+
+    <!-- Effective EXSUB Promotion Section -->
+<section class="px-4 max-w-[1200px] mx-auto mt-32">
+    <h2 class="text-[28px] sm:text-[36px] font-bold text-center leading-tight tracking-[-0.01em]">
+        Powerful YouTube Promotion<br>and Real Community Engagement
+    </h2>
+
+    <div class="grid lg:grid-cols-3 gap-4 mt-12">
+
+        <!-- Channel Growth -->
+        <div class="card card-hover rounded-[20px] p-6 lg:row-span-1">
+            <h3 class="text-[18px] font-semibold">Channel Growth Tasks</h3>
+            <p class="text-muted text-[13px] leading-relaxed mt-2">
+                Real members helping creators grow with subscriptions, watch time, likes, comments, and active engagement.
+            </p>
+
+            <div class="mt-6 bg-[#0a0b0f] rounded-xl p-4 border border-[#1a1d27]">
+                <div class="text-[11px] text-[#8b5cf6] mb-3">
+                    EXSUB Tasks
+                </div>
+
+                <div class="flex gap-2 mb-3">
+                    <div class="flex-1 h-8 bg-[#151821] rounded-lg flex items-center justify-center">
+                        <span class="text-[10px] text-red-500 font-semibold">YouTube</span>
+                    </div>
+
+                    <div class="flex-1 h-8 bg-[#151821] rounded-lg flex items-center justify-center">
+                        <span class="text-[10px] text-[#8b5cf6]">EXSUB</span>
+                    </div>
+
+                    <div class="flex-1 h-8 bg-[#151821] rounded-lg flex items-center justify-center">
+                        <span class="text-[10px] text-green-400">Active</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="h-8 bg-[#151821] rounded-lg px-3 flex items-center text-[11px] text-muted">
+                        Subscribe to Channel
+                    </div>
+
+                    <div class="h-8 bg-[#151821] rounded-lg px-3 flex items-center text-[11px] text-muted">
+                        Watch 5 Minutes
+                    </div>
+
+                    <div class="h-8 bg-[#151821] rounded-lg px-3 flex items-center text-[11px] text-muted">
+                        Like & Comment
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Tracking -->
+        <div class="card card-hover rounded-[20px] p-6 lg:col-span-2">
+            <h3 class="text-[18px] font-semibold">Performance Tracking</h3>
+
+            <p class="text-muted text-[13px] leading-relaxed mt-2 max-w-[600px]">
+                Track your channel performance with community engagement, ranking growth, watch time progress, and audience interaction.
+            </p>
+
+            <div class="text-[12px] text-[#8b5cf6] mt-4">
+                Real engagement from active EXSUB members
+            </div>
+
+            <div class="mt-5 bg-[#0a0b0f] rounded-xl p-4 border border-[#1a1d27]">
+
+                <div class="flex items-center justify-between text-[10px] text-muted mb-3">
+                    <span>Channel Activity</span>
+
+                    <div class="flex gap-6">
+                        <span>Week 1</span>
+                        <span>Week 2</span>
+                        <span>Week 3</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+
+                    <div class="flex items-center gap-3 bg-[#151821] rounded-lg p-2.5">
+                        <div class="w-4 h-4 rounded-full bg-red-500"></div>
+
+                        <span class="text-[12px] flex-1">
+                            Gaming Channel
+                        </span>
+
+                        <div class="flex gap-3 text-[11px]">
+                            <span class="text-muted">
+                                120 <span class="text-green-500">▲ 40</span>
+                            </span>
+
+                            <span class="text-muted">
+                                260 <span class="text-green-500">▲ 90</span>
+                            </span>
+
+                            <span class="text-muted">
+                                540 <span class="text-green-500">▲ 280</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 bg-[#151821] rounded-lg p-2.5">
+                        <div class="w-4 h-4 rounded-full bg-[#8b5cf6]"></div>
+
+                        <span class="text-[12px] flex-1">
+                            Tutorial Channel
+                        </span>
+
+                        <div class="flex gap-3 text-[11px]">
+                            <span class="text-muted">
+                                85 <span class="text-green-500">▲ 20</span>
+                            </span>
+
+                            <span class="text-muted">
+                                180 <span class="text-green-500">▲ 75</span>
+                            </span>
+
+                            <span class="text-muted">
+                                420 <span class="text-green-500">▲ 210</span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Friendly -->
+        <div class="card card-hover rounded-[20px] p-6 lg:col-span-3">
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <div>
+                    <h3 class="text-[18px] font-semibold">
+                        Mobile Friendly Community
+                    </h3>
+
+                    <p class="text-muted text-[13px] leading-relaxed mt-2 max-w-[400px]">
+                        Use EXSUB Group from any device and complete tasks easily. Watch videos, engage with creators, earn credits, and grow together with the community.
+                    </p>
+
+                    <div class="text-[12px] text-[#8b5cf6] mt-16">
+                        Fast, simple and creator-focused system
+                    </div>
+                </div>
+
+              <div class="relative flex justify-center md:justify-end mt-6 md:mt-0">
+    <div class="w-full max-w-[220px] md:absolute md:right-0 md:top-0">
+
+                        <div class="bg-[#1a1d27] rounded-[24px] p-2 border border-[#2a2e3a] shadow-2xl">
+
+                            <div class="bg-[#0a0b0f] rounded-[20px] overflow-hidden">
+
+                                <div class="h-[340px] p-3">
+
+                                    <div class="flex items-center justify-between text-[10px] text-muted mb-3">
+                                        <span>9:41</span>
+
+                                        <div class="flex gap-1">
+                                            <div class="w-3 h-1.5 bg-white rounded-sm"></div>
+                                            <div class="w-3 h-1.5 bg-white rounded-sm"></div>
+                                            <div class="w-3 h-1.5 bg-white rounded-sm"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#151821] rounded-xl p-3">
+
+                                        <div class="flex items-start gap-2">
+
+                                            <div class="w-8 h-8 rounded-lg bg-[#8b5cf6] flex items-center justify-center text-[10px] font-bold">
+                                                EX
+                                            </div>
+
+                                            <div class="flex-1">
+
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-[11px] font-medium">
+                                                        Great Progress!
+                                                    </span>
+
+                                                    <span class="text-[9px] text-muted">
+                                                        1 hour ago
+                                                    </span>
+                                                </div>
+
+                                                <div class="flex text-[#f59e0b] text-[9px] my-1">
+                                                    ★★★★★
+                                                </div>
+
+                                                <p class="text-[9px] text-muted leading-snug">
+                                                    EXSUB helped me increase watch time and gain real engagement from active creators.
+                                                </p>
+
+                                                <p class="text-[9px] text-muted leading-snug mt-1">
+                                                    The tasks are simple, fast, and perfect for growing new YouTube channels.
+                                                </p>
+
+                                                <p class="text-[9px] text-muted mt-1">
+                                                    EXSUB Member
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mt-3 flex items-center justify-between text-[9px]">
+                                        <span class="text-white">Trending Tasks</span>
+                                        <span class="text-muted">Latest</span>
+                                        <span class="text-muted">Top Channels</span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+        <!-- EXSUB Benefits -->
+<section class="px-4 max-w-[1200px] mx-auto mt-32">
+
+    <h2 class="text-[28px] sm:text-[34px] font-bold text-center">
+        Why Choose EXSUB
+    </h2>
+
+    <p class="text-muted text-[13px] text-center mt-2 max-w-[500px] mx-auto">
+        EXSUB Group helps creators grow faster with real engagement, active members, and powerful YouTube promotion tools.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-4 mt-10">
+
+        <!-- Real Members -->
+        <div class="card rounded-[20px] p-6">
+
+            <h3 class="text-[15px] font-semibold">
+                Real Members Only
+            </h3>
+
+            <p class="text-muted text-[12px] leading-relaxed mt-2">
+                Every task is completed by real EXSUB members using real devices and active YouTube accounts.
+            </p>
+
+            <div class="flex -space-x-2 mt-8">
+
+                <div class="w-10 h-10 rounded-full border-2 border-[#12141c] bg-[#8b5cf6] flex items-center justify-center text-[11px] font-bold">
+                    EX
+                </div>
+
+                <div class="w-10 h-10 rounded-full border-2 border-[#12141c] bg-red-500 flex items-center justify-center text-[11px] font-bold">
+                    YT
+                </div>
+
+                <div class="w-10 h-10 rounded-full border-2 border-[#12141c] bg-green-500 flex items-center justify-center text-[11px] font-bold">
+                    GM
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Easy Interface -->
+        <div class="card rounded-[20px] p-6">
+
+            <h3 class="text-[15px] font-semibold">
+                Simple & Easy System
+            </h3>
+
+            <p class="text-muted text-[12px] leading-relaxed mt-2">
+                Complete tasks, earn credits, and promote your channel with a fast and user-friendly dashboard.
+            </p>
+
+            <div class="mt-6 space-y-2">
+
+                <div class="bg-[#0a0b0f] rounded-lg px-3 py-2 text-[11px] flex items-center gap-2 border border-[#1a1d27] w-fit">
+                    <div class="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                    Create Account
+                </div>
+
+                <div class="bg-[#0a0b0f] rounded-lg px-3 py-2 text-[11px] flex items-center gap-2 border border-[#1a1d27] w-fit ml-6">
+                    <div class="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                    Complete Tasks
+                </div>
+
+                <div class="bg-[#0a0b0f] rounded-lg px-3 py-2 text-[11px] flex items-center gap-2 border border-[#1a1d27] w-fit ml-12">
+                    <div class="w-2 h-2 rounded-full bg-[#8b5cf6]"></div>
+                    Grow Your Channel
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Fast Growth -->
+        <div class="card rounded-[20px] p-6">
+
+            <h3 class="text-[15px] font-semibold">
+                Fast Channel Growth
+            </h3>
+
+            <p class="text-muted text-[12px] leading-relaxed mt-2">
+                Start receiving engagement instantly after launching your campaign and reach more viewers faster.
+            </p>
+
+            <div class="mt-6 flex justify-center">
+
+                <div class="relative w-24 h-24">
+
+                    <svg class="transform -rotate-90 w-24 h-24">
+
+                        <circle 
+                            cx="48" 
+                            cy="48" 
+                            r="40" 
+                            stroke="#1e212c" 
+                            stroke-width="8" 
+                            fill="none"
+                        />
+
+                        <circle 
+                            cx="48" 
+                            cy="48" 
+                            r="40" 
+                            stroke="#8b5cf6" 
+                            stroke-width="8" 
+                            fill="none" 
+                            stroke-dasharray="251" 
+                            stroke-dashoffset="40" 
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                    <div class="absolute inset-0 flex items-center justify-center text-[18px] font-bold">
+                        85%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16 max-w-[900px] mx-auto">
+
+        <div>
+            <div class="text-[32px] font-bold">
+                250K+
+            </div>
+
+            <div class="text-muted text-[13px] mt-1">
+                Daily Video Views
+            </div>
+        </div>
+
+        <div>
+
+            <div class="flex items-baseline gap-3">
+
+                <div class="text-[32px] font-bold">
+                    50K+
+                </div>
+
+                <div class="text-[12px] text-green-500 bg-green-500/10 px-2 py-1 rounded">
+                    +1.2K
+                </div>
+
+            </div>
+
+            <div class="text-muted text-[13px] mt-1">
+                Active Members
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="text-[32px] font-bold">
+                3M+
+            </div>
+
+            <div class="text-muted text-[13px] mt-1">
+                Completed Tasks
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- Final CTA -->
+        <section class="px-4 max-w-[1200px] mx-auto mt-20 mb-20 p-[24px]">
+            <div class="relative overflow-hidden rounded-[28px]" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);">
+                <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 50%);"></div>
+                <div class="relative px-8 py-14 sm:py-16 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center mb-5">
+                      <!-- Use your own logo from resources -->
+        <img src="images/logo.svg" alt="Exsub Group Logo" class="w-6 h-6 object-contain"/>
+                    </div>
+                    <h2 class="text-[28px] sm:text-[32px] font-bold leading-tight">Don't wait to join<br>and get rid of fake groups</h2>
+                    <p class="text-white/80 text-[14px] mt-3 max-w-[420px] mx-auto">Join us and promote your youtube channel 100% more faster than others youtube promotion groups</p>
+                    <button class="bg-white text-[#5b21b6] font-medium text-[14px] px-6 py-[10px] rounded-full mt-6 hover:bg-gray-100 transition">
+                       Create Account Now
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 text-[12px] text-muted px-2">
+                <div>© 2026 Exsub Group</div>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-white transition">Get Help</a>
+                    <a href="#" class="hover:text-white transition">Find Us On Social Media</a>
+                </div>
+                <div class="flex items-center gap-1.5 cursor-pointer hover:text-white transition">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>English</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Button interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (btn.textContent.includes('Launch') || btn.textContent.includes('Sign Up') || btn.textContent.includes('Add an order') || btn.textContent.includes('Compose')) {
+                    e.preventDefault();
+                    btn.style.transform = 'scale(0.97)';
+                    setTimeout(() => btn.style.transform = '', 150);
+                }
+            });
+        });
+
+        // Parallax effect for dashboard
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const dashboard = document.querySelector('.dashboard-frame');
+            if (dashboard && scrolled < 1000) {
+                dashboard.style.transform = `translateY(${scrolled * 0.05}px)`;
+            }
+        });
+    </script>
+    <script>
+  const menuBtn = document.getElementById("menuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
+</body>
+</html>
