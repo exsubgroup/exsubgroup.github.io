@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EXSUB Group - Login</title>
+
+<link rel="icon" href="images/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg:#050508;
+  --card:#12141c;
+  --border:#1e212c;
+  --purple:#7c3aed;
+}
+
+*{
+  font-family:Inter,sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:white;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at top, rgba(124,58,237,.18), transparent 35%),
+    radial-gradient(circle at bottom, rgba(124,58,237,.12), transparent 40%);
+  pointer-events:none;
+}
+
+.glass-nav{
+  background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.card{
+  background:linear-gradient(180deg,#151821 0%,#101219 100%);
+  border:1px solid var(--border);
+}
+
+.input{
+  width:100%;
+  padding:13px 15px;
+  border-radius:14px;
+  background:#0f1117;
+  border:1px solid #1e212c;
+  color:white;
+  outline:none;
+  transition:.2s;
+}
+
+.input:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,.15);
+}
+
+.btn-purple{
+  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+  box-shadow:0 0 25px rgba(124,58,237,.35);
+}
+
+.btn-purple:hover{
+  transform:translateY(-1px);
+}
+
+.text-muted{
+  color:#8a8f9e;
+}
+
+.password-box{
+  position:relative;
+}
+
+.password-box i{
+  position:absolute;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#8a8f9e;
+  cursor:pointer;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2">
+
+      <img src="images/logo.svg" class="w-6 h-6 object-contain">
+
+      <span class="font-semibold text-[17px]">
+        EXSUB Group
+      </span>
+
+    </a>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-7 text-[13px]">
+
+      <a href="/members" class="hover:text-gray-200 transition">
+        Members
+      </a>
+
+      <a href="/how-to-work" class="hover:text-gray-200 transition">
+        How to Work
+      </a>
+
+      <a href="/browser-extension" class="hover:text-gray-200 transition">
+        Browser Extension
+      </a>
+
+    </div>
+
+    <!-- Right Side -->
+    <div class="flex items-center gap-3">
+
+      <a href="signup.html"
+         class="hidden sm:block text-[13px] hover:text-gray-200 transition">
+        Create Account
+      </a>
+
+      <a href="login.html"
+         class="bg-white text-black text-[13px] font-medium px-4 py-[8px] rounded-full hover:bg-gray-100 transition">
+        Log In
+      </a>
+
+      <!-- Mobile Button -->
+      <button id="menuBtn" class="md:hidden text-white">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="w-6 h-6"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
+
+        </svg>
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu"
+       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-5 flex flex-col gap-5 text-[14px]">
+
+    <a href="/members">Members</a>
+
+    <a href="/how-to-work">How to Work</a>
+
+    <a href="/browser-extension">Browser Extension</a>
+
+    <div class="border-t border-white/10 pt-4 flex flex-col gap-3">
+
+      <a href="signup.html"
+         class="btn-purple text-center py-3 rounded-full font-medium">
+        Create Account
+      </a>
+
+      <a href="login.html"
+         class="bg-white text-center text-black py-3 rounded-full font-medium">
+        Log In
+      </a>
+
+    </div>
+
+  </div>
+
+</nav>
+
+
+<!-- LOGIN SECTION -->
+<section class="min-h-screen flex items-center justify-center px-4 pt-32 pb-14 relative z-10">
+
+  <div class="w-full max-w-[450px]">
+
+    <!-- Heading -->
+    <div class="text-center mb-8">
+
+      <img src="images/logo.svg"
+           class="w-14 h-14 mx-auto mb-5">
+
+      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight">
+        Welcome Back
+      </h1>
+
+      <p class="text-muted text-[14px] mt-3 max-w-[340px] mx-auto leading-relaxed">
+        Login to your EXSUB Group account and continue growing your YouTube channel.
+      </p>
+
+    </div>
+
+    <!-- Card -->
+    <div class="card rounded-[28px] p-6 sm:p-8">
+
+      <form class="space-y-5">
+
+        <!-- Username -->
+        <div>
+
+          <label class="text-[13px] text-gray-300 block mb-2">
+            Username
+          </label>
+
+          <input type="text"
+                 placeholder="Enter your username"
+                 class="input">
+
+        </div>
+
+        <!-- Password -->
+        <div>
+
+          <label class="text-[13px] text-gray-300 block mb-2">
+            Password
+          </label>
+
+          <div class="password-box">
+
+            <input type="password"
+                   id="password"
+                   placeholder="Enter your password"
+                   class="input">
+
+            <i id="togglePassword">
+              👁️
+            </i>
+
+          </div>
+
+        </div>
+
+        <!-- Remember -->
+        <div class="flex items-center justify-between text-[13px]">
+
+          <label class="flex items-center gap-2 text-muted">
+
+            <input type="checkbox" class="accent-purple-600">
+
+            Remember Me
+
+          </label>
+
+          <a href="#"
+             class="text-[#8b5cf6] hover:text-[#a78bfa] transition">
+            Forgot Password?
+          </a>
+
+        </div>
+
+        <!-- Button -->
+        <button type="submit"
+                class="btn-purple w-full text-white py-[13px] rounded-[14px] font-medium transition">
+
+          Log In
+
+        </button>
+
+      </form>
+
+      <!-- Bottom -->
+      <div class="text-center mt-6">
+
+        <p class="text-[13px] text-muted">
+
+          Don’t have an account?
+
+          <a href="signup.html"
+             class="text-[#8b5cf6] hover:text-[#a78bfa] transition">
+            Create Account
+          </a>
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+
+menuBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("hidden");
+});
+
+/* PASSWORD TOGGLE */
+const togglePassword = document.getElementById("togglePassword");
+const password = document.getElementById("password");
+
+togglePassword.addEventListener("click", () => {
+
+  if(password.type === "password"){
+    password.type = "text";
+    togglePassword.innerHTML = "🙈";
+  }else{
+    password.type = "password";
+    togglePassword.innerHTML = "👁️";
+  }
+
+});
+</script>
+
+</body>
+</html>
