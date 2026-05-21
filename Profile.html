@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile</title>
+
+<link rel="icon" type="image/svg+xml" href="images/logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+    const username = localStorage.getItem("username");
+
+    if (!username || username.trim() === "") {
+        window.location.href = "login.html";
+    }
+
+    document.getElementById("navUsername").innerText = username;
+</script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --card2:#101219;
+    --border:#1e212c;
+    --purple:#7c3aed;
+    --purple2:#8b5cf6;
+    --text-muted:#8a8f9e;
+}
+
+*{
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.glass-nav{
+        background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: white;
+}
+
+.card{
+    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    border:1px solid var(--border);
+    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset;
+}
+
+.card-hover{
+    transition:0.3s ease;
+}
+
+.card-hover:hover{
+    transform:translateY(-3px);
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.text-muted{
+    color:var(--text-muted);
+}
+
+.btn-purple{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    box-shadow:0 0 25px rgba(124,58,237,0.35);
+}
+
+.btn-purple:hover{
+    transform:translateY(-1px);
+}
+
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.profile-menu{
+    display:none;
+}
+
+.profile-menu.show{
+    display:block;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+
+        <!-- LOGO -->
+
+        <div class="flex items-center gap-2">
+
+            <img src="images/logo.svg" class="w-7 h-7">
+
+            <span class="font-semibold text-[17px]">
+                Exsub Group
+            </span>
+
+        </div>
+
+        <!-- MENU -->
+
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+
+            <a href="#" class="text-white font-medium">
+                Dashboard
+            </a>
+
+            <a href="#" class="text-white transition">
+                Members
+            </a>
+
+            <a href="#" class="text-white transition">
+                Tasks
+            </a>
+
+            <a href="#" class="text-white transition">
+                Groups
+            </a>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="flex items-center gap-3">
+
+            <!-- NOTIFICATION -->
+
+            <button class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center hover:border-purple-500 transition">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 24a2.4 2.4 0 0 0 2.4-2.4H9.6A2.4 2.4 0 0 0 12 24zm6-7.2v-6c0-3.1-1.7-5.7-4.8-6.5V3.6a1.2 1.2 0 1 0-2.4 0v.7C7.7 5.1 6 7.7 6 10.8v6L3.6 19.2v1.2h16.8v-1.2L18 16.8z"/>
+                </svg>
+
+            </button>
+
+            <!-- PROFILE -->
+
+            <div class="relative">
+
+                <button onclick="toggleProfileMenu()" class="flex items-center gap-2 bg-[#161922] border border-[#252936] hover:border-purple-500 transition px-2 py-1.5 rounded-full">
+
+                    <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+
+                    <span class="hidden sm:block text-[13px]">
+                        Mazhar
+                    </span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="white" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+
+                </button>
+
+                <!-- DROPDOWN -->
+
+                <div id="profileDropdown" class="profile-menu absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card">
+
+                    <div class="p-4 border-b border-[#232632]">
+
+                        <div class="flex items-center gap-3">
+
+                            <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+
+                            <div>
+
+                                <h3 class="font-semibold text-sm">
+                                    Mazhar Saleem
+                                </h3>
+
+                                <p class="text-muted text-xs">
+                                    ID #EX24571
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="py-2">
+
+                        <a href="#" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            My Profile
+                        </a>
+
+                        <a href="#" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            Settings
+                        </a>
+
+                        <a href="#" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            My Tasks
+                        </a>
+
+                        <a href="#" class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
+                            Logout
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+
+<main class="relative z-10 pt-32 pb-20 px-4">
+
+<div class="max-w-[1200px] mx-auto">
+
+    <!-- PROFILE HEADER -->
+
+    <div class="card rounded-3xl p-6 lg:p-8">
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+
+            <!-- LEFT -->
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+
+                <div class="relative">
+
+                    <img src="https://i.pravatar.cc/150"
+                    class="w-28 h-28 rounded-3xl border border-purple-500">
+
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-green-500 border-4 border-[#101219]"></div>
+
+                </div>
+
+                <div>
+
+                    <h1 class="text-3xl font-bold gradient-text">
+                        Mazhar Saleem
+                    </h1>
+
+                    <div class="flex flex-wrap items-center gap-4 mt-3">
+
+                        <div class="text-sm">
+                            Member ID:
+                            <span class="text-white">
+                                #EX24571
+                            </span>
+                        </div>
+
+                        <div class="text-sm">
+                            Joined:
+                            <span class="text-white">
+                                19 May 2026
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <p class="text-muted text-sm mt-4 max-w-[600px] leading-relaxed">
+                        Active Exsub Group member focused on YouTube growth,
+                        audience engagement, subscriber exchange and video promotion.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button class="btn-purple px-6 py-3 rounded-full text-sm font-medium">
+                Edit Profile
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-7">
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Today Tasks Done
+            </div>
+
+            <h2 class="text-3xl font-bold mt-3">
+                12
+            </h2>
+
+        </div>
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Total Tasks
+            </div>
+
+            <h2 class="text-3xl font-bold mt-3">
+                348
+            </h2>
+
+        </div>
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Total Earnings
+            </div>
+
+            <h2 class="text-3xl font-bold mt-3">
+                $245
+            </h2>
+
+        </div>
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Last Active
+            </div>
+
+            <h2 class="text-lg font-bold mt-3">
+                2 Hours Ago
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- BIG SECTIONS -->
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+
+        <!-- LEFT -->
+
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- GROUPS -->
+
+            <div class="card rounded-3xl p-6">
+
+                <div class="flex items-center justify-between mb-6">
+
+                    <h2 class="text-xl font-semibold">
+                        My Groups
+                    </h2>
+
+                    <button class="text-sm text-purple-400">
+                        View All
+                    </button>
+
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Subscribers Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Exchange real subscribers
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                🔥
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Video Boost Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Increase views and reach
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                🚀
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Watch Time Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Improve watch hours
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                ⏱️
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Engagement Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Likes and comments support
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                💜
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTIVITY -->
+
+            <div class="card rounded-3xl p-6">
+
+                <h2 class="text-xl font-semibold mb-6">
+                    Recent Activity
+                </h2>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center justify-between border-b border-[#1f2330] pb-4">
+
+                        <div>
+
+                            <h4 class="font-medium">
+                                Completed Subscriber Task
+                            </h4>
+
+                            <p class="text-muted text-sm mt-1">
+                                You subscribed to 5 channels
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm text-muted">
+                            2h ago
+                        </span>
+
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-[#1f2330] pb-4">
+
+                        <div>
+
+                            <h4 class="font-medium">
+                                Earned Reward
+                            </h4>
+
+                            <p class="text-muted text-sm mt-1">
+                                You earned 20 points
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm text-muted">
+                            5h ago
+                        </span>
+
+                    </div>
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+
+                            <h4 class="font-medium">
+                                Joined New Group
+                            </h4>
+
+                            <p class="text-muted text-sm mt-1">
+                                Video Promotion Group
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm text-muted">
+                            Yesterday
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+
+        <div class="space-y-6">
+
+            <!-- LEVEL -->
+
+            <div class="card rounded-3xl p-6">
+
+                <h2 class="text-lg font-semibold">
+                    Member Level
+                </h2>
+
+                <div class="mt-5">
+
+                    <div class="flex justify-between mb-2 text-sm">
+
+                        <span class="text-muted">
+                            Level 12
+                        </span>
+
+                        <span>
+                            72%
+                        </span>
+
+                    </div>
+
+                    <div class="w-full h-3 rounded-full bg-[#1a1d27] overflow-hidden">
+
+                        <div class="h-full w-[72%] bg-gradient-to-r from-purple-500 to-purple-400 rounded-full"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACHIEVEMENTS -->
+
+            <div class="card rounded-3xl p-6">
+
+                <h2 class="text-lg font-semibold mb-5">
+                    Achievements
+                </h2>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                            🏆
+                        </div>
+
+                        <div>
+
+                            <h4 class="font-medium text-sm">
+                                Top Contributor
+                            </h4>
+
+                            <p class="text-muted text-xs">
+                                Completed 300+ tasks
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                            ⭐
+                        </div>
+
+                        <div>
+
+                            <h4 class="font-medium text-sm">
+                                Trusted Member
+                            </h4>
+
+                            <p class="text-muted text-xs">
+                                Active for 6 months
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer class="relative z-10 border-t border-[#1e212c] mt-20">
+
+    <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+
+        <div>
+
+            <div class="flex items-center gap-2">
+
+                <img src="images/logo.svg" class="w-6 h-6">
+
+                <span class="font-semibold">
+                    Exsub Group
+                </span>
+
+            </div>
+
+            <p class="text-muted text-sm mt-3">
+                Grow together with creators worldwide.
+            </p>
+
+        </div>
+
+        <div class="flex gap-6 text-sm text-muted">
+
+            <a href="#" class="hover:text-white transition">
+                Privacy
+            </a>
+
+            <a href="#" class="hover:text-white transition">
+                Terms
+            </a>
+
+            <a href="#" class="hover:text-white transition">
+                Support
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<script>
+
+function toggleProfileMenu(){
+    document
+    .getElementById('profileDropdown')
+    .classList
+    .toggle('show');
+}
+
+window.onclick=function(e){
+
+    if(!e.target.closest('#profileDropdown') &&
+       !e.target.closest('button')){
+
+        document
+        .getElementById('profileDropdown')
+        .classList
+        .remove('show');
+    }
+}
+
+</script>
+
+
+
+</body>
+</html>
