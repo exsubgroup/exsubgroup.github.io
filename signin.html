@@ -475,13 +475,43 @@ window.addEventListener("load", async () => {
           window.location.href =
             "profile.html";
 
-        }else{
+       }else{
 
-          /* REMOVE BLOCKED LOGIN */
-          localStorage.removeItem("username");
-          localStorage.removeItem("password");
+  localStorage.removeItem("username");
+  localStorage.removeItem("password");
+  localStorage.removeItem("usercode");
+  localStorage.removeItem("status");
 
-        }
+  Swal.fire({
+    icon: "error",
+    title: "Account Banned",
+    html: `
+      <div style="font-size:14px; line-height:1.7;">
+        You are banned from the EXSUB Group.<br><br>
+        Please contact admin on WhatsApp.
+      </div>
+    `,
+    background: "#12141c",
+    color: "#fff",
+    confirmButtonColor: "#22c55e",
+    confirmButtonText: "Contact Admin",
+    showCancelButton: true,
+    cancelButtonText: "Close",
+    cancelButtonColor: "#2a2d38"
+  }).then((result) => {
+
+    if(result.isConfirmed){
+
+      window.open(
+        "https://wa.me/923118937287",
+        "_blank"
+      );
+
+    }
+
+  });
+
+}
 
       }else{
 
@@ -529,7 +559,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Username must be at least 7 characters",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
     return;
@@ -544,7 +575,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Username cannot be more than 20 characters",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
     return;
@@ -559,7 +591,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Username cannot contain spaces",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
     return;
@@ -576,7 +609,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Password must be at least 7 characters",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
     return;
@@ -591,7 +625,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Password cannot be more than 20 characters",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
     return;
@@ -606,7 +641,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Password cannot contain spaces",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
     return;
@@ -642,23 +678,53 @@ loginForm.addEventListener("submit", async (e) => {
     if(data.status === "success"){
 
       /* BLOCK CHECK */
-      if(data.accountStatus !== "Active"){
+    if(data.accountStatus !== "Active"){
 
-        Swal.fire({
-          icon: "error",
-          title: "Account Blocked",
-          text: "Your account has been blocked. Contact support.",
-          background: "#12141c",
-          color: "#fff",
-          confirmButtonColor: "#7c3aed"
-        });
+  Swal.fire({
+    icon: "error",
+    title: "Account Banned",
+    html: `
+      <div style="font-size:14px; line-height:1.7;">
+        You are banned from the EXSUB Group.<br><br>
+        Please contact admin on WhatsApp for support.
+      </div>
+    `,
+    background: "#12141c",
+    color: "#fff",
+    confirmButtonColor: "#22c55e",
+    confirmButtonText: "Contact Admin",
+    showCancelButton: true,
+    cancelButtonText: "Close",
+      customClass: { popup: "rounded-popup"},
+    cancelButtonColor: "#2a2d38",
+    customClass: {
+      popup: 'rounded-[24px]'
+    }
+  }).then((result) => {
 
-        loginBtn.innerText = "Log In";
-        loginBtn.disabled = false;
+    if(result.isConfirmed){
 
-        return;
+      window.open(
+        "https://wa.me/923118937287",
+        "_blank"
+      );
 
-      }
+    }
+
+  });
+
+  /* REMOVE SAVED LOGIN */
+  localStorage.removeItem("username");
+  localStorage.removeItem("password");
+  localStorage.removeItem("usercode");
+  localStorage.removeItem("status");
+
+  loginBtn.innerText = "Log In";
+  loginBtn.disabled = false;
+
+  return;
+
+}
 
       /* SAVE LOGIN */
       if(rememberMe){
@@ -691,7 +757,8 @@ loginForm.addEventListener("submit", async (e) => {
         text: "Welcome back to EXSUB Group",
         background: "#12141c",
         color: "#fff",
-        confirmButtonColor: "#7c3aed"
+        confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
       }).then(() => {
 
         window.location.href =
@@ -707,7 +774,8 @@ loginForm.addEventListener("submit", async (e) => {
         text: data.message,
         background: "#12141c",
         color: "#fff",
-        confirmButtonColor: "#7c3aed"
+        confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
       });
 
     }
@@ -720,7 +788,8 @@ loginForm.addEventListener("submit", async (e) => {
       text: "Something went wrong",
       background: "#12141c",
       color: "#fff",
-      confirmButtonColor: "#7c3aed"
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup"}
     });
 
   }
