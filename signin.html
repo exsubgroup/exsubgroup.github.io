@@ -7,10 +7,15 @@
 <title>EXSUB Group - Login</title>
 
 <link rel="icon" href="images/logo.svg">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <script src="https://cdn.tailwindcss.com"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
+
 :root{
   --bg:#050508;
   --card:#12141c;
@@ -82,15 +87,17 @@ body::before{
   position:relative;
 }
 
-.password-box i{
+.eye-btn{
   position:absolute;
-  right:16px;
+  right:15px;
   top:50%;
   transform:translateY(-50%);
-  color:#8a8f9e;
   cursor:pointer;
-  font-size:14px;
+  font-size:18px;
+  color:#8a8f9e;
+  user-select:none;
 }
+
 </style>
 </head>
 
@@ -115,15 +122,15 @@ body::before{
     <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-7 text-[13px]">
 
-      <a href="/members" class="hover:text-gray-200 transition">
+      <a href="Members.html" class="hover:text-gray-200 transition">
         Members
       </a>
 
-      <a href="/how-to-work" class="hover:text-gray-200 transition">
+      <a href="HowtoWork.html" class="hover:text-gray-200 transition">
         How to Work
       </a>
 
-      <a href="/browser-extension" class="hover:text-gray-200 transition">
+      <a href="BrowserExtension.html" class="hover:text-gray-200 transition">
         Browser Extension
       </a>
 
@@ -137,7 +144,7 @@ body::before{
         Create Account
       </a>
 
-      <a href="login.html"
+      <a href="signin.html"
          class="bg-white text-black text-[13px] font-medium px-4 py-[8px] rounded-full hover:bg-gray-100 transition">
         Log In
       </a>
@@ -168,11 +175,11 @@ body::before{
   <div id="mobileMenu"
        class="hidden md:hidden mt-2 glass-nav rounded-2xl p-5 flex flex-col gap-5 text-[14px]">
 
-    <a href="/members">Members</a>
+    <a href="Members.html">Members</a>
 
-    <a href="/how-to-work">How to Work</a>
+    <a href="HowtoWork.html">How to Work</a>
 
-    <a href="/browser-extension">Browser Extension</a>
+    <a href="BrowserExtension.html">Browser Extension</a>
 
     <div class="border-t border-white/10 pt-4 flex flex-col gap-3">
 
@@ -181,7 +188,7 @@ body::before{
         Create Account
       </a>
 
-      <a href="login.html"
+      <a href="signin.html"
          class="bg-white text-center text-black py-3 rounded-full font-medium">
         Log In
       </a>
@@ -217,7 +224,7 @@ body::before{
     <!-- Card -->
     <div class="card rounded-[28px] p-6 sm:p-8">
 
-      <form class="space-y-5">
+      <form id="loginForm" class="space-y-5">
 
         <!-- Username -->
         <div>
@@ -227,8 +234,15 @@ body::before{
           </label>
 
           <input type="text"
+                 id="username"
                  placeholder="Enter your username"
-                 class="input">
+                 class="input"
+                 maxlength="20"
+                 required>
+
+          <p class="text-[11px] text-muted mt-2">
+            Username must be between 7 and 20 characters without spaces.
+          </p>
 
         </div>
 
@@ -244,13 +258,20 @@ body::before{
             <input type="password"
                    id="password"
                    placeholder="Enter your password"
-                   class="input">
+                   class="input pr-12"
+                   maxlength="20"
+                   required>
 
-            <i id="togglePassword">
+            <span id="togglePassword"
+                  class="eye-btn">
               👁️
-            </i>
+            </span>
 
           </div>
+
+          <p class="text-[11px] text-muted mt-2">
+            Password must be between 7 and 20 characters without spaces.
+          </p>
 
         </div>
 
@@ -259,7 +280,9 @@ body::before{
 
           <label class="flex items-center gap-2 text-muted">
 
-            <input type="checkbox" class="accent-purple-600">
+            <input type="checkbox"
+                   id="rememberMe"
+                   class="accent-purple-600">
 
             Remember Me
 
@@ -274,6 +297,7 @@ body::before{
 
         <!-- Button -->
         <button type="submit"
+                id="loginBtn"
                 class="btn-purple w-full text-white py-[13px] rounded-[14px] font-medium transition">
 
           Log In
@@ -305,29 +329,407 @@ body::before{
 </section>
 
 
+
 <script>
-const menuBtn = document.getElementById("menuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
+
+/* WEB APP URL */
+const WEB_APP_URL =
+"https://script.google.com/macros/s/AKfycbw4RFl8Au7jX1xqQ13ETfNoyuQVkRndM56fP3S6uB3XN3ay6gzBZV4IIMYuGR5siZjzig/exec";
+
+
+/* MOBILE MENU */
+const menuBtn =
+document.getElementById("menuBtn");
+
+const mobileMenu =
+document.getElementById("mobileMenu");
 
 menuBtn.addEventListener("click", () => {
+
   mobileMenu.classList.toggle("hidden");
+
 });
 
+
 /* PASSWORD TOGGLE */
-const togglePassword = document.getElementById("togglePassword");
-const password = document.getElementById("password");
+const togglePassword =
+document.getElementById("togglePassword");
+
+const passwordInput =
+document.getElementById("password");
 
 togglePassword.addEventListener("click", () => {
 
-  if(password.type === "password"){
-    password.type = "text";
+  if(passwordInput.type === "password"){
+
+    passwordInput.type = "text";
     togglePassword.innerHTML = "🙈";
+
   }else{
-    password.type = "password";
+
+    passwordInput.type = "password";
     togglePassword.innerHTML = "👁️";
+
   }
 
 });
+
+
+/* INPUTS */
+const usernameInput =
+document.getElementById("username");
+
+const loginForm =
+document.getElementById("loginForm");
+
+const loginBtn =
+document.getElementById("loginBtn");
+
+
+/* REMOVE SPACES LIVE */
+usernameInput.addEventListener("input", () => {
+
+  usernameInput.value =
+    usernameInput.value
+      .replace(/\s/g, "")
+      .slice(0, 20);
+
+});
+
+passwordInput.addEventListener("input", () => {
+
+  passwordInput.value =
+    passwordInput.value
+      .replace(/\s/g, "")
+      .slice(0, 20);
+
+});
+
+
+/* =========================
+   AUTO LOGIN CHECK
+========================= */
+
+window.addEventListener("load", async () => {
+
+  const savedUsername =
+    localStorage.getItem("username");
+
+  const savedPassword =
+    localStorage.getItem("password");
+
+
+  /* FILL INPUTS */
+  if(savedUsername){
+
+    usernameInput.value = savedUsername;
+
+  }
+
+  if(savedPassword){
+
+    passwordInput.value = savedPassword;
+
+  }
+
+
+  /* AUTO LOGIN */
+  if(savedUsername && savedPassword){
+
+    try{
+
+      const response = await fetch(WEB_APP_URL, {
+
+        method: "POST",
+
+        body: JSON.stringify({
+
+          action: "login",
+          username: savedUsername,
+          password: savedPassword
+
+        })
+
+      });
+
+      const data =
+        await response.json();
+
+
+      if(data.status === "success"){
+
+        /* ACCOUNT ACTIVE CHECK */
+        if(data.accountStatus === "Active"){
+
+          localStorage.setItem(
+            "usercode",
+            data.usercode
+          );
+
+          localStorage.setItem(
+            "status",
+            data.accountStatus
+          );
+
+          /* INSTANT REDIRECT */
+          window.location.href =
+            "profile.html";
+
+        }else{
+
+          /* REMOVE BLOCKED LOGIN */
+          localStorage.removeItem("username");
+          localStorage.removeItem("password");
+
+        }
+
+      }else{
+
+        /* REMOVE WRONG LOGIN */
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+
+      }
+
+    }catch(error){
+
+      console.log("Auto login failed");
+
+    }
+
+  }
+
+});
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginForm.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  const username =
+    usernameInput.value.trim();
+
+  const password =
+    passwordInput.value.trim();
+
+  const rememberMe =
+    document.getElementById("rememberMe").checked;
+
+
+  /* USERNAME VALIDATION */
+  if(username.length < 7){
+
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Username",
+      text: "Username must be at least 7 characters",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+    return;
+
+  }
+
+  if(username.length > 20){
+
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Username",
+      text: "Username cannot be more than 20 characters",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+    return;
+
+  }
+
+  if(username.includes(" ")){
+
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Username",
+      text: "Username cannot contain spaces",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+    return;
+
+  }
+
+
+  /* PASSWORD VALIDATION */
+  if(password.length < 7){
+
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "Password must be at least 7 characters",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+    return;
+
+  }
+
+  if(password.length > 20){
+
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "Password cannot be more than 20 characters",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+    return;
+
+  }
+
+  if(password.includes(" ")){
+
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "Password cannot contain spaces",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+    return;
+
+  }
+
+
+  loginBtn.innerText = "Checking...";
+  loginBtn.disabled = true;
+
+
+  try{
+
+    const response = await fetch(WEB_APP_URL, {
+
+      method: "POST",
+
+      body: JSON.stringify({
+
+        action: "login",
+        username: username,
+        password: password
+
+      })
+
+    });
+
+    const data =
+      await response.json();
+
+
+    /* LOGIN SUCCESS */
+    if(data.status === "success"){
+
+      /* BLOCK CHECK */
+      if(data.accountStatus !== "Active"){
+
+        Swal.fire({
+          icon: "error",
+          title: "Account Blocked",
+          text: "Your account has been blocked. Contact support.",
+          background: "#12141c",
+          color: "#fff",
+          confirmButtonColor: "#7c3aed"
+        });
+
+        loginBtn.innerText = "Log In";
+        loginBtn.disabled = false;
+
+        return;
+
+      }
+
+      /* SAVE LOGIN */
+      if(rememberMe){
+
+        localStorage.setItem(
+          "username",
+          data.username
+        );
+
+        localStorage.setItem(
+          "password",
+          password
+        );
+
+      }
+
+      localStorage.setItem(
+        "usercode",
+        data.usercode
+      );
+
+      localStorage.setItem(
+        "status",
+        data.accountStatus
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Welcome back to EXSUB Group",
+        background: "#12141c",
+        color: "#fff",
+        confirmButtonColor: "#7c3aed"
+      }).then(() => {
+
+        window.location.href =
+          "profile.html";
+
+      });
+
+    }else{
+
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: data.message,
+        background: "#12141c",
+        color: "#fff",
+        confirmButtonColor: "#7c3aed"
+      });
+
+    }
+
+  }catch(error){
+
+    Swal.fire({
+      icon: "error",
+      title: "Server Error",
+      text: "Something went wrong",
+      background: "#12141c",
+      color: "#fff",
+      confirmButtonColor: "#7c3aed"
+    });
+
+  }
+
+  loginBtn.innerText = "Log In";
+  loginBtn.disabled = false;
+
+});
+
 </script>
 
 </body>
