@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Channels</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --card2:#101219;
+    --border:#1e212c;
+    --purple:#7c3aed;
+    --purple2:#8b5cf6;
+    --text-muted:#8a8f9e;
+}
+
+*{
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.glass-nav{
+    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border:1px solid rgba(255,255,255,0.06);
+}
+
+.card{
+    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    border:1px solid var(--border);
+}
+
+.text-muted{
+    color:var(--text-muted);
+}
+
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.channel-card{
+    background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
+    border:1px solid #242938;
+    border-radius:24px;
+    padding:22px;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    transition:0.3s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.channel-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+}
+
+.channel-left{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+}
+
+.channel-image{
+    width:88px;
+    height:88px;
+    border-radius:22px;
+    object-fit:cover;
+    border:2px solid rgba(124,58,237,0.35);
+}
+
+.channel-name{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.channel-handle{
+    color:#9ca3af;
+    font-size:13px;
+    margin-bottom:14px;
+}
+
+.channel-info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+
+.channel-info-box{
+    background:#0f1118;
+    border:1px solid #1f2330;
+    border-radius:14px;
+    padding:12px;
+}
+
+.channel-info-box span{
+    display:block;
+    color:#8a8f9e;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.channel-info-box strong{
+    font-size:14px;
+    color:white;
+}
+
+.channel-right{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-width:170px;
+}
+
+.edit-btn{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.edit-btn:hover{
+    transform:translateY(-2px);
+}
+
+.delete-btn{
+    background:#dc2626;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.delete-btn:hover{
+    background:#ef4444;
+}
+
+#notifDropdown{
+    transition:all 0.2s ease;
+}
+
+@media(max-width:768px){
+
+    .channel-card{
+        flex-direction:column;
+    }
+
+    .channel-left{
+        flex-direction:column;
+    }
+
+    .channel-info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .channel-right{
+        width:100%;
+        min-width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+
+        <!-- MOBILE BUTTON -->
+
+        <button
+        id="mobileMenuBtn"
+        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">
+
+            ☰
+
+        </button>
+
+        <!-- LOGO -->
+
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+
+            <img
+            src="images/logo.svg"
+            class="w-7 h-7 hidden md:block">
+
+            <span class="font-semibold text-[17px]">
+                Exsub Group
+            </span>
+
+        </div>
+
+        <!-- DESKTOP NAV -->
+
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+
+            <a href="dashboard.html" class="text-white hover:text-purple-300 transition">
+                Dashboard
+            </a>
+
+            <a href="issues.html" class="text-white hover:text-purple-300 transition">
+                Issues
+            </a>
+
+            <a href="channels.html" class="text-purple-300 font-semibold">
+                Channels
+            </a>
+
+            <a href="tasks.html" class="text-white hover:text-purple-300 transition">
+                Tasks
+            </a>
+
+            <a href="groups.html" class="text-white hover:text-purple-300 transition">
+                Groups
+            </a>
+
+            <a href="support.html" class="text-white hover:text-purple-300 transition">
+                Support
+            </a>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="flex items-center gap-2">
+
+            <!-- NOTIFICATION -->
+
+            <div class="relative">
+
+                <button
+                id="notifBtn"
+                class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">
+
+                    🔔
+
+                </button>
+
+                <div
+                id="notifDropdown"
+                class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+
+                    <div class="p-3 border-b border-[#232632] font-semibold text-sm">
+                        Notifications
+                    </div>
+
+                    <div class="p-4 text-sm text-muted">
+                        No new notifications
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PROFILE -->
+
+            <div class="relative">
+
+                <button
+                id="profileBtn"
+                class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+
+                    <img
+                    src="https://i.pravatar.cc/100"
+                    class="w-8 h-8 rounded-full">
+
+                    <span
+                    id="navUserName"
+                    class="hidden sm:block text-[13px]">
+
+                        Member
+
+                    </span>
+
+                </button>
+
+                <div
+                id="profileDropdown"
+                class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+
+                    <div class="p-4 border-b border-[#232632]">
+
+                        <div class="flex items-center gap-3">
+
+                            <img
+                            src="https://i.pravatar.cc/100"
+                            class="w-12 h-12 rounded-full">
+
+                            <div>
+
+                                <h3
+                                id="dropdownUserName"
+                                class="font-semibold text-sm">
+
+                                    Member
+
+                                </h3>
+
+                                <p
+                                id="dropdownUserCode"
+                                class="text-muted text-xs">
+
+                                    ID #0000
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="py-2">
+
+                        <a href="profile.html"
+                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            My Profile
+                        </a>
+
+                        <a href="channels.html"
+                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            My Channels
+                        </a>
+
+                        <a href="support.html"
+                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            Support
+                        </a>
+
+                        <a
+                        href="#"
+                        onclick="logoutUser()"
+                        class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
+
+                            Logout
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MOBILE MENU -->
+
+    <div
+    id="mobileMenu"
+    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+
+        <div class="flex flex-col gap-4">
+
+            <a href="dashboard.html">Dashboard</a>
+            <a href="issues.html">Issues</a>
+            <a href="channels.html" class="text-purple-400">Channels</a>
+            <a href="tasks.html">Tasks</a>
+            <a href="groups.html">Groups</a>
+            <a href="support.html">Support</a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+
+<main class="relative z-10 pt-32 pb-20 px-4">
+
+<div class="max-w-[1200px] mx-auto">
+
+    <!-- HEADER -->
+
+    <div class="text-center mb-12">
+
+        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+
+            📺 Channel Center
+
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-black gradient-text">
+
+            Manage Your Channels
+
+        </h1>
+
+        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
+
+            Add, manage and update your promotional YouTube channels. Keep your channel information updated for better promotion tasks.
+
+        </p>
+
+    </div>
+
+    <!-- CHANNEL SECTION -->
+
+    <div class="card rounded-3xl p-6">
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-7">
+
+            <div>
+
+                <h2 class="text-2xl font-bold">
+                    Your Promotional Channels
+                </h2>
+
+                <p class="text-muted text-sm mt-1">
+                    Manage and update your YouTube channels
+                </p>
+
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap">
+
+                <div class="bg-purple-500/10 text-purple-300 px-4 py-2 rounded-xl text-sm border border-purple-500/20">
+
+                    Total Channels :
+                    <span id="totalChannels" class="font-semibold">
+                        0
+                    </span>
+
+                </div>
+
+                <button
+                onclick="openAddChannelModal()"
+                class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
+
+                    + Add Channel
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- CHANNELS -->
+
+        <div id="channelsContainer" class="space-y-5"></div>
+
+    </div>
+
+</div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+const MEMBER_SHEET_API =
+"https://script.google.com/macros/s/AKfycbxZDOIfLSfhoYBNABRHnCuZM6p4AFQjLAgB2w2SE7xMeelMGZahiDg1Ja7Mfm9eiTa9FA/exec";
+
+const ChannelScript =
+"https://script.google.com/macros/s/AKfycbyeJX6LstqWydy_MGVlt10oACiTg3bArQ-EHBkPm-TPxtXjQUVqUMdfwPwRecFH-8HK_Q/exec";
+
+const savedUsername = localStorage.getItem("username");
+const savedPassword = localStorage.getItem("password");
+
+if (!savedUsername || !savedPassword) {
+    window.location.href = "signin.html";
+}
+
+async function loadChannels(){
+
+    try{
+
+        const response = await fetch(
+            `${MEMBER_SHEET_API}?action=login&username=${savedUsername}&password=${savedPassword}`
+        );
+
+        const data = await response.json();
+
+        if(data.status !== "success"){
+            return;
+        }
+
+        document.getElementById("navUserName").innerText =
+        data.member.UserName || "Member";
+
+        document.getElementById("dropdownUserName").innerText =
+        data.member.UserName || "Member";
+
+        document.getElementById("dropdownUserCode").innerText =
+        "ID #" + (data.member.UserCode || "0000");
+
+        if(!Array.isArray(data.channels)){
+            data.channels = [];
+        }
+
+        document.getElementById("totalChannels").innerText =
+        data.channels.length;
+
+        let channelsHTML = "";
+
+        if(data.channels.length === 0){
+
+            channelsHTML = `
+            <div class="text-center py-20">
+
+                <div class="text-6xl mb-4">📺</div>
+
+                <h2 class="text-2xl font-bold mb-2">
+                    No Channel Found
+                </h2>
+
+                <p class="text-muted mb-6">
+                    Add your first promotional channel to get started
+                </p>
+
+            </div>
+            `;
+        }
+
+        data.channels.forEach(channel=>{
+
+            const image =
+            channel.ChannelImage &&
+            channel.ChannelImage.trim() !== ""
+            ? channel.ChannelImage
+            : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
+
+            channelsHTML += `
+
+            <div class="channel-card">
+
+                <div class="channel-left">
+
+                    <img
+                    src="${image}"
+                    class="channel-image"
+                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
+
+                    <div class="w-full">
+
+                        <h2 class="channel-name">
+                            ${channel.ChannelName || "Unknown Channel"}
+                        </h2>
+
+                        <div class="channel-handle">
+                            ${channel.ChannelHandle || "channel"}
+                        </div>
+
+                        <div class="channel-info-grid">
+
+                            <div class="channel-info-box">
+                                <span>Channel Type</span>
+                                <strong>${channel.ChannelType || "-"}</strong>
+                            </div>
+
+                            <div class="channel-info-box">
+                                <span>Total Subscribers</span>
+                                <strong>${channel.TotalSubscribers || 0}</strong>
+                            </div>
+
+                            <div class="channel-info-box">
+                                <span>Current Subscribers</span>
+                                <strong>${channel.CurrentSubscribers || 0}</strong>
+                            </div>
+
+                            <div class="channel-info-box">
+                                <span>Last Updated</span>
+                                <strong>${channel.LastUpdated || "-"}</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="${channel.ChannelLink || '#'}"
+                        target="_blank"
+                        class="inline-flex items-center gap-2 mt-5 text-purple-400 text-sm hover:text-purple-300 transition">
+
+                            Visit Channel →
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="channel-right">
+
+                    <button
+                    onclick='updateChannel("${channel.ChannelId}")'
+                    class="edit-btn">
+
+                        Update Channel
+
+                    </button>
+
+                    <button
+                    onclick='deleteChannel("${channel.ChannelId}")'
+                    class="delete-btn">
+
+                        Delete Channel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        });
+
+        document.getElementById("channelsContainer").innerHTML =
+        channelsHTML;
+
+    }
+
+    catch(error){
+
+        Swal.fire({
+            icon:"error",
+            title:"Error",
+            text:"Unable to load channels"
+        });
+
+    }
+
+}
+
+/* ADD CHANNEL */
+
+function openAddChannelModal(){
+
+    Swal.fire({
+
+        title:"Add YouTube Channel",
+
+        width:650,
+
+        html:`
+
+            <input
+            id="channelLink"
+            class="swal2-input"
+            placeholder="Enter YouTube Channel Link">
+
+        `,
+
+        confirmButtonText:"Add Channel",
+
+        showCancelButton:true,
+
+        preConfirm: async ()=>{
+
+            const channelLink =
+            document.getElementById("channelLink").value;
+
+            if(!channelLink){
+
+                Swal.showValidationMessage(
+                    "Please enter channel link"
+                );
+
+                return false;
+
+            }
+
+            try{
+
+                Swal.showLoading();
+
+                const response = await fetch(
+
+                    ChannelScript +
+
+                    "?action=addChannel" +
+
+                    "&username=" + encodeURIComponent(savedUsername) +
+
+                    "&password=" + encodeURIComponent(savedPassword) +
+
+                    "&channelLink=" + encodeURIComponent(channelLink)
+
+                );
+
+                const data = await response.json();
+
+                if(data.status !== "success"){
+
+                    Swal.showValidationMessage(data.message);
+
+                    return false;
+
+                }
+
+                return data;
+
+            }
+
+            catch(error){
+
+                Swal.showValidationMessage(
+                    "Something went wrong"
+                );
+
+            }
+
+        }
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            Swal.fire({
+                icon:"success",
+                title:"Channel Added Successfully"
+            });
+
+            setTimeout(()=>{
+                location.reload();
+            },1200);
+
+        }
+
+    });
+
+}
+
+/* UPDATE */
+
+async function updateChannel(channelId){
+
+    try{
+
+        Swal.fire({
+            title:"Updating Channel...",
+            allowOutsideClick:false,
+            didOpen:()=>{
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch(
+
+            ChannelScript +
+
+            "?action=updateChannel" +
+
+            "&username=" + encodeURIComponent(savedUsername) +
+
+            "&password=" + encodeURIComponent(savedPassword) +
+
+            "&channelId=" + encodeURIComponent(channelId)
+
+        );
+
+        const data = await response.json();
+
+        if(data.status !== "success"){
+
+            Swal.fire({
+                icon:"error",
+                title:"Update Failed",
+                text:data.message
+            });
+
+            return;
+        }
+
+        Swal.fire({
+            icon:"success",
+            title:"Channel Updated"
+        });
+
+        setTimeout(()=>{
+            location.reload();
+        },1200);
+
+    }
+
+    catch(error){
+
+        Swal.fire({
+            icon:"error",
+            title:"Error",
+            text:"Unable to update channel"
+        });
+
+    }
+
+}
+
+/* DELETE */
+
+async function deleteChannel(channelId){
+
+    const confirmDelete = await Swal.fire({
+
+        icon:"warning",
+
+        title:"Delete Channel?",
+
+        text:"This action cannot be undone",
+
+        showCancelButton:true,
+
+        confirmButtonColor:"#dc2626",
+
+        confirmButtonText:"Delete"
+
+    });
+
+    if(!confirmDelete.isConfirmed){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+
+            ChannelScript +
+
+            "?action=deleteChannel" +
+
+            "&username=" + encodeURIComponent(savedUsername) +
+
+            "&password=" + encodeURIComponent(savedPassword) +
+
+            "&channelId=" + encodeURIComponent(channelId)
+
+        );
+
+        const data = await response.json();
+
+        if(data.status !== "success"){
+
+            Swal.fire({
+                icon:"error",
+                title:"Delete Failed",
+                text:data.message
+            });
+
+            return;
+        }
+
+        Swal.fire({
+            icon:"success",
+            title:"Channel Deleted"
+        });
+
+        setTimeout(()=>{
+            location.reload();
+        },1000);
+
+    }
+
+    catch(error){
+
+        Swal.fire({
+            icon:"error",
+            title:"Error",
+            text:"Unable to delete channel"
+        });
+
+    }
+
+}
+
+/* LOGOUT */
+
+function logoutUser(){
+
+    localStorage.clear();
+
+    window.location.href = "index.html";
+
+}
+
+/* MENUS */
+
+const mobileMenuBtn =
+document.getElementById("mobileMenuBtn");
+
+const mobileMenu =
+document.getElementById("mobileMenu");
+
+const profileBtn =
+document.getElementById("profileBtn");
+
+const profileDropdown =
+document.getElementById("profileDropdown");
+
+const notifBtn =
+document.getElementById("notifBtn");
+
+const notifDropdown =
+document.getElementById("notifDropdown");
+
+mobileMenuBtn.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    mobileMenu.classList.toggle("hidden");
+
+});
+
+profileBtn.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    profileDropdown.classList.toggle("hidden");
+
+});
+
+notifBtn.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    notifDropdown.classList.toggle("hidden");
+
+});
+
+document.addEventListener("click",()=>{
+
+    mobileMenu.classList.add("hidden");
+
+    profileDropdown.classList.add("hidden");
+
+    notifDropdown.classList.add("hidden");
+
+});
+
+loadChannels();
+
+</script>
+
+</body>
+</html>

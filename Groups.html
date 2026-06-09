@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Groups</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --border:#1e212c;
+    --purple:#7c3aed;
+    --purple2:#8b5cf6;
+    --text-muted:#8a8f9e;
+}
+
+*{
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.glass-nav{
+    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border:1px solid rgba(255,255,255,0.06);
+    color:white;
+}
+
+.card{
+    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    border:1px solid var(--border);
+    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset;
+}
+
+.card-hover{
+    transition:0.3s ease;
+}
+
+.card-hover:hover{
+    transform:translateY(-4px);
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.text-muted{
+    color:var(--text-muted);
+}
+
+.group-icon{
+    width:54px;
+    height:54px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    background:rgba(124,58,237,0.15);
+    border:1px solid rgba(124,58,237,0.25);
+}
+
+.join-btn{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    color:white;
+    border:none;
+    padding:12px 22px;
+    border-radius:14px;
+    font-weight:600;
+    transition:0.3s ease;
+}
+
+.join-btn:hover{
+    transform:translateY(-2px);
+}
+
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+
+        <!-- LOGO -->
+
+        <div class="flex items-center gap-2">
+
+            <img
+            src="images/logo.svg"
+            class="w-7 h-7">
+
+            <span class="font-semibold text-[17px]">
+                Exsub Group
+            </span>
+
+        </div>
+
+        <!-- NAVIGATION -->
+
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+
+            <a href="profile.html" class="text-white hover:text-purple-300 transition">
+                Dashboard
+            </a>
+
+            <a href="groups.html" class="text-purple-200 font-semibold">
+                Groups
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-300 transition">
+                Tasks
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-300 transition">
+                Support
+            </a>
+
+        </div>
+
+        <!-- PROFILE -->
+
+        <div class="flex items-center gap-3">
+
+            <img
+            src="https://i.pravatar.cc/100"
+            class="w-10 h-10 rounded-full border border-white/10">
+
+            <div class="hidden sm:block">
+
+                <div class="text-sm font-semibold">
+                    Member
+                </div>
+
+                <div class="text-[11px] text-purple-100">
+                    EXSUB User
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+
+<main class="relative z-10 pt-32 pb-20 px-4">
+
+    <div class="max-w-[1200px] mx-auto">
+
+        <!-- HEADER -->
+
+        <div class="text-center mb-12">
+
+            <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+
+                🚀 Creator Communities
+
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-black gradient-text">
+
+                Explore Groups
+
+            </h1>
+
+            <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
+
+                Join creator communities to grow your channel, increase engagement,
+                improve watch time and connect with active members worldwide.
+
+            </p>
+
+        </div>
+
+        <!-- GROUPS GRID -->
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- GROUP -->
+
+            <div class="card card-hover rounded-3xl p-6">
+
+                <div class="flex items-start justify-between gap-4">
+
+                    <div class="group-icon">
+                        🔥
+                    </div>
+
+                    <div class="bg-red-500/10 border border-red-500/20 text-red-300 px-3 py-1 rounded-full text-xs font-semibold">
+                        Popular
+                    </div>
+
+                </div>
+
+                <h2 class="text-2xl font-bold mt-6">
+                    Subscribers Group
+                </h2>
+
+                <p class="text-muted mt-3 leading-7 text-sm">
+
+                    Exchange real subscribers with active creators and grow your audience organically.
+
+                </p>
+
+                <div class="flex items-center justify-between mt-8">
+
+                    <div>
+
+                        <div class="text-sm font-semibold">
+                            4.2k Members
+                        </div>
+
+                        <div class="text-xs text-muted mt-1">
+                            Highly Active
+                        </div>
+
+                    </div>
+
+                    <button class="join-btn">
+                        Join Group
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- GROUP -->
+
+            <div class="card card-hover rounded-3xl p-6">
+
+                <div class="flex items-start justify-between gap-4">
+
+                    <div class="group-icon">
+                        🚀
+                    </div>
+
+                    <div class="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">
+                        Trending
+                    </div>
+
+                </div>
+
+                <h2 class="text-2xl font-bold mt-6">
+                    Video Boost Group
+                </h2>
+
+                <p class="text-muted mt-3 leading-7 text-sm">
+
+                    Increase video reach, impressions and engagement with collaborative promotion tasks.
+
+                </p>
+
+                <div class="flex items-center justify-between mt-8">
+
+                    <div>
+
+                        <div class="text-sm font-semibold">
+                            3.8k Members
+                        </div>
+
+                        <div class="text-xs text-muted mt-1">
+                            Fast Growing
+                        </div>
+
+                    </div>
+
+                    <button class="join-btn">
+                        Join Group
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- GROUP -->
+
+            <div class="card card-hover rounded-3xl p-6">
+
+                <div class="flex items-start justify-between gap-4">
+
+                    <div class="group-icon">
+                        ⏱️
+                    </div>
+
+                    <div class="bg-green-500/10 border border-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs font-semibold">
+                        Recommended
+                    </div>
+
+                </div>
+
+                <h2 class="text-2xl font-bold mt-6">
+                    Watch Time Group
+                </h2>
+
+                <p class="text-muted mt-3 leading-7 text-sm">
+
+                    Improve watch hours and audience retention using organized viewing activities.
+
+                </p>
+
+                <div class="flex items-center justify-between mt-8">
+
+                    <div>
+
+                        <div class="text-sm font-semibold">
+                            2.9k Members
+                        </div>
+
+                        <div class="text-xs text-muted mt-1">
+                            Daily Tasks
+                        </div>
+
+                    </div>
+
+                    <button class="join-btn">
+                        Join Group
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- GROUP -->
+
+            <div class="card card-hover rounded-3xl p-6">
+
+                <div class="flex items-start justify-between gap-4">
+
+                    <div class="group-icon">
+                        💜
+                    </div>
+
+                    <div class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-xs font-semibold">
+                        Active
+                    </div>
+
+                </div>
+
+                <h2 class="text-2xl font-bold mt-6">
+                    Engagement Group
+                </h2>
+
+                <p class="text-muted mt-3 leading-7 text-sm">
+
+                    Get more likes, comments and interactions from supportive creators and members.
+
+                </p>
+
+                <div class="flex items-center justify-between mt-8">
+
+                    <div>
+
+                        <div class="text-sm font-semibold">
+                            5.1k Members
+                        </div>
+
+                        <div class="text-xs text-muted mt-1">
+                            Community Support
+                        </div>
+
+                    </div>
+
+                    <button class="join-btn">
+                        Join Group
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer class="relative z-10 border-t border-[#1e212c]">
+
+    <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+
+        <div>
+
+            <div class="flex items-center gap-2">
+
+                <img src="images/logo.svg" class="w-6 h-6">
+
+                <span class="font-semibold">
+                    Exsub Group
+                </span>
+
+            </div>
+
+            <p class="text-muted text-sm mt-3">
+                Grow together with creators worldwide.
+            </p>
+
+        </div>
+
+        <div class="flex gap-6 text-sm text-muted">
+
+            <a href="#" class="hover:text-white transition">
+                Privacy
+            </a>
+
+            <a href="#" class="hover:text-white transition">
+                Terms
+            </a>
+
+            <a href="#" class="hover:text-white transition">
+                Support
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+</body>
+</html>
