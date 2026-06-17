@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>How To Work – Exsub Group</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --border:#232938;
+    --purple:#7c3aed;
+}
+
+*{ font-family:'Inter',sans-serif; }
+
+body{
+    background:#050508;
+    color:white;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%; left:-50%;
+    width:200%; height:200%;
+    background:
+        radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+        radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.glass-nav{
+    background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.06);
+}
+
+.card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid var(--border);
+}
+
+/* ── STEP CARD ── */
+.step-card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:24px;
+    transition:border-color .3s;
+    position:relative;
+    overflow:hidden;
+}
+
+.step-card.is-open{
+    border-color:#7c3aed;
+}
+
+.step-card-top{
+    padding:24px 24px 20px;
+}
+
+.step-card:not(.is-open):hover{
+    border-color:rgba(124,58,237,0.5);
+    transform:translateY(-3px);
+    transition:border-color .3s, transform .3s;
+}
+
+/* purple shimmer line on top when open */
+.step-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg,transparent,rgba(124,58,237,0.7),transparent);
+    opacity:0;
+    transition:.3s;
+}
+.step-card.is-open::before{ opacity:1; }
+
+.step-number{
+    width:48px; height:48px;
+    border-radius:14px;
+    background:rgba(124,58,237,0.15);
+    border:1px solid rgba(124,58,237,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; font-weight:900;
+    color:#c4b5fd;
+    flex-shrink:0;
+}
+
+.badge{
+    padding:4px 11px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(124,58,237,.15);
+    color:#c4b5fd;
+    border:1px solid rgba(124,58,237,0.2);
+}
+
+/* Read More button */
+.read-more-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:16px;
+    padding:8px 16px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+    color:#c4b5fd;
+    background:rgba(124,58,237,0.12);
+    border:1px solid rgba(124,58,237,0.25);
+    cursor:pointer;
+    transition:.25s;
+}
+.read-more-btn:hover{
+    background:rgba(124,58,237,0.22);
+    border-color:rgba(124,58,237,0.5);
+}
+.read-more-btn .btn-arrow{
+    transition:transform .3s;
+    font-size:11px;
+}
+.read-more-btn.open .btn-arrow{
+    transform:rotate(180deg);
+}
+
+/* Expand panel */
+.step-detail{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+    opacity:0;
+}
+.step-detail.open{
+    max-height:2000px;
+    opacity:1;
+}
+
+/* Inside the expanded panel */
+.step-detail-inner{
+    border-top:1px solid #1e2130;
+    padding:24px;
+}
+
+/* Image grid inside detail */
+.detail-images{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:12px;
+    margin-bottom:18px;
+}
+.detail-images img{
+    width:100%;
+    border-radius:14px;
+    border:1px solid #252938;
+    object-fit:cover;
+}
+
+/* Text blocks inside detail */
+.detail-text{
+    color:#9ca3af;
+    font-size:14px;
+    line-height:1.8;
+}
+
+.detail-text p{ margin-bottom:10px; }
+.detail-text p:last-child{ margin-bottom:0; }
+
+.detail-text strong{
+    color:#e2e8f0;
+    font-weight:600;
+}
+
+/* step sub-list */
+.detail-list{
+    list-style:none;
+    padding:0;
+    margin:10px 0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+.detail-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    color:#9ca3af;
+    font-size:13.5px;
+}
+.detail-list li::before{
+    content:'›';
+    color:#7c3aed;
+    font-size:18px;
+    line-height:1.2;
+    flex-shrink:0;
+}
+
+/* ── OTHER SECTIONS ── */
+
+.rule-row{
+    display:flex; align-items:flex-start;
+    gap:12px; padding:14px 0;
+    border-bottom:1px solid #1a1d28;
+}
+.rule-row:last-child{ border-bottom:none; }
+
+.dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:#7c3aed;
+    margin-top:6px; flex-shrink:0;
+}
+
+.icon-box{
+    width:44px; height:44px;
+    border-radius:12px;
+    background:rgba(124,58,237,0.12);
+    border:1px solid rgba(124,58,237,0.25);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex-shrink:0;
+}
+
+.faq-item{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:16px;
+    overflow:hidden;
+    transition:.3s;
+}
+.faq-item:hover{ border-color:rgba(124,58,237,0.4); }
+
+.faq-btn{
+    width:100%;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px;
+    background:none; border:none;
+    color:white; cursor:pointer;
+    font-size:15px; font-weight:600;
+    text-align:left; gap:12px;
+}
+
+.faq-answer{
+    display:none;
+    padding:0 22px 18px;
+    color:#9ca3af; font-size:14px; line-height:1.7;
+}
+.faq-answer.open{ display:block; }
+
+.chevron{ transition:.3s; flex-shrink:0; color:#7c3aed; }
+.chevron.open{ transform:rotate(180deg); }
+
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+
+        <button id="mobileMenuBtn"
+        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+            <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+            <span class="font-semibold text-[17px]">Exsub Group</span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+            <a href="dashboard.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="channels.html"  class="text-white hover:text-purple-300 transition">Channels</a>
+            <a href="groups.html"    class="text-white hover:text-purple-300 transition">Groups</a>
+            <a href="issues.html"    class="text-white hover:text-purple-300 transition">Issues</a>
+            <a href="support.html"   class="text-white hover:text-purple-300 transition">Support</a>
+            <a href="HowtoWork.html" class="text-purple-300 font-semibold">How To Work</a>
+            <a href="QandA.html"     class="text-white hover:text-purple-300 transition">Q&amp;A</a>
+        </div>
+
+        <div class="flex items-center gap-2"></div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+        <div class="flex flex-col gap-4 text-sm">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="channels.html">Channels</a>
+            <a href="groups.html">Groups</a>
+            <a href="issues.html">Issues</a>
+            <a href="support.html">Support</a>
+            <a href="HowtoWork.html" class="text-purple-400">How To Work</a>
+            <a href="QandA.html">Q&amp;A</a>
+        </div>
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+<main class="relative z-10 pt-32 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+    <!-- HERO -->
+    <div class="text-center mb-14">
+        <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm">
+            📖 Getting Started Guide
+        </div>
+        <h1 class="text-5xl font-black mt-5 gradient-text">How To Work</h1>
+        <p class="text-gray-400 mt-4 max-w-xl mx-auto">
+            Follow these steps to get set up, understand community rules, and make the most of Exsub Group.
+        </p>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <div class="card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-black text-purple-400">5</div>
+            <div class="text-gray-400 text-sm mt-1">Steps to Start</div>
+        </div>
+        <div class="card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-black text-purple-400">24h</div>
+            <div class="text-gray-400 text-sm mt-1">Support Response</div>
+        </div>
+        <div class="card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-black text-purple-400">100%</div>
+            <div class="text-gray-400 text-sm mt-1">Free to Join</div>
+        </div>
+        <div class="card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-black text-purple-400">∞</div>
+            <div class="text-gray-400 text-sm mt-1">Channels Access</div>
+        </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="mb-12">
+
+        <h2 class="text-2xl font-bold mb-6">Step-by-Step Process</h2>
+
+        <div class="flex flex-col gap-5">
+
+            <!-- ═══════════════════════════════════════ STEP 1 -->
+            <div class="step-card" id="step-1">
+
+                <div class="step-card-top">
+
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+
+                        <div class="flex items-center gap-4">
+                            <div class="step-number">1</div>
+                            <div>
+                                <div class="font-bold text-lg">Register Your Account</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge">Required</span>
+                                    <span class="text-gray-500 text-xs">📝 Takes about 2 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="read-more-btn" onclick="toggleStep('step-1', this)">
+                            <span class="btn-label">Read More</span>
+                            <span class="btn-arrow">▼</span>
+                        </button>
+
+                    </div>
+
+                    <p class="text-gray-400 text-sm leading-relaxed mt-4">
+                        Sign up using the registration form. Provide your username, country, and contact details. Your account will be reviewed and assigned a unique User Code.
+                    </p>
+
+                </div>
+
+                <!-- ▼ EXPANDED DETAIL — add your images & text here -->
+                <div class="step-detail" id="step-1-detail">
+                    <div class="step-detail-inner">
+
+                        <!-- IMAGES — replace src with your real image paths -->
+                        <div class="detail-images">
+                            <img src="images/step1-a.png" alt="Registration form screenshot" onerror="this.style.display='none'">
+                            <img src="images/step1-b.png" alt="Confirmation screen" onerror="this.style.display='none'">
+                        </div>
+
+                        <!-- TEXT -->
+                        <div class="detail-text">
+                            <p><strong>How to register:</strong></p>
+                            <ul class="detail-list">
+                                <li>Open the registration link shared by your referrer.</li>
+                                <li>Fill in your full name, username, country, and WhatsApp number.</li>
+                                <li>Double-check all details before submitting — errors will delay your approval.</li>
+                                <li>After submission, wait for an approval message with your User Code.</li>
+                            </ul>
+                            <p style="margin-top:14px;">
+                                Your <strong>User Code</strong> is your permanent ID inside Exsub Group.
+                                Keep it safe — you will need it for every task submission and support request.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════ STEP 2 -->
+            <div class="step-card" id="step-2">
+
+                <div class="step-card-top">
+
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-4">
+                            <div class="step-number">2</div>
+                            <div>
+                                <div class="font-bold text-lg">Join Your Group</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge">Required</span>
+                                    <span class="text-gray-500 text-xs">👥 Check the Groups page</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="read-more-btn" onclick="toggleStep('step-2', this)">
+                            <span class="btn-label">Read More</span>
+                            <span class="btn-arrow">▼</span>
+                        </button>
+                    </div>
+
+                    <p class="text-gray-400 text-sm leading-relaxed mt-4">
+                        Once registered, you will be assigned to a group based on your region or role. Navigate to the Groups page and confirm your membership is active.
+                    </p>
+
+                </div>
+
+                <div class="step-detail" id="step-2-detail">
+                    <div class="step-detail-inner">
+
+                        <div class="detail-images">
+                            <img src="images/step2-a.png" alt="Groups page screenshot" onerror="this.style.display='none'">
+                            <img src="images/step2-b.png" alt="Group join confirmation" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="detail-text">
+                            <p><strong>Finding your group:</strong></p>
+                            <ul class="detail-list">
+                                <li>Go to the <a href="groups.html" style="color:#a78bfa;">Groups page</a> after your account is approved.</li>
+                                <li>Look for your name or User Code in the member list.</li>
+                                <li>The group admin will send you an invite link to the correct channel.</li>
+                                <li>Accept the invite and introduce yourself using your User Code.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════ STEP 3 -->
+            <div class="step-card" id="step-3">
+
+                <div class="step-card-top">
+
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-4">
+                            <div class="step-number">3</div>
+                            <div>
+                                <div class="font-bold text-lg">Subscribe to Channels</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge">Recommended</span>
+                                    <span class="text-gray-500 text-xs">📢 Don't miss updates</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="read-more-btn" onclick="toggleStep('step-3', this)">
+                            <span class="btn-label">Read More</span>
+                            <span class="btn-arrow">▼</span>
+                        </button>
+                    </div>
+
+                    <p class="text-gray-400 text-sm leading-relaxed mt-4">
+                        Visit the Channels page to subscribe to relevant announcement and update channels. Staying subscribed keeps you informed about tasks and news.
+                    </p>
+
+                </div>
+
+                <div class="step-detail" id="step-3-detail">
+                    <div class="step-detail-inner">
+
+                        <div class="detail-images">
+                            <img src="images/step3-a.png" alt="Channels page" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="detail-text">
+                            <p><strong>Which channels to join:</strong></p>
+                            <ul class="detail-list">
+                                <li>Main Announcements — critical updates that affect all members.</li>
+                                <li>Your Region Channel — tasks specific to your country or area.</li>
+                                <li>Your Group Channel — direct communication with your group leader.</li>
+                            </ul>
+                            <p style="margin-top:14px;">
+                                Turn on notifications for all subscribed channels so you never miss a time-sensitive task.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════ STEP 4 -->
+            <div class="step-card" id="step-4">
+
+                <div class="step-card-top">
+
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-4">
+                            <div class="step-number">4</div>
+                            <div>
+                                <div class="font-bold text-lg">Complete Your Tasks</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge">Ongoing</span>
+                                    <span class="text-gray-500 text-xs">✅ Submit proof on time</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="read-more-btn" onclick="toggleStep('step-4', this)">
+                            <span class="btn-label">Read More</span>
+                            <span class="btn-arrow">▼</span>
+                        </button>
+                    </div>
+
+                    <p class="text-gray-400 text-sm leading-relaxed mt-4">
+                        Tasks are assigned through your group channel. Read each task carefully, follow the instructions exactly, and submit proof of completion when required.
+                    </p>
+
+                </div>
+
+                <div class="step-detail" id="step-4-detail">
+                    <div class="step-detail-inner">
+
+                        <div class="detail-images">
+                            <img src="images/step4-a.png" alt="Task example" onerror="this.style.display='none'">
+                            <img src="images/step4-b.png" alt="Proof submission" onerror="this.style.display='none'">
+                            <img src="images/step4-c.png" alt="Completion confirmation" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="detail-text">
+                            <p><strong>Task workflow:</strong></p>
+                            <ul class="detail-list">
+                                <li>Read the full task description — including deadlines and proof requirements.</li>
+                                <li>Complete the task exactly as described. No shortcuts.</li>
+                                <li>Take a clear screenshot of the completed action as proof.</li>
+                                <li>Submit your User Code + screenshot in the submission channel before the deadline.</li>
+                                <li>Wait for the verification message before moving to the next task.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════ STEP 5 -->
+            <div class="step-card" id="step-5">
+
+                <div class="step-card-top">
+
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-4">
+                            <div class="step-number">5</div>
+                            <div>
+                                <div class="font-bold text-lg">Report Issues</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge">When needed</span>
+                                    <span class="text-gray-500 text-xs">⚠️ Issues page is always open</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="read-more-btn" onclick="toggleStep('step-5', this)">
+                            <span class="btn-label">Read More</span>
+                            <span class="btn-arrow">▼</span>
+                        </button>
+                    </div>
+
+                    <p class="text-gray-400 text-sm leading-relaxed mt-4">
+                        If you encounter any problems — wrong task, payment issue, or technical error — go to the Issues page and submit a report with your User Code.
+                    </p>
+
+                </div>
+
+                <div class="step-detail" id="step-5-detail">
+                    <div class="step-detail-inner">
+
+                        <div class="detail-images">
+                            <img src="images/step5-a.png" alt="Issues page" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="detail-text">
+                            <p><strong>How to submit an issue:</strong></p>
+                            <ul class="detail-list">
+                                <li>Go to the <a href="issues.html" style="color:#a78bfa;">Issues page</a> from the navigation bar.</li>
+                                <li>Select the issue category that best describes your problem.</li>
+                                <li>Enter your User Code and a clear description of what happened.</li>
+                                <li>Attach any relevant screenshots as evidence.</li>
+                                <li>Submit the report and note your ticket number for follow-up.</li>
+                            </ul>
+                            <p style="margin-top:14px;">
+                                The support team reviews all reports within <strong>24 hours</strong>.
+                                Do not resubmit the same issue multiple times — it will not speed up the review.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ═══════════════════════════════════════ BONUS STEP -->
+            <div class="step-card" id="step-bonus" style="border-color:rgba(124,58,237,0.3);">
+
+                <div class="step-card-top">
+
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div class="flex items-center gap-4">
+                            <div class="step-number" style="background:rgba(124,58,237,0.25);border-color:rgba(124,58,237,0.5);">🎯</div>
+                            <div>
+                                <div class="font-bold text-lg">Stay Active &amp; Earn More</div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge">Bonus</span>
+                                    <span class="text-gray-500 text-xs">🚀 Consistency is rewarded</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="read-more-btn" onclick="toggleStep('step-bonus', this)">
+                            <span class="btn-label">Read More</span>
+                            <span class="btn-arrow">▼</span>
+                        </button>
+                    </div>
+
+                    <p class="text-gray-400 text-sm leading-relaxed mt-4">
+                        Active members who consistently complete tasks and follow rules are prioritized for higher-value tasks and early access to new channels.
+                    </p>
+
+                </div>
+
+                <div class="step-detail" id="step-bonus-detail">
+                    <div class="step-detail-inner">
+
+                        <div class="detail-images">
+                            <img src="images/stepbonus-a.png" alt="Rewards overview" onerror="this.style.display='none'">
+                        </div>
+
+                        <div class="detail-text">
+                            <p><strong>How to maximize your earnings:</strong></p>
+                            <ul class="detail-list">
+                                <li>Complete every task assigned to you — partial participation lowers your score.</li>
+                                <li>Submit proof quickly. Fast submitters get priority in the next task round.</li>
+                                <li>Refer trusted members — referral bonuses are paid after their first completed task.</li>
+                                <li>Stay active in your group channel to be first to hear about bonus tasks.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RULES SECTION -->
+    <div class="grid md:grid-cols-2 gap-6 mb-12">
+
+        <div class="card rounded-3xl p-6">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="icon-box">✅</div>
+                <div>
+                    <div class="font-bold text-lg">Things To Do</div>
+                    <div class="text-gray-500 text-sm">Follow these to stay in good standing</div>
+                </div>
+            </div>
+            <div>
+                <div class="rule-row"><div class="dot mt-2"></div><div class="text-sm text-gray-300 leading-relaxed">Always use your registered User Code when submitting reports or tasks.</div></div>
+                <div class="rule-row"><div class="dot mt-2"></div><div class="text-sm text-gray-300 leading-relaxed">Read all task instructions fully before starting. Mistakes due to skipping instructions are not reimbursed.</div></div>
+                <div class="rule-row"><div class="dot mt-2"></div><div class="text-sm text-gray-300 leading-relaxed">Submit clear screenshot proof when required. Blurry or cropped images will be rejected.</div></div>
+                <div class="rule-row"><div class="dot mt-2"></div><div class="text-sm text-gray-300 leading-relaxed">Stay subscribed to your assigned channels to never miss task announcements.</div></div>
+                <div class="rule-row"><div class="dot mt-2"></div><div class="text-sm text-gray-300 leading-relaxed">Contact support through the proper Support page. Avoid DMing admins directly.</div></div>
+            </div>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="icon-box">🚫</div>
+                <div>
+                    <div class="font-bold text-lg">Things To Avoid</div>
+                    <div class="text-gray-500 text-sm">Violations may lead to suspension</div>
+                </div>
+            </div>
+            <div>
+                <div class="rule-row"><div class="dot mt-2" style="background:#ef4444;"></div><div class="text-sm text-gray-300 leading-relaxed">Do not share your User Code or account access with anyone else.</div></div>
+                <div class="rule-row"><div class="dot mt-2" style="background:#ef4444;"></div><div class="text-sm text-gray-300 leading-relaxed">Do not submit fake or edited screenshots as proof of task completion.</div></div>
+                <div class="rule-row"><div class="dot mt-2" style="background:#ef4444;"></div><div class="text-sm text-gray-300 leading-relaxed">Do not create multiple accounts. Each member is allowed one account only.</div></div>
+                <div class="rule-row"><div class="dot mt-2" style="background:#ef4444;"></div><div class="text-sm text-gray-300 leading-relaxed">Do not spam the channels or group with repeated messages or off-topic content.</div></div>
+                <div class="rule-row"><div class="dot mt-2" style="background:#ef4444;"></div><div class="text-sm text-gray-300 leading-relaxed">Do not attempt to claim tasks that were not assigned to you.</div></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FAQ -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+        <div class="flex flex-col gap-3">
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>How long does account approval take?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Account approval typically takes between 24 to 48 hours. You will receive a notification once your account is active and your User Code has been assigned.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>What if I miss a task deadline?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Missed deadlines cannot be extended retroactively. Make sure to check your channels regularly. If you had a genuine emergency, submit an issue report explaining the situation and it will be reviewed.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>How do I get paid for completed tasks?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Payments are processed after task verification. The payment method and schedule are specified in each task's instructions. Make sure your payment details are correctly registered in your profile.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>Can I be part of multiple groups?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">By default, each member is assigned to one primary group. If you believe you qualify for multiple groups, contact support with your User Code and they will review your eligibility.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>What happens if my account is suspended?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Suspended accounts can submit an appeal through the Issues page within 7 days of suspension. Include your User Code and a clear explanation. Repeat violations may result in a permanent ban.</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SUPPORT BANNER -->
+    <div class="card rounded-3xl p-8 text-center" style="border-color:rgba(124,58,237,0.3);background:linear-gradient(135deg,#171a24,#13101f);">
+        <div class="text-4xl mb-4">🤝</div>
+        <h3 class="text-2xl font-bold mb-2">Still have questions?</h3>
+        <p class="text-gray-400 mb-6">Our support team is ready to help. Open a support ticket and we'll get back to you within 24 hours.</p>
+        <a href="support.html" class="inline-flex items-center gap-2 px-7 py-3 rounded-xl font-semibold text-sm" style="background:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);">
+            Contact Support →
+        </a>
+    </div>
+
+</div>
+</main>
+
+<script>
+
+/* ── STEP EXPAND / COLLAPSE ── */
+function toggleStep(cardId, btn){
+
+    const card   = document.getElementById(cardId);
+    const detail = document.getElementById(cardId + '-detail');
+    const isOpen = detail.classList.contains('open');
+
+    if(isOpen){
+        detail.classList.remove('open');
+        card.classList.remove('is-open');
+        btn.classList.remove('open');
+        btn.querySelector('.btn-label').textContent = 'Read More';
+    } else {
+        detail.classList.add('open');
+        card.classList.add('is-open');
+        btn.classList.add('open');
+        btn.querySelector('.btn-label').textContent = 'Show Less';
+    }
+}
+
+/* ── FAQ ── */
+function toggleFaq(btn){
+    const answer  = btn.nextElementSibling;
+    const chevron = btn.querySelector('.chevron');
+    const isOpen  = answer.classList.contains('open');
+
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+
+    if(!isOpen){
+        answer.classList.add('open');
+        chevron.classList.add('open');
+    }
+}
+
+/* ── MOBILE MENU ── */
+const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+const mobileMenu    = document.getElementById("mobileMenu");
+
+mobileMenuBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle("hidden");
+});
+
+document.addEventListener("click", e => {
+    if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target))
+        mobileMenu.classList.add("hidden");
+});
+
+</script>
+
+</body>
+</html>

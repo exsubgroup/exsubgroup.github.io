@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Extension – Exsub Group</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --border:#232938;
+    --purple:#7c3aed;
+}
+
+*{ font-family:'Inter',sans-serif; }
+
+body{
+    background:#050508;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ── BG GLOW ── */
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%; left:-50%;
+    width:200%; height:200%;
+    background:
+        radial-gradient(ellipse at top center,rgba(124,58,237,0.18) 0%,transparent 40%),
+        radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+/* ── NAV ── */
+.glass-nav{
+    background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.06);
+}
+
+/* ── CARD ── */
+.card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid var(--border);
+}
+
+/* ── HERO EXT MOCKUP ── */
+.ext-mockup{
+    background:linear-gradient(145deg,#1a1d2a,#111320);
+    border:1px solid #2a2d40;
+    border-radius:20px;
+    padding:18px;
+    width:320px;
+    box-shadow:0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.15);
+}
+
+.ext-mockup-bar{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:14px;
+}
+
+.ext-mockup-dot{
+    width:10px; height:10px;
+    border-radius:50%;
+}
+
+.ext-mockup-url{
+    flex:1;
+    background:#0d0f17;
+    border:1px solid #252938;
+    border-radius:6px;
+    padding:4px 10px;
+    font-size:11px;
+    color:#555;
+}
+
+.ext-icon-large{
+    width:56px; height:56px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#7c3aed,#5b21b6);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    box-shadow:0 8px 24px rgba(124,58,237,0.4);
+    flex-shrink:0;
+}
+
+/* ── DOWNLOAD BUTTON ── */
+.btn-download{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 32px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:700;
+    color:white;
+    background:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
+    border:1px solid rgba(255,255,255,0.1);
+    cursor:pointer;
+    transition:.25s;
+    text-decoration:none;
+    box-shadow:0 8px 32px rgba(124,58,237,0.35);
+}
+
+.btn-download:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 40px rgba(124,58,237,0.5);
+}
+
+.btn-outline{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 28px;
+    border-radius:14px;
+    font-size:14px;
+    font-weight:600;
+    color:#c4b5fd;
+    background:rgba(124,58,237,0.08);
+    border:1px solid rgba(124,58,237,0.3);
+    cursor:pointer;
+    transition:.25s;
+    text-decoration:none;
+}
+
+.btn-outline:hover{
+    background:rgba(124,58,237,0.18);
+    border-color:rgba(124,58,237,0.6);
+}
+
+/* ── FEATURE CARD ── */
+.feat-card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:20px;
+    padding:24px;
+    transition:.3s;
+}
+
+.feat-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(124,58,237,0.45);
+}
+
+.feat-icon{
+    width:46px; height:46px;
+    border-radius:13px;
+    background:rgba(124,58,237,0.12);
+    border:1px solid rgba(124,58,237,0.25);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+    margin-bottom:14px;
+}
+
+/* ── STEP PILLS ── */
+.step-pill{
+    display:flex;
+    align-items:flex-start;
+    gap:16px;
+    padding:20px;
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:18px;
+    transition:.3s;
+}
+
+.step-pill:hover{
+    border-color:rgba(124,58,237,0.4);
+}
+
+.step-num{
+    width:36px; height:36px;
+    border-radius:10px;
+    background:rgba(124,58,237,0.15);
+    border:1px solid rgba(124,58,237,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:900;
+    color:#c4b5fd;
+    flex-shrink:0;
+}
+
+/* ── CONNECTOR LINE ── */
+.steps-wrap{
+    position:relative;
+}
+
+.steps-wrap::before{
+    content:'';
+    position:absolute;
+    left:38px; top:36px; bottom:36px;
+    width:1px;
+    background:linear-gradient(to bottom,rgba(124,58,237,0.4),rgba(124,58,237,0.05));
+}
+
+/* ── BADGE ── */
+.badge{
+    padding:4px 11px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(124,58,237,.15);
+    color:#c4b5fd;
+    border:1px solid rgba(124,58,237,0.2);
+}
+
+.badge-green{
+    padding:4px 11px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(34,197,94,.12);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,0.2);
+}
+
+/* ── GRADIENT TEXT ── */
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.purple-text{
+    background:linear-gradient(135deg,#a78bfa,#7c3aed);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+/* ── PULSE RING ── */
+@keyframes pulse-ring{
+    0%  { transform:scale(1);   opacity:.6; }
+    100%{ transform:scale(1.55);opacity:0; }
+}
+
+.pulse-ring{
+    position:absolute;
+    inset:-12px;
+    border-radius:50%;
+    border:2px solid rgba(124,58,237,0.4);
+    animation:pulse-ring 2s ease-out infinite;
+    pointer-events:none;
+}
+
+.pulse-ring-2{
+    animation-delay:.7s;
+}
+
+/* ── VERSION CHIP ── */
+.version-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 14px;
+    border-radius:999px;
+    background:rgba(124,58,237,0.1);
+    border:1px solid rgba(124,58,237,0.25);
+    font-size:12px;
+    color:#a78bfa;
+}
+
+/* ── REQUIREMENT ROW ── */
+.req-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:13px 0;
+    border-bottom:1px solid #1a1d28;
+}
+.req-row:last-child{ border-bottom:none; }
+
+/* ── FAQ ── */
+.faq-item{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:16px;
+    overflow:hidden;
+    transition:.3s;
+}
+.faq-item:hover{ border-color:rgba(124,58,237,0.4); }
+
+.faq-btn{
+    width:100%;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px;
+    background:none; border:none;
+    color:white; cursor:pointer;
+    font-size:14px; font-weight:600;
+    text-align:left; gap:12px;
+}
+
+.faq-answer{
+    display:none;
+    padding:0 22px 18px;
+    color:#9ca3af; font-size:13.5px; line-height:1.75;
+}
+.faq-answer.open{ display:block; }
+
+.chevron{ transition:.3s; flex-shrink:0; color:#7c3aed; }
+.chevron.open{ transform:rotate(180deg); }
+
+/* ── SHIMMER BORDER HERO ── */
+@keyframes border-spin{
+    from{ transform:rotate(0deg); }
+    to  { transform:rotate(360deg); }
+}
+
+.spin-border{
+    position:absolute;
+    inset:-2px;
+    border-radius:22px;
+    background:conic-gradient(from 0deg, transparent 70%, rgba(124,58,237,0.6) 100%);
+    animation:border-spin 4s linear infinite;
+    z-index:-1;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+
+        <button id="mobileMenuBtn"
+        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+            <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+            <span class="font-semibold text-[17px]">Exsub Group</span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+            <a href="dashboard.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="channels.html"  class="text-white hover:text-purple-300 transition">Channels</a>
+            <a href="groups.html"    class="text-white hover:text-purple-300 transition">Groups</a>
+            <a href="issues.html"    class="text-white hover:text-purple-300 transition">Issues</a>
+            <a href="support.html"   class="text-white hover:text-purple-300 transition">Support</a>
+            <a href="HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="extension.html" class="text-purple-300 font-semibold">Extension</a>
+        </div>
+
+        <div class="flex items-center gap-2"></div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+        <div class="flex flex-col gap-4 text-sm">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="channels.html">Channels</a>
+            <a href="groups.html">Groups</a>
+            <a href="issues.html">Issues</a>
+            <a href="support.html">Support</a>
+            <a href="HowtoWork.html">How To Work</a>
+            <a href="extension.html" class="text-purple-400">Extension</a>
+        </div>
+    </div>
+
+</nav>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main class="relative z-10 pt-28 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+
+    <!-- ── HERO ── -->
+    <section class="flex flex-col lg:flex-row items-center gap-14 mb-24 pt-6">
+
+        <!-- Left text -->
+        <div class="flex-1 text-center lg:text-left">
+
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-6">
+                <span>🧩</span>
+                <span>Official Browser Extension</span>
+            </div>
+
+            <h1 class="text-5xl sm:text-6xl font-black leading-tight mb-5">
+                <span class="gradient-text">Exsub Group</span><br>
+                <span class="purple-text">Extension</span>
+            </h1>
+
+            <p class="text-gray-400 text-lg leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
+                The official extension for Exsub Group members. It automatically tracks your YouTube watch activity, detects play/pause events, and sends your proof directly to admin — with one click.
+            </p>
+
+            <div class="flex items-center gap-3 mb-8 justify-center lg:justify-start flex-wrap">
+                <span class="version-chip">
+                    <span style="width:7px;height:7px;border-radius:50%;background:#86efac;display:inline-block;"></span>
+                    v2.4.1 Latest
+                </span>
+                <span class="badge-green">Free for all members</span>
+                <span class="badge">Chrome & Edge</span>
+            </div>
+
+            <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+
+                <!-- Primary download -->
+                <a href="#" id="downloadBtn" class="btn-download">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Extension
+                </a>
+
+                <!-- Install guide -->
+                <a href="#install" class="btn-outline">
+                    📖 Installation Guide
+                </a>
+
+            </div>
+
+            <!-- Trust badges -->
+            <div class="flex items-center gap-5 mt-8 justify-center lg:justify-start flex-wrap">
+                <div class="flex items-center gap-2 text-gray-500 text-xs">
+                    <span>🔒</span><span>Safe & Verified</span>
+                </div>
+                <div class="flex items-center gap-2 text-gray-500 text-xs">
+                    <span>⚡</span><span>Lightweight — under 500 KB</span>
+                </div>
+                <div class="flex items-center gap-2 text-gray-500 text-xs">
+                    <span>🔄</span><span>Auto-updates</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right mockup -->
+        <div class="flex-shrink-0 flex items-center justify-center">
+
+            <div style="position:relative;">
+
+                <!-- Glow blob -->
+                <div style="position:absolute;inset:-60px;background:radial-gradient(circle,rgba(124,58,237,0.2),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+
+                <!-- Browser mockup -->
+                <div class="ext-mockup">
+
+                    <!-- Browser bar -->
+                    <div class="ext-mockup-bar">
+                        <div class="ext-mockup-dot" style="background:#ff5f56;"></div>
+                        <div class="ext-mockup-dot" style="background:#ffbd2e;"></div>
+                        <div class="ext-mockup-dot" style="background:#27c93f;"></div>
+                        <div class="ext-mockup-url">exsub.group/dashboard</div>
+                        <!-- extension icon in toolbar -->
+                        <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;">
+                            <img src="images/logo.svg" style="width:14px;height:14px;" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Extension popup preview -->
+                    <div style="background:#0d0f17;border-radius:14px;padding:16px;border:1px solid #1e2130;">
+
+                        <!-- Popup header -->
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1e2130;">
+                            <div style="position:relative;">
+                                <div class="pulse-ring"></div>
+                                <div class="pulse-ring pulse-ring-2"></div>
+                                <div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;">
+                                    <img src="images/logo.svg" style="width:22px;height:22px;" onerror="this.style.display='none'">
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size:12px;font-weight:700;">Exsub Group</div>
+                                <div style="font-size:9px;color:#86efac;display:flex;align-items:center;gap:3px;">
+                                    <span style="width:5px;height:5px;border-radius:50%;background:#86efac;display:inline-block;"></span>
+                                    Tracking Active
+                                </div>
+                            </div>
+                            <div style="margin-left:auto;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;padding:3px 8px;font-size:9px;color:#c4b5fd;">
+                                ID #4821
+                            </div>
+                        </div>
+
+                        <!-- YouTube watch status -->
+                        <div style="background:#0a1a0a;border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:10px;margin-bottom:8px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                <div class="mockup-state" style="font-size:9px;color:#86efac;font-weight:700;letter-spacing:.5px;">▶ PLAYING</div>
+                                <div class="mockup-time" style="font-size:9px;color:#555;">4:32 / 8:10</div>
+                            </div>
+                            <!-- Progress bar -->
+                            <div style="background:#1a1d28;border-radius:4px;height:4px;margin-bottom:6px;">
+                                <div class="mockup-progress-fill" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);width:55%;height:4px;border-radius:4px;transition:width .8s linear;"></div>
+                            </div>
+                            <div style="font-size:9px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                📺 How to grow your YouTube channel fast
+                            </div>
+                        </div>
+
+                        <!-- Watch stats row -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
+                            <div style="background:#131620;border:1px solid #1e2130;border-radius:8px;padding:8px;text-align:center;">
+                                <div class="mockup-pct" style="font-size:14px;font-weight:900;color:#86efac;">55%</div>
+                                <div style="font-size:8px;color:#555;margin-top:1px;">Watched</div>
+                            </div>
+                            <div style="background:#131620;border:1px solid #1e2130;border-radius:8px;padding:8px;text-align:center;">
+                                <div style="font-size:14px;font-weight:900;color:#fbbf24;">2</div>
+                                <div style="font-size:8px;color:#555;margin-top:1px;">Pauses</div>
+                            </div>
+                            <div style="background:#131620;border:1px solid #1e2130;border-radius:8px;padding:8px;text-align:center;">
+                                <div style="font-size:14px;font-weight:900;color:#a78bfa;">4:32</div>
+                                <div style="font-size:8px;color:#555;margin-top:1px;">Watch Time</div>
+                            </div>
+                        </div>
+
+                        <!-- Auto proof sent alert -->
+                        <div style="background:#0f1a1f;border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:9px;margin-bottom:8px;display:flex;align-items:center;gap:7px;">
+                            <span style="font-size:13px;">📤</span>
+                            <div>
+                                <div style="font-size:9px;color:#7dd3fc;font-weight:600;">Proof auto-sent to admin</div>
+                                <div style="font-size:8px;color:#555;">Screenshot captured at 4:32</div>
+                            </div>
+                            <div style="margin-left:auto;font-size:9px;color:#86efac;">✓</div>
+                        </div>
+
+                        <!-- One-click submit button -->
+                        <div style="background:linear-gradient(180deg,#7c3aed,#5b21b6);border-radius:10px;padding:10px;text-align:center;cursor:pointer;">
+                            <div style="font-size:11px;font-weight:700;letter-spacing:.3px;">⚡ Submit Subscribe Proof</div>
+                            <div style="font-size:8px;color:rgba(255,255,255,0.6);margin-top:2px;">One click · Auto-fills your ID</div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ── FEATURES ── -->
+    <section class="mb-20">
+
+        <div class="text-center mb-12">
+            <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-4">✨ Core Features</div>
+            <h2 class="text-3xl font-black gradient-text">Four powerful tools in one extension</h2>
+            <p class="text-gray-400 mt-3 max-w-xl mx-auto">Everything the extension does automatically — so you focus on the task, not the paperwork.</p>
+        </div>
+
+        <!-- Feature 1 — full width highlight -->
+        <div class="feat-card mb-5" style="border-color:rgba(124,58,237,0.35);background:linear-gradient(135deg,#181b28,#101420);padding:32px;">
+            <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+
+                <div style="flex:1;min-width:260px;">
+                    <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);font-size:11px;color:#a78bfa;margin-bottom:14px;">
+                        FEATURE 01
+                    </div>
+                    <h3 class="text-xl font-black mb-3">📤 Automatic Proof Sent to Admin</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        The moment you complete a task on YouTube, the extension automatically captures your proof — screenshot, watch time, and your User Code — and sends it directly to your admin. No manual steps, no forgetting.
+                    </p>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2);">✓ Screenshot auto-captured</span>
+                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2);">✓ User Code auto-attached</span>
+                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2);">✓ Sent instantly</span>
+                    </div>
+                </div>
+
+                <!-- Mini visual -->
+                <div style="flex-shrink:0;background:#0d0f17;border:1px solid #1e2130;border-radius:16px;padding:16px;min-width:220px;">
+                    <div style="font-size:10px;color:#555;margin-bottom:10px;letter-spacing:.5px;">AUTO PROOF SYSTEM</div>
+                    <div style="display:flex;flex-direction:column;gap:7px;">
+                        <div style="display:flex;align-items:center;gap:8px;background:#111420;border:1px solid #1e2130;border-radius:9px;padding:9px;">
+                            <span style="font-size:14px;">📺</span>
+                            <div style="flex:1;">
+                                <div style="font-size:9px;color:#d1d5db;font-weight:600;">Task video detected</div>
+                                <div style="font-size:8px;color:#555;">youtube.com/watch?v=...</div>
+                            </div>
+                            <div style="width:7px;height:7px;border-radius:50%;background:#86efac;"></div>
+                        </div>
+                        <div style="text-align:center;font-size:10px;color:#7c3aed;">↓ capturing...</div>
+                        <div style="display:flex;align-items:center;gap:8px;background:#111420;border:1px solid #1e2130;border-radius:9px;padding:9px;">
+                            <span style="font-size:14px;">📸</span>
+                            <div style="flex:1;">
+                                <div style="font-size:9px;color:#d1d5db;font-weight:600;">Proof screenshot taken</div>
+                                <div style="font-size:8px;color:#555;">ID #4821 · 4m32s watched</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center;font-size:10px;color:#7c3aed;">↓ sending...</div>
+                        <div style="display:flex;align-items:center;gap:8px;background:#0a1a10;border:1px solid rgba(34,197,94,0.2);border-radius:9px;padding:9px;">
+                            <span style="font-size:14px;">✅</span>
+                            <div>
+                                <div style="font-size:9px;color:#86efac;font-weight:600;">Proof delivered to admin</div>
+                                <div style="font-size:8px;color:#555;">Just now</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Feature 2 — full width highlight -->
+        <div class="feat-card mb-5" style="border-color:rgba(56,189,248,0.2);background:linear-gradient(135deg,#181b28,#101420);padding:32px;">
+            <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+
+                <div style="flex:1;min-width:260px;">
+                    <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);font-size:11px;color:#7dd3fc;margin-bottom:14px;">
+                        FEATURE 02
+                    </div>
+                    <h3 class="text-xl font-black mb-3">📊 YouTube Watch Performance Tracker</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        The extension tracks exactly how much of each assigned video a member has watched — total watch time, percentage completed, number of pauses, and re-watches. All data is recorded per member and per video.
+                    </p>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);">📈 % watched tracked</span>
+                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);">⏱ Total watch time</span>
+                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);">🔁 Re-watch count</span>
+                    </div>
+                </div>
+
+                <!-- Mini visual -->
+                <div style="flex-shrink:0;background:#0d0f17;border:1px solid #1e2130;border-radius:16px;padding:16px;min-width:220px;">
+                    <div style="font-size:10px;color:#555;margin-bottom:10px;letter-spacing:.5px;">WATCH PERFORMANCE</div>
+                    <!-- progress bars -->
+                    <div style="display:flex;flex-direction:column;gap:9px;">
+                        <div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <span style="font-size:9px;color:#9ca3af;">Video #1</span>
+                                <span style="font-size:9px;color:#86efac;font-weight:700;">100%</span>
+                            </div>
+                            <div style="background:#1a1d28;border-radius:4px;height:6px;">
+                                <div style="background:linear-gradient(90deg,#22c55e,#86efac);width:100%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <span style="font-size:9px;color:#9ca3af;">Video #2</span>
+                                <span style="font-size:9px;color:#7dd3fc;font-weight:700;">78%</span>
+                            </div>
+                            <div style="background:#1a1d28;border-radius:4px;height:6px;">
+                                <div style="background:linear-gradient(90deg,#38bdf8,#7dd3fc);width:78%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <span style="font-size:9px;color:#9ca3af;">Video #3</span>
+                                <span style="font-size:9px;color:#fbbf24;font-weight:700;">55%</span>
+                            </div>
+                            <div style="background:#1a1d28;border-radius:4px;height:6px;">
+                                <div style="background:linear-gradient(90deg,#f59e0b,#fbbf24);width:55%;height:6px;border-radius:4px;"></div>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
+                            <div style="background:#111420;border:1px solid #1e2130;border-radius:8px;padding:7px;text-align:center;">
+                                <div style="font-size:13px;font-weight:900;color:#a78bfa;">14:21</div>
+                                <div style="font-size:8px;color:#555;">Total Watch</div>
+                            </div>
+                            <div style="background:#111420;border:1px solid #1e2130;border-radius:8px;padding:7px;text-align:center;">
+                                <div style="font-size:13px;font-weight:900;color:#fbbf24;">5</div>
+                                <div style="font-size:8px;color:#555;">Pauses</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Features 3 & 4 — side by side -->
+        <div class="grid md:grid-cols-2 gap-5">
+
+            <!-- Feature 3 -->
+            <div class="feat-card" style="padding:28px;">
+                <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);font-size:11px;color:#fde68a;margin-bottom:14px;">
+                    FEATURE 03
+                </div>
+                <h3 class="text-lg font-black mb-3">⏯ Play / Pause Detection</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-5">
+                    The extension listens to every play and pause event on the assigned YouTube video. If a member pauses too often or skips ahead, it is recorded and flagged automatically — no way to fake a full watch.
+                </p>
+
+                <!-- Visual event log -->
+                <div style="background:#0d0f17;border:1px solid #1e2130;border-radius:12px;padding:12px;">
+                    <div style="font-size:9px;color:#555;margin-bottom:8px;letter-spacing:.5px;">LIVE EVENT LOG</div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">▶</div>
+                            <div style="font-size:10px;color:#9ca3af;">Video started <span style="color:#555;">— 0:00</span></div>
+                            <div style="margin-left:auto;font-size:9px;color:#555;">12:01</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(251,191,36,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;">⏸</div>
+                            <div style="font-size:10px;color:#9ca3af;">Paused <span style="color:#555;">— 1:45</span></div>
+                            <div style="margin-left:auto;font-size:9px;color:#555;">12:03</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">▶</div>
+                            <div style="font-size:10px;color:#9ca3af;">Resumed <span style="color:#555;">— 1:45</span></div>
+                            <div style="margin-left:auto;font-size:9px;color:#555;">12:04</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;">⏭</div>
+                            <div style="font-size:10px;color:#fca5a5;">Skip detected <span style="color:#555;">— 2:10→5:30</span></div>
+                            <div style="margin-left:auto;font-size:9px;color:#ef4444;">⚠</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">✓</div>
+                            <div style="font-size:10px;color:#9ca3af;">Video ended <span style="color:#555;">— 8:10</span></div>
+                            <div style="margin-left:auto;font-size:9px;color:#86efac;">done</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feat-card" style="padding:28px;border-color:rgba(124,58,237,0.35);">
+                <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);font-size:11px;color:#c4b5fd;margin-bottom:14px;">
+                    FEATURE 04
+                </div>
+                <h3 class="text-lg font-black mb-3">⚡ One-Click Subscribe Proof Submit</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-5">
+                    After subscribing to the assigned channel, hit the submit button in the extension. It automatically fills in your User Code, captures the subscribed state, and sends the proof to admin — all in one click.
+                </p>
+
+                <!-- Visual button demo -->
+                <div style="background:#0d0f17;border:1px solid #1e2130;border-radius:12px;padding:14px;">
+                    <div style="font-size:9px;color:#555;margin-bottom:10px;letter-spacing:.5px;">SUBSCRIBE PROOF PANEL</div>
+
+                    <div style="background:#111420;border:1px solid #1e2130;border-radius:10px;padding:10px;margin-bottom:8px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                            <div style="font-size:10px;color:#9ca3af;">Channel assigned</div>
+                            <div style="font-size:10px;color:#86efac;font-weight:600;">✓ Subscribed</div>
+                        </div>
+                        <div style="font-size:9px;color:#555;">@ExsubOfficialChannel</div>
+                    </div>
+
+                    <div style="background:#111420;border:1px solid #1e2130;border-radius:10px;padding:10px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:12px;">🪪</span>
+                        <div>
+                            <div style="font-size:9px;color:#555;">Member ID</div>
+                            <div style="font-size:10px;color:#c4b5fd;font-weight:700;">#4821 — auto-filled</div>
+                        </div>
+                        <div style="margin-left:auto;">
+                            <div style="width:16px;height:16px;border-radius:4px;background:rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:8px;">✓</div>
+                        </div>
+                    </div>
+
+                    <!-- The big button -->
+                    <div id="demoSubmitBtn" onclick="demoSubmit()" style="background:linear-gradient(180deg,#924ef4,#7b2af0);border-radius:10px;padding:13px;text-align:center;cursor:pointer;transition:.2s;user-select:none;">
+                        <div style="font-size:12px;font-weight:800;letter-spacing:.3px;">⚡ Submit Subscribe Proof</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.55);margin-top:2px;">Tap to send · takes 1 second</div>
+                    </div>
+                    <div id="demoSuccess" style="display:none;background:#0a1a0a;border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:11px;text-align:center;margin-top:8px;">
+                        <div style="font-size:12px;font-weight:700;color:#86efac;">✅ Proof sent to admin!</div>
+                        <div style="font-size:9px;color:#555;margin-top:2px;">Confirmed · ID #4821</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ── INSTALLATION GUIDE ── -->
+    <section id="install" class="mb-20">
+
+        <div class="text-center mb-10">
+            <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-4">📥 Installation</div>
+            <h2 class="text-3xl font-black gradient-text">Install in under 2 minutes</h2>
+            <p class="text-gray-400 mt-3">Works on Chrome, Brave, Edge, and any Chromium browser.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+
+            <!-- Steps -->
+            <div class="steps-wrap flex flex-col gap-4">
+
+                <div class="step-pill">
+                    <div class="step-num">1</div>
+                    <div>
+                        <div class="font-semibold mb-1">Download the extension file</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Click the <strong class="text-white">Download Extension</strong> button above. A <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">.crx</code> or <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">.zip</code> file will be saved to your device.</p>
+                    </div>
+                </div>
+
+                <div class="step-pill">
+                    <div class="step-num">2</div>
+                    <div>
+                        <div class="font-semibold mb-1">Open Extensions page in Chrome</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Type <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">chrome://extensions</code> in your address bar and press Enter. Make sure <strong class="text-white">Developer Mode</strong> is toggled ON (top-right corner).</p>
+                    </div>
+                </div>
+
+                <div class="step-pill">
+                    <div class="step-num">3</div>
+                    <div>
+                        <div class="font-semibold mb-1">Load the extension</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            If you have a <strong class="text-white">.zip</strong> file: unzip it first, then click <strong class="text-white">Load Unpacked</strong> and select the unzipped folder.<br><br>
+                            If you have a <strong class="text-white">.crx</strong> file: drag and drop it directly onto the <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">chrome://extensions</code> page.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-pill">
+                    <div class="step-num">4</div>
+                    <div>
+                        <div class="font-semibold mb-1">Pin it to your toolbar</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Click the puzzle-piece icon 🧩 in the Chrome toolbar, find <strong class="text-white">Exsub Group</strong>, and click the pin icon so it always shows.</p>
+                    </div>
+                </div>
+
+                <div class="step-pill">
+                    <div class="step-num">5</div>
+                    <div>
+                        <div class="font-semibold mb-1">Enter your User Code</div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Click the Exsub extension icon in your toolbar. Enter your <strong class="text-white">User Code</strong> to connect your account. You're done!</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Requirements card -->
+            <div>
+
+                <div class="card rounded-3xl p-6 mb-5">
+
+                    <div class="flex items-center gap-3 mb-5">
+                        <div style="width:40px;height:40px;border-radius:11px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;">💻</div>
+                        <div>
+                            <div class="font-bold">System Requirements</div>
+                            <div class="text-gray-500 text-xs">Compatible browsers & OS</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="req-row">
+                            <span class="text-gray-400 text-sm">Browser</span>
+                            <span class="text-sm font-medium">Chrome 88+, Edge 88+, Brave</span>
+                        </div>
+                        <div class="req-row">
+                            <span class="text-gray-400 text-sm">Operating System</span>
+                            <span class="text-sm font-medium">Windows, macOS, Linux</span>
+                        </div>
+                        <div class="req-row">
+                            <span class="text-gray-400 text-sm">File Size</span>
+                            <span class="text-sm font-medium">~480 KB</span>
+                        </div>
+                        <div class="req-row">
+                            <span class="text-gray-400 text-sm">Version</span>
+                            <span class="badge-green">v2.4.1</span>
+                        </div>
+                        <div class="req-row">
+                            <span class="text-gray-400 text-sm">Last Updated</span>
+                            <span class="text-sm font-medium">June 2025</span>
+                        </div>
+                        <div class="req-row">
+                            <span class="text-gray-400 text-sm">Required</span>
+                            <span class="text-sm font-medium">Active Exsub Member Account</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Download again CTA inside this col -->
+                <div class="card rounded-3xl p-6 text-center" style="border-color:rgba(124,58,237,0.3);background:linear-gradient(135deg,#171a24,#13101f);">
+                    <div class="text-3xl mb-3">⬇️</div>
+                    <div class="font-bold text-lg mb-1">Ready to install?</div>
+                    <p class="text-gray-400 text-sm mb-5">Free for all registered Exsub Group members.</p>
+                    <a href="#" id="downloadBtn2" class="btn-download" style="width:100%;justify-content:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download Extension
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ── FAQ ── -->
+    <section class="mb-20">
+
+        <div class="text-center mb-10">
+            <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-4">❓ FAQ</div>
+            <h2 class="text-3xl font-black gradient-text">Common Questions</h2>
+        </div>
+
+        <div class="flex flex-col gap-3 max-w-3xl mx-auto">
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>Is the extension free?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Yes, the Exsub Group extension is completely free for all registered members. You only need an active member account to use it.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>Is it safe to install?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Absolutely. The extension is built and maintained by the Exsub Group team. It does not collect personal data, does not access any websites outside of Exsub platforms, and stores your User Code locally in encrypted form.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>Does it work on Firefox or Safari?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Currently the extension supports Chromium-based browsers only — Google Chrome, Microsoft Edge, and Brave. Firefox and Safari support is planned for a future release.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>How do I update to a newer version?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">When a new version is released, simply download it from this page and load it again using the same installation steps. Your settings and User Code will be preserved.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>The extension says "Not from Chrome Web Store" — is that normal?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Yes, this is expected. Because we distribute the extension directly rather than through the Chrome Web Store, Chrome will show this warning. It is safe to dismiss. Make sure you only download the extension from this official Exsub Group page.</div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-btn" onclick="toggleFaq(this)">
+                    <span>I installed it but it's not connecting. What do I do?</span>
+                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div class="faq-answer">Make sure you are entering your correct User Code. If the problem continues, try removing and reinstalling the extension. If it still doesn't work, submit a report on the Issues page with your User Code and a description of the problem.</div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ── BOTTOM CTA ── -->
+    <section class="card rounded-3xl p-10 text-center" style="border-color:rgba(124,58,237,0.3);background:linear-gradient(135deg,#171a24,#13101f);">
+
+        <div style="position:relative;display:inline-block;margin-bottom:20px;">
+            <div style="width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 12px 40px rgba(124,58,237,0.4);">
+                <img src="images/logo.svg" style="width:44px;height:44px;" onerror="this.parentElement.innerHTML='🧩'">
+            </div>
+        </div>
+
+        <h3 class="text-3xl font-black mb-3 gradient-text">Download &amp; Get Started</h3>
+        <p class="text-gray-400 mb-8 max-w-md mx-auto">Join thousands of Exsub Group members already using the extension to work smarter and faster.</p>
+
+        <div class="flex flex-wrap gap-4 justify-center">
+            <a href="#" class="btn-download">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Extension
+            </a>
+            <a href="support.html" class="btn-outline">Need help? Contact Support</a>
+        </div>
+
+    </section>
+
+
+</div>
+</main>
+
+
+<script>
+
+/* ── FAQ ── */
+function toggleFaq(btn){
+    const answer  = btn.nextElementSibling;
+    const chevron = btn.querySelector('.chevron');
+    const isOpen  = answer.classList.contains('open');
+
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+
+    if(!isOpen){
+        answer.classList.add('open');
+        chevron.classList.add('open');
+    }
+}
+
+/* ── MOBILE MENU ── */
+const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+const mobileMenu    = document.getElementById("mobileMenu");
+
+mobileMenuBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle("hidden");
+});
+
+document.addEventListener("click", e => {
+    if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target))
+        mobileMenu.classList.add("hidden");
+});
+
+/* ── ONE-CLICK SUBMIT DEMO ── */
+function demoSubmit(){
+    const btn     = document.getElementById('demoSubmitBtn');
+    const success = document.getElementById('demoSuccess');
+
+    btn.style.opacity = '.5';
+    btn.style.pointerEvents = 'none';
+    btn.querySelector('div').textContent = '⏳ Sending proof...';
+
+    setTimeout(()=>{
+        btn.style.display  = 'none';
+        success.style.display = 'block';
+        // reset after 3s so they can try again
+        setTimeout(()=>{
+            btn.style.display      = 'block';
+            btn.style.opacity      = '1';
+            btn.style.pointerEvents= 'auto';
+            btn.querySelector('div').textContent = '⚡ Submit Subscribe Proof';
+            success.style.display  = 'none';
+        }, 3000);
+    }, 1200);
+}
+
+/* ── MOCKUP PROGRESS BAR ANIMATION ── */
+(function(){
+    const bar   = document.querySelector('.mockup-progress-fill');
+    const pct   = document.querySelector('.mockup-pct');
+    const time  = document.querySelector('.mockup-time');
+    const state = document.querySelector('.mockup-state');
+    if(!bar) return;
+
+    const total = 490; // 8:10 in seconds
+    let current = 272; // start at 4:32
+    let playing = true;
+
+    function fmt(s){ return Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60); }
+
+    setInterval(()=>{
+        if(playing){
+            current = Math.min(current+1, total);
+            const p = Math.round(current/total*100);
+            bar.style.width = p+'%';
+            if(pct)  pct.textContent  = p+'%';
+            if(time) time.textContent = fmt(current)+' / '+fmt(total);
+            if(current === total){
+                state.textContent = '✓ COMPLETE';
+                state.style.color = '#86efac';
+            }
+        }
+    }, 800);
+
+    // simulate a pause at ~70%
+    setTimeout(()=>{
+        playing = false;
+        if(state){ state.textContent = '⏸ PAUSED'; state.style.color='#fbbf24'; }
+        setTimeout(()=>{
+            playing = true;
+            if(state){ state.textContent = '▶ PLAYING'; state.style.color='#86efac'; }
+        }, 2500);
+    }, 14000);
+})();
+
+/* ── DOWNLOAD BUTTON ──
+   Replace href="#" with your real file URL, e.g.:
+   document.querySelectorAll('[id^="downloadBtn"]').forEach(b => b.href = "files/exsub-extension.zip");
+*/
+
+</script>
+
+</body>
+</html>
