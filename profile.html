@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+
+const username = localStorage.getItem("username");
+
+if (!username || username.trim() === "") {
+    window.location.href = "/signin.html";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    const navUserName =
+    document.getElementById("navUserName");
+
+    if(navUserName){
+        navUserName.innerText = username;
+    }
+
+});
+
+</script>
+
+<style>
+
+
+.issue-card{
+    background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
+    border:1px solid #242938;
+    border-radius:22px;
+    padding:22px;
+    transition:0.3s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.issue-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+}
+
+.issue-header{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:flex-start;
+    margin-bottom:15px;
+}
+
+.issue-title{
+    font-size:19px;
+    font-weight:700;
+    color:white;
+}
+
+.issue-description{
+    color:#b2b8c7;
+    line-height:1.7;
+    margin-top:10px;
+    font-size:14px;
+}
+
+.issue-footer{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:18px;
+}
+
+.issue-tag{
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.issue-status-open{
+    background:rgba(239,68,68,0.15);
+    color:#fca5a5;
+    border:1px solid rgba(239,68,68,0.25);
+}
+
+.issue-status-progress{
+    background:rgba(245,158,11,0.15);
+    color:#fcd34d;
+    border:1px solid rgba(245,158,11,0.25);
+}
+
+.issue-status-resolved{
+    background:rgba(34,197,94,0.15);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,0.25);
+}
+
+.issue-type{
+    background:rgba(124,58,237,0.15);
+    color:#c4b5fd;
+    border:1px solid rgba(124,58,237,0.25);
+}
+
+.issue-reply{
+    margin-top:18px;
+    background:#0f1118;
+    border:1px solid #1f2330;
+    border-radius:16px;
+    padding:15px;
+}
+
+.issue-reply-title{
+    color:#8b5cf6;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.issue-date{
+    color:#8a8f9e;
+    font-size:12px;
+    margin-top:14px;
+}
+
+.channel-card{
+    background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
+    border:1px solid #242938;
+    border-radius:24px;
+    padding:22px;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    transition:0.3s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.channel-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+}
+
+.channel-card::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+}
+
+.channel-left{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+}
+
+.channel-image{
+    width:88px;
+    height:88px;
+    border-radius:22px;
+    object-fit:cover;
+    border:2px solid rgba(124,58,237,0.35);
+}
+
+.channel-name{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.channel-handle{
+    color:#9ca3af;
+    font-size:13px;
+    margin-bottom:14px;
+}
+
+.channel-info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+
+.channel-info-box{
+    background:#0f1118;
+    border:1px solid #1f2330;
+    border-radius:14px;
+    padding:12px;
+}
+
+.channel-info-box span{
+    display:block;
+    color:#8a8f9e;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.channel-info-box strong{
+    font-size:14px;
+    color:white;
+}
+
+.channel-right{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-width:170px;
+}
+
+.edit-btn{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.edit-btn:hover{
+    transform:translateY(-2px);
+}
+
+.update-btn{
+    background:#161922;
+    border:1px solid #2d3344;
+    color:white;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.update-btn:hover{
+    border-color:#7c3aed;
+}
+
+@media(max-width:768px){
+
+    .channel-card{
+        flex-direction:column;
+    }
+
+    .channel-left{
+        flex-direction:column;
+    }
+
+    .channel-info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .channel-right{
+        width:100%;
+        min-width:100%;
+    }
+
+}
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --card2:#101219;
+    --border:#1e212c;
+    --purple:#7c3aed;
+    --purple2:#8b5cf6;
+    --text-muted:#8a8f9e;
+}
+
+*{
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.glass-nav{
+        background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: white;
+}
+
+.card{
+    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    border:1px solid var(--border);
+    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset;
+}
+
+.card-hover{
+    transition:0.3s ease;
+}
+
+.card-hover:hover{
+    transform:translateY(-3px);
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.text-muted{
+    color:var(--text-muted);
+}
+
+.btn-purple{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    box-shadow:0 0 25px rgba(124,58,237,0.35);
+}
+
+.btn-purple:hover{
+    transform:translateY(-1px);
+}
+
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.profile-menu{
+    display:none;
+}
+#notifDropdown {
+    transition: all 0.2s ease;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<!-- =========================
+EXSUB NAVBAR
+========================= -->
+
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+
+        <!-- MOBILE MENU BUTTON -->
+        <button
+        id="exsubMobileToggleBtn"
+        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">
+
+            ☰
+
+        </button>
+
+        <!-- LOGO -->
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+
+            <img
+            src="images/logo.svg"
+            class="w-7 h-7 hidden md:block">
+
+            <span class="font-semibold text-[17px]">
+                Exsub Group
+            </span>
+
+        </div>
+
+        <!-- DESKTOP NAVIGATION -->
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+
+            <a href="#" class="text-white font-medium hover:text-purple-300 transition">
+                Dashboard
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-300 transition">
+                Issues
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-300 transition">
+                Channels
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-300 transition">
+                Tasks
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-300 transition">
+                Groups
+            </a>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="flex items-center gap-2">
+
+            <!-- NOTIFICATION -->
+          <div class="relative">
+
+    <!-- NOTIFICATION BUTTON -->
+    <button
+        id="notifBtn"
+        class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">
+        🔔
+
+        <span id="notifDot"
+        class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+    </button>
+
+    <!-- DROPDOWN -->
+    <div id="notifDropdown"
+        class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+
+        <div class="p-3 border-b border-[#232632] font-semibold text-sm">
+            Notifications
+        </div>
+
+        <div id="notifList" class="max-h-72 overflow-y-auto"></div>
+
+    </div>
+
+</div>
+
+            <!-- PROFILE MENU -->
+            <div class="relative">
+
+                <!-- PROFILE BUTTON -->
+                <button
+                id="exsubProfileToggleBtn"
+                class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+
+                    <img
+                    src="https://i.pravatar.cc/100"
+                    class="w-8 h-8 rounded-full">
+
+                    <span
+                    id="navUserName"
+                    class="hidden sm:block text-[13px]">
+
+                        Member
+
+                    </span>
+
+                    <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+
+                </button>
+
+                <!-- PROFILE DROPDOWN -->
+                <div
+                id="exsubProfileDropdownMenu"
+                class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+
+                    <!-- TOP -->
+                    <div class="p-4 border-b border-[#232632]">
+
+                        <div class="flex items-center gap-3">
+
+                            <img
+                            src="https://i.pravatar.cc/100"
+                            class="w-12 h-12 rounded-full">
+
+                            <div>
+
+                                <h3
+                                id="dropdownUserName"
+                                class="font-semibold text-sm">
+
+                                    Member
+
+                                </h3>
+
+                                <p
+                                id="dropdownUserCode"
+                                class="text-muted text-xs">
+
+                                    ID #0000
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- LINKS -->
+                    <div class="py-2">
+
+                        <a href="#"
+                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+
+                            My Profile
+
+                        </a>
+
+                        <a href="#"
+                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+
+                            Settings
+
+                        </a>
+
+                        <a href="#"
+                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+
+                            My Tasks
+
+                        </a>
+
+                        <a
+                        href="#"
+                        onclick="logoutUser()"
+                        class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
+
+                            Logout
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+    MOBILE NAVIGATION MENU
+    ========================= -->
+
+    <div
+    id="exsubMobileNavigationMenu"
+    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+
+        <div class="flex flex-col gap-4">
+
+            <a href="#" class="text-white hover:text-purple-400 transition">
+                Dashboard
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-400 transition">
+                Issues
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-400 transition">
+                Channels
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-400 transition">
+                Tasks
+            </a>
+
+            <a href="#" class="text-white hover:text-purple-400 transition">
+                Groups
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+
+<main class="relative z-10 pt-32 pb-20 px-4">
+
+
+
+
+<div class="max-w-[1200px] mx-auto">
+
+    <!-- ISSUES SECTION -->
+
+<div class="card rounded-3xl p-6 mb-8">
+
+    <div class="flex items-center justify-between mb-6">
+
+        <div>
+
+            <h2 class="text-2xl font-bold">
+                My Issues
+            </h2>
+
+            <p class="text-muted text-sm mt-1">
+                View all reported issues and admin responses
+            </p>
+
+        </div>
+
+        <div class="bg-red-500/10 text-red-300 px-4 py-2 rounded-xl text-sm border border-red-500/20">
+
+            Total Issues :
+            <span id="totalIssues" class="font-semibold">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- ISSUES CONTAINER -->
+
+    <div id="issuesContainer" class="space-y-5">
+
+        <!-- ISSUES WILL LOAD HERE -->
+
+    </div>
+
+</div>
+
+
+    <!-- PROFILE HEADER -->
+
+    <div class="card rounded-3xl p-6 lg:p-8">
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+
+            <!-- LEFT -->
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+
+                <div class="relative">
+
+                    <img src="https://i.pravatar.cc/150"
+                    class="w-28 h-28 rounded-3xl border border-purple-500">
+
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-green-500 border-4 border-[#101219]"></div>
+
+                </div>
+
+              <div>
+
+    <h1 class="text-3xl font-bold gradient-text" id="profileUserName">
+        Name
+    </h1>
+
+    <div class="flex flex-wrap items-center gap-6 mt-4">
+
+        <div class="text-sm text-muted">
+            User Code :
+            <span id="profileUserCode" class="text-white font-medium"></span>
+        </div>
+
+        <div class="text-sm text-muted">
+            Join Date :
+            <span id="profileJoinDate" class="text-white font-medium"></span>
+        </div>
+
+    </div>
+
+    <div class="text-muted text-sm mt-4">
+        Country :
+        <span id="profileCountry" class="text-white"></span>
+    </div>
+
+</div>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button class="btn-purple px-6 py-3 rounded-full text-sm font-medium">
+                Edit Profile
+            </button>
+
+        </div>
+
+    </div>
+<!-- MY CHANNELS -->
+
+<div class="card rounded-3xl p-6 mt-8">
+
+    <div class="flex items-center justify-between mb-7">
+
+        <div>
+
+            <h2 class="text-2xl font-bold">
+                Your Promotional Channel
+            </h2>
+
+            <p class="text-muted text-sm mt-1">
+                Manage and update your Promotional YouTube channel.This channel will be promoted using tasks. 
+            </p>
+
+        </div>
+
+      <div class="flex items-center gap-3">
+
+    <div class="bg-purple-500/10 text-purple-300 px-4 py-2 rounded-xl text-sm border border-purple-500/20">
+
+        Total Channels :
+        <span id="totalChannels" class="font-semibold">
+            0
+        </span>
+
+    </div>
+
+    <button
+    onclick="openAddChannelModal()"
+    class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
+
+        + Add Channel
+
+    </button>
+
+</div>
+
+    </div>
+
+    <!-- CHANNELS LIST -->
+
+    <div id="channelsContainer" class="space-y-5">
+
+        <!-- CHANNEL CARD -->
+
+    </div>
+
+</div>
+    <!-- STATS -->
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-7">
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Today Tasks Done
+            </div>
+
+            <h2 class="text-3xl font-bold mt-3">
+                12
+            </h2>
+
+        </div>
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Total Tasks
+            </div>
+
+            <h2 class="text-3xl font-bold mt-3">
+                348
+            </h2>
+
+        </div>
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Total Earnings
+            </div>
+
+            <h2 class="text-3xl font-bold mt-3">
+                $245
+            </h2>
+
+        </div>
+
+        <div class="card card-hover rounded-2xl p-5">
+
+            <div class="text-muted text-sm">
+                Last Active
+            </div>
+
+            <h2 class="text-lg font-bold mt-3">
+                2 Hours Ago
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- BIG SECTIONS -->
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+
+        <!-- LEFT -->
+
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- GROUPS -->
+
+            <div class="card rounded-3xl p-6">
+
+                <div class="flex items-center justify-between mb-6">
+
+                    <h2 class="text-xl font-semibold">
+                        My Groups
+                    </h2>
+
+                    <button class="text-sm text-purple-400">
+                        View All
+                    </button>
+
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Subscribers Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Exchange real subscribers
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                🔥
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Video Boost Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Increase views and reach
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                🚀
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Watch Time Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Improve watch hours
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                ⏱️
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card card-hover rounded-2xl p-5">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h3 class="font-semibold">
+                                    Engagement Group
+                                </h3>
+
+                                <p class="text-muted text-sm mt-1">
+                                    Likes and comments support
+                                </p>
+
+                            </div>
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/20 flex items-center justify-center">
+
+                                💜
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTIVITY -->
+
+            <div class="card rounded-3xl p-6">
+
+                <h2 class="text-xl font-semibold mb-6">
+                    Recent Activity
+                </h2>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center justify-between border-b border-[#1f2330] pb-4">
+
+                        <div>
+
+                            <h4 class="font-medium">
+                                Completed Subscriber Task
+                            </h4>
+
+                            <p class="text-muted text-sm mt-1">
+                                You subscribed to 5 channels
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm text-muted">
+                            2h ago
+                        </span>
+
+                    </div>
+
+                    <div class="flex items-center justify-between border-b border-[#1f2330] pb-4">
+
+                        <div>
+
+                            <h4 class="font-medium">
+                                Earned Reward
+                            </h4>
+
+                            <p class="text-muted text-sm mt-1">
+                                You earned 20 points
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm text-muted">
+                            5h ago
+                        </span>
+
+                    </div>
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+
+                            <h4 class="font-medium">
+                                Joined New Group
+                            </h4>
+
+                            <p class="text-muted text-sm mt-1">
+                                Video Promotion Group
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm text-muted">
+                            Yesterday
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+
+        <div class="space-y-6">
+
+            <!-- LEVEL -->
+
+            <div class="card rounded-3xl p-6">
+
+                <h2 class="text-lg font-semibold">
+                    Member Level
+                </h2>
+
+                <div class="mt-5">
+
+                    <div class="flex justify-between mb-2 text-sm">
+
+                        <span class="text-muted">
+                            Level 12
+                        </span>
+
+                        <span>
+                            72%
+                        </span>
+
+                    </div>
+
+                    <div class="w-full h-3 rounded-full bg-[#1a1d27] overflow-hidden">
+
+                        <div class="h-full w-[72%] bg-gradient-to-r from-purple-500 to-purple-400 rounded-full"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACHIEVEMENTS -->
+
+            <div class="card rounded-3xl p-6">
+
+                <h2 class="text-lg font-semibold mb-5">
+                    Achievements
+                </h2>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                            🏆
+                        </div>
+
+                        <div>
+
+                            <h4 class="font-medium text-sm">
+                                Top Contributor
+                            </h4>
+
+                            <p class="text-muted text-xs">
+                                Completed 300+ tasks
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                            ⭐
+                        </div>
+
+                        <div>
+
+                            <h4 class="font-medium text-sm">
+                                Trusted Member
+                            </h4>
+
+                            <p class="text-muted text-xs">
+                                Active for 6 months
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer class="relative z-10 border-t border-[#1e212c] mt-20">
+
+    <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+
+        <div>
+
+            <div class="flex items-center gap-2">
+
+                <img src="images/logo.svg" class="w-6 h-6">
+
+                <span class="font-semibold">
+                    Exsub Group
+                </span>
+
+            </div>
+
+            <p class="text-muted text-sm mt-3">
+                Grow together with creators worldwide.
+            </p>
+
+        </div>
+
+        <div class="flex gap-6 text-sm text-muted">
+
+            <a href="#" class="hover:text-white transition">
+                Privacy
+            </a>
+
+            <a href="#" class="hover:text-white transition">
+                Terms
+            </a>
+
+            <a href="#" class="hover:text-white transition">
+                Support
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+
+<script>
+
+const MEMBER_SHEET_API = "https://script.google.com/macros/s/AKfycbxZDOIfLSfhoYBNABRHnCuZM6p4AFQjLAgB2w2SE7xMeelMGZahiDg1Ja7Mfm9eiTa9FA/exec";
+const ChannelScript="https://script.google.com/macros/s/AKfycbyeJX6LstqWydy_MGVlt10oACiTg3bArQ-EHBkPm-TPxtXjQUVqUMdfwPwRecFH-8HK_Q/exec";
+
+const savedUsername = localStorage.getItem("username");
+const savedPassword = localStorage.getItem("password");
+
+/* =========================
+CHECK LOGIN
+========================= */
+
+if (!savedUsername || !savedPassword) {
+    window.location.href = "signin.html";
+}
+
+/* =========================
+PROFILE MENU
+========================= */
+
+function toggleProfileMenu(){
+    const menu = document.getElementById("profileDropdown");
+    menu.classList.toggle("hidden");
+}
+
+window.addEventListener("click",(e)=>{
+
+    if(
+        !e.target.closest("#profileDropdown") &&
+        !e.target.closest(".profile-btn")
+    ){
+
+        document
+        .getElementById("profileDropdown")
+       classList.add("hidden");
+       
+
+    }
+
+});
+
+/* =========================
+LOAD PROFILE
+========================= */
+
+async function loadProfile(){
+
+    try{
+
+        const response = await fetch(
+            `${MEMBER_SHEET_API}?action=login&username=${savedUsername}&password=${savedPassword}`
+        );
+
+        const data = await response.json();
+
+        console.log(data);
+
+        /* =========================
+        LOGIN FAILED
+        ========================= */
+
+        if(data.status !== "success"){
+
+            Swal.fire({
+                icon:"error",
+                title:"Login Failed",
+                text:data.message
+            });
+
+            return;
+
+        }
+
+       /* =========================
+        BLOCKED ACCOUNT
+        ========================= */
+
+        if (data.member.Status !== "Active") {
+
+            Swal.fire({
+                icon: "error",
+                title: "Account Blocked",
+                html: `
+                    Your account has been blocked.<br><br>
+                    Redirecting to login...
+                `,
+                allowOutsideClick: false
+            });
+
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.href = "signin.html";
+            }, 1500);
+
+            return;
+        }
+        /* =========================
+        MEMBER INFO
+        ========================= */
+
+        document.getElementById("profileUserName").innerText =
+        data.member.UserName || "Member";
+
+        document.getElementById("profileUserCode").innerText =
+        data.member.UserCode || "-";
+
+        document.getElementById("profileJoinDate").innerText =
+        data.member.DateOfJoin || "-";
+
+        document.getElementById("profileCountry").innerText =
+        data.member.Country || "-";
+
+        /* =========================
+        NAVBAR MEMBER INFO
+        ========================= */
+
+        const navUserName = document.getElementById("navUserName");
+        const dropdownUserName = document.getElementById("dropdownUserName");
+        const dropdownUserCode = document.getElementById("dropdownUserCode");
+
+        if(navUserName){
+            navUserName.innerText = data.member.UserName;
+        }
+
+        if(dropdownUserName){
+            dropdownUserName.innerText = data.member.UserName;
+        }
+
+        if(dropdownUserCode){
+            dropdownUserCode.innerText =
+            "ID #" + data.member.UserCode;
+        }
+
+        /* =========================
+        CHANNEL COUNT
+        ========================= */
+
+        document.getElementById("totalChannels").innerText =
+        data.channels.length;
+
+        if(!Array.isArray(data.channels)){
+    data.channels = [];
+}
+
+       /* =========================
+CHANNELS HTML
+========================= */
+
+let channelsHTML = "";
+
+/* =========================
+NO CHANNELS
+========================= */
+
+if (data.channels.length === 0) {
+
+    channelsHTML = `
+    <div class="text-center py-20">
+
+        <div class="text-6xl mb-4">📺</div>
+
+        <h2 class="text-2xl font-bold mb-2">
+            No Channel Found
+        </h2>
+
+        <p class="text-muted mb-6">
+            Add your first promotional channel to get started
+        </p>
+
+        <button onclick="openAddChannelModal()"
+            class="px-6 py-3 rounded-full bg-purple-600 hover:bg-purple-500 transition font-semibold">
+            + Add Channel
+        </button>
+
+    </div>
+    `;
+}
+
+/* =========================
+CHANNEL LOOP
+========================= */
+
+/* =========================
+CHANNEL LOOP
+========================= */
+
+data.channels.forEach(channel => {
+
+    const image =
+    channel.ChannelImage &&
+    channel.ChannelImage.trim() !== ""
+    ? channel.ChannelImage
+    : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
+
+    channelsHTML += `
+
+    <div class="channel-card">
+
+        <div class="channel-left">
+
+            <img src="${image}"
+            class="channel-image"
+            onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
+
+            <div class="w-full">
+
+                <h2 class="channel-name">
+                    ${channel.ChannelName || "Unknown Channel"}
+                </h2>
+
+                <div class="channel-handle">
+                    ${channel.ChannelHandle || "channel"}
+                </div>
+
+                <div class="channel-info-grid">
+
+                    <div class="channel-info-box">
+                        <span>Channel Type</span>
+                        <strong>${channel.ChannelType || "-"}</strong>
+                    </div>
+
+                    <div class="channel-info-box">
+                        <span>Channel Found</span>
+                        <strong>${channel.ChannelFound || "-"}</strong>
+                    </div>
+
+                    <div class="channel-info-box">
+                        <span>Total Subscribers</span>
+                        <strong>${channel.TotalSubscribers || 0}</strong>
+                    </div>
+
+                    <div class="channel-info-box">
+                        <span>Current Subscribers</span>
+                        <strong>${channel.CurrentSubscribers || 0}</strong>
+                    </div>
+
+                    <div class="channel-info-box">
+                        <span>Channel ID</span>
+                        <strong>${channel.ChannelId || "-"}</strong>
+                    </div>
+
+                    <div class="channel-info-box">
+                        <span>Last Updated</span>
+                        <strong>${channel.LastUpdated || "-"}</strong>
+                    </div>
+
+                </div>
+
+                <a href="${channel.ChannelLink || '#'}"
+                target="_blank"
+                class="inline-flex items-center gap-2 mt-5 text-purple-400 text-sm hover:text-purple-300 transition">
+
+                    Visit Channel
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="15"
+                    fill="currentColor"
+                    viewBox="0 0 24 24">
+
+                        <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/>
+
+                        <path d="M5 5h6v2H7v10h10v-4h2v6H5z"/>
+
+                    </svg>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="channel-right">
+
+            <button
+            onclick='updateChannel("${channel.ChannelId}")'
+            class="edit-btn">
+
+                Update Channel
+
+            </button>
+
+            <button
+            onclick='deleteChannel("${channel.ChannelId}")'
+            class="bg-red-600 hover:bg-red-500 text-white border-none px-4 py-3 rounded-xl font-semibold transition">
+
+                Delete Channel
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+});
+
+/* =========================
+RENDER CHANNELS
+========================= */
+
+document.getElementById("channelsContainer").innerHTML =
+channelsHTML;
+
+/* =========================
+ISSUES
+========================= */
+
+if(!Array.isArray(data.issues)){
+    data.issues = [];
+}
+
+document.getElementById("totalIssues").innerText =
+data.issues.length;
+
+// SHOW RED DOT IF ISSUES EXIST
+if (data.issues.length > 0) {
+    notifDot.classList.remove("hidden");
+} else {
+    notifDot.classList.add("hidden");
+}
+
+// BUILD NOTIFICATION LIST (ONLY TITLES)
+let notifHTML = "";
+
+data.issues.forEach((issue, index) => {
+    notifHTML += `
+        <div class="p-3 hover:bg-[#1a1d27] cursor-pointer border-b border-[#1f2330]"
+        onclick="openIssueFromNotification(${index})">
+
+            <div class="text-sm font-medium text-white">
+                ${issue.IssueTitle || "New Issue"}
+            </div>
+
+            <div class="text-xs text-muted mt-1">
+                ${issue.IssueStatus || "Open"}
+            </div>
+
+        </div>
+    `;
+});
+
+notifList.innerHTML = notifHTML;
+
+let issuesHTML = "";
+
+/* =========================
+NO ISSUES
+========================= */
+
+if(data.issues.length === 0){
+
+    issuesHTML = `
+
+    <div class="text-center py-16">
+
+        <div class="text-6xl mb-4">🎫</div>
+
+        <h2 class="text-2xl font-bold mb-2">
+            No Issues Found
+        </h2>
+
+        <p class="text-muted">
+            You have not reported any issues yet
+        </p>
+
+    </div>
+
+    `;
+}
+
+/* =========================
+ISSUE LOOP
+========================= */
+
+data.issues.forEach(issue => {
+
+    let statusClass = "issue-status-open";
+
+    if(issue.IssueStatus){
+
+        const status =
+        issue.IssueStatus.toLowerCase();
+
+        if(status.includes("progress")){
+            statusClass = "issue-status-progress";
+        }
+
+        if(
+            status.includes("resolved") ||
+            status.includes("closed") ||
+            status.includes("done")
+        ){
+            statusClass = "issue-status-resolved";
+        }
+
+    }
+
+    issuesHTML += `
+
+    <div class="issue-card">
+
+        <div class="issue-header">
+
+            <div>
+
+                <h2 class="issue-title">
+                    ${issue.IssueTitle || "Untitled Issue"}
+                </h2>
+
+                <div class="issue-date">
+
+                    Created :
+                    ${issue.CreatedDate || "-"}
+
+                </div>
+
+            </div>
+
+            <div class="issue-tag ${statusClass}">
+
+                ${issue.IssueStatus || "Open"}
+
+            </div>
+
+        </div>
+
+        <div class="issue-description">
+
+            ${issue.IssueDescription || "No description"}
+
+        </div>
+
+        <div class="issue-footer">
+
+            <div class="issue-tag issue-type">
+
+                ${issue.IssueType || "General"}
+
+            </div>
+
+        </div>
+
+        ${
+            issue.AdminReply &&
+            issue.AdminReply.trim() !== ""
+            ?
+
+            `
+
+            <div class="issue-reply">
+
+                <div class="issue-reply-title">
+                    ADMIN REPLY
+                </div>
+
+                <div class="text-sm text-white leading-7">
+                    ${issue.AdminReply}
+                </div>
+
+            </div>
+
+            `
+
+            :
+
+            ""
+
+        }
+
+    </div>
+
+    `;
+
+});
+
+/* =========================
+RENDER ISSUES
+========================= */
+
+document.getElementById("issuesContainer").innerHTML =
+issuesHTML;
+
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        Swal.fire({
+            icon:"error",
+            title:"Error",
+            text:"Unable to load profile"
+        });
+
+    }
+
+}
+
+/* =========================
+UPDATE CHANNEL
+========================= */
+
+function updateChannel(channelId){
+
+    Swal.fire({
+        icon:"success",
+        title:"Channel Updated",
+        text:"Your channel information has been refreshed"
+    });
+
+}
+
+/* =========================
+EDIT CHANNEL
+========================= */
+
+function editChannel(channel){
+
+    Swal.fire({
+
+        title:"Edit Channel",
+
+        width:700,
+
+        html:`
+
+            <input id="swalChannelName"
+            class="swal2-input"
+            placeholder="Channel Name"
+            value="${channel.ChannelName || ''}">
+
+            <input id="swalChannelHandle"
+            class="swal2-input"
+            placeholder="Channel Handle"
+            value="${channel.ChannelHandle || ''}">
+
+            <input id="swalChannelLink"
+            class="swal2-input"
+            placeholder="Channel Link"
+            value="${channel.ChannelLink || ''}">
+
+            <input id="swalChannelImage"
+            class="swal2-input"
+            placeholder="Channel Image"
+            value="${channel.ChannelImage || ''}">
+
+        `,
+
+        confirmButtonText:"Save Changes",
+        showCancelButton:true
+
+    });
+
+}
+
+/* =========================
+START
+========================= */
+
+loadProfile();
+
+</script>
+
+<script>
+
+/* =========================
+OPEN ADD CHANNEL MODAL
+========================= */
+
+function openAddChannelModal(){
+
+    Swal.fire({
+
+        title:"Add YouTube Channel",
+
+        width:650,
+
+        html:`
+
+            <div style="margin-top:15px;">
+
+                <input
+                id="channelLink"
+                class="swal2-input"
+                placeholder="Enter YouTube Channel Link">
+
+            </div>
+
+        `,
+
+        confirmButtonText:"Add Channel",
+
+        showCancelButton:true,
+
+        preConfirm: async ()=>{
+
+            const channelLink =
+            document.getElementById("channelLink").value;
+
+            if(!channelLink){
+
+                Swal.showValidationMessage(
+                    "Please enter channel link"
+                );
+
+                return false;
+
+            }
+
+            try{
+
+                Swal.showLoading();
+
+                const response = await fetch(
+
+                    ChannelScript +
+
+                    "?action=addChannel" +
+
+                    "&username=" + encodeURIComponent(savedUsername) +
+
+                    "&password=" + encodeURIComponent(savedPassword) +
+
+                    "&channelLink=" + encodeURIComponent(channelLink)
+
+                );
+
+                const data = await response.json();
+
+                if(data.status !== "success"){
+
+                    Swal.showValidationMessage(
+                        data.message
+                    );
+
+                    return false;
+
+                }
+
+                return data;
+
+            }
+
+            catch(error){
+
+                Swal.showValidationMessage(
+                    "Something went wrong"
+                );
+
+            }
+
+        }
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            Swal.fire({
+                icon:"success",
+                title:"Channel Added",
+                text:"Your channel added successfully"
+            });
+
+            setTimeout(()=>{
+                location.reload();
+            },1200);
+
+        }
+
+    });
+
+}
+
+/* =========================
+UPDATE CHANNEL
+========================= */
+
+async function updateChannel(channelId){
+
+    try{
+
+        Swal.fire({
+            title:"Updating Channel...",
+            allowOutsideClick:false,
+            didOpen:()=>{
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch(
+
+            ChannelScript +
+
+            "?action=updateChannel" +
+
+            "&username=" + encodeURIComponent(savedUsername) +
+
+            "&password=" + encodeURIComponent(savedPassword) +
+
+            "&channelId=" + encodeURIComponent(channelId)
+
+        );
+
+        const data = await response.json();
+
+        if(data.status !== "success"){
+
+            Swal.fire({
+                icon:"error",
+                title:"Update Failed",
+                text:data.message
+            });
+
+            return;
+        }
+
+        Swal.fire({
+            icon:"success",
+            title:"Channel Updated",
+            text:"Channel information updated successfully"
+        });
+
+        setTimeout(()=>{
+            location.reload();
+        },1200);
+
+    }
+
+    catch(error){
+
+        Swal.fire({
+            icon:"error",
+            title:"Error",
+            text:"Unable to update channel"
+        });
+
+    }
+
+}
+
+/* =========================
+DELETE CHANNEL
+========================= */
+
+async function deleteChannel(channelId){
+
+    const confirmDelete = await Swal.fire({
+
+        icon:"warning",
+
+        title:"Delete Channel?",
+
+        text:"This action cannot be undone",
+
+        showCancelButton:true,
+
+        confirmButtonColor:"#dc2626",
+
+        confirmButtonText:"Delete"
+
+    });
+
+    if(!confirmDelete.isConfirmed){
+        return;
+    }
+
+    try{
+
+        Swal.fire({
+            title:"Deleting...",
+            allowOutsideClick:false,
+            didOpen:()=>{
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch(
+
+            ChannelScript +
+
+            "?action=deleteChannel" +
+
+            "&username=" + encodeURIComponent(savedUsername) +
+
+            "&password=" + encodeURIComponent(savedPassword) +
+
+            "&channelId=" + encodeURIComponent(channelId)
+
+        );
+
+        const data = await response.json();
+
+        if(data.status !== "success"){
+
+            Swal.fire({
+                icon:"error",
+                title:"Delete Failed",
+                text:data.message
+            });
+
+            return;
+        }
+
+        Swal.fire({
+            icon:"success",
+            title:"Deleted",
+            text:"Channel deleted successfully"
+        });
+
+        setTimeout(()=>{
+            location.reload();
+        },1000);
+
+    }
+
+    catch(error){
+
+        Swal.fire({
+            icon:"error",
+            title:"Error",
+            text:"Unable to delete channel"
+        });
+
+    }
+
+}
+
+</script>
+<script>
+
+/* =========================
+LOGOUT USER
+========================= */
+
+function logoutUser(){
+
+    Swal.fire({
+
+        icon:"warning",
+
+        title:"Logout?",
+
+        text:"You will be redirected to homepage",
+
+        showCancelButton:true,
+
+        confirmButtonText:"Logout",
+
+        confirmButtonColor:"#dc2626"
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            /* REMOVE ALL LOCAL STORAGE */
+
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+            localStorage.removeItem("usercode");
+
+            /* OR CLEAR EVERYTHING */
+
+            localStorage.clear();
+
+            /* REDIRECT */
+
+            window.location.href = "index.html";
+
+        }
+
+    });
+
+}
+
+
+</script>
+
+<script>
+
+/* =========================
+EXSUB MENU SYSTEM
+========================= */
+
+const exsubMobileToggleBtn =
+document.getElementById("exsubMobileToggleBtn");
+
+const exsubMobileNavigationMenu =
+document.getElementById("exsubMobileNavigationMenu");
+
+const exsubProfileToggleBtn =
+document.getElementById("exsubProfileToggleBtn");
+
+const exsubProfileDropdownMenu =
+document.getElementById("exsubProfileDropdownMenu");
+
+const notifBtn = document.getElementById("notifBtn");
+const notifDropdown = document.getElementById("notifDropdown");
+const notifList = document.getElementById("notifList");
+const notifDot = document.getElementById("notifDot");
+
+notifBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    notifDropdown.classList.toggle("hidden");
+});
+
+/* =========================
+MOBILE MENU
+========================= */
+
+if(exsubMobileToggleBtn){
+
+    exsubMobileToggleBtn.addEventListener("click",(event)=>{
+
+        event.stopPropagation();
+
+        exsubMobileNavigationMenu.classList.toggle("hidden");
+
+        /* CLOSE PROFILE MENU */
+
+        exsubProfileDropdownMenu.classList.add("hidden");
+
+    });
+
+}
+
+/* =========================
+PROFILE MENU
+========================= */
+
+if(exsubProfileToggleBtn){
+
+    exsubProfileToggleBtn.addEventListener("click",(event)=>{
+
+        event.stopPropagation();
+
+        exsubProfileDropdownMenu.classList.toggle("hidden");
+
+        /* CLOSE MOBILE MENU */
+
+        exsubMobileNavigationMenu.classList.add("hidden");
+
+    });
+
+}
+
+/* =========================
+OUTSIDE CLICK
+========================= */
+
+document.addEventListener("click",(event)=>{
+  
+  
+    // CLOSE NOTIFICATION
+    if (
+        !notifDropdown.contains(event.target) &&
+        !notifBtn.contains(event.target)
+    ) {
+        notifDropdown.classList.add("hidden");
+    }
+    /* CLOSE PROFILE */
+
+    if(
+        !exsubProfileDropdownMenu.contains(event.target)
+        &&
+        !exsubProfileToggleBtn.contains(event.target)
+    ){
+
+        exsubProfileDropdownMenu.classList.add("hidden");
+
+    }
+
+    /* CLOSE MOBILE */
+
+    if(
+        !exsubMobileNavigationMenu.contains(event.target)
+        &&
+        !exsubMobileToggleBtn.contains(event.target)
+    ){
+
+        exsubMobileNavigationMenu.classList.add("hidden");
+
+    }
+
+});
+
+/* =========================
+ESCAPE KEY CLOSE
+========================= */
+
+document.addEventListener("keydown",(event)=>{
+
+    if(event.key === "Escape"){
+
+        exsubProfileDropdownMenu.classList.add("hidden");
+
+        exsubMobileNavigationMenu.classList.add("hidden");
+
+    }
+
+});
+
+</script>
+
+<script>
+
+function openIssueFromNotification(index){
+
+    // hide dropdown
+    document.getElementById("notifDropdown").classList.add("hidden");
+
+    // SCROLL TO ISSUES
+    document.getElementById("issuesContainer")
+        .scrollIntoView({ behavior: "smooth" });
+
+    // HIDE EVERYTHING EXCEPT ISSUES
+    document.querySelectorAll("main > div > div").forEach(el => {
+        el.style.display = "none";
+    });
+
+    // SHOW ONLY ISSUES CARD
+    document.querySelector(".card").style.display = "block";
+}
+
+function resetView(){
+    location.reload();
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

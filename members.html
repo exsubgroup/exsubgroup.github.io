@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Members</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --border:#232938;
+    --purple:#7c3aed;
+}
+
+*{
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#050508;
+    color:white;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at top,rgba(124,58,237,.18),transparent 50%);
+    pointer-events:none;
+}
+
+.card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid var(--border);
+}
+
+.member-card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:24px;
+    padding:20px;
+    transition:.3s;
+}
+
+.member-card:hover{
+    transform:translateY(-4px);
+    border-color:#7c3aed;
+}
+
+.avatar{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(124,58,237,.4);
+}
+
+.badge{
+    padding:5px 12px;
+    border-radius:999px;
+    font-size:12px;
+    background:rgba(124,58,237,.15);
+    color:#c4b5fd;
+}
+
+.pagination button{
+    min-width:40px;
+}
+body::before{
+    content:'';
+    position:fixed;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.glass-nav{
+    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border:1px solid rgba(255,255,255,0.06);
+}
+
+.card{
+    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    border:1px solid var(--border);
+}
+
+.text-muted{
+    color:var(--text-muted);
+}
+
+.gradient-text{
+    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+</style>
+
+</head>
+<body>
+
+  <!-- Navigation -->
+   <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-40" >
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <img src="images/logo.svg" alt="Exsub Group Logo" class="w-6 h-6 object-contain"/>
+      <span class="text-white font-semibold text-[17px] tracking-tight">Exsub Group</span>
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-7 text-[13px]">
+        <a href="/index.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="/Members.html" class="text-purple-300 font-semibold">Community Members</a>
+            <a href="support.html" class="text-white hover:text-purple-300 transition">Support</a>
+            <a href="/HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="/ExsubExtension.html" class="transition">Browser Extension</a>
+    </div>
+
+    <!-- Right Buttons -->
+    <div class="flex items-center gap-3">
+      <a href="signin.html" class="text-[13px] text-white transition hidden sm:block">
+        Log In
+      </a>
+
+      <a href="signup.html"
+         class="bg-white text-black text-[13px] font-medium px-4 py-[7px] rounded-full  hover:bg-gray-100 transition">
+        Create Account
+      </a>
+
+      <!-- Mobile Menu Button -->
+      <button id="menuBtn" class="md:hidden ml-2 text-white">
+        <!-- Hamburger Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu"
+       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-4 flex flex-col gap-6 text-[14px]">
+
+      <a href="/index.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="/Members.html" class="text-purple-300 font-semibold">Community Members</a>
+            <a href="support.html" class="text-white hover:text-purple-300 transition">Support</a>
+            <a href="/HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="/ExsubExtension.html" class="transition">Browser Extension</a>
+            <div class="border-t border-white/10 pt-4 flex flex-col gap-3">
+
+      <a href="signup.html"
+         class="btn-purple text-center py-3 rounded-full font-medium">
+
+        Create Account
+
+      </a>
+
+      <a href="signin.html"
+         class="bg-white text-center text-black py-3 rounded-full font-medium">
+
+        Login
+
+      </a>
+
+    </div>
+  </div>
+   </nav>
+
+<main class="relative z-10 pt-32 pb-20 px-4">
+
+<div class="max-w-[1200px] mx-auto">
+
+    <div class="text-center mb-10">
+
+        <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm">
+            👥 Members Directory
+        </div>
+
+        <h1 class="text-5xl font-black mt-5">
+            Community Members
+        </h1>
+
+        <p class="text-gray-400 mt-4">
+            Browse all registered members.
+        </p>
+
+    </div>
+
+    <div class="card rounded-3xl p-6 mb-8">
+
+        <div class="flex flex-wrap items-center justify-between gap-4">
+
+            <div>
+
+                <div class="text-gray-400 text-sm">
+                    Total Members
+                </div>
+
+                <div
+                id="memberCount"
+                class="text-4xl font-black">
+
+                    0
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="text-gray-400 text-sm">
+                    Current Page
+                </div>
+
+                <div
+                id="pageInfo"
+                class="text-2xl font-bold">
+
+                    1
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div
+    id="membersContainer"
+    class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+    </div>
+
+    <div
+    id="pagination"
+    class="pagination flex justify-center gap-2 mt-10 flex-wrap">
+
+    </div>
+
+</div>
+</main>
+
+<script>
+
+const API =
+"https://script.google.com/macros/s/AKfycbxWta2prUJCHZs0fLZuCBnNgE9j5HnsnLE5ZsdWKv39lE6bMQ01YA2d9UjHVV2JJR-rnA/exec";
+
+let currentPage = 1;
+
+function randomAvatar(seed){
+
+    return `https://i.pravatar.cc/150?img=${seed}`;
+}
+
+async function loadMembers(page=1){
+
+    currentPage = page;
+
+    document.getElementById(
+        "membersContainer"
+    ).innerHTML =
+    `<div class="col-span-full text-center py-10">
+        Loading Members...
+     </div>`;
+
+    const res =
+    await fetch(
+      `${API}?action=members&page=${page}`
+    );
+
+    const data =
+    await res.json();
+
+    document.getElementById(
+      "memberCount"
+    ).innerText =
+    data.totalMembers;
+
+    document.getElementById(
+      "pageInfo"
+    ).innerText =
+    `${data.currentPage} / ${data.totalPages}`;
+
+    let html = "";
+
+    data.members.forEach((m,index)=>{
+
+        const avatar =
+        randomAvatar(
+          ((page-1)*20)+index+1
+        );
+
+        html += `
+
+        <div class="member-card">
+
+            <div class="flex items-center gap-4">
+
+                <img
+                src="${avatar}"
+                class="avatar">
+
+                <div>
+
+                    <h3 class="font-bold text-lg">
+                        ${m.UserName || "Unknown"}
+                    </h3>
+
+                    <div class="text-gray-400 text-sm">
+                        ID #${m.UserCode}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-5">
+
+                <div class="card rounded-xl p-3">
+
+                    <div class="text-gray-500 text-xs">
+                        Country
+                    </div>
+
+                    <div class="font-semibold">
+                        ${m.Country || "-"}
+                    </div>
+
+                </div>
+
+                <div class="card rounded-xl p-3">
+
+                    <div class="text-gray-500 text-xs">
+                        Status
+                    </div>
+
+                    <div class="font-semibold">
+                        ${m.Status || "-"}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+
+                <!-- <span class="badge">
+                    WT: ${m.WTNumber || "-"}
+                </span>-->
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById(
+      "membersContainer"
+    ).innerHTML = html;
+
+    renderPagination(
+      data.totalPages
+    );
+}
+
+function renderPagination(totalPages){
+
+    let html = "";
+
+    for(let i=1;i<=totalPages;i++){
+
+        html += `
+        <button
+        onclick="loadMembers(${i})"
+        class="${
+        i===currentPage
+        ?
+        'bg-purple-600'
+        :
+        'bg-[#171a24]'
+        }
+        px-4 py-2 rounded-xl border border-[#252938]">
+
+        ${i}
+
+        </button>
+        `;
+    }
+
+    document.getElementById(
+      "pagination"
+    ).innerHTML = html;
+}
+
+loadMembers();
+
+/* ================= MENUS ================= */
+
+const mobileMenuBtn =
+document.getElementById("mobileMenuBtn");
+
+const mobileMenu =
+document.getElementById("mobileMenu");
+
+const profileBtn =
+document.getElementById("profileBtn");
+
+const profileDropdown =
+document.getElementById("profileDropdown");
+
+/* MOBILE MENU */
+
+mobileMenuBtn.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    mobileMenu.classList.toggle("hidden");
+
+});
+
+ // Close menu when clicking outside
+    document.addEventListener("click", (event) => {
+        const isClickInside = mobileMenu.contains(event.target) || mobileMenuBtn.contains(event.target);
+        if (!isClickInside) {
+            mobileMenu.classList.add("hidden");
+        }
+    });
+
+/* PROFILE MENU */
+
+profileBtn.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+    profileDropdown.classList.toggle("hidden");
+
+});
+
+/* CLOSE MENUS */
+
+document.addEventListener("click",()=>{
+
+    mobileMenu.classList.add("hidden");
+
+    profileDropdown.classList.add("hidden");
+
+});
+
+
+
+
+</script>
+
+    <script>
+  const menuBtn = document.getElementById("menuBtn");
+  //const mobileMenu = document.getElementById("mobileMenu");
+
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
+
+</body>
+</html>
