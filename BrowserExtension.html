@@ -331,44 +331,62 @@ body::before{
 <body>
 
 <!-- ══════════════════ NAVBAR ══════════════════ -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+   <!-- Navigation -->
+   <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-40" >
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
 
-    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-        <button id="mobileMenuBtn"
-        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-
-        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-            <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-            <span class="font-semibold text-[17px]">Exsub Group</span>
-        </div>
-
-        <div class="hidden md:flex items-center gap-8 text-[13px]">
-            <a href="dashboard.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-            <a href="channels.html"  class="text-white hover:text-purple-300 transition">Channels</a>
-            <a href="groups.html"    class="text-white hover:text-purple-300 transition">Groups</a>
-            <a href="issues.html"    class="text-white hover:text-purple-300 transition">Issues</a>
-            <a href="support.html"   class="text-white hover:text-purple-300 transition">Support</a>
-            <a href="HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
-            <a href="extension.html" class="text-purple-300 font-semibold">Extension</a>
-        </div>
-
-        <div class="flex items-center gap-2"></div>
+    <!-- Logo -->
+    <div class="flex items-center gap-2">
+      <img src="images/logo.svg" alt="Exsub Group Logo" class="w-6 h-6 object-contain"/>
+      <span class="text-white font-semibold text-[17px] tracking-tight">Exsub Group</span>
     </div>
 
-    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-        <div class="flex flex-col gap-4 text-sm">
-            <a href="dashboard.html">Dashboard</a>
-            <a href="channels.html">Channels</a>
-            <a href="groups.html">Groups</a>
-            <a href="issues.html">Issues</a>
-            <a href="support.html">Support</a>
-            <a href="HowtoWork.html">How To Work</a>
-            <a href="extension.html" class="text-purple-400">Extension</a>
-        </div>
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-7 text-[13px]">
+        <a href="/index.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="/Members.html" class="text-white hover:text-purple-300 transition">Community Members</a>
+            <a href="support.html" class="text-white hover:text-purple-300 transition">Support</a>
+            <a href="/HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="/BrowserExtension.html" class="text-purple-300 font-semibold">Browser Extension</a>
     </div>
 
-</nav>
+    <!-- Right Buttons -->
+    <div class="flex items-center gap-3">
+      <a href="signin.html" class="text-[13px] text-white transition hidden sm:block">
+        Log In
+      </a>
+
+      <a href="signup.html"
+         class="bg-white text-black text-[13px] font-medium px-4 py-[7px] rounded-full  hover:bg-gray-100 transition">
+        Create Account
+      </a>
+
+      <!-- Mobile Menu Button -->
+      <button id="menuBtn" class="md:hidden ml-2 text-white">
+        <!-- Hamburger Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu"
+       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-4 flex flex-col gap-6 text-[14px]">
+
+      <a href="/index.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="/Members.html" class="text-white hover:text-purple-300 transition">Community Members</a>
+            <a href="support.html" class="text-white hover:text-purple-300 transition">Support</a>
+            <a href="/HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="/BrowserExtension.html" class="text-purple-300 font-semibold">Browser Extension</a>
+             <a href="/signin.html" class="transition">Login</a>
+              <!-- <a href="/signup.html" class="transition">Create Account</a> -->
+  </div>
+   </nav>
 
 <!-- ══════════════════ MAIN ══════════════════ -->
 <main class="relative z-10 pt-28 pb-20 px-4">
@@ -1077,6 +1095,17 @@ function demoSubmit(){
    document.querySelectorAll('[id^="downloadBtn"]').forEach(b => b.href = "files/exsub-extension.zip");
 */
 
+</script>
+
+
+</script>
+    <script>
+  const menuBtn = document.getElementById("menuBtn");
+  //const mobileMenu = document.getElementById("mobileMenu");
+
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
 </script>
 
 </body>
