@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Support</title>
+<title>Support – Exsub Group</title>
 
 <link rel="icon" href="images/logo.svg">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -20,18 +18,14 @@
 :root{
     --bg:#050508;
     --card:#12141c;
-    --border:#1e212c;
+    --border:#232938;
     --purple:#7c3aed;
-    --purple2:#8b5cf6;
-    --text-muted:#8a8f9e;
 }
 
-*{
-    font-family:'Inter',sans-serif;
-}
+*{ font-family:'Inter',sans-serif; }
 
 body{
-    background:var(--bg);
+    background:#050508;
     color:white;
     overflow-x:hidden;
 }
@@ -39,13 +33,11 @@ body{
 body::before{
     content:'';
     position:fixed;
-    top:-50%;
-    left:-50%;
-    width:200%;
-    height:200%;
+    top:-50%; left:-50%;
+    width:200%; height:200%;
     background:
-    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
-    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+        radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+        radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
     z-index:0;
     pointer-events:none;
 }
@@ -54,17 +46,11 @@ body::before{
     background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
     backdrop-filter:blur(20px);
     border:1px solid rgba(255,255,255,0.06);
-    color:white;
 }
 
 .card{
-    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    background:linear-gradient(180deg,#171a24,#101219);
     border:1px solid var(--border);
-    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset;
-}
-
-.text-muted{
-    color:var(--text-muted);
 }
 
 .gradient-text{
@@ -73,453 +59,842 @@ body::before{
     -webkit-text-fill-color:transparent;
 }
 
-.input-box{
-    width:100%;
-    background:#0f1118;
-    border:1px solid #232632;
-    border-radius:16px;
-    padding:15px 18px;
-    color:white;
-    outline:none;
-    transition:0.3s ease;
-    font-size:14px;
+/* ── CHAT WINDOW ── */
+.chat-window{
+    background:linear-gradient(180deg,#0f1118,#0c0e15);
+    border:1px solid #1e2130;
+    border-radius:24px;
+    display:flex;
+    flex-direction:column;
+    height:520px;
+    overflow:hidden;
 }
 
-.input-box:focus{
-    border-color:#7c3aed;
-    box-shadow:0 0 0 4px rgba(124,58,237,0.15);
-}
-
-.label{
-    display:block;
-    margin-bottom:10px;
-    font-size:14px;
-    font-weight:600;
-}
-
-.submit-btn{
-    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
-    color:white;
-    border:none;
-    padding:14px 28px;
-    border-radius:16px;
-    font-weight:700;
-    transition:0.3s ease;
-}
-
-.submit-btn:hover{
-    transform:translateY(-2px);
-}
-
-.support-icon{
-    width:60px;
-    height:60px;
-    border-radius:20px;
+.chat-header{
+    padding:16px 20px;
+    border-bottom:1px solid #1e2130;
     display:flex;
     align-items:center;
-    justify-content:center;
-    background:rgba(124,58,237,0.15);
+    gap:12px;
+    background:linear-gradient(180deg,#13161f,#0f1118);
+    flex-shrink:0;
+}
+
+.admin-avatar{
+    width:40px; height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#7c3aed,#5b21b6);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
+    position:relative;
+}
+
+.online-dot{
+    position:absolute;
+    bottom:-2px; right:-2px;
+    width:11px; height:11px;
+    border-radius:50%;
+    background:#22c55e;
+    border:2px solid #0f1118;
+}
+
+.chat-messages{
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    scroll-behavior:smooth;
+}
+
+.chat-messages::-webkit-scrollbar{ width:4px; }
+.chat-messages::-webkit-scrollbar-track{ background:transparent; }
+.chat-messages::-webkit-scrollbar-thumb{ background:#252938; border-radius:4px; }
+
+/* message bubbles */
+.msg-row{
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+}
+
+.msg-row.outgoing{
+    flex-direction:row-reverse;
+}
+
+.msg-avatar{
+    width:30px; height:30px;
+    border-radius:9px;
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px;
+}
+
+.bubble{
+    max-width:75%;
+    padding:11px 15px;
+    border-radius:16px;
+    font-size:13.5px;
+    line-height:1.55;
+}
+
+.bubble.admin{
+    background:#1a1d2a;
+    border:1px solid #252938;
+    border-bottom-left-radius:4px;
+    color:#e2e8f0;
+}
+
+.bubble.member{
+    background:linear-gradient(135deg,#7c3aed,#6d28d9);
+    border-bottom-right-radius:4px;
+    color:white;
+}
+
+.msg-meta{
+    font-size:10px;
+    color:#4b5563;
+    margin-top:4px;
+    padding:0 4px;
+}
+
+.msg-row.outgoing .msg-meta{ text-align:right; }
+
+/* typing indicator */
+.typing-bubble{
+    background:#1a1d2a;
+    border:1px solid #252938;
+    border-radius:16px;
+    border-bottom-left-radius:4px;
+    padding:12px 16px;
+    display:flex;
+    gap:5px;
+    align-items:center;
+    width:fit-content;
+}
+
+.typing-dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:#555;
+    animation:typing-bounce .9s infinite;
+}
+
+.typing-dot:nth-child(2){ animation-delay:.15s; }
+.typing-dot:nth-child(3){ animation-delay:.3s; }
+
+@keyframes typing-bounce{
+    0%,60%,100%{ transform:translateY(0); background:#555; }
+    30%{ transform:translateY(-5px); background:#7c3aed; }
+}
+
+/* ── INPUT AREA ── */
+.chat-input-area{
+    padding:14px 16px;
+    border-top:1px solid #1e2130;
+    background:#0c0e15;
+    flex-shrink:0;
+}
+
+.chat-input-wrap{
+    display:flex;
+    align-items:flex-end;
+    gap:10px;
+    background:#13161f;
+    border:1px solid #252938;
+    border-radius:16px;
+    padding:10px 12px;
+    transition:.2s;
+}
+
+.chat-input-wrap:focus-within{
+    border-color:rgba(124,58,237,0.5);
+    box-shadow:0 0 0 3px rgba(124,58,237,0.08);
+}
+
+#msgInput{
+    flex:1;
+    background:none;
+    border:none;
+    outline:none;
+    color:white;
+    font-size:14px;
+    resize:none;
+    max-height:100px;
+    line-height:1.5;
+    padding:2px 0;
+}
+
+#msgInput::placeholder{ color:#4b5563; }
+
+.send-btn{
+    width:36px; height:36px;
+    border-radius:10px;
+    background:linear-gradient(135deg,#7c3aed,#6d28d9);
+    border:none;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition:.2s;
+}
+
+.send-btn:hover{ transform:scale(1.08); }
+.send-btn:active{ transform:scale(0.96); }
+.send-btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+
+/* ── ATTACH / EMOJI BTN ── */
+.icon-btn{
+    width:30px; height:30px;
+    border-radius:8px;
+    background:none;
+    border:none;
+    color:#6b7280;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    transition:.15s;
+    flex-shrink:0;
+}
+.icon-btn:hover{ color:#a78bfa; background:rgba(124,58,237,0.1); }
+
+/* ── INFO CARDS ── */
+.info-card{
+    background:linear-gradient(180deg,#171a24,#101219);
+    border:1px solid #252938;
+    border-radius:20px;
+    padding:20px;
+    transition:.3s;
+}
+
+.info-card:hover{ border-color:rgba(124,58,237,0.4); }
+
+.info-icon{
+    width:44px; height:44px;
+    border-radius:13px;
+    background:rgba(124,58,237,0.12);
     border:1px solid rgba(124,58,237,0.25);
-    font-size:28px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+    margin-bottom:12px;
 }
 
-.support-card{
-    transition:0.3s ease;
+/* ── CATEGORY PILLS ── */
+.cat-pill{
+    padding:8px 16px;
+    border-radius:10px;
+    background:#13161f;
+    border:1px solid #252938;
+    font-size:13px;
+    color:#9ca3af;
+    cursor:pointer;
+    transition:.2s;
+    white-space:nowrap;
 }
 
-.support-card:hover{
-    transform:translateY(-4px);
+.cat-pill:hover, .cat-pill.active{
+    background:rgba(124,58,237,0.15);
     border-color:rgba(124,58,237,0.4);
+    color:#c4b5fd;
 }
 
+/* ── STATUS BADGE ── */
+.badge-green{
+    padding:3px 10px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(34,197,94,0.1);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,0.2);
+}
+
+.badge-yellow{
+    padding:3px 10px;
+    border-radius:999px;
+    font-size:11px;
+    background:rgba(251,191,36,0.1);
+    color:#fde68a;
+    border:1px solid rgba(251,191,36,0.2);
+}
+
+/* ── TICKET CARD ── */
+.ticket-card{
+    background:#13161f;
+    border:1px solid #1e2130;
+    border-radius:14px;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.ticket-card:hover{ border-color:rgba(124,58,237,0.3); }
+
+/* scrollbar for chat area only */
 </style>
 
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-
+<!-- ══════ NAVBAR ══════ -->
 <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
 
-    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
 
-        <!-- LOGO -->
+        <button id="mobileMenuBtn"
+        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
 
-        <div class="flex items-center gap-2">
-
-            <img
-            src="images/logo.svg"
-            class="w-7 h-7">
-
-            <span class="font-semibold text-[17px]">
-                Exsub Group
-            </span>
-
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+            <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+            <span class="font-semibold text-[17px]">Exsub Group</span>
         </div>
-
-        <!-- NAVIGATION -->
 
         <div class="hidden md:flex items-center gap-8 text-[13px]">
-
-            <a href="profile.html" class="text-white hover:text-purple-300 transition">
-                Profile
-            </a>
-
-            <a href="groups.html" class="text-white hover:text-purple-300 transition">
-                Groups
-            </a>
-
-            <a href="support.html" class="text-purple-200 font-semibold">
-                Support
-            </a>
-
+            <a href="dashboard.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="channels.html"  class="text-white hover:text-purple-300 transition">Channels</a>
+            <a href="groups.html"    class="text-white hover:text-purple-300 transition">Groups</a>
+            <a href="issues.html"    class="text-white hover:text-purple-300 transition">Issues</a>
+            <a href="support.html"   class="text-purple-300 font-semibold">Support</a>
+            <a href="HowtoWork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="extension.html" class="text-white hover:text-purple-300 transition">Extension</a>
         </div>
 
-        <!-- USER -->
+        <div class="flex items-center gap-2"></div>
+    </div>
 
-        <div class="flex items-center gap-3">
-
-            <img
-            src="https://i.pravatar.cc/100"
-            class="w-10 h-10 rounded-full border border-white/10">
-
-            <div class="hidden sm:block">
-
-                <div class="text-sm font-semibold">
-                    Mazhar
-                </div>
-
-                <div class="text-[11px] text-purple-100">
-                    Member
-                </div>
-
-            </div>
-
+    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+        <div class="flex flex-col gap-4 text-sm">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="channels.html">Channels</a>
+            <a href="groups.html">Groups</a>
+            <a href="issues.html">Issues</a>
+            <a href="support.html" class="text-purple-400">Support</a>
+            <a href="HowtoWork.html">How To Work</a>
+            <a href="extension.html">Extension</a>
         </div>
-
     </div>
 
 </nav>
 
-<!-- MAIN -->
+<!-- ══════ MAIN ══════ -->
+<main class="relative z-10 pt-28 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
 
-<main class="relative z-10 pt-32 pb-20 px-4">
 
-    <div class="max-w-[1200px] mx-auto">
+    <!-- HERO -->
+    <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-5">
+            💬 Member Support
+        </div>
+        <h1 class="text-5xl font-black gradient-text mb-4">Support Center</h1>
+        <p class="text-gray-400 max-w-lg mx-auto">
+            Have a question or issue? Send a message directly to the admin team. We reply within 24 hours.
+        </p>
+    </div>
 
-        <!-- HEADER -->
 
-        <div class="text-center mb-12">
+    <!-- QUICK INFO CARDS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
 
-            <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+        <div class="info-card text-center">
+            <div class="text-3xl mb-2">⚡</div>
+            <div class="font-bold text-sm">Fast Reply</div>
+            <div class="text-gray-500 text-xs mt-1">Usually under 24h</div>
+        </div>
 
-                💬 Help Center
+        <div class="info-card text-center">
+            <div class="text-3xl mb-2">🔒</div>
+            <div class="font-bold text-sm">Private</div>
+            <div class="text-gray-500 text-xs mt-1">Only you & admin</div>
+        </div>
 
+        <div class="info-card text-center">
+            <div class="text-3xl mb-2">📋</div>
+            <div class="font-bold text-sm">Ticket ID</div>
+            <div class="text-gray-500 text-xs mt-1">Every message tracked</div>
+        </div>
+
+        <div class="info-card text-center">
+            <div class="text-3xl mb-2">🌐</div>
+            <div class="font-bold text-sm">Always Open</div>
+            <div class="text-gray-500 text-xs mt-1">24 / 7 available</div>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN LAYOUT: Chat + Sidebar -->
+    <div class="grid lg:grid-cols-3 gap-6">
+
+
+        <!-- ── LEFT: CHAT WINDOW ── -->
+        <div class="lg:col-span-2 flex flex-col gap-5">
+
+            <!-- Category selector -->
+            <div>
+                <div class="text-sm text-gray-400 mb-3 font-medium">What do you need help with?</div>
+                <div class="flex flex-wrap gap-2" id="catPills">
+                    <button class="cat-pill active" onclick="selectCat(this)">🔧 General</button>
+                    <button class="cat-pill" onclick="selectCat(this)">💰 Payment Issue</button>
+                    <button class="cat-pill" onclick="selectCat(this)">📋 Task Problem</button>
+                    <button class="cat-pill" onclick="selectCat(this)">👤 Account</button>
+                    <button class="cat-pill" onclick="selectCat(this)">🧩 Extension</button>
+                    <button class="cat-pill" onclick="selectCat(this)">📢 Channel Issue</button>
+                    <button class="cat-pill" onclick="selectCat(this)">❓ Other</button>
+                </div>
             </div>
 
-            <h1 class="text-4xl md:text-5xl font-black gradient-text">
+            <!-- Chat window -->
+            <div class="chat-window">
 
-                Support Center
+                <!-- Header -->
+                <div class="chat-header">
 
-            </h1>
+                    <div class="admin-avatar">
+                        🛡️
+                        <div class="online-dot"></div>
+                    </div>
 
-            <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
+                    <div>
+                        <div class="font-bold text-sm">Exsub Admin</div>
+                        <div class="text-xs" style="color:#86efac;">● Online — replies within 24h</div>
+                    </div>
 
-                Need help with your account, groups or tasks? Contact our support team and we will help you quickly.
+                    <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+                        <span class="badge-green">Support</span>
+                        <div id="ticketBadge" style="background:#13161f;border:1px solid #252938;border-radius:8px;padding:3px 10px;font-size:11px;color:#6b7280;">
+                            #SUP-<span id="ticketNum">----</span>
+                        </div>
+                    </div>
 
-            </p>
+                </div>
+
+                <!-- Messages -->
+                <div class="chat-messages" id="chatMessages">
+
+                    <!-- Welcome message from admin -->
+                    <div class="msg-row">
+                        <div class="msg-avatar" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);">🛡️</div>
+                        <div>
+                            <div class="bubble admin">
+                                👋 Hello! Welcome to Exsub Group Support.<br><br>
+                                Please enter your <strong>User Code</strong> to get started, then describe your issue. We'll get back to you as soon as possible.
+                            </div>
+                            <div class="msg-meta">Exsub Admin · just now</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Input area -->
+                <div class="chat-input-area">
+
+                    <!-- User Code bar (shown until code is entered) -->
+                    <div id="userCodeBar" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;background:#13161f;border:1px solid #252938;border-radius:12px;padding:8px 12px;">
+                        <span style="font-size:12px;color:#6b7280;white-space:nowrap;">User Code:</span>
+                        <input id="userCodeInput" type="text" placeholder="Enter your ID e.g. #4821"
+                        style="flex:1;background:none;border:none;outline:none;color:#c4b5fd;font-size:13px;font-weight:600;"
+                        onkeydown="if(event.key==='Enter') confirmCode()">
+                        <button onclick="confirmCode()" style="padding:4px 12px;border-radius:8px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;font-size:12px;font-weight:600;cursor:pointer;">
+                            Confirm
+                        </button>
+                    </div>
+
+                    <div class="chat-input-wrap">
+
+                        <!-- Attachment -->
+                        <label class="icon-btn" title="Attach screenshot">
+                            📎
+                            <input type="file" accept="image/*" style="display:none;" onchange="attachFile(this)">
+                        </label>
+
+                        <!-- Text input -->
+                        <textarea id="msgInput" rows="1" placeholder="Type your message…"
+                        onkeydown="handleKey(event)"
+                        oninput="autoResize(this)"></textarea>
+
+                        <!-- Send -->
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+
+                    </div>
+
+                    <!-- Attachment preview -->
+                    <div id="attachPreview" style="display:none;margin-top:8px;display:flex;align-items:center;gap:8px;background:#13161f;border:1px solid #252938;border-radius:10px;padding:8px 12px;">
+                        <span style="font-size:14px;">🖼️</span>
+                        <span id="attachName" style="font-size:12px;color:#9ca3af;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+                        <button onclick="clearAttach()" style="background:none;border:none;color:#6b7280;cursor:pointer;font-size:14px;">✕</button>
+                    </div>
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:0 2px;">
+                        <div style="font-size:10px;color:#374151;">Press <kbd style="background:#13161f;border:1px solid #252938;border-radius:4px;padding:1px 5px;font-size:9px;">Enter</kbd> to send · <kbd style="background:#13161f;border:1px solid #252938;border-radius:4px;padding:1px 5px;font-size:9px;">Shift+Enter</kbd> for new line</div>
+                        <div id="charCount" style="font-size:10px;color:#374151;">0 / 1000</div>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
-        <!-- SUPPORT CARDS -->
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- ── RIGHT: SIDEBAR ── -->
+        <div class="flex flex-col gap-5">
 
-            <!-- CARD -->
-
-            <div class="card support-card rounded-3xl p-6">
-
-                <div class="support-icon">
-                    📩
+            <!-- Member ID card -->
+            <div class="card rounded-2xl p-5">
+                <div class="text-xs text-gray-500 mb-3 uppercase tracking-wider">Your Session</div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div style="width:42px;height:42px;border-radius:12px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;">👤</div>
+                    <div>
+                        <div id="sidebarName" class="font-bold text-sm">Not confirmed</div>
+                        <div id="sidebarCode" class="text-xs text-gray-500">Enter your User Code</div>
+                    </div>
                 </div>
-
-                <h2 class="text-xl font-bold mt-6">
-                    Email Support
-                </h2>
-
-                <p class="text-muted mt-3 text-sm leading-7">
-
-                    Contact our support team anytime for account issues and assistance.
-
-                </p>
-
-                <div class="mt-6 text-purple-300 font-medium text-sm">
-                    support@exsub.com
+                <div style="background:#0d0f17;border:1px solid #1e2130;border-radius:10px;padding:10px;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                        <span style="font-size:11px;color:#6b7280;">Ticket</span>
+                        <span id="sideTicket" style="font-size:11px;color:#a78bfa;font-weight:700;">#SUP-----</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                        <span style="font-size:11px;color:#6b7280;">Category</span>
+                        <span id="sideCat" style="font-size:11px;color:#e2e8f0;">🔧 General</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;">
+                        <span style="font-size:11px;color:#6b7280;">Status</span>
+                        <span class="badge-green" style="font-size:10px;">Open</span>
+                    </div>
                 </div>
-
             </div>
 
-            <!-- CARD -->
-
-            <div class="card support-card rounded-3xl p-6">
-
-                <div class="support-icon">
-                    ⚡
+            <!-- Quick tips -->
+            <div class="card rounded-2xl p-5">
+                <div class="text-xs text-gray-500 mb-4 uppercase tracking-wider">Tips for faster support</div>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <div style="display:flex;gap:10px;align-items:flex-start;">
+                        <span style="font-size:14px;flex-shrink:0;">✅</span>
+                        <div style="font-size:12px;color:#9ca3af;line-height:1.5;">Always include your <strong class="text-white">User Code</strong> in your first message.</div>
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;">
+                        <span style="font-size:14px;flex-shrink:0;">📸</span>
+                        <div style="font-size:12px;color:#9ca3af;line-height:1.5;">Attach a <strong class="text-white">screenshot</strong> if your issue is visual — it speeds up resolution.</div>
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;">
+                        <span style="font-size:14px;flex-shrink:0;">🎯</span>
+                        <div style="font-size:12px;color:#9ca3af;line-height:1.5;">Select the correct <strong class="text-white">category</strong> above the chat for faster routing.</div>
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:flex-start;">
+                        <span style="font-size:14px;flex-shrink:0;">🚫</span>
+                        <div style="font-size:12px;color:#9ca3af;line-height:1.5;">Do not send the same issue multiple times — it will not speed up the reply.</div>
+                    </div>
                 </div>
-
-                <h2 class="text-xl font-bold mt-6">
-                    Fast Response
-                </h2>
-
-                <p class="text-muted mt-3 text-sm leading-7">
-
-                    Our team usually responds within a few hours for urgent support requests.
-
-                </p>
-
-                <div class="mt-6 text-purple-300 font-medium text-sm">
-                    24/7 Available
-                </div>
-
             </div>
 
-            <!-- CARD -->
+            <!-- Past tickets -->
+            <div class="card rounded-2xl p-5">
+                <div class="text-xs text-gray-500 mb-4 uppercase tracking-wider">Recent Tickets</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
 
-            <div class="card support-card rounded-3xl p-6">
+                    <div class="ticket-card">
+                        <div style="width:34px;height:34px;border-radius:9px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✅</div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Payment not received</div>
+                            <div style="font-size:10px;color:#6b7280;">#SUP-3841 · 3 days ago</div>
+                        </div>
+                        <span class="badge-green" style="font-size:10px;flex-shrink:0;">Resolved</span>
+                    </div>
 
-                <div class="support-icon">
-                    🔒
+                    <div class="ticket-card">
+                        <div style="width:34px;height:34px;border-radius:9px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">⏳</div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Task proof rejected</div>
+                            <div style="font-size:10px;color:#6b7280;">#SUP-3892 · 1 day ago</div>
+                        </div>
+                        <span class="badge-yellow" style="font-size:10px;flex-shrink:0;">Pending</span>
+                    </div>
+
                 </div>
-
-                <h2 class="text-xl font-bold mt-6">
-                    Secure Support
-                </h2>
-
-                <p class="text-muted mt-3 text-sm leading-7">
-
-                    Your account information and support messages are always protected.
-
-                </p>
-
-                <div class="mt-6 text-purple-300 font-medium text-sm">
-                    Safe & Private
-                </div>
-
             </div>
 
-        </div>
-
-        <!-- SUPPORT FORM -->
-
-        <div class="card rounded-[32px] p-6 md:p-8">
-
-            <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
-
-                <div>
-
-                    <h2 class="text-3xl font-bold">
-                        Create Support Ticket
-                    </h2>
-
-                    <p class="text-muted mt-2">
-                        Describe your issue and our team will contact you.
-                    </p>
-
+            <!-- Admin note -->
+            <div style="background:linear-gradient(135deg,#131620,#0f1018);border:1px solid rgba(124,58,237,0.2);border-radius:16px;padding:16px;">
+                <div style="font-size:11px;color:#6b7280;margin-bottom:6px;">📌 Admin Note</div>
+                <div style="font-size:12px;color:#9ca3af;line-height:1.6;">
+                    Support hours are <strong class="text-white">9 AM – 11 PM PKT</strong>. Messages sent outside these hours will be answered on the next business day.
                 </div>
-
-                <div class="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm">
-
-                    Support Ticket
-
-                </div>
-
-            </div>
-
-            <!-- FORM -->
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                <!-- NAME -->
-
-                <div>
-
-                    <label class="label">
-                        Full Name
-                    </label>
-
-                    <input
-                    type="text"
-                    class="input-box"
-                    placeholder="Enter your full name">
-
-                </div>
-
-                <!-- EMAIL -->
-
-                <div>
-
-                    <label class="label">
-                        Email Address
-                    </label>
-
-                    <input
-                    type="email"
-                    class="input-box"
-                    placeholder="Enter your email">
-
-                </div>
-
-                <!-- ISSUE TYPE -->
-
-                <div>
-
-                    <label class="label">
-                        Issue Type
-                    </label>
-
-                    <select class="input-box">
-
-                        <option>
-                            Account Problem
-                        </option>
-
-                        <option>
-                            Group Issue
-                        </option>
-
-                        <option>
-                            Task Issue
-                        </option>
-
-                        <option>
-                            Payment Issue
-                        </option>
-
-                        <option>
-                            Other
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <!-- PRIORITY -->
-
-                <div>
-
-                    <label class="label">
-                        Priority
-                    </label>
-
-                    <select class="input-box">
-
-                        <option>
-                            Low
-                        </option>
-
-                        <option>
-                            Medium
-                        </option>
-
-                        <option>
-                            High
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <!-- SUBJECT -->
-
-            <div class="mt-6">
-
-                <label class="label">
-                    Subject
-                </label>
-
-                <input
-                type="text"
-                class="input-box"
-                placeholder="Enter issue subject">
-
-            </div>
-
-            <!-- MESSAGE -->
-
-            <div class="mt-6">
-
-                <label class="label">
-                    Message
-                </label>
-
-                <textarea
-                class="input-box min-h-[180px] resize-none"
-                placeholder="Describe your issue in detail..."></textarea>
-
-            </div>
-
-            <!-- BUTTON -->
-
-            <div class="mt-8">
-
-                <button class="submit-btn">
-                    Submit Ticket
-                </button>
-
             </div>
 
         </div>
 
     </div>
 
+
+</div>
 </main>
 
-<!-- FOOTER -->
 
-<footer class="relative z-10 border-t border-[#1e212c]">
+<script>
 
-    <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+/* ══════════════════════════════════
+   STATE
+══════════════════════════════════ */
 
+let userCode     = '';
+let codeConfirmed = false;
+let selectedCat  = '🔧 General';
+let attachedFile = null;
+let msgCount     = 0;
+
+// Generate ticket number
+const ticketNum  = 'SUP-' + (Math.floor(Math.random()*9000)+1000);
+document.getElementById('ticketNum').textContent  = ticketNum.split('-')[1];
+document.getElementById('sideTicket').textContent = '#' + ticketNum;
+document.getElementById('ticketBadge').querySelector('span').textContent = ticketNum.split('-')[1];
+
+/* ── CATEGORY PILLS ── */
+function selectCat(btn){
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    selectedCat = btn.textContent.trim();
+    document.getElementById('sideCat').textContent = selectedCat;
+}
+
+/* ── CONFIRM USER CODE ── */
+function confirmCode(){
+    const val = document.getElementById('userCodeInput').value.trim();
+    if(!val){ shake('userCodeInput'); return; }
+
+    userCode      = val.startsWith('#') ? val : '#'+val;
+    codeConfirmed = true;
+
+    // hide code bar
+    document.getElementById('userCodeBar').style.display = 'none';
+
+    // update sidebar
+    document.getElementById('sidebarName').textContent = 'Member';
+    document.getElementById('sidebarCode').textContent = userCode;
+
+    // add system message in chat
+    addSystemMsg('User Code ' + userCode + ' confirmed ✓');
+
+    // admin auto-reply
+    setTimeout(()=>{
+        showTyping();
+        setTimeout(()=>{
+            removeTyping();
+            addAdminMsg('Thank you! I can see your account (' + userCode + ').\n\nPlease go ahead and describe your issue in as much detail as possible. If you have a screenshot, you can attach it using the 📎 button.');
+        }, 2000);
+    }, 600);
+}
+
+/* ── SEND MESSAGE ── */
+function sendMessage(){
+    const input = document.getElementById('msgInput');
+    const text  = input.value.trim();
+
+    if(!text && !attachedFile) return;
+    if(!codeConfirmed){
+        shake('userCodeBar');
+        document.getElementById('userCodeInput').focus();
+        return;
+    }
+
+    msgCount++;
+
+    // add member bubble
+    addMemberMsg(text, attachedFile);
+
+    input.value   = '';
+    input.style.height = 'auto';
+    document.getElementById('charCount').textContent = '0 / 1000';
+    clearAttach();
+
+    // admin auto-responses
+    const replies = getAutoReply(text, msgCount);
+    if(replies){
+        setTimeout(()=>{
+            showTyping();
+            setTimeout(()=>{
+                removeTyping();
+                addAdminMsg(replies);
+            }, 1800 + Math.random()*800);
+        }, 800);
+    }
+}
+
+/* ── AUTO REPLIES ── */
+function getAutoReply(text, count){
+    const t = text.toLowerCase();
+
+    if(count === 1)
+        return 'Thank you for reaching out! 🙏\n\nYour message has been received under ticket #' + ticketNum + '. Our team will review your issue and get back to you shortly.\n\nIf you have any additional details or screenshots, please share them here.';
+
+    if(t.includes('payment') || t.includes('paid') || t.includes('money'))
+        return 'I can see this is a payment-related issue. Please confirm:\n\n1. The task name or task number\n2. The date you completed it\n3. Your payment method on file\n\nThis will help us locate your transaction quickly.';
+
+    if(t.includes('task') || t.includes('proof') || t.includes('submit'))
+        return 'For task issues, please share the task number and the screenshot of your completed work so we can verify it on our end.';
+
+    if(t.includes('extension') || t.includes('install'))
+        return 'For extension issues, please let us know:\n\n• Your browser name and version\n• The exact error message you see\n• Whether you have Developer Mode enabled\n\nYou can find your Chrome version at chrome://settings/help';
+
+    if(t.includes('account') || t.includes('login') || t.includes('code'))
+        return 'Account issues are usually resolved within a few hours. Our team has been notified. Please avoid submitting duplicate tickets for the same issue.';
+
+    if(count === 3)
+        return '✅ All your details have been noted. A senior admin will follow up with you soon. Your ticket #' + ticketNum + ' is now in the queue.';
+
+    return null;
+}
+
+/* ── ADD BUBBLES ── */
+function addMemberMsg(text, file){
+    const wrap = document.getElementById('chatMessages');
+    const now  = timeStr();
+
+    const row = document.createElement('div');
+    row.className = 'msg-row outgoing';
+
+    let content = '';
+    if(text)
+        content += '<div class="bubble member">' + escHtml(text).replace(/\n/g,'<br>') + '</div>';
+    if(file)
+        content += '<div class="bubble member" style="padding:8px;margin-top:4px;">' +
+            '🖼️ <span style="font-size:12px;opacity:.8;">' + escHtml(file.name) + '</span></div>';
+
+    row.innerHTML = `
+        <div class="msg-avatar" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);">👤</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;">
+            ${content}
+            <div class="msg-meta">${escHtml(userCode)} · ${now}</div>
+        </div>`;
+
+    wrap.appendChild(row);
+    scrollBottom();
+}
+
+function addAdminMsg(text){
+    const wrap = document.getElementById('chatMessages');
+    const now  = timeStr();
+
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `
+        <div class="msg-avatar" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);">🛡️</div>
         <div>
+            <div class="bubble admin">${escHtml(text).replace(/\n/g,'<br>')}</div>
+            <div class="msg-meta">Exsub Admin · ${now}</div>
+        </div>`;
 
-            <div class="flex items-center gap-2">
+    wrap.appendChild(row);
+    scrollBottom();
+}
 
-                <img src="images/logo.svg" class="w-6 h-6">
+function addSystemMsg(text){
+    const wrap = document.getElementById('chatMessages');
+    const div  = document.createElement('div');
+    div.style.cssText = 'text-align:center;font-size:11px;color:#4b5563;padding:4px 0;';
+    div.textContent   = '— ' + text + ' —';
+    wrap.appendChild(div);
+    scrollBottom();
+}
 
-                <span class="font-semibold">
-                    Exsub Group
-                </span>
+/* ── TYPING INDICATOR ── */
+function showTyping(){
+    const wrap = document.getElementById('chatMessages');
+    const row  = document.createElement('div');
+    row.className = 'msg-row';
+    row.id = 'typingRow';
+    row.innerHTML = `
+        <div class="msg-avatar" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);">🛡️</div>
+        <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>`;
+    wrap.appendChild(row);
+    scrollBottom();
+}
 
-            </div>
+function removeTyping(){
+    const row = document.getElementById('typingRow');
+    if(row) row.remove();
+}
 
-            <p class="text-muted text-sm mt-3">
-                Grow together with creators worldwide.
-            </p>
+/* ── HELPERS ── */
+function scrollBottom(){
+    const c = document.getElementById('chatMessages');
+    c.scrollTop = c.scrollHeight;
+}
 
-        </div>
+function timeStr(){
+    const d = new Date();
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
 
-        <div class="flex gap-6 text-sm text-muted">
+function escHtml(t){
+    return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 
-            <a href="#" class="hover:text-white transition">
-                Privacy
-            </a>
+function shake(id){
+    const el = document.getElementById(id);
+    el.style.animation = 'none';
+    el.style.outline   = '2px solid rgba(239,68,68,0.5)';
+    setTimeout(()=>{ el.style.outline=''; }, 1200);
+}
 
-            <a href="#" class="hover:text-white transition">
-                Terms
-            </a>
+/* ── INPUT HELPERS ── */
+function handleKey(e){
+    if(e.key==='Enter' && !e.shiftKey){
+        e.preventDefault();
+        sendMessage();
+    }
+    const len = e.target.value.length;
+    document.getElementById('charCount').textContent = len+' / 1000';
+    if(len > 1000) e.target.value = e.target.value.slice(0,1000);
+}
 
-            <a href="#" class="hover:text-white transition">
-                Support
-            </a>
+function autoResize(el){
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    document.getElementById('charCount').textContent = el.value.length + ' / 1000';
+}
 
-        </div>
+/* ── ATTACHMENT ── */
+function attachFile(input){
+    if(!input.files[0]) return;
+    attachedFile = input.files[0];
+    document.getElementById('attachPreview').style.display = 'flex';
+    document.getElementById('attachName').textContent = attachedFile.name;
+}
 
-    </div>
+function clearAttach(){
+    attachedFile = null;
+    document.getElementById('attachPreview').style.display = 'none';
+}
 
-</footer>
+/* ── MOBILE MENU ── */
+const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+const mobileMenu    = document.getElementById("mobileMenu");
+
+mobileMenuBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle("hidden");
+});
+
+document.addEventListener("click", e => {
+    if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target))
+        mobileMenu.classList.add("hidden");
+});
+
+</script>
 
 </body>
 </html>
