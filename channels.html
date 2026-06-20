@@ -596,6 +596,11 @@ body::before{
         </div>
       </div>
 
+      <!-- VIDEOS NOT READY BANNER -->
+      <div id="videosNotReadyBanner" class="hidden mb-6 px-4 py-3 rounded-2xl text-sm font-semibold" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
+        ⚠️ Videos are not added yet. You need to add videos to start work in our group.
+      </div>
+
       <!-- VIDEO STATS BAR -->
       <div id="videoStatsBar" class="hidden grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div class="channel-info-box"><span>Total Videos</span><strong id="statTotal">0</strong></div>
@@ -644,7 +649,7 @@ body::before{
 /* =========================================================
    CONFIG
 ========================================================= */
-const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxWNAa35mj8jgEzrMCma6F9F2Y4Lp1-x3XdmCOv04xMzpeEO8TiDdOXLzRT-dREUW8D/exec";
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxQISzJioFoKxFHnvURaZi19Zd7CtJw3cAyRGRvwz0zVv3Hr31rwz6pTCVlQFp1O7jkoA/exec";
 
 /* =========================================================
    SESSION — load directly from what login already saved.
@@ -879,10 +884,24 @@ function channelCardHTML(ch, type) {
   const badgeLbl = type === 'promo' ? '📢 Promotional' : '⚙️ Working';
 
   const subsLabel = type === 'working' ? 'Total Subscriptions'  : 'Total Subscribers';
-  const curLabel  = type === 'working' ? 'Public Subscriptions' : 'Current Subscribers';
   const subsVal   = type === 'working' ? (ch.TotalSubscription||ch.TotalSubscribers||0) : (ch.TotalSubscribers||0);
-  const curVal    = type === 'working' ? (ch.PublicSubscription||ch.CurrentSubscribers||0) : (ch.CurrentSubscribers||0);
   const lastUpdated = type === 'working' ? (ch.SheetUpdate||ch.LastTimeFetch||'-') : (ch.LastUpdated||'-');
+
+  // Issue box only shows when there's an actual reported issue (not blank / "No")
+  const issueText = (ch.Issue || '').trim();
+  const hasIssue  = issueText && issueText.toLowerCase() !== 'no';
+  const issueBoxHTML = hasIssue
+    ? `<div class="channel-info-box" style="border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.08);">
+         <span style="color:#f87171;">⚠️ Issue</span><strong style="color:#f87171;">${issueText}</strong>
+       </div>`
+    : '';
+
+  // For the promo channel, surface a clear "videos not added yet" notice when not ready
+  const videosNotReadyHTML = (type === 'promo' && String(ch.VideosReady||'').toLowerCase() !== 'yes')
+    ? `<div class="mt-4 px-3 py-2.5 rounded-xl text-xs font-semibold" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
+         ⚠️ Videos are not added yet. You need to add videos to start work in our group.
+       </div>`
+    : '';
 
   const editFn   = `openEditModal('${type}','${ch.ChannelId}')`;
   const ytFn     = type === 'promo' ? `updateChannelYT('${ch.ChannelId}')` : `updateWorkingChannelYT('${ch.ChannelId}')`;
@@ -896,11 +915,12 @@ function channelCardHTML(ch, type) {
         <h2 class="channel-name">${ch.ChannelName||'Unknown Channel'}</h2>
         <div class="channel-handle">${ch.ChannelHandle||'channel'}</div>
         <div class="channel-info-grid">
-          <div class="channel-info-box"><span>Channel Type</span><strong>${typeObj.emoji} ${typeObj.label}</strong></div>
+          ${type === 'promo' ? `<div class="channel-info-box"><span>Channel Type</span><strong>${typeObj.emoji} ${typeObj.label}</strong></div>` : ''}
           <div class="channel-info-box"><span>${subsLabel}</span><strong>${subsVal}</strong></div>
-          <div class="channel-info-box"><span>${curLabel}</span><strong>${curVal}</strong></div>
           <div class="channel-info-box"><span>Last Updated</span><strong>${lastUpdated}</strong></div>
+          ${issueBoxHTML}
         </div>
+        ${videosNotReadyHTML}
         <a href="${ch.ChannelLink||'#'}" target="_blank"
           class="inline-flex items-center gap-2 mt-4 text-purple-400 text-sm hover:text-purple-300 transition">
           Visit Channel →
@@ -936,6 +956,17 @@ function updateVideoStats() {
   document.getElementById('statReady').innerText   = active >= 5 ? '✅ Yes' : `❌ No (${active}/5)`;
   if (total > 0) document.getElementById('videoStatsBar').classList.remove('hidden');
   else           document.getElementById('videoStatsBar').classList.add('hidden');
+
+  // Banner: tell the member clearly that videos still need to be added
+  const banner = document.getElementById('videosNotReadyBanner');
+  if (active < 5) {
+    banner.innerText = total === 0
+      ? '⚠️ Videos are not added yet. You need to add videos to start work in our group.'
+      : `⚠️ Videos are not ready yet (${active}/5 active). Add more videos to start work in our group.`;
+    banner.classList.remove('hidden');
+  } else {
+    banner.classList.add('hidden');
+  }
 }
 
 function filterVideos() {
@@ -1164,17 +1195,16 @@ function openAddModal(type) {
     html:`<div style="text-align:left">
       <label class="swal-label">YouTube Channel Link</label>
       <input id="sw_channelLink" class="swal-input" placeholder="https://youtube.com/@yourchannel">
-      <label class="swal-label">Channel Type</label>
-      ${typeGridHTML()}
+      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeGridHTML()}`}
     </div>`,
     confirmButtonText: isWorking ? 'Add Working Channel' : 'Add Promotional Channel',
     showCancelButton:true,
     cancelButtonText:'Cancel',
     preConfirm: async () => {
       const channelLink = document.getElementById('sw_channelLink').value.trim();
-      const channelType = document.getElementById('selectedChannelType').value;
+      const channelType = isWorking ? '' : document.getElementById('selectedChannelType').value;
       if (!channelLink) { Swal.showValidationMessage('Please enter a channel link'); return false; }
-      if (!channelType) { Swal.showValidationMessage('Please select a channel type'); return false; }
+      if (!isWorking && !channelType) { Swal.showValidationMessage('Please select a channel type'); return false; }
       try {
         Swal.showLoading();
         const actionParam = isWorking ? 'addWorkingChannel' : 'addChannel';
@@ -1183,7 +1213,7 @@ function openAddModal(type) {
           + `&username=${encodeURIComponent(savedUsername)}`
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelLink=${encodeURIComponent(channelLink)}`
-          + `&channelType=${encodeURIComponent(channelType)}`
+          + (isWorking ? '' : `&channelType=${encodeURIComponent(channelType)}`)
         );
         const d = await r.json();
         if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
@@ -1228,8 +1258,7 @@ async function openEditModal(type, channelId) {
       <input id="sw_editName" class="swal-input" placeholder="Leave blank to keep current" value="${currName}">
       <label class="swal-label">Channel Link</label>
       <input id="sw_editLink" class="swal-input" placeholder="https://youtube.com/@yourchannel" value="${currLink}">
-      <label class="swal-label">Channel Type</label>
-      ${typeGridHTML(currType)}
+      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeGridHTML(currType)}`}
       <div style="margin-top:18px;padding:12px;background:#0a0b10;border-radius:12px;border:1px solid #1f2330;font-size:12px;color:#8a8f9e;">
         💡 Use <strong style="color:#a78bfa">Save Changes</strong> to update your edits, or <strong style="color:#a78bfa">Sync YouTube</strong> to re-fetch live data.
       </div>
@@ -1241,7 +1270,7 @@ async function openEditModal(type, channelId) {
     preConfirm: async () => {
       const name  = document.getElementById('sw_editName').value.trim();
       const link  = document.getElementById('sw_editLink').value.trim();
-      const ctype = document.getElementById('selectedChannelType').value;
+      const ctype = isWorking ? '' : document.getElementById('selectedChannelType').value;
       try {
         Swal.showLoading();
         const action = isWorking ? 'editWorkingChannel' : 'editChannel';
@@ -1252,7 +1281,7 @@ async function openEditModal(type, channelId) {
           + `&channelId=${encodeURIComponent(channelId)}`
           + `&channelName=${encodeURIComponent(name)}`
           + `&channelLink=${encodeURIComponent(link)}`
-          + `&channelType=${encodeURIComponent(ctype)}`
+          + (isWorking ? '' : `&channelType=${encodeURIComponent(ctype)}`)
         );
         const d = await r.json();
         if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
