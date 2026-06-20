@@ -271,79 +271,66 @@ body::before{
 </head>
 <body>
 
-    <!-- NAVBAR -->
-
- <!-- Navigation -->
-   <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-40" >
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
-
-    <!-- Logo -->
+<!-- NAVBAR -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+      <span class="font-semibold text-[17px]">Exsub Group</span>
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-[13px]">
+      <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+      <a href="channels.html" class="text-white hover:text-purple-300 transition">Channels</a>
+      <a href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
+      <a href="howtowork.html" class="text-purple-300 font-semibold">How To Work</a>
+      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
+      <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+    </div>
     <div class="flex items-center gap-2">
-      <img src="images/logo.svg" alt="Exsub Group Logo" class="w-6 h-6 object-contain"/>
-      <span class="text-white font-semibold text-[17px] tracking-tight">Exsub Group</span>
-    </div>
-
-    <!-- Desktop Menu -->
-    <div class="hidden md:flex items-center gap-7 text-[13px]">
-        <a href="/index.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-            <a href="/Members.html" class="text-white hover:text-purple-300 transition">Community Members</a>
-            <a href="support.html" class="text-white hover:text-purple-300 transition">Support</a>
-            <a href="/HowtoWork.html" class="text-purple-300 font-semibold">How To Work</a>
-            <a href="/ExsubExtension.html" class="transition">Browser Extension</a>
-    </div>
-
-    <!-- Right Buttons -->
-    <div class="flex items-center gap-3">
-      <a href="signin.html" class="text-[13px] text-white transition hidden sm:block">
-        Log In
-      </a>
-
-      <a href="signup.html"
-         class="bg-white text-black text-[13px] font-medium px-4 py-[7px] rounded-full  hover:bg-gray-100 transition">
-        Create Account
-      </a>
-
-      <!-- Mobile Menu Button -->
-      <button id="menuBtn" class="md:hidden ml-2 text-white">
-        <!-- Hamburger Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-
-  </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobileMenu"
-       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-4 flex flex-col gap-6 text-[14px]">
-
-      <a href="/index.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-            <a href="/Members.html" class="text-white hover:text-purple-300 transition">Community Members</a>
-            <a href="support.html" class="text-white hover:text-purple-300 transition">Support</a>
-            <a href="/HowtoWork.html" class="text-purple-300 font-semibold">How To Work</a>
-            <a href="/ExsubExtension.html" class="transition">Browser Extension</a>
-            <div class="border-t border-white/10 pt-4 flex flex-col gap-3">
-
-      <a href="signup.html"
-         class="btn-purple text-center py-3 rounded-full font-medium">
-
-        Create Account
-
-      </a>
-
-      <a href="signin.html"
-         class="bg-white text-center text-black py-3 rounded-full font-medium">
-
-        Login
-
-      </a>
-
+      <div class="relative">
+        <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
+        <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
+          <div class="p-4 text-sm text-gray-400">No new notifications</div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
+        </button>
+        <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+          <div class="p-4 border-b border-[#232632]">
+            <div class="flex items-center gap-3">
+              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+              <div>
+                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
+                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+              </div>
+            </div>
+          </div>
+          <div class="py-2">
+            <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+            <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
+            <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-   </nav>
+  <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+    <div class="flex flex-col gap-4 text-sm">
+      <a href="analytics.html" class="text-white">Dashboard</a>
+      <a href="channels.html" class="text-white">Channels</a>
+      <a href="groups.html" class="text-white">Groups</a>
+      <a href="howtowork.html" class="text-purple-300 font-semibold">How To Work</a>
+      <a href="exsubextension.html" class="text-white">Exsub Extension</a>
+      <a href="support.html" class="text-white">Contact &amp; Support</a>
+      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
+    </div>
+  </div>
+</nav>
 
 <!-- MAIN -->
 <main class="relative z-10 pt-32 pb-20 px-4">
@@ -849,28 +836,25 @@ function toggleFaq(btn){
     }
 }
 
-/* ── MOBILE MENU ── */
-const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-const mobileMenu    = document.getElementById("mobileMenu");
-
-mobileMenuBtn.addEventListener("click", e => {
-    e.stopPropagation();
-    mobileMenu.classList.toggle("hidden");
-});
-
-document.addEventListener("click", e => {
-    if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target))
-        mobileMenu.classList.add("hidden");
-});
-
 </script>
-    <script>
-  const menuBtn = document.getElementById("menuBtn");
-  //const mobileMenu = document.getElementById("mobileMenu");
 
-  menuBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-  });
+<script>
+
+    /* =========================================================
+   LOGOUT + MENUS
+========================================================= */
+function logoutUser() { localStorage.clear(); window.location.href = "index.html"; }
+
+document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
+document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
+document.getElementById("notifBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
+document.addEventListener("click", () => {
+  document.getElementById("mobileMenu").classList.add("hidden");
+  document.getElementById("profileDropdown").classList.add("hidden");
+  document.getElementById("notifDropdown").classList.add("hidden");
+});
 </script>
+
+
 </body>
 </html>

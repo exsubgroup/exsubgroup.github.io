@@ -1,976 +1,1376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Channels</title>
-
+<title>Channels — Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-
 :root{
-    --bg:#050508;
-    --card:#12141c;
-    --card2:#101219;
-    --border:#1e212c;
-    --purple:#7c3aed;
-    --purple2:#8b5cf6;
-    --text-muted:#8a8f9e;
+  --bg:#050508;
+  --card:#12141c;
+  --card2:#101219;
+  --border:#1e212c;
+  --purple:#7c3aed;
+  --purple2:#8b5cf6;
+  --text-muted:#8a8f9e;
 }
-
-*{
-    font-family:'Inter',sans-serif;
-}
-
-body{
-    background:var(--bg);
-    color:white;
-    overflow-x:hidden;
-}
+*{ font-family:'Inter',sans-serif; }
+body{ background:var(--bg); color:white; overflow-x:hidden; }
 
 body::before{
-    content:'';
-    position:fixed;
-    top:-50%;
-    left:-50%;
-    width:200%;
-    height:200%;
-    background:
+  content:'';
+  position:fixed;
+  top:-50%; left:-50%;
+  width:200%; height:200%;
+  background:
     radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
     radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
-    z-index:0;
-    pointer-events:none;
+  z-index:0; pointer-events:none;
+}
+
+/* LOADING OVERLAY */
+#loadingOverlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(5,5,8,0.97);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:24px;
+  transition:opacity 0.4s ease;
+}
+#loadingOverlay.hide{ opacity:0; pointer-events:none; }
+.loader-ring{
+  width:64px; height:64px;
+  border:3px solid #1e212c;
+  border-top-color:#8b5cf6;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.loader-dots{ display:flex; gap:6px; }
+.loader-dots span{
+  width:8px; height:8px; border-radius:50%;
+  background:#8b5cf6;
+  animation:bounce 1.2s ease-in-out infinite;
+}
+.loader-dots span:nth-child(2){ animation-delay:0.2s; }
+.loader-dots span:nth-child(3){ animation-delay:0.4s; }
+@keyframes bounce{
+  0%,80%,100%{ transform:translateY(0); opacity:0.4; }
+  40%{ transform:translateY(-10px); opacity:1; }
 }
 
 .glass-nav{
-    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border:1px solid rgba(255,255,255,0.06);
+  background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.06);
 }
-
 .card{
-    background:linear-gradient(180deg,#151821 0%,#101219 100%);
-    border:1px solid var(--border);
+  background:linear-gradient(180deg,#151821 0%,#101219 100%);
+  border:1px solid var(--border);
 }
-
-.text-muted{
-    color:var(--text-muted);
-}
-
+.text-muted{ color:var(--text-muted); }
 .gradient-text{
-    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+  background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
+/* SECTION TABS */
+.section-tab{
+  padding:10px 22px;
+  border-radius:12px;
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:0.25s ease;
+  white-space:nowrap;
+}
+.section-tab.active{
+  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+  border-color:#8b5cf6;
+  color:white;
+}
+.section-tab:not(.active){
+  background:#0f1118;
+  border-color:#1f2330;
+  color:#8a8f9e;
+}
+.section-tab:not(.active):hover{ border-color:#8b5cf6; color:white; }
+
+/* CHANNEL CARD */
 .channel-card{
-    background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
-    border:1px solid #242938;
-    border-radius:24px;
-    padding:22px;
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
-    transition:0.3s ease;
-    position:relative;
-    overflow:hidden;
+  background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
+  border:1px solid #242938;
+  border-radius:24px;
+  padding:22px;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  transition:0.3s ease;
+  position:relative;
+  overflow:hidden;
+  animation:fadeUp 0.4s ease both;
 }
-
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(16px); }
+  to{ opacity:1; transform:translateY(0); }
+}
 .channel-card:hover{
-    transform:translateY(-3px);
-    border-color:rgba(124,58,237,0.5);
-    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+  transform:translateY(-3px);
+  border-color:rgba(124,58,237,0.5);
+  box-shadow:0 10px 35px rgba(0,0,0,0.35);
 }
-
-.channel-left{
-    display:flex;
-    gap:18px;
-    align-items:flex-start;
+.channel-card::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.6),transparent);
+  opacity:0;
+  transition:0.3s;
 }
-
+.channel-card:hover::before{ opacity:1; }
+.channel-left{ display:flex; gap:18px; align-items:flex-start; }
 .channel-image{
-    width:88px;
-    height:88px;
-    border-radius:22px;
-    object-fit:cover;
-    border:2px solid rgba(124,58,237,0.35);
+  width:88px; height:88px;
+  border-radius:22px;
+  object-fit:cover;
+  border:2px solid rgba(124,58,237,0.35);
+  flex-shrink:0;
 }
-
-.channel-name{
-    font-size:20px;
-    font-weight:700;
-    margin-bottom:4px;
-}
-
-.channel-handle{
-    color:#9ca3af;
-    font-size:13px;
-    margin-bottom:14px;
-}
-
+.channel-name{ font-size:20px; font-weight:700; margin-bottom:4px; }
+.channel-handle{ color:#9ca3af; font-size:13px; margin-bottom:14px; }
 .channel-info-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
 }
-
 .channel-info-box{
-    background:#0f1118;
-    border:1px solid #1f2330;
-    border-radius:14px;
-    padding:12px;
+  background:#0f1118;
+  border:1px solid #1f2330;
+  border-radius:12px;
+  padding:10px 12px;
 }
-
 .channel-info-box span{
-    display:block;
-    color:#8a8f9e;
-    font-size:11px;
-    margin-bottom:5px;
+  display:block; color:#8a8f9e;
+  font-size:10px; margin-bottom:4px;
+  text-transform:uppercase; letter-spacing:0.05em;
 }
-
-.channel-info-box strong{
-    font-size:14px;
-    color:white;
-}
-
+.channel-info-box strong{ font-size:13px; color:white; }
 .channel-right{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    min-width:170px;
+  display:flex; flex-direction:column;
+  gap:10px; min-width:160px;
+}
+.btn-edit{
+  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+  color:white; border:none;
+  padding:11px 16px; border-radius:12px;
+  font-weight:600; font-size:13px;
+  cursor:pointer; transition:0.25s ease;
+  width:100%;
+}
+.btn-edit:hover{ transform:translateY(-2px); box-shadow:0 6px 20px rgba(124,58,237,0.4); }
+.btn-update-yt{
+  background:#0f1118;
+  color:#8b5cf6;
+  border:1px solid #8b5cf6;
+  padding:11px 16px; border-radius:12px;
+  font-weight:600; font-size:13px;
+  cursor:pointer; transition:0.25s ease;
+  width:100%;
+}
+.btn-update-yt:hover{ background:#8b5cf6; color:white; }
+.btn-delete{
+  background:#dc2626; color:white;
+  border:none; padding:11px 16px;
+  border-radius:12px; font-weight:600;
+  font-size:13px; cursor:pointer;
+  transition:0.25s ease; width:100%;
+}
+.btn-delete:hover{ background:#ef4444; }
+
+/* BADGE */
+.type-badge{
+  display:inline-flex; align-items:center;
+  gap:5px; font-size:11px; font-weight:600;
+  padding:4px 10px; border-radius:20px;
+  margin-bottom:8px;
+}
+.type-promo{ background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
+.type-working{ background:rgba(34,197,94,0.12); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
+
+/* SWAL OVERRIDES */
+.swal2-popup{
+  background:#12141c !important;
+  border:1px solid #1e212c !important;
+  border-radius:24px !important;
+  color:white !important;
+}
+.swal2-title{ color:white !important; }
+.swal2-html-container{ color:#c0c4d0 !important; }
+.swal-input{
+  width:100%;
+  background:#0a0b10;
+  border:1px solid #252936;
+  border-radius:12px;
+  padding:12px 14px;
+  color:white;
+  font-size:14px;
+  outline:none;
+  transition:border-color 0.2s;
+  box-sizing:border-box;
+  margin-top:6px;
+}
+.swal-input:focus{ border-color:#8b5cf6; }
+.swal-label{
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  color:#8a8f9e;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  margin-bottom:4px;
+  text-align:left;
+  margin-top:14px;
+}
+.swal-select{
+  width:100%;
+  background:#0a0b10;
+  border:1px solid #252936;
+  border-radius:12px;
+  padding:12px 14px;
+  color:white;
+  font-size:14px;
+  outline:none;
+  transition:border-color 0.2s;
+  box-sizing:border-box;
+  appearance:none;
+  cursor:pointer;
+}
+.swal-select:focus{ border-color:#8b5cf6; }
+.swal-select option{ background:#12141c; }
+.swal2-confirm{
+  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%) !important;
+  border:none !important;
+  border-radius:12px !important;
+  padding:12px 28px !important;
+  font-weight:600 !important;
+}
+.swal2-cancel{
+  background:#1a1d27 !important;
+  border:1px solid #252936 !important;
+  border-radius:12px !important;
+  padding:12px 28px !important;
+  color:white !important;
+  font-weight:600 !important;
+}
+.swal2-deny{
+  background:transparent !important;
+  border:1px solid #8b5cf6 !important;
+  border-radius:12px !important;
+  padding:12px 28px !important;
+  color:#a78bfa !important;
+  font-weight:600 !important;
 }
 
-.edit-btn{
-    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
-    color:white;
-    border:none;
-    padding:12px 18px;
-    border-radius:14px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s ease;
+/* CHANNEL TYPE GRID */
+.channel-type-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:6px;
+}
+.channel-type-opt{
+  background:#0a0b10;
+  border:2px solid #1f2330;
+  border-radius:12px;
+  padding:10px 8px;
+  cursor:pointer;
+  text-align:center;
+  transition:0.2s ease;
+  font-size:12px;
+  font-weight:600;
+  color:#8a8f9e;
+}
+.channel-type-opt:hover{ border-color:#8b5cf6; color:white; }
+.channel-type-opt.selected{
+  border-color:#8b5cf6;
+  background:rgba(139,92,246,0.15);
+  color:#a78bfa;
+}
+.channel-type-opt .emoji{ font-size:20px; display:block; margin-bottom:4px; }
+
+/* EMPTY STATE */
+.empty-state{
+  text-align:center; padding:60px 20px;
+  animation:fadeUp 0.5s ease;
+}
+.empty-icon{
+  width:72px; height:72px;
+  border-radius:22px;
+  background:rgba(139,92,246,0.1);
+  border:1px solid rgba(139,92,246,0.2);
+  display:inline-flex; align-items:center;
+  justify-content:center;
+  font-size:30px; margin-bottom:20px;
 }
 
-.edit-btn:hover{
-    transform:translateY(-2px);
+/* LIMIT BADGE */
+.limit-badge{
+  display:inline-flex; align-items:center;
+  gap:6px; font-size:12px; font-weight:600;
+  padding:5px 12px; border-radius:20px;
+}
+.limit-full{ background:rgba(239,68,68,0.1); color:#f87171; border:1px solid rgba(239,68,68,0.25); }
+.limit-ok{ background:rgba(34,197,94,0.1); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
+
+/* VIDEO CARD */
+.video-card{
+  background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
+  border:1px solid #242938;
+  border-radius:20px;
+  overflow:hidden;
+  transition:0.3s ease;
+  animation:fadeUp 0.4s ease both;
+  display:flex;
+  flex-direction:column;
+}
+.video-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(124,58,237,0.5);
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+}
+.video-thumb-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:#0a0b10;
+}
+.video-thumb-wrap img{
+  width:100%; height:100%;
+  object-fit:cover;
+  transition:transform 0.3s ease;
+}
+.video-card:hover .video-thumb-wrap img{ transform:scale(1.04); }
+.video-duration{
+  position:absolute;
+  bottom:8px; right:8px;
+  background:rgba(0,0,0,0.85);
+  color:white;
+  font-size:11px; font-weight:700;
+  padding:2px 7px; border-radius:6px;
+}
+.video-info{ padding:14px; flex:1; display:flex; flex-direction:column; gap:8px; }
+.video-title{
+  font-size:13px; font-weight:600;
+  color:white;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  line-height:1.5;
+}
+.video-meta{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:auto; }
+.video-status-badge{
+  font-size:10px; font-weight:700;
+  padding:3px 8px; border-radius:20px;
+}
+.status-active{ background:rgba(34,197,94,0.12); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+.status-deleted{ background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+.video-actions{ display:flex; gap:6px; padding:0 14px 14px; }
+.btn-video-fix{
+  flex:1;
+  background:#0f1118;
+  color:#f59e0b;
+  border:1px solid #f59e0b;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:12px; font-weight:600;
+  cursor:pointer; transition:0.2s ease;
+}
+.btn-video-fix:hover{ background:#f59e0b; color:#0a0b10; }
+.btn-video-del{
+  flex:1;
+  background:#dc2626;
+  color:white;
+  border:none;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:12px; font-weight:600;
+  cursor:pointer; transition:0.2s ease;
+}
+.btn-video-del:hover{ background:#ef4444; }
+
+/* PAGINATION */
+.pagination{ display:flex; gap:6px; align-items:center; justify-content:center; }
+.page-btn{
+  width:36px; height:36px;
+  background:#0f1118;
+  border:1px solid #1f2330;
+  border-radius:10px;
+  color:#8a8f9e;
+  font-size:13px; font-weight:600;
+  cursor:pointer; transition:0.2s ease;
+  display:flex; align-items:center; justify-content:center;
+}
+.page-btn:hover{ border-color:#8b5cf6; color:white; }
+.page-btn.active{ background:#8b5cf6; border-color:#8b5cf6; color:white; }
+.page-btn:disabled{ opacity:0.4; cursor:not-allowed; }
+
+/* SEARCH BAR */
+.search-bar{
+  width:100%;
+  background:#0a0b10;
+  border:1px solid #252936;
+  border-radius:14px;
+  padding:12px 16px 12px 44px;
+  color:white;
+  font-size:14px;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.search-bar:focus{ border-color:#8b5cf6; }
+.search-wrap{ position:relative; }
+.search-wrap::before{
+  content:'🔍';
+  position:absolute;
+  left:14px; top:50%;
+  transform:translateY(-50%);
+  font-size:15px;
 }
 
-.delete-btn{
-    background:#dc2626;
-    color:white;
-    border:none;
-    padding:12px 18px;
-    border-radius:14px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s ease;
-}
-
-.delete-btn:hover{
-    background:#ef4444;
-}
-
-#notifDropdown{
-    transition:all 0.2s ease;
-}
+#notifDropdown{ transition:all 0.2s ease; }
 
 @media(max-width:768px){
-
-    .channel-card{
-        flex-direction:column;
-    }
-
-    .channel-left{
-        flex-direction:column;
-    }
-
-    .channel-info-grid{
-        grid-template-columns:1fr;
-    }
-
-    .channel-right{
-        width:100%;
-        min-width:100%;
-    }
-
+  .channel-card{ flex-direction:column; }
+  .channel-left{ flex-direction:column; }
+  .channel-info-grid{ grid-template-columns:1fr; }
+  .channel-right{ width:100%; min-width:100%; }
+  .channel-type-grid{ grid-template-columns:repeat(2,1fr); }
+  .section-tab{ padding:8px 14px; font-size:12px; }
 }
-
 </style>
-
 </head>
-
 <body>
 
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your channels…</p>
+  <div class="loader-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
 <!-- NAVBAR -->
-
 <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-
-    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-        <!-- MOBILE BUTTON -->
-
-        <button
-        id="mobileMenuBtn"
-        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">
-
-            ☰
-
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+      <span class="font-semibold text-[17px]">Exsub Group</span>
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-[13px]">
+      <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+      <a href="channels.html" class="text-purple-300 font-semibold">Channels</a>
+      <a href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
+      <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
+      <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="relative">
+        <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
+        <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
+          <div class="p-4 text-sm text-gray-400">No new notifications</div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
         </button>
-
-        <!-- LOGO -->
-
-        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-
-            <img
-            src="images/logo.svg"
-            class="w-7 h-7 hidden md:block">
-
-            <span class="font-semibold text-[17px]">
-                Exsub Group
-            </span>
-
-        </div>
-
-        <!-- DESKTOP NAV -->
-
-        <div class="hidden md:flex items-center gap-8 text-[13px]">
-
-            <a href="dashboard.html" class="text-white hover:text-purple-300 transition">
-                Dashboard
-            </a>
-
-            <a href="channels.Html" class="text-white hover:text-purple-300 transition">
-                Channels
-            </a>
-
-            <a href="groups.html" class="text-purple-300 font-semibold">
-                Groups
-            </a>
-
-            <a href="howtowork.html" class="text-white hover:text-purple-300 transition">
-                How To Work
-            </a>
-
-            <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">
-                Exsub Extensio
-            </a>
-
-            <a href="support.html" class="text-white hover:text-purple-300 transition">
-                Contact & Support
-            </a>
-
-        </div>
-
-        <!-- RIGHT -->
-
-        <div class="flex items-center gap-2">
-
-            <!-- NOTIFICATION -->
-
-            <div class="relative">
-
-                <button
-                id="notifBtn"
-                class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">
-
-                    🔔
-
-                </button>
-
-                <div
-                id="notifDropdown"
-                class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-
-                    <div class="p-3 border-b border-[#232632] font-semibold text-sm">
-                        Notifications
-                    </div>
-
-                    <div class="p-4 text-sm text-muted">
-                        No new notifications
-                    </div>
-
-                </div>
-
+        <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+          <div class="p-4 border-b border-[#232632]">
+            <div class="flex items-center gap-3">
+              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+              <div>
+                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
+                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+              </div>
             </div>
-
-            <!-- PROFILE -->
-
-            <div class="relative">
-
-                <button
-                id="profileBtn"
-                class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-
-                    <img
-                    src="https://i.pravatar.cc/100"
-                    class="w-8 h-8 rounded-full">
-
-                    <span
-                    id="navUserName"
-                    class="hidden sm:block text-[13px]">
-
-                        Member
-
-                    </span>
-
-                </button>
-
-                <div
-                id="profileDropdown"
-                class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-
-                    <div class="p-4 border-b border-[#232632]">
-
-                        <div class="flex items-center gap-3">
-
-                            <img
-                            src="https://i.pravatar.cc/100"
-                            class="w-12 h-12 rounded-full">
-
-                            <div>
-
-                                <h3
-                                id="dropdownUserName"
-                                class="font-semibold text-sm">
-
-                                    Member
-
-                                </h3>
-
-                                <p
-                                id="dropdownUserCode"
-                                class="text-muted text-xs">
-
-                                    ID #0000
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="py-2">
-
-                        <a href="profile.html"
-                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-                            My Profile
-                        </a>
-
-                        <a
-                        href="#"
-                        onclick="logoutUser()"
-                        class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
-
-                            Logout
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+          </div>
+          <div class="py-2">
+            <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+            <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
+            <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
+          </div>
         </div>
-
+      </div>
     </div>
-
-    <!-- MOBILE MENU -->
-
-    <div
-    id="mobileMenu"
-    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-
-        <div class="flex flex-col gap-4">
-
-            <a href="dashboard.html">Dashboard</a>
-            <a href="issues.html">Issues</a>
-            <a href="channels.html" class="text-purple-400">Channels</a>
-            <a href="tasks.html">Tasks</a>
-            <a href="groups.html">Groups</a>
-            <a href="support.html">Support</a>
-
-        </div>
-
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+    <div class="flex flex-col gap-4 text-sm">
+      <a href="analytics.html" class="text-white">Dashboard</a>
+      <a href="channels.html" class="text-purple-300 font-semibold">Channels</a>
+      <a href="groups.html" class="text-white">Groups</a>
+      <a href="howtowork.html" class="text-white">How To Work</a>
+      <a href="exsubextension.html" class="text-white">Exsub Extension</a>
+      <a href="support.html" class="text-white">Contact &amp; Support</a>
+      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
     </div>
-
+  </div>
 </nav>
 
 <!-- MAIN -->
-
 <main class="relative z-10 pt-32 pb-20 px-4">
-
 <div class="max-w-[1200px] mx-auto">
 
-    <!-- HEADER -->
-
-    <div class="text-center mb-12">
-
-        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-
-            📺 Channel Center
-
-        </div>
-
-        <h1 class="text-4xl md:text-5xl font-black gradient-text">
-
-            Manage Your Channels
-
-        </h1>
-
-        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
-
-            Add, manage and update your promotional YouTube channels. Keep your channel information updated for better promotion tasks.
-
-        </p>
-
+  <!-- HEADER -->
+  <div class="text-center mb-12">
+    <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+      📺 Channel Center
     </div>
+    <h1 class="text-4xl md:text-5xl font-black gradient-text mb-5">Manage Your Channels</h1>
+    <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7 ">
+      Set up your promotional channel, manage its videos, and add your working account. Each member gets 1 promo channel and 1 working channel.
+    </p>
+  </div>
 
-    <!-- CHANNEL SECTION -->
+  <!-- SECTION TABS -->
+  <div class="flex items-center gap-3 mb-8 overflow-x-auto pb-2">
+    <button class="section-tab active" id="tabPromo" onclick="switchTab('promo')">📢 Promotional Channel</button>
+    <button class="section-tab" id="tabVideos" onclick="switchTab('videos')">🎬 Promotional Videos</button>
+    <button class="section-tab" id="tabWorking" onclick="switchTab('working')">⚙️ Working Channel</button>
+  </div>
 
+  <!-- ===== PROMO SECTION ===== -->
+  <div id="sectionPromo">
     <div class="card rounded-3xl p-6">
-
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-7">
-
-            <div>
-
-                <h2 class="text-2xl font-bold">
-                    Your Promotional Channels
-                </h2>
-
-                <p class="text-muted text-sm mt-1">
-                    Manage and update your YouTube channels
-                </p>
-
-            </div>
-
-            <div class="flex items-center gap-3 flex-wrap">
-
-                <div class="bg-purple-500/10 text-purple-300 px-4 py-2 rounded-xl text-sm border border-purple-500/20">
-
-                    Total Channels :
-                    <span id="totalChannels" class="font-semibold">
-                        0
-                    </span>
-
-                </div>
-
-                <button
-                onclick="openAddChannelModal()"
-                class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
-
-                    + Add Channel
-
-                </button>
-
-            </div>
-
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-7">
+        <div>
+          <h2 class="text-2xl font-bold">Promotional Channel</h2>
+          <p class="text-muted text-sm mt-1">The channel that will receive subscriptions and views from the community</p>
         </div>
-
-        <!-- CHANNELS -->
-
-        <div id="channelsContainer" class="space-y-5"></div>
-
+        <div class="flex items-center gap-3 flex-wrap">
+          <div id="promoLimitBadge" class="limit-badge limit-ok">● Slot available</div>
+          <button id="btnAddPromo" onclick="openAddModal('promo')"
+            class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
+            + Add Channel
+          </button>
+        </div>
+      </div>
+      <div id="promoContainer" class="space-y-5"></div>
     </div>
+  </div>
+
+  <!-- ===== VIDEOS SECTION ===== -->
+  <div id="sectionVideos" class="hidden">
+    <div class="card rounded-3xl p-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold">🎬 Promotional Channel Videos</h2>
+          <p class="text-muted text-sm mt-1">Only videos ≥ 2 minutes are tracked. Minimum 5 videos required to be marked ready.</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <button onclick="syncVideos()" class="bg-[#0f1118] border border-purple-500 text-purple-400 hover:bg-purple-600 hover:text-white transition px-4 py-2.5 rounded-xl font-semibold text-sm">
+            🔄 Sync All Videos
+          </button>
+          <button onclick="fixVideos()" class="bg-[#0f1118] border border-amber-500 text-amber-400 hover:bg-amber-600 hover:text-white transition px-4 py-2.5 rounded-xl font-semibold text-sm">
+            🛠️ Fix Deleted Videos
+          </button>
+          <button id="btnAddVideos" onclick="openAddVideosModal()"
+            class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
+            + Add Videos
+          </button>
+        </div>
+      </div>
+
+      <!-- VIDEO STATS BAR -->
+      <div id="videoStatsBar" class="hidden grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="channel-info-box"><span>Total Videos</span><strong id="statTotal">0</strong></div>
+        <div class="channel-info-box"><span>Active Videos</span><strong id="statActive">0</strong></div>
+        <div class="channel-info-box"><span>Deleted Videos</span><strong id="statDeleted">0</strong></div>
+        <div class="channel-info-box"><span>Videos Ready</span><strong id="statReady">—</strong></div>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-wrap mb-6">
+        <input id="videoSearch" class="search-bar" type="text" placeholder="Search videos by title…" oninput="filterVideos()">
+      </div>
+
+      <!-- VIDEO GRID -->
+      <div id="videoContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+
+      <!-- PAGINATION -->
+      <div id="videoPagination" class="pagination mt-8 hidden"></div>
+    </div>
+  </div>
+
+  <!-- ===== WORKING SECTION ===== -->
+  <div id="sectionWorking" class="hidden">
+    <div class="card rounded-3xl p-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-7">
+        <div>
+          <h2 class="text-2xl font-bold">Working Channel</h2>
+          <p class="text-muted text-sm mt-1">Account used to watch and subscribe to other members' channels</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <div id="workingLimitBadge" class="limit-badge limit-ok">● Slot available</div>
+          <button id="btnAddWorking" onclick="openAddModal('working')"
+            class="bg-green-700 hover:bg-green-600 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
+            + Add Working Channel
+          </button>
+        </div>
+      </div>
+      <div id="workingContainer" class="space-y-5"></div>
+    </div>
+  </div>
 
 </div>
-
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
+/* =========================================================
+   CONFIG
+========================================================= */
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxWNAa35mj8jgEzrMCma6F9F2Y4Lp1-x3XdmCOv04xMzpeEO8TiDdOXLzRT-dREUW8D/exec";
 
-const MEMBER_SHEET_API =
-"https://script.google.com/macros/s/AKfycbxZDOIfLSfhoYBNABRHnCuZM6p4AFQjLAgB2w2SE7xMeelMGZahiDg1Ja7Mfm9eiTa9FA/exec";
-
-const ChannelScript =
-"https://script.google.com/macros/s/AKfycbyeJX6LstqWydy_MGVlt10oACiTg3bArQ-EHBkPm-TPxtXjQUVqUMdfwPwRecFH-8HK_Q/exec";
-
-const savedUsername = localStorage.getItem("username");
-const savedPassword = localStorage.getItem("password");
+/* =========================================================
+   SESSION — load directly from what login already saved.
+   No separate status/blocked check here anymore; that is
+   handled once at login / on the dashboard. This page just
+   trusts the saved session and loads channels immediately.
+========================================================= */
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
 
 if (!savedUsername || !savedPassword) {
-    window.location.href = "signin.html";
+  window.location.href = "signin.html";
 }
 
-async function loadChannels(){
+/* Populate navbar straight from localStorage — no extra request needed */
+document.getElementById("navUserName").innerText      = savedUsername || "Member";
+document.getElementById("dropdownUserName").innerText = savedUsername || "Member";
+document.getElementById("dropdownUserCode").innerText = "ID #" + (savedUserCode || "0000");
 
-    try{
+/* =========================================================
+   STATE
+========================================================= */
+let currentTab      = 'promo';
+let allVideos       = [];       // full list from server
+let filteredVideos  = [];       // after search filter
+let currentPage     = 1;
+const VIDEOS_PER_PAGE = 20;
+let promoChannelId  = null;     // store the promo channel's YouTube channelId
 
-        const response = await fetch(
-            `${MEMBER_SHEET_API}?action=login&username=${savedUsername}&password=${savedPassword}`
-        );
+/* =========================================================
+   CHANNEL TYPES
+========================================================= */
+const CHANNEL_TYPES = [
+  { id:'gaming',    emoji:'🎮', label:'Gaming' },
+  { id:'tech',      emoji:'💻', label:'Tech' },
+  { id:'education', emoji:'📚', label:'Education' },
+  { id:'music',     emoji:'🎵', label:'Music' },
+  { id:'vlogs',     emoji:'🎥', label:'Vlogs' },
+  { id:'sports',    emoji:'⚽', label:'Sports' },
+  { id:'comedy',    emoji:'😂', label:'Comedy' },
+  { id:'news',      emoji:'📰', label:'News' },
+  { id:'other',     emoji:'🌐', label:'Other' },
+];
 
-        const data = await response.json();
-
-        if(data.status !== "success"){
-            return;
-        }
-
-        document.getElementById("navUserName").innerText =
-        data.member.UserName || "Member";
-
-        document.getElementById("dropdownUserName").innerText =
-        data.member.UserName || "Member";
-
-        document.getElementById("dropdownUserCode").innerText =
-        "ID #" + (data.member.UserCode || "0000");
-
-        if(!Array.isArray(data.channels)){
-            data.channels = [];
-        }
-
-        document.getElementById("totalChannels").innerText =
-        data.channels.length;
-
-        let channelsHTML = "";
-
-        if(data.channels.length === 0){
-
-            channelsHTML = `
-            <div class="text-center py-20">
-
-                <div class="text-6xl mb-4">📺</div>
-
-                <h2 class="text-2xl font-bold mb-2">
-                    No Channel Found
-                </h2>
-
-                <p class="text-muted mb-6">
-                    Add your first promotional channel to get started
-                </p>
-
-            </div>
-            `;
-        }
-
-        data.channels.forEach(channel=>{
-
-            const image =
-            channel.ChannelImage &&
-            channel.ChannelImage.trim() !== ""
-            ? channel.ChannelImage
-            : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
-
-            channelsHTML += `
-
-            <div class="channel-card">
-
-                <div class="channel-left">
-
-                    <img
-                    src="${image}"
-                    class="channel-image"
-                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
-
-                    <div class="w-full">
-
-                        <h2 class="channel-name">
-                            ${channel.ChannelName || "Unknown Channel"}
-                        </h2>
-
-                        <div class="channel-handle">
-                            ${channel.ChannelHandle || "channel"}
-                        </div>
-
-                        <div class="channel-info-grid">
-
-                            <div class="channel-info-box">
-                                <span>Channel Type</span>
-                                <strong>${channel.ChannelType || "-"}</strong>
-                            </div>
-
-                            <div class="channel-info-box">
-                                <span>Total Subscribers</span>
-                                <strong>${channel.TotalSubscribers || 0}</strong>
-                            </div>
-
-                            <div class="channel-info-box">
-                                <span>Current Subscribers</span>
-                                <strong>${channel.CurrentSubscribers || 0}</strong>
-                            </div>
-
-                            <div class="channel-info-box">
-                                <span>Last Updated</span>
-                                <strong>${channel.LastUpdated || "-"}</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="${channel.ChannelLink || '#'}"
-                        target="_blank"
-                        class="inline-flex items-center gap-2 mt-5 text-purple-400 text-sm hover:text-purple-300 transition">
-
-                            Visit Channel →
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-                <div class="channel-right">
-
-                    <button
-                    onclick='updateChannel("${channel.ChannelId}")'
-                    class="edit-btn">
-
-                        Update Channel
-
-                    </button>
-
-                    <button
-                    onclick='deleteChannel("${channel.ChannelId}")'
-                    class="delete-btn">
-
-                        Delete Channel
-
-                    </button>
-
-                </div>
-
-            </div>
-
-            `;
-
-        });
-
-        document.getElementById("channelsContainer").innerHTML =
-        channelsHTML;
-
-    }
-
-    catch(error){
-
-        Swal.fire({
-            icon:"error",
-            title:"Error",
-            text:"Unable to load channels"
-        });
-
-    }
-
+/* =========================================================
+   TAB SWITCH
+========================================================= */
+function switchTab(tab) {
+  currentTab = tab;
+  ['promo','videos','working'].forEach(t => {
+    document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+  });
+  if (tab === 'videos') renderVideoPage();
 }
 
-/* ADD CHANNEL */
-
-function openAddChannelModal(){
-
-    Swal.fire({
-
-        title:"Add YouTube Channel",
-
-        width:650,
-
-        html:`
-
-            <input
-            id="channelLink"
-            class="swal2-input"
-            placeholder="Enter YouTube Channel Link">
-
-        `,
-
-        confirmButtonText:"Add Channel",
-
-        showCancelButton:true,
-
-        preConfirm: async ()=>{
-
-            const channelLink =
-            document.getElementById("channelLink").value;
-
-            if(!channelLink){
-
-                Swal.showValidationMessage(
-                    "Please enter channel link"
-                );
-
-                return false;
-
-            }
-
-            try{
-
-                Swal.showLoading();
-
-                const response = await fetch(
-
-                    ChannelScript +
-
-                    "?action=addChannel" +
-
-                    "&username=" + encodeURIComponent(savedUsername) +
-
-                    "&password=" + encodeURIComponent(savedPassword) +
-
-                    "&channelLink=" + encodeURIComponent(channelLink)
-
-                );
-
-                const data = await response.json();
-
-                if(data.status !== "success"){
-
-                    Swal.showValidationMessage(data.message);
-
-                    return false;
-
-                }
-
-                return data;
-
-            }
-
-            catch(error){
-
-                Swal.showValidationMessage(
-                    "Something went wrong"
-                );
-
-            }
-
-        }
-
-    }).then((result)=>{
-
-        if(result.isConfirmed){
-
-            Swal.fire({
-                icon:"success",
-                title:"Channel Added Successfully"
-            });
-
-            setTimeout(()=>{
-                location.reload();
-            },1200);
-
-        }
-
-    });
-
+/* =========================================================
+   TYPE GRID HTML
+========================================================= */
+function typeGridHTML(selectedId = '') {
+  return `<div class="channel-type-grid" id="typeGrid">` +
+    CHANNEL_TYPES.map(t =>
+      `<div class="channel-type-opt${t.id === selectedId ? ' selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}">
+        <span class="emoji">${t.emoji}</span>${t.label}
+      </div>`
+    ).join('') +
+    `</div><input type="hidden" id="selectedChannelType" value="${selectedId}">`;
 }
 
-/* UPDATE */
-
-async function updateChannel(channelId){
-
-    try{
-
-        Swal.fire({
-            title:"Updating Channel...",
-            allowOutsideClick:false,
-            didOpen:()=>{
-                Swal.showLoading();
-            }
-        });
-
-        const response = await fetch(
-
-            ChannelScript +
-
-            "?action=updateChannel" +
-
-            "&username=" + encodeURIComponent(savedUsername) +
-
-            "&password=" + encodeURIComponent(savedPassword) +
-
-            "&channelId=" + encodeURIComponent(channelId)
-
-        );
-
-        const data = await response.json();
-
-        if(data.status !== "success"){
-
-            Swal.fire({
-                icon:"error",
-                title:"Update Failed",
-                text:data.message
-            });
-
-            return;
-        }
-
-        Swal.fire({
-            icon:"success",
-            title:"Channel Updated"
-        });
-
-        setTimeout(()=>{
-            location.reload();
-        },1200);
-
-    }
-
-    catch(error){
-
-        Swal.fire({
-            icon:"error",
-            title:"Error",
-            text:"Unable to update channel"
-        });
-
-    }
-
+function selectType(id) {
+  document.querySelectorAll('.channel-type-opt').forEach(el => {
+    el.classList.toggle('selected', el.dataset.type === id);
+  });
+  const hidden = document.getElementById('selectedChannelType');
+  if (hidden) hidden.value = id;
 }
 
-/* DELETE */
+/* =========================================================
+   LOAD CHANNELS + VIDEOS
+   Goes straight to ChannelCRUDScript using saved username/
+   password — no separate login/status round-trip first.
+   validateMember() inside the Apps Script still confirms the
+   credentials are correct before returning any data, so this
+   stays secure; we've just removed the extra blocked-status
+   gate that used to run before this on every page load.
+========================================================= */
+async function loadChannels() {
+  try {
+    // Promo channel(s)
+    let promoChannels = [];
+    try {
+      const pr = await fetch(ChannelCRUDScript
+        + `?action=getMyChannel`
+        + `&username=${encodeURIComponent(savedUsername)}`
+        + `&password=${encodeURIComponent(savedPassword)}`
+      );
+      const pd = await pr.json();
 
-async function deleteChannel(channelId){
-
-    const confirmDelete = await Swal.fire({
-
-        icon:"warning",
-
-        title:"Delete Channel?",
-
-        text:"This action cannot be undone",
-
-        showCancelButton:true,
-
-        confirmButtonColor:"#dc2626",
-
-        confirmButtonText:"Delete"
-
-    });
-
-    if(!confirmDelete.isConfirmed){
+      if (pd.status !== 'success') {
+        // Credentials are invalid/expired — only now do we send them back to sign in
+        hideLoading();
+        await Swal.fire({
+          icon: "error",
+          title: "Session Expired",
+          text: pd.message || "Please sign in again.",
+          confirmButtonText: "Go to Sign In"
+        });
+        localStorage.clear();
+        window.location.href = "signin.html";
         return;
-    }
+      }
 
-    try{
+      promoChannels = Array.isArray(pd.channels) ? pd.channels : [];
+    } catch(pe) { promoChannels = []; }
 
-        const response = await fetch(
+    // Working channel(s)
+    let workingChannels = [];
+    try {
+      const wr = await fetch(ChannelCRUDScript
+        + `?action=getMyWorkingChannel`
+        + `&username=${encodeURIComponent(savedUsername)}`
+        + `&password=${encodeURIComponent(savedPassword)}`
+      );
+      const wd = await wr.json();
+      workingChannels = (wd.status === 'success' && Array.isArray(wd.channels)) ? wd.channels : [];
+    } catch(we) { workingChannels = []; }
 
-            ChannelScript +
+    // Store promoChannelId for video operations
+    if (promoChannels.length > 0) promoChannelId = promoChannels[0].ChannelId;
 
-            "?action=deleteChannel" +
+    renderPromo(promoChannels);
+    renderWorking(workingChannels);
 
-            "&username=" + encodeURIComponent(savedUsername) +
-
-            "&password=" + encodeURIComponent(savedPassword) +
-
-            "&channelId=" + encodeURIComponent(channelId)
-
+    // Videos for the promo channel
+    if (promoChannelId) {
+      try {
+        const vr = await fetch(ChannelCRUDScript
+          + `?action=getVideos`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelId=${encodeURIComponent(promoChannelId)}`
         );
-
-        const data = await response.json();
-
-        if(data.status !== "success"){
-
-            Swal.fire({
-                icon:"error",
-                title:"Delete Failed",
-                text:data.message
-            });
-
-            return;
-        }
-
-        Swal.fire({
-            icon:"success",
-            title:"Channel Deleted"
-        });
-
-        setTimeout(()=>{
-            location.reload();
-        },1000);
-
+        const vd = await vr.json();
+        const videos = (vd.status === 'success' && Array.isArray(vd.videos)) ? vd.videos : [];
+        setVideos(videos);
+      } catch(ve) {
+        setVideos([]);
+      }
+    } else {
+      setVideos([]);
     }
 
-    catch(error){
+    hideLoading();
+  } catch(err) {
+    hideLoading();
+    Swal.fire({ icon:"error", title:"Error", text:"Unable to load channels: " + err.message });
+  }
+}
 
-        Swal.fire({
-            icon:"error",
-            title:"Error",
-            text:"Unable to delete channel"
-        });
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('hide');
+  setTimeout(() => overlay.style.display = 'none', 500);
+}
 
+/* =========================================================
+   RENDER PROMO
+========================================================= */
+function renderPromo(channels) {
+  const container = document.getElementById('promoContainer');
+  const badge     = document.getElementById('promoLimitBadge');
+  const btn       = document.getElementById('btnAddPromo');
+
+  if (channels.length >= 1) {
+    badge.className = 'limit-badge limit-full';
+    badge.innerHTML = '● 1/1 Slot used';
+    btn.disabled = true;
+    btn.classList.add('opacity-40','cursor-not-allowed');
+    btn.onclick = null;
+  } else {
+    badge.className = 'limit-badge limit-ok';
+    badge.innerHTML = '● Slot available';
+  }
+
+  container.innerHTML = channels.length === 0
+    ? emptyState('📢','No Promotional Channel','Add your channel to start receiving community support')
+    : channels.map(ch => channelCardHTML(ch, 'promo')).join('');
+}
+
+/* =========================================================
+   RENDER WORKING
+========================================================= */
+function renderWorking(channels) {
+  const container = document.getElementById('workingContainer');
+  const badge     = document.getElementById('workingLimitBadge');
+  const btn       = document.getElementById('btnAddWorking');
+
+  if (channels.length >= 1) {
+    badge.className = 'limit-badge limit-full';
+    badge.innerHTML = '● 1/1 Slot used';
+    btn.disabled = true;
+    btn.classList.add('opacity-40','cursor-not-allowed');
+    btn.onclick = null;
+  } else {
+    badge.className = 'limit-badge limit-ok';
+    badge.innerHTML = '● Slot available';
+  }
+
+  container.innerHTML = channels.length === 0
+    ? emptyState('⚙️','No Working Channel','Add your working account to participate in the exchange')
+    : channels.map(ch => channelCardHTML(ch, 'working')).join('');
+}
+
+/* =========================================================
+   CHANNEL CARD HTML
+========================================================= */
+function emptyState(icon, title, desc) {
+  return `<div class="empty-state">
+    <div class="empty-icon">${icon}</div>
+    <h2 class="text-xl font-bold mb-2">${title}</h2>
+    <p class="text-muted text-sm">${desc}</p>
+  </div>`;
+}
+
+function channelCardHTML(ch, type) {
+  const image    = ch.ChannelImage && ch.ChannelImage.trim()
+    ? ch.ChannelImage
+    : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
+  const typeObj  = CHANNEL_TYPES.find(t => t.id === (ch.ChannelType||'').toLowerCase()) || { emoji:'🌐', label: ch.ChannelType||'-' };
+  const badgeCls = type === 'promo' ? 'type-promo' : 'type-working';
+  const badgeLbl = type === 'promo' ? '📢 Promotional' : '⚙️ Working';
+
+  const subsLabel = type === 'working' ? 'Total Subscriptions'  : 'Total Subscribers';
+  const curLabel  = type === 'working' ? 'Public Subscriptions' : 'Current Subscribers';
+  const subsVal   = type === 'working' ? (ch.TotalSubscription||ch.TotalSubscribers||0) : (ch.TotalSubscribers||0);
+  const curVal    = type === 'working' ? (ch.PublicSubscription||ch.CurrentSubscribers||0) : (ch.CurrentSubscribers||0);
+  const lastUpdated = type === 'working' ? (ch.SheetUpdate||ch.LastTimeFetch||'-') : (ch.LastUpdated||'-');
+
+  const editFn   = `openEditModal('${type}','${ch.ChannelId}')`;
+  const ytFn     = type === 'promo' ? `updateChannelYT('${ch.ChannelId}')` : `updateWorkingChannelYT('${ch.ChannelId}')`;
+  const deleteFn = `deleteChannel('${type}','${ch.ChannelId}')`;
+
+  return `<div class="channel-card">
+    <div class="channel-left">
+      <img src="${image}" class="channel-image" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
+      <div class="w-full">
+        <div class="type-badge ${badgeCls}">${badgeLbl}</div>
+        <h2 class="channel-name">${ch.ChannelName||'Unknown Channel'}</h2>
+        <div class="channel-handle">${ch.ChannelHandle||'channel'}</div>
+        <div class="channel-info-grid">
+          <div class="channel-info-box"><span>Channel Type</span><strong>${typeObj.emoji} ${typeObj.label}</strong></div>
+          <div class="channel-info-box"><span>${subsLabel}</span><strong>${subsVal}</strong></div>
+          <div class="channel-info-box"><span>${curLabel}</span><strong>${curVal}</strong></div>
+          <div class="channel-info-box"><span>Last Updated</span><strong>${lastUpdated}</strong></div>
+        </div>
+        <a href="${ch.ChannelLink||'#'}" target="_blank"
+          class="inline-flex items-center gap-2 mt-4 text-purple-400 text-sm hover:text-purple-300 transition">
+          Visit Channel →
+        </a>
+      </div>
+    </div>
+    <div class="channel-right">
+      <button onclick="${editFn}" class="btn-edit">✏️ Edit Channel</button>
+      <button onclick="${ytFn}" class="btn-update-yt">🔄 Sync from YouTube</button>
+      <button onclick="${deleteFn}" class="btn-delete">🗑️ Delete</button>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   VIDEO MANAGEMENT
+========================================================= */
+function setVideos(videos) {
+  allVideos = videos;
+  filteredVideos = [...allVideos];
+  currentPage = 1;
+  updateVideoStats();
+  if (currentTab === 'videos') renderVideoPage();
+}
+
+function updateVideoStats() {
+  const total   = allVideos.length;
+  const deleted = allVideos.filter(v => (v.VideoStatus||'').toLowerCase() === 'deleted').length;
+  const active  = total - deleted;
+  document.getElementById('statTotal').innerText   = total;
+  document.getElementById('statActive').innerText  = active;
+  document.getElementById('statDeleted').innerText = deleted;
+  document.getElementById('statReady').innerText   = active >= 5 ? '✅ Yes' : `❌ No (${active}/5)`;
+  if (total > 0) document.getElementById('videoStatsBar').classList.remove('hidden');
+  else           document.getElementById('videoStatsBar').classList.add('hidden');
+}
+
+function filterVideos() {
+  const q = document.getElementById('videoSearch').value.toLowerCase().trim();
+  filteredVideos = q
+    ? allVideos.filter(v => (v.VideoTitle||'').toLowerCase().includes(q))
+    : [...allVideos];
+  currentPage = 1;
+  renderVideoPage();
+}
+
+function renderVideoPage() {
+  const container  = document.getElementById('videoContainer');
+  const pagination = document.getElementById('videoPagination');
+
+  if (filteredVideos.length === 0) {
+    container.innerHTML = emptyState('🎬','No Videos Found', allVideos.length === 0
+      ? 'Add your promotional channel videos using the button above'
+      : 'No videos match your search');
+    pagination.classList.add('hidden');
+    return;
+  }
+
+  const totalPages = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
+  const start = (currentPage - 1) * VIDEOS_PER_PAGE;
+  const page  = filteredVideos.slice(start, start + VIDEOS_PER_PAGE);
+
+  container.innerHTML = page.map((v, idx) => videoCardHTML(v, start + idx)).join('');
+
+  // Pagination
+  if (totalPages <= 1) {
+    pagination.classList.add('hidden');
+    return;
+  }
+  pagination.classList.remove('hidden');
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if (Math.abs(i - currentPage) === 3) {
+      html += `<span class="page-btn" style="cursor:default;opacity:.4">…</span>`;
     }
-
+  }
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  pagination.innerHTML = html;
 }
 
-/* LOGOUT */
-
-function logoutUser(){
-
-    localStorage.clear();
-
-    window.location.href = "index.html";
-
+function goPage(p) {
+  const total = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
+  if (p < 1 || p > total) return;
+  currentPage = p;
+  renderVideoPage();
+  document.getElementById('sectionVideos').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-/* MENUS */
+function videoCardHTML(v, idx) {
+  const thumb    = v.VideoThumbnail || 'https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb';
+  const title    = v.VideoTitle || 'Untitled Video';
+  const duration = v.VideoDurationText || '—';
+  const url      = v.VideoUrl || '#';
+  const status   = (v.VideoStatus||'active').toLowerCase();
+  const statusCls = status === 'deleted' ? 'status-deleted' : 'status-active';
+  const statusLbl = status === 'deleted' ? '🗑 Deleted' : '✅ Active';
+  const videoId   = v.VideoUrl ? v.VideoUrl.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','') : '';
 
-const mobileMenuBtn =
-document.getElementById("mobileMenuBtn");
+  return `<div class="video-card" style="animation-delay:${(idx%VIDEOS_PER_PAGE)*0.04}s">
+    <a href="${url}" target="_blank" class="video-thumb-wrap">
+      <img src="${thumb}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb'">
+      <span class="video-duration">${duration}</span>
+    </a>
+    <div class="video-info">
+      <div class="video-title" title="${title}">${title}</div>
+      <div class="video-meta">
+        <span class="video-status-badge ${statusCls}">${statusLbl}</span>
+        <span style="color:#8a8f9e;font-size:10px;">${v.CreatedDate||''}</span>
+      </div>
+    </div>
+    <div class="video-actions">
+      <button class="btn-video-fix" onclick="fixSingleVideo('${videoId}','${v.VideoUrl}')">🛠️ Fix</button>
+      <button class="btn-video-del" onclick="deleteSingleVideo('${videoId}')">🗑️</button>
+    </div>
+  </div>`;
+}
 
-const mobileMenu =
-document.getElementById("mobileMenu");
+/* =========================================================
+   ADD VIDEOS
+========================================================= */
+function openAddVideosModal() {
+  if (!promoChannelId) {
+    Swal.fire({ icon:'warning', title:'No Promo Channel', text:'Please add a promotional channel first.' });
+    return;
+  }
+  Swal.fire({
+    title:'🎬 Add Promotional Videos',
+    html:`<div style="text-align:left">
+      <p style="color:#8a8f9e;font-size:13px;margin-bottom:12px;">
+        Fetches all videos ≥ 2 minutes from your promotional channel and adds them automatically.
+      </p>
+      <div style="background:#0a0b10;border:1px solid #1f2330;border-radius:12px;padding:14px;font-size:13px;color:#a78bfa;">
+        📌 Channel ID: <strong style="color:white">${promoChannelId}</strong>
+      </div>
+    </div>`,
+    confirmButtonText:'🚀 Fetch & Add Videos',
+    showCancelButton:true,
+    cancelButtonText:'Cancel',
+    preConfirm: async () => {
+      try {
+        Swal.showLoading();
+        const r = await fetch(ChannelCRUDScript
+          + `?action=addVideos`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelId=${encodeURIComponent(promoChannelId)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        return d;
+      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      Swal.fire({ icon:'success', title:'Videos Added!', text: result.value.message || 'Videos fetched successfully.', timer:2000, showConfirmButton:false });
+      setTimeout(() => location.reload(), 2100);
+    }
+  });
+}
 
-const profileBtn =
-document.getElementById("profileBtn");
+/* =========================================================
+   SYNC ALL VIDEOS
+========================================================= */
+async function syncVideos() {
+  if (!promoChannelId) { Swal.fire({ icon:'warning', title:'No Promo Channel' }); return; }
+  Swal.fire({ title:'🔄 Syncing Videos…', text:'Fetching latest data from YouTube', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=syncVideos`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(promoChannelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Sync Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Synced!', text: d.message || 'All videos updated.', timer:1600, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1700);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to sync videos' }); }
+}
 
-const profileDropdown =
-document.getElementById("profileDropdown");
+/* =========================================================
+   FIX DELETED VIDEOS (bulk)
+========================================================= */
+async function fixVideos() {
+  if (!promoChannelId) { Swal.fire({ icon:'warning', title:'No Promo Channel' }); return; }
+  Swal.fire({ title:'🛠️ Fixing Videos…', text:'Checking YouTube for deleted videos', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=fixVideos`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(promoChannelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Fix Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Fixed!', text: d.message || 'Deleted videos have been removed.', timer:1800, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1900);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to fix videos' }); }
+}
 
-const notifBtn =
-document.getElementById("notifBtn");
+/* =========================================================
+   FIX SINGLE VIDEO
+========================================================= */
+async function fixSingleVideo(videoId, videoUrl) {
+  if (!videoId && !videoUrl) return;
+  Swal.fire({ title:'🛠️ Checking video…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=fixSingleVideo`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&videoUrl=${encodeURIComponent(videoUrl)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Fix Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Done!', text: d.message || 'Video status updated.', timer:1400, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1500);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to fix video' }); }
+}
 
-const notifDropdown =
-document.getElementById("notifDropdown");
+/* =========================================================
+   DELETE SINGLE VIDEO
+========================================================= */
+async function deleteSingleVideo(videoId) {
+  const confirm = await Swal.fire({
+    icon:'warning', title:'Remove Video?',
+    text:'This will remove the video from your list.',
+    showCancelButton:true,
+    confirmButtonColor:'#dc2626',
+    confirmButtonText:'Yes, Remove',
+    cancelButtonText:'Cancel'
+  });
+  if (!confirm.isConfirmed) return;
+  Swal.fire({ title:'Removing…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=deleteVideo`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&videoId=${encodeURIComponent(videoId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Removed!', timer:1200, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1300);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to remove video' }); }
+}
 
-mobileMenuBtn.addEventListener("click",(e)=>{
+/* =========================================================
+   ADD CHANNEL MODAL
+========================================================= */
+function openAddModal(type) {
+  const isWorking = type === 'working';
+  const title = isWorking ? '⚙️ Add Working Channel' : '📢 Add Promotional Channel';
 
-    e.stopPropagation();
+  Swal.fire({
+    title,
+    width:600,
+    html:`<div style="text-align:left">
+      <label class="swal-label">YouTube Channel Link</label>
+      <input id="sw_channelLink" class="swal-input" placeholder="https://youtube.com/@yourchannel">
+      <label class="swal-label">Channel Type</label>
+      ${typeGridHTML()}
+    </div>`,
+    confirmButtonText: isWorking ? 'Add Working Channel' : 'Add Promotional Channel',
+    showCancelButton:true,
+    cancelButtonText:'Cancel',
+    preConfirm: async () => {
+      const channelLink = document.getElementById('sw_channelLink').value.trim();
+      const channelType = document.getElementById('selectedChannelType').value;
+      if (!channelLink) { Swal.showValidationMessage('Please enter a channel link'); return false; }
+      if (!channelType) { Swal.showValidationMessage('Please select a channel type'); return false; }
+      try {
+        Swal.showLoading();
+        const actionParam = isWorking ? 'addWorkingChannel' : 'addChannel';
+        const r = await fetch(ChannelCRUDScript
+          + `?action=${actionParam}`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelLink=${encodeURIComponent(channelLink)}`
+          + `&channelType=${encodeURIComponent(channelType)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        return d;
+      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      Swal.fire({ icon:'success', title:'Channel Added!', timer:1500, showConfirmButton:false });
+      setTimeout(() => location.reload(), 1600);
+    }
+  });
+}
 
-    mobileMenu.classList.toggle("hidden");
+/* =========================================================
+   EDIT CHANNEL MODAL
+========================================================= */
+async function openEditModal(type, channelId) {
+  const isWorking   = type === 'working';
+  const actionParam = isWorking ? 'getWorkingChannel' : 'getChannel';
 
+  let ch = null;
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=${actionParam}`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(channelId)}`
+    );
+    const d = await r.json();
+    if (d.status === 'success') ch = d.channel;
+  } catch(e) {}
+
+  const currType = ch ? (ch.ChannelType||'').toLowerCase() : '';
+  const currLink = ch ? (ch.ChannelLink||'') : '';
+  const currName = ch ? (ch.ChannelName||'') : '';
+
+  Swal.fire({
+    title:'✏️ Edit Channel', width:620,
+    html:`<div style="text-align:left">
+      <label class="swal-label">Channel Name (manual override)</label>
+      <input id="sw_editName" class="swal-input" placeholder="Leave blank to keep current" value="${currName}">
+      <label class="swal-label">Channel Link</label>
+      <input id="sw_editLink" class="swal-input" placeholder="https://youtube.com/@yourchannel" value="${currLink}">
+      <label class="swal-label">Channel Type</label>
+      ${typeGridHTML(currType)}
+      <div style="margin-top:18px;padding:12px;background:#0a0b10;border-radius:12px;border:1px solid #1f2330;font-size:12px;color:#8a8f9e;">
+        💡 Use <strong style="color:#a78bfa">Save Changes</strong> to update your edits, or <strong style="color:#a78bfa">Sync YouTube</strong> to re-fetch live data.
+      </div>
+    </div>`,
+    showConfirmButton:true, showDenyButton:true, showCancelButton:true,
+    confirmButtonText:'💾 Save Changes',
+    denyButtonText:'🔄 Sync YouTube',
+    cancelButtonText:'Cancel',
+    preConfirm: async () => {
+      const name  = document.getElementById('sw_editName').value.trim();
+      const link  = document.getElementById('sw_editLink').value.trim();
+      const ctype = document.getElementById('selectedChannelType').value;
+      try {
+        Swal.showLoading();
+        const action = isWorking ? 'editWorkingChannel' : 'editChannel';
+        const r = await fetch(ChannelCRUDScript
+          + `?action=${action}`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelId=${encodeURIComponent(channelId)}`
+          + `&channelName=${encodeURIComponent(name)}`
+          + `&channelLink=${encodeURIComponent(link)}`
+          + `&channelType=${encodeURIComponent(ctype)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        return { action:'save' };
+      } catch(e) { Swal.showValidationMessage('Something went wrong'); return false; }
+    }
+  }).then(async result => {
+    if (result.isConfirmed) {
+      Swal.fire({ icon:'success', title:'Changes Saved!', timer:1400, showConfirmButton:false });
+      setTimeout(() => location.reload(), 1500);
+    } else if (result.isDenied) {
+      const syncAction = isWorking ? 'updateWorkingChannel' : 'updateChannel';
+      Swal.fire({ title:'Syncing from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+      try {
+        const r = await fetch(ChannelCRUDScript
+          + `?action=${syncAction}`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelId=${encodeURIComponent(channelId)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Sync Failed', text:d.message }); return; }
+        Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
+        setTimeout(() => location.reload(), 1500);
+      } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to sync' }); }
+    }
+  });
+}
+
+/* =========================================================
+   QUICK SYNC FROM CARD
+========================================================= */
+async function updateChannelYT(channelId) {
+  Swal.fire({ title:'Syncing from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=updateChannel`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(channelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1500);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to sync' }); }
+}
+
+async function updateWorkingChannelYT(channelId) {
+  Swal.fire({ title:'Syncing from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=updateWorkingChannel`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(channelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1500);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to sync' }); }
+}
+
+/* =========================================================
+   DELETE CHANNEL
+   For the promo channel, the backend now also cascades and
+   removes every video row tied to that channel — so the
+   confirmation copy mentions this.
+========================================================= */
+async function deleteChannel(type, channelId) {
+  const isPromo = type !== 'working';
+  const confirm = await Swal.fire({
+    icon:'warning',
+    title: isPromo ? 'Delete Promotional Channel?' : 'Delete Working Channel?',
+    text: isPromo
+      ? 'This cannot be undone. All videos linked to this channel will also be permanently deleted.'
+      : 'This cannot be undone.',
+    showCancelButton:true,
+    confirmButtonColor:'#dc2626',
+    confirmButtonText:'Yes, Delete',
+    cancelButtonText:'Cancel'
+  });
+  if (!confirm.isConfirmed) return;
+  try {
+    const action = type === 'working' ? 'deleteWorkingChannel' : 'deleteChannel';
+    Swal.fire({ title:'Deleting…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    const r = await fetch(ChannelCRUDScript
+      + `?action=${action}`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(channelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Deleted!', text: d.message || '', timer:1500, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1600);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to delete' }); }
+}
+
+/* =========================================================
+   LOGOUT + MENUS
+========================================================= */
+function logoutUser() { localStorage.clear(); window.location.href = "index.html"; }
+
+document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
+document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
+document.getElementById("notifBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
+document.addEventListener("click", () => {
+  document.getElementById("mobileMenu").classList.add("hidden");
+  document.getElementById("profileDropdown").classList.add("hidden");
+  document.getElementById("notifDropdown").classList.add("hidden");
 });
 
-profileBtn.addEventListener("click",(e)=>{
-
-    e.stopPropagation();
-
-    profileDropdown.classList.toggle("hidden");
-
-});
-
-notifBtn.addEventListener("click",(e)=>{
-
-    e.stopPropagation();
-
-    notifDropdown.classList.toggle("hidden");
-
-});
-
-document.addEventListener("click",()=>{
-
-    mobileMenu.classList.add("hidden");
-
-    profileDropdown.classList.add("hidden");
-
-    notifDropdown.classList.add("hidden");
-
-});
-
+/* =========================================================
+   INIT
+========================================================= */
 loadChannels();
-
 </script>
-
 </body>
 </html>

@@ -8,18 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-:root{
-  --bg:#050508;
-  --card:#12141c;
-  --border:#232938;
-  --purple:#7c3aed;
-}
+:root{ --bg:#050508; --card:#12141c; --border:#232938; --purple:#7c3aed; }
 *{ font-family:'Inter',sans-serif; box-sizing:border-box; }
 body{ background:#050508; color:white; overflow-x:hidden; }
 
 body::before{
-  content:'';
-  position:fixed; top:-50%; left:-50%;
+  content:''; position:fixed; top:-50%; left:-50%;
   width:200%; height:200%;
   background:
     radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
@@ -27,12 +21,23 @@ body::before{
   z-index:0; pointer-events:none;
 }
 
+/* ── NAV ── */
 .glass-nav{
   background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
   backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,0.06);
 }
 
+/* BLOCKED — nav links that are disabled */
+.nav-disabled{
+  opacity:.28 !important;
+  pointer-events:none !important;
+  cursor:not-allowed !important;
+  filter:grayscale(1);
+  text-decoration:line-through;
+}
+
+/* ── CARD ── */
 .card{
   background:linear-gradient(180deg,#171a24,#101219);
   border:1px solid #232938;
@@ -44,97 +49,89 @@ body::before{
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
 }
 
-/* ── ALERT BANNERS ── */
-.alert-red{
+/* ── ALERT: ACCOUNT INCOMPLETE ── */
+.alert-incomplete{
   background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(220,38,38,0.06));
   border:2px solid rgba(239,68,68,0.5);
   border-radius:20px; padding:24px 28px;
   position:relative; overflow:hidden;
 }
-.alert-red::before{
+.alert-incomplete::before{
   content:''; position:absolute; inset:0;
   background:repeating-linear-gradient(
-    -45deg, transparent, transparent 8px,
-    rgba(239,68,68,0.04) 8px, rgba(239,68,68,0.04) 16px
-  );
+    -45deg,transparent,transparent 8px,
+    rgba(239,68,68,0.04) 8px,rgba(239,68,68,0.04) 16px);
 }
-.alert-red-pulse{
-  animation:redpulse 2s ease-in-out infinite;
+
+/* ── ALERT: BLOCKED (more intense) ── */
+.alert-blocked{
+  background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(127,29,29,0.15));
+  border:2px solid rgba(239,68,68,0.7);
+  border-radius:24px; padding:32px;
+  position:relative; overflow:hidden;
 }
+.alert-blocked::before{
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(
+    -45deg,transparent,transparent 6px,
+    rgba(239,68,68,0.06) 6px,rgba(239,68,68,0.06) 12px);
+}
+
+/* Pulsing glow shared */
+.pulse-red{ animation:redpulse 1.8s ease-in-out infinite; }
 @keyframes redpulse{
-  0%,100%{ box-shadow:0 0 0 0 rgba(239,68,68,0.3); }
-  50%    { box-shadow:0 0 0 12px rgba(239,68,68,0); }
+  0%,100%{ box-shadow:0 0 0 0 rgba(239,68,68,0.35); }
+  50%    { box-shadow:0 0 0 16px rgba(239,68,68,0); }
 }
 
 /* ── GROUP BADGE ── */
 .group-badge{
   display:inline-flex; align-items:center; gap:8px;
   padding:10px 18px; border-radius:14px;
-  font-size:13px; font-weight:700;
-  border:1px solid; transition:.25s;
+  font-size:13px; font-weight:700; border:1px solid; transition:.25s;
 }
 .group-badge:hover{ transform:translateY(-2px); }
 
 /* ── STAT CARD ── */
 .stat-card{
   background:linear-gradient(180deg,#181b27,#101219);
-  border:1px solid #252938;
-  border-radius:16px; padding:20px;
-  transition:.3s;
+  border:1px solid #252938; border-radius:16px; padding:20px; transition:.3s;
 }
 .stat-card:hover{ border-color:rgba(124,58,237,0.4); transform:translateY(-2px); }
 
-/* ── SECTION HEADER ── */
+/* ── SECTION PILL ── */
 .section-pill{
   display:inline-flex; align-items:center; gap:6px;
   padding:5px 14px; border-radius:999px;
-  font-size:11px; font-weight:700; letter-spacing:.5px;
-  text-transform:uppercase;
+  font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
 }
 
 /* ── PROGRESS BAR ── */
-.prog-track{
-  background:#1a1d28; border-radius:999px; height:8px; overflow:hidden;
-}
-.prog-fill{
-  height:8px; border-radius:999px;
-  transition:width 1.2s cubic-bezier(.4,0,.2,1);
-}
+.prog-track{ background:#1a1d28; border-radius:999px; height:8px; overflow:hidden; }
+.prog-fill{ height:8px; border-radius:999px; transition:width 1.2s cubic-bezier(.4,0,.2,1); }
 
 /* ── RING CHART ── */
-.ring-wrap{
-  position:relative; display:inline-flex;
-  align-items:center; justify-content:center;
-}
+.ring-wrap{ position:relative; display:inline-flex; align-items:center; justify-content:center; }
 .ring-wrap svg{ transform:rotate(-90deg); }
-.ring-center{
-  position:absolute; text-align:center;
-  pointer-events:none;
-}
+.ring-center{ position:absolute; text-align:center; pointer-events:none; }
 
 /* ── BAR CHART ── */
-.bar-chart{
-  display:flex; align-items:flex-end;
-  gap:6px; height:80px;
-}
+.bar-chart{ display:flex; align-items:flex-end; gap:6px; height:80px; }
 .bar{
-  flex:1; border-radius:6px 6px 0 0;
-  min-height:4px;
-  transition:height 1s ease;
+  flex:1; border-radius:6px 6px 0 0; min-height:4px;
   cursor:pointer; position:relative;
 }
 .bar:hover::after{
   content:attr(data-val);
   position:absolute; top:-22px; left:50%; transform:translateX(-50%);
   background:#252938; color:white; font-size:10px; font-weight:700;
-  padding:2px 6px; border-radius:4px; white-space:nowrap;
+  padding:2px 6px; border-radius:4px; white-space:nowrap; pointer-events:none; z-index:10;
 }
 
 /* ── SPINNER ── */
 .spinner{
   width:40px; height:40px; border-radius:50%;
-  border:3px solid rgba(124,58,237,0.2);
-  border-top-color:#7c3aed;
+  border:3px solid rgba(124,58,237,0.2); border-top-color:#7c3aed;
   animation:spin 0.7s linear infinite;
 }
 @keyframes spin{ to{ transform:rotate(360deg); } }
@@ -142,11 +139,14 @@ body::before{
 /* ── LAST WORK CHIP ── */
 .lw-chip{
   display:inline-flex; align-items:center; gap:5px;
-  padding:3px 10px; border-radius:999px;
-  font-size:10px; font-weight:600;
-  background:rgba(124,58,237,0.1); color:#a78bfa;
-  border:1px solid rgba(124,58,237,0.2);
+  padding:3px 10px; border-radius:999px; font-size:10px; font-weight:600;
+  background:rgba(124,58,237,0.1); color:#a78bfa; border:1px solid rgba(124,58,237,0.2);
 }
+
+/* ── STATUS COLORS ── */
+.status-active  { color:#86efac; }
+.status-blocked { color:#fca5a5; }
+.status-pending { color:#fde68a; }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{ width:5px; }
@@ -164,280 +164,122 @@ body::before{
 .delay-3{ animation-delay:.24s; }
 .delay-4{ animation-delay:.32s; }
 </style>
-
-<script>
-
-/* =========================
-   AUTH GUARD
-========================= */
-
-(function(){
-
-    const usercode = localStorage.getItem("usercode");
-    const username = localStorage.getItem("username");
-    const status = localStorage.getItem("status");
-
-    if(!usercode || !username){
-        window.location.replace("signin.html");
-        return;
-    }
-
-    if(
-        !status ||
-        status.toLowerCase() !== "active"
-    ){
-        localStorage.clear();
-        sessionStorage.clear();
-
-        window.location.replace("signin.html");
-        return;
-    }
-
-})();
-
-</script>
-
-
 </head>
 <body>
 
-<!-- ══════ NAVBAR ══════ -->
-<!-- NAVBAR -->
-
+<!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
 <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
 
-    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
 
-        <!-- MOBILE BUTTON -->
+    <button id="mobileMenuBtn"
+      class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
 
-        <button
-        id="mobileMenuBtn"
-        class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">
+    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+      <span class="font-semibold text-[17px]">Exsub Group</span>
+    </div>
 
-            ☰
+    <!-- Desktop nav — each link gets an id so JS can disable them -->
+    <div class="hidden md:flex items-center gap-8 text-[13px]">
+      <a id="lnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
+      <a id="lnkChannels"  href="channels.html"       class="text-white hover:text-purple-300 transition">Channels</a>
+      <a id="lnkGroups"    href="groups.html"         class="text-white hover:text-purple-300 transition">Groups</a>
+      <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
+      <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
+      <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+    </div>
 
+    <!-- Right side -->
+    <div class="flex items-center gap-2">
+
+      <div class="relative">
+        <button id="notifBtn"
+          class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
+        <div id="notifDropdown"
+          class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
+          <div class="p-4 text-sm text-gray-400">No new notifications</div>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="profileBtn"
+          class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
         </button>
 
-        <!-- LOGO -->
-
-        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-
-            <img
-            src="images/logo.svg"
-            class="w-7 h-7 hidden md:block">
-
-            <span class="font-semibold text-[17px]">
-                Exsub Group
-            </span>
-
-        </div>
-
-        <!-- DESKTOP NAV -->
-
-        <div class="hidden md:flex items-center gap-8 text-[13px]">
-
-            <a href="dashboard.html" class="text-purple-300 font-semibold">
-                Dashboard
-            </a>
-
-            <a href="channels.Html" class="text-white hover:text-purple-300 transition">
-                Channels
-            </a>
-
-            <a href="groups.html" class="text-white hover:text-purple-300 transition">
-                Groups
-            </a>
-
-            <a href="howtowork.html" class="text-white hover:text-purple-300 transition">
-                How To Work
-            </a>
-
-            <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">
-                Exsub Extension
-            </a>
-
-            <a href="support.html" class="text-white hover:text-purple-300 transition">
-                Contact & Support
-            </a>
-
-        </div>
-
-        <!-- RIGHT -->
-
-        <div class="flex items-center gap-2">
-
-            <!-- NOTIFICATION -->
-
-            <div class="relative">
-
-                <button
-                id="notifBtn"
-                class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">
-
-                    🔔
-
-                </button>
-
-                <div
-                id="notifDropdown"
-                class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-
-                    <div class="p-3 border-b border-[#232632] font-semibold text-sm">
-                        Notifications
-                    </div>
-
-                    <div class="p-4 text-sm text-muted">
-                        No new notifications
-                    </div>
-
-                </div>
-
+        <div id="profileDropdown"
+          class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+          <div class="p-4 border-b border-[#232632]">
+            <div class="flex items-center gap-3">
+              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+              <div>
+                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
+                <p  id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+              </div>
             </div>
-
-            <!-- PROFILE -->
-
-            <div class="relative">
-
-                <button
-                id="profileBtn"
-                class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-
-                    <img
-                    src="https://i.pravatar.cc/100"
-                    class="w-8 h-8 rounded-full">
-
-                    <span
-                    id="navUserName"
-                    class="hidden sm:block text-[13px]">
-
-                        Member
-
-                    </span>
-
-                </button>
-
-                <div
-                id="profileDropdown"
-                class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-
-                    <div class="p-4 border-b border-[#232632]">
-
-                        <div class="flex items-center gap-3">
-
-                            <img
-                            src="https://i.pravatar.cc/100"
-                            class="w-12 h-12 rounded-full">
-
-                            <div>
-
-                                <h3
-                                id="dropdownUserName"
-                                class="font-semibold text-sm">
-
-                                    Member
-
-                                </h3>
-
-                                <p
-                                id="dropdownUserCode"
-                                class="text-muted text-xs">
-
-                                    ID #0000
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="py-2">
-
-                        <a href="profile.html"
-                        class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-                            My Profile
-                        </a>
-
-                       <a
-href="javascript:void(0)"
-onclick="logoutUser()"
-class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
-
-    Logout
-
-</a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+          </div>
+          <div class="py-2">
+            <a id="ddProfile" href="profile.html"
+              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+            <a href="support.html"
+              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
+            <button onclick="logoutUser()"
+              class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
+              Logout
+            </button>
+          </div>
         </div>
+      </div>
 
     </div>
+  </div>
 
-    <!-- MOBILE MENU -->
-
-    <div
-    id="mobileMenu"
+  <!-- Mobile menu -->
+  <div id="mobileMenu"
     class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-
-        <div class="flex flex-col gap-4">
-
-            <a href="dashboard.html" class="text-purple-300 font-semibold">
-                Dashboard
-            </a>
-
-            <a href="channels.Html" class="text-white hover:text-purple-300 transition">
-                Channels
-            </a>
-
-            <a href="groups.html" class="text-white hover:text-purple-300 transition">
-                Groups
-            </a>
-
-            <a href="howtowork.html" class="text-white hover:text-purple-300 transition">
-                How To Work
-            </a>
-
-            <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">
-                Exsub Extension
-            </a>
-
-            <a href="support.html" class="text-white hover:text-purple-300 transition">
-                Contact & Support
-            </a>
-        </div>
-
+    <div class="flex flex-col gap-4 text-sm">
+      <a id="mLnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
+      <a id="mLnkChannels"  href="channels.html"       class="text-white">Channels</a>
+      <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
+      <a id="mLnkHowTo"     href="howtowork.html"      class="text-white">How To Work</a>
+      <a id="mLnkExtension" href="exsubextension.html" class="text-white">Exsub Extension</a>
+      <a id="mLnkSupport"   href="support.html"        class="text-white">Contact &amp; Support</a>
+      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
     </div>
+  </div>
 
 </nav>
 
-
-<!-- ══════ MAIN ══════ -->
+<!-- ══════════════════════════════════════
+     MAIN
+══════════════════════════════════════ -->
 <main class="relative z-10 pt-28 pb-20 px-4">
-<div class="max-w-[1200px] mx-auto" id="mainWrap">
+<div class="max-w-[1200px] mx-auto">
 
-  <!-- LOADING STATE -->
+  <!-- LOADING -->
   <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
     <div class="spinner"></div>
-    <div class="text-gray-400 text-sm">Loading your analytics...</div>
+    <div class="text-gray-400 text-sm">Loading your analytics…</div>
   </div>
 
-  <!-- ERROR STATE -->
+  <!-- ERROR -->
   <div id="errorState" class="hidden text-center py-32">
     <div class="text-5xl mb-4">⚠️</div>
     <div class="text-xl font-bold mb-2">Could not load data</div>
     <div id="errorMsg" class="text-gray-400 text-sm mb-6"></div>
-    <button onclick="loadDashboard()" class="px-6 py-3 rounded-xl font-semibold text-sm" style="background:linear-gradient(180deg,#924ef4,#7b2af0);">
-      Retry
-    </button>
+    <button onclick="loadDashboard()"
+      class="px-6 py-3 rounded-xl font-semibold text-sm"
+      style="background:linear-gradient(180deg,#924ef4,#7b2af0);">Retry</button>
   </div>
 
-  <!-- DASHBOARD CONTENT -->
-  <div id="dashContent" class="hidden flex flex-col gap-8">
+  <!-- DASHBOARD -->
+  <div id="dashContent" class="hidden">
+  <div class="flex flex-col gap-8">
 
     <!-- ── HEADER ── -->
     <div class="fade-in flex flex-wrap items-center justify-between gap-4">
@@ -448,8 +290,8 @@ class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
         <h1 class="text-4xl font-black gradient-text">Your Dashboard</h1>
         <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1"></div>
       </div>
-      <div id="memberChip" class="card px-5 py-3 flex items-center gap-3">
-        <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>
+      <div class="card px-5 py-3 flex items-center gap-3">
+        <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;font-size:16px;" id="chipAvatar">👤</div>
         <div>
           <div id="chipName" class="font-bold text-sm"></div>
           <div id="chipCode" class="text-xs text-purple-400 font-semibold"></div>
@@ -457,411 +299,449 @@ class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
       </div>
     </div>
 
-    <!-- ── ACCOUNT INCOMPLETE BANNER ── -->
+    <!-- ════════════════════════════════════════
+         🔴 BLOCKED BANNER
+    ════════════════════════════════════════ -->
+    <div id="blockedBanner" class="hidden fade-in delay-1">
+      <div class="alert-blocked pulse-red">
+        <div class="relative z-10">
+
+          <!-- Title row -->
+          <div class="flex flex-wrap items-center gap-4 mb-5">
+            <div style="font-size:56px;line-height:1;filter:drop-shadow(0 0 24px rgba(239,68,68,0.7));flex-shrink:0;">⛔</div>
+            <div>
+              <div class="flex items-center gap-3 flex-wrap mb-1">
+                <span class="text-3xl font-black text-red-400">Account Blocked</span>
+                <span style="background:rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.6);border-radius:8px;padding:3px 12px;font-size:11px;font-weight:800;color:#fca5a5;letter-spacing:.8px;">BLOCKED</span>
+              </div>
+              <div class="text-red-300 font-semibold text-base">
+                Your account has been blocked by the administrator. All group activities are suspended immediately.
+              </div>
+            </div>
+          </div>
+
+          <!-- Reason box (only shown if blockedReason is set) -->
+          <div id="blockedReasonBox"
+            class="hidden mb-5 flex items-start gap-3 rounded-xl p-4"
+            style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);">
+            <span style="font-size:18px;flex-shrink:0;">📋</span>
+            <div>
+              <div class="text-xs font-bold text-red-400 uppercase tracking-wider mb-1">Reason for block</div>
+              <div id="blockedReasonText" class="text-red-200 text-sm leading-relaxed"></div>
+            </div>
+          </div>
+
+          <!-- 3 info cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:16px;">
+              <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">❌ What's blocked?</div>
+              <div class="text-sm text-red-200 leading-relaxed">All task submissions, channel subscriptions, video watching, and engagement actions are disabled.</div>
+            </div>
+            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:16px;">
+              <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">🚫 Menu Access</div>
+              <div class="text-sm text-red-200 leading-relaxed">Channels, Groups, How To Work, and Extension pages are disabled. Only Support is accessible.</div>
+            </div>
+            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:16px;">
+              <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">💬 What to do?</div>
+              <div class="text-sm text-red-200 leading-relaxed">Contact the support team to appeal your block or get more information. Provide your User Code.</div>
+            </div>
+          </div>
+
+          <!-- CTA buttons -->
+          <div class="flex flex-wrap gap-3">
+            <a href="support.html"
+              style="display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:13px;font-weight:700;font-size:14px;background:rgba(239,68,68,0.22);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;text-decoration:none;transition:.2s;">
+              💬 Contact Support &amp; Appeal
+            </a>
+            <button onclick="logoutUser()"
+              style="display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:13px;font-weight:700;font-size:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#9ca3af;cursor:pointer;transition:.2s;">
+              🚪 Logout
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         🟡 ACCOUNT INCOMPLETE BANNER
+    ════════════════════════════════════════ -->
     <div id="incompleteBanner" class="hidden fade-in delay-1">
-      <div class="alert-red alert-red-pulse">
+      <div class="alert-incomplete pulse-red">
         <div class="relative z-10 flex flex-wrap items-center gap-5">
           <div style="font-size:52px;flex-shrink:0;">🚫</div>
           <div class="flex-1">
             <div class="text-2xl font-black text-red-400 mb-1">Account Not Completed!</div>
-            <div class="text-red-300 font-semibold mb-2">Your account setup is incomplete. You cannot participate in group tasks until your account is fully set up.</div>
-            <div class="text-red-400/70 text-sm">Please contact your admin or group leader to complete your account activation. Once activated, your analytics and group memberships will appear here.</div>
+            <div class="text-red-300 font-semibold mb-2">Your account setup is incomplete. You cannot work in our group until your account is fully ready.</div>
+            <div class="text-sm mb-2" style="color:rgba(252,165,165,0.7);">You need to setup two things</div>
+            <div class="text-sm mb-2" style="color:rgba(252,165,165,0.7);">1- Add your promotional channel and your working channel. </div>
+            <div class="text-sm mb-2" style="color:rgba(252,165,165,0.7);">2- Join any group to start.</div>
           </div>
-          <a href="support.html" class="px-6 py-3 rounded-xl font-bold text-sm flex-shrink-0" style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;">
-            Contact Admin →
+          <a href="support.html"
+            class="px-6 py-3 rounded-xl font-bold text-sm flex-shrink-0"
+            style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;text-decoration:none;">
+            Contact Admin For Help→
           </a>
         </div>
       </div>
     </div>
 
     <!-- ── MEMBER INFO ROW ── -->
-    <div id="memberInfoRow" class="hidden fade-in delay-1 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="card p-5 text-center">
-        <div class="text-2xl mb-1">🌍</div>
-        <div class="text-xs text-gray-500 mb-1">Country</div>
-        <div id="infoCountry" class="font-bold text-sm"></div>
-      </div>
-      <div class="card p-5 text-center">
-        <div class="text-2xl mb-1">📅</div>
-        <div class="text-xs text-gray-500 mb-1">Member Since</div>
-        <div id="infoJoin" class="font-bold text-sm"></div>
-      </div>
-      <div class="card p-5 text-center">
-        <div class="text-2xl mb-1">⚡</div>
-        <div class="text-xs text-gray-500 mb-1">Status</div>
-        <div id="infoStatus" class="font-bold text-sm"></div>
-      </div>
-      <div class="card p-5 text-center">
-        <div class="text-2xl mb-1">🏦</div>
-        <div class="text-xs text-gray-500 mb-1">Working Channels</div>
-        <div id="infoChannels" class="font-bold text-2xl text-purple-400"></div>
+    <div id="memberInfoRow" class="hidden fade-in delay-1">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card p-5 text-center">
+          <div class="text-2xl mb-1">🌍</div>
+          <div class="text-xs text-gray-500 mb-1">Country</div>
+          <div id="infoCountry" class="font-bold text-sm"></div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl mb-1">📅</div>
+          <div class="text-xs text-gray-500 mb-1">Member Since</div>
+          <div id="infoJoin" class="font-bold text-sm"></div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl mb-1">⚡</div>
+          <div class="text-xs text-gray-500 mb-1">Status</div>
+          <div id="infoStatus" class="font-bold text-sm"></div>
+        </div>
+        <div class="card p-5 text-center">
+          <div class="text-2xl mb-1">🏦</div>
+          <div class="text-xs text-gray-500 mb-1">Working Channels</div>
+          <div id="infoChannels" class="font-bold text-2xl text-purple-400">0</div>
+        </div>
       </div>
     </div>
 
-    <!-- ── MY GROUPS ── -->
-    <div id="groupsSection" class="hidden fade-in delay-2">
-      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
-        <h2 class="text-xl font-bold">My Groups</h2>
-        <a href="groups.html" class="text-xs text-purple-400 hover:text-purple-300 transition font-medium">
-          Join more groups →
-        </a>
-      </div>
-      <div id="groupBadgesWrap" class="flex flex-wrap gap-3 mb-4"></div>
-      <div class="card p-4 flex items-center gap-3">
-        <span style="font-size:18px;">💡</span>
-        <span class="text-gray-400 text-sm">Want to join more groups? Go to <a href="groups.html" class="text-purple-400 font-semibold hover:underline">Groups</a> in the menu to apply for additional work groups.</span>
-      </div>
-    </div>
+    <!-- ════════════════════════════════════════
+         ACTIVE-ONLY CONTENT
+         (hidden entirely when blocked)
+    ════════════════════════════════════════ -->
+    <div id="activeContent">
 
-    <!-- ── NO GROUPS MESSAGE ── -->
-    <div id="noGroupsMsg" class="hidden fade-in delay-2 card p-8 text-center">
-      <div class="text-5xl mb-4">📭</div>
-      <div class="text-xl font-bold mb-2">Not in any group yet</div>
-      <div class="text-gray-400 text-sm mb-5">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
-      <a href="groups.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm" style="background:linear-gradient(180deg,#924ef4,#7b2af0);">
-        Browse Groups →
-      </a>
-    </div>
-
-    <!-- ══════════════════════════════════════
-         SUBSCRIBERS PERFORMANCE
-    ══════════════════════════════════════ -->
-    <div id="subsSection" class="hidden fade-in delay-2">
-
-      <div class="flex items-center gap-3 mb-6">
-        <div class="section-pill" style="background:rgba(124,58,237,0.15);color:#c4b5fd;border:1px solid rgba(124,58,237,0.3);">
-          👥 Subscribers Group
+      <!-- ── MY GROUPS ── -->
+      <div id="groupsSection" class="hidden fade-in delay-2 mb-8">
+        <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+          <h2 class="text-xl font-bold">My Groups</h2>
+          <a href="groups.html" class="text-xs text-purple-400 hover:text-purple-300 transition font-medium">Join more groups →</a>
         </div>
-        <div id="subsLastWork" class="lw-chip"></div>
+        <div id="groupBadgesWrap" class="flex flex-wrap gap-3 mb-4"></div>
+        <div class="card p-4 flex items-center gap-3">
+          <span style="font-size:18px;">💡</span>
+          <span class="text-gray-400 text-sm">Want to join more groups? Go to
+            <a href="groups.html" class="text-purple-400 font-semibold hover:underline">Groups</a>
+            in the menu to apply for additional work groups.</span>
+        </div>
       </div>
 
-      <!-- top stats -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Total Subscribers Got</div>
-          <div id="subsTotal" class="text-3xl font-black text-purple-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">subscribers earned</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Channels Subscribed</div>
-          <div id="subsDone" class="text-3xl font-black text-green-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">completed tasks</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Unsubscribed by Others</div>
-          <div id="subsUnsub" class="text-3xl font-black text-red-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">lost subscribers</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Pending (You → Others)</div>
-          <div id="subsPendOut" class="text-3xl font-black text-yellow-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">awaiting approval</div>
-        </div>
-
+      <!-- ── NO GROUPS ── -->
+      <div id="noGroupsMsg" class="hidden fade-in delay-2 card p-8 text-center mb-8">
+        <div class="text-5xl mb-4">📭</div>
+        <div class="text-xl font-bold mb-2">Not in any group yet</div>
+        <div class="text-gray-400 text-sm mb-5">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
+        <a href="groups.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
+          style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
       </div>
 
-      <!-- charts row -->
-      <div class="grid md:grid-cols-2 gap-5">
+      <!-- ══════════════════════════════════════
+           SUBSCRIBERS PERFORMANCE
+      ══════════════════════════════════════ -->
+      <div id="subsSection" class="hidden fade-in delay-2 mb-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="section-pill" style="background:rgba(124,58,237,0.15);color:#c4b5fd;border:1px solid rgba(124,58,237,0.3);">👥 Subscribers Group</div>
+          <div id="subsLastWork" class="lw-chip"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Total Subscribers Got</div>
+            <div id="subsTotal" class="text-3xl font-black text-purple-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">subscribers earned</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Channels Subscribed</div>
+            <div id="subsDone" class="text-3xl font-black text-green-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">completed tasks</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Unsubscribed by Others</div>
+            <div id="subsUnsub" class="text-3xl font-black text-red-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">lost subscribers</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Pending (You → Others)</div>
+            <div id="subsPendOut" class="text-3xl font-black text-yellow-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">awaiting approval</div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <div class="text-sm font-bold mb-4">Subscriber Health</div>
+            <div class="flex items-center gap-6 flex-wrap">
+              <div class="ring-wrap">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                  <circle cx="55" cy="55" r="44" fill="none" stroke="#1a1d28" stroke-width="12"/>
+                  <circle id="subsRingGained" cx="55" cy="55" r="44" fill="none"
+                    stroke="#7c3aed" stroke-width="12"
+                    stroke-dasharray="276.5" stroke-dashoffset="276.5"
+                    stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
+                </svg>
+                <div class="ring-center">
+                  <div id="subsRingPct" class="text-lg font-black">0%</div>
+                  <div class="text-xs text-gray-500">net gain</div>
+                </div>
+              </div>
+              <div class="flex-1 flex flex-col gap-3 min-w-0">
+                <div>
+                  <div class="flex justify-between mb-1 text-xs">
+                    <span class="text-gray-400">Gained</span>
+                    <span id="subsLegGained" class="text-purple-400 font-bold">0</span>
+                  </div>
+                  <div class="prog-track"><div id="subsProgGained" class="prog-fill" style="background:#7c3aed;width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1 text-xs">
+                    <span class="text-gray-400">Lost</span>
+                    <span id="subsLegLost" class="text-red-400 font-bold">0</span>
+                  </div>
+                  <div class="prog-track"><div id="subsProgLost" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1 text-xs">
+                    <span class="text-gray-400">Pending In</span>
+                    <span id="subsLegPendIn" class="text-yellow-400 font-bold">0</span>
+                  </div>
+                  <div class="prog-track"><div id="subsProgPendIn" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-6">
+            <div class="text-sm font-bold mb-4">Subscriber Limit Usage</div>
+            <div class="flex items-end gap-4 mb-4">
+              <div id="subsLimitUsed" class="text-4xl font-black text-purple-400">0</div>
+              <div class="text-gray-500 text-sm pb-1">/ <span id="subsLimitMax">0</span> limit</div>
+            </div>
+            <div class="prog-track" style="height:12px;border-radius:8px;margin-bottom:12px;">
+              <div id="subsLimitBar" class="prog-fill" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);width:0%;height:12px;border-radius:8px;"></div>
+            </div>
+            <div id="subsLimitMsg" class="text-xs text-gray-500 mb-5"></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div style="background:#13161f;border:1px solid #1e2130;border-radius:10px;padding:10px;">
+                <div class="text-xs text-gray-500 mb-1">Unsubscribed</div>
+                <div id="subsUnsubCount" class="text-xl font-black text-orange-400">0</div>
+              </div>
+              <div style="background:#13161f;border:1px solid #1e2130;border-radius:10px;padding:10px;">
+                <div class="text-xs text-gray-500 mb-1">Pending From Others</div>
+                <div id="subsPendIn" class="text-xl font-black text-blue-400">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <!-- Ring: net subscribers -->
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-4">Subscriber Health</div>
-          <div class="flex items-center gap-6 flex-wrap">
-            <div class="ring-wrap">
-              <svg width="110" height="110" viewBox="0 0 110 110">
-                <circle cx="55" cy="55" r="44" fill="none" stroke="#1a1d28" stroke-width="12"/>
-                <circle id="subsRingGained" cx="55" cy="55" r="44" fill="none"
-                  stroke="#7c3aed" stroke-width="12"
-                  stroke-dasharray="276.5" stroke-dashoffset="276.5"
-                  stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
+      <!-- ══════════════════════════════════════
+           VIDEO PERFORMANCE
+      ══════════════════════════════════════ -->
+      <div id="videoSection" class="hidden fade-in delay-3 mb-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="section-pill" style="background:rgba(239,68,68,0.12);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);">🎬 Video Watch Group</div>
+          <div id="videoLastWork" class="lw-chip"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+          <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
+            <div class="text-xs text-gray-500 mb-2">Videos Watched</div>
+            <div id="videoWatched" class="text-3xl font-black text-red-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Pending From Others</div>
+            <div id="videoPendIn" class="text-3xl font-black text-yellow-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">awaiting watch</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Pending By Others</div>
+            <div id="videoPendOut" class="text-3xl font-black text-blue-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">others to watch yours</div>
+          </div>
+          <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
+            <div class="text-xs text-gray-500 mb-2">Rejected</div>
+            <div id="videoRejects" class="text-3xl font-black text-red-500">0</div>
+            <div class="text-xs text-gray-500 mt-1">incomplete watches</div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <div class="text-sm font-bold mb-4">Video Task Breakdown</div>
+            <div class="bar-chart w-full mb-3" id="videoBarChart"></div>
+            <div class="flex flex-wrap gap-3">
+              <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#ef4444;"></div><span class="text-gray-400">Watched</span></div>
+              <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#fbbf24;"></div><span class="text-gray-400">Pending In</span></div>
+              <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#38bdf8;"></div><span class="text-gray-400">Pending Out</span></div>
+              <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#6b7280;"></div><span class="text-gray-400">Rejected</span></div>
+            </div>
+          </div>
+          <div class="card p-6">
+            <div class="text-sm font-bold mb-4">Completion Rate</div>
+            <div class="flex items-center gap-6">
+              <div class="ring-wrap">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                  <circle cx="55" cy="55" r="44" fill="none" stroke="#1a1d28" stroke-width="12"/>
+                  <circle id="videoRing" cx="55" cy="55" r="44" fill="none"
+                    stroke="#ef4444" stroke-width="12"
+                    stroke-dasharray="276.5" stroke-dashoffset="276.5"
+                    stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
+                </svg>
+                <div class="ring-center">
+                  <div id="videoRingPct" class="text-lg font-black">0%</div>
+                  <div class="text-xs text-gray-500">success</div>
+                </div>
+              </div>
+              <div class="flex-1 text-sm text-gray-400 leading-relaxed">
+                Out of all video tasks assigned,
+                <span id="videoSuccessDesc" class="text-white font-bold"></span> were completed successfully.
+                <div class="mt-3 text-xs text-gray-500">Rejected tasks do not count toward your completion score.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           ENGAGEMENT (LIKE & COMMENT)
+      ══════════════════════════════════════ -->
+      <div id="engageSection" class="hidden fade-in delay-4 mb-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="section-pill" style="background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.25);">💬 Like &amp; Comment Group</div>
+          <div id="engageLastWork" class="lw-chip"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+          <div class="stat-card" style="border-color:rgba(34,197,94,0.2);">
+            <div class="text-xs text-gray-500 mb-2">Total Likes/Comments Got</div>
+            <div id="engageTotal" class="text-3xl font-black text-green-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">engagements earned</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Deleted by Others</div>
+            <div id="engageDeleted" class="text-3xl font-black text-red-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">removed</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Pending You→Others</div>
+            <div id="engagePendOut" class="text-3xl font-black text-yellow-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">to complete</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-xs text-gray-500 mb-2">Pending Others→You</div>
+            <div id="engagePendIn" class="text-3xl font-black text-blue-400">0</div>
+            <div class="text-xs text-gray-500 mt-1">incoming</div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <div class="text-sm font-bold mb-5">Engagement Health Score</div>
+            <div class="flex flex-col gap-4">
+              <div>
+                <div class="flex justify-between mb-2 text-xs">
+                  <span class="text-gray-400">Engagements Earned</span>
+                  <span id="engProgGainedLbl" class="text-green-400 font-bold">0</span>
+                </div>
+                <div class="prog-track"><div id="engProgGained" class="prog-fill" style="background:linear-gradient(90deg,#22c55e,#86efac);width:0%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-2 text-xs">
+                  <span class="text-gray-400">Deleted / Lost</span>
+                  <span id="engProgDeletedLbl" class="text-red-400 font-bold">0</span>
+                </div>
+                <div class="prog-track"><div id="engProgDeleted" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-2 text-xs">
+                  <span class="text-gray-400">Pending Outgoing</span>
+                  <span id="engProgOutLbl" class="text-yellow-400 font-bold">0</span>
+                </div>
+                <div class="prog-track"><div id="engProgOut" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-2 text-xs">
+                  <span class="text-gray-400">Pending Incoming</span>
+                  <span id="engProgInLbl" class="text-blue-400 font-bold">0</span>
+                </div>
+                <div class="prog-track"><div id="engProgIn" class="prog-fill" style="background:#38bdf8;width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card p-6">
+            <div class="text-sm font-bold mb-4">Net Engagement</div>
+            <div class="flex items-end gap-2 mb-1">
+              <div id="engNetValue" class="text-5xl font-black text-green-400">0</div>
+              <div class="text-gray-500 text-sm pb-2">net score</div>
+            </div>
+            <div class="text-xs text-gray-500 mb-5">Earned minus deleted</div>
+            <div style="position:relative;display:flex;justify-content:center;align-items:center;">
+              <svg width="130" height="130" viewBox="0 0 130 130">
+                <circle cx="65" cy="65" r="52" fill="none" stroke="#1a1d28" stroke-width="14"/>
+                <circle id="engRing" cx="65" cy="65" r="52" fill="none"
+                  stroke="#22c55e" stroke-width="14"
+                  stroke-dasharray="326.7" stroke-dashoffset="326.7"
+                  stroke-linecap="round"
+                  style="transition:stroke-dashoffset 1.2s ease;transform:rotate(-90deg);transform-origin:65px 65px"/>
               </svg>
-              <div class="ring-center">
-                <div id="subsRingPct" class="text-lg font-black">0%</div>
-                <div class="text-xs text-gray-500">net gain</div>
-              </div>
-            </div>
-            <div class="flex-1 flex flex-col gap-3 min-w-0">
-              <div>
-                <div class="flex justify-between mb-1 text-xs">
-                  <span class="text-gray-400">Gained</span>
-                  <span id="subsLegGained" class="text-purple-400 font-bold">0</span>
-                </div>
-                <div class="prog-track"><div id="subsProgGained" class="prog-fill" style="background:#7c3aed;width:0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1 text-xs">
-                  <span class="text-gray-400">Lost</span>
-                  <span id="subsLegLost" class="text-red-400 font-bold">0</span>
-                </div>
-                <div class="prog-track"><div id="subsProgLost" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-1 text-xs">
-                  <span class="text-gray-400">Pending In</span>
-                  <span id="subsLegPendIn" class="text-yellow-400 font-bold">0</span>
-                </div>
-                <div class="prog-track"><div id="subsProgPendIn" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Limit bar -->
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-4">Subscriber Limit Usage</div>
-          <div class="flex items-end gap-4 mb-4">
-            <div id="subsLimitUsed" class="text-4xl font-black text-purple-400">0</div>
-            <div class="text-gray-500 text-sm pb-1">/ <span id="subsLimitMax">0</span> limit</div>
-          </div>
-          <div class="prog-track" style="height:12px;border-radius:8px;margin-bottom:12px;">
-            <div id="subsLimitBar" class="prog-fill" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);width:0%;height:12px;border-radius:8px;"></div>
-          </div>
-          <div id="subsLimitMsg" class="text-xs text-gray-500"></div>
-
-          <div class="mt-5 grid grid-cols-2 gap-3">
-            <div style="background:#13161f;border:1px solid #1e2130;border-radius:10px;padding:10px;">
-              <div class="text-xs text-gray-500 mb-1">Unsubscribed</div>
-              <div id="subsUnsubCount" class="text-xl font-black text-orange-400">0</div>
-            </div>
-            <div style="background:#13161f;border:1px solid #1e2130;border-radius:10px;padding:10px;">
-              <div class="text-xs text-gray-500 mb-1">Pending From Others</div>
-              <div id="subsPendIn" class="text-xl font-black text-blue-400">0</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════
-         VIDEO PERFORMANCE
-    ══════════════════════════════════════ -->
-    <div id="videoSection" class="hidden fade-in delay-3">
-
-      <div class="flex items-center gap-3 mb-6">
-        <div class="section-pill" style="background:rgba(239,68,68,0.12);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);">
-          🎬 Video Watch Group
-        </div>
-        <div id="videoLastWork" class="lw-chip"></div>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-
-        <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
-          <div class="text-xs text-gray-500 mb-2">Videos Watched</div>
-          <div id="videoWatched" class="text-3xl font-black text-red-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">completed</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Pending From Others</div>
-          <div id="videoPendIn" class="text-3xl font-black text-yellow-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">awaiting watch</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Pending By Others</div>
-          <div id="videoPendOut" class="text-3xl font-black text-blue-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">others to watch yours</div>
-        </div>
-
-        <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
-          <div class="text-xs text-gray-500 mb-2">Rejected</div>
-          <div id="videoRejects" class="text-3xl font-black text-red-500">0</div>
-          <div class="text-xs text-gray-500 mt-1">incomplete watches</div>
-        </div>
-
-      </div>
-
-      <!-- Video bar chart + completion ring -->
-      <div class="grid md:grid-cols-2 gap-5">
-
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-4">Video Task Breakdown</div>
-          <div class="flex items-end gap-3 mb-3">
-            <div class="bar-chart w-full" id="videoBarChart"></div>
-          </div>
-          <div class="flex flex-wrap gap-3 mt-2">
-            <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#ef4444;"></div><span class="text-gray-400">Watched</span></div>
-            <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#fbbf24;"></div><span class="text-gray-400">Pending In</span></div>
-            <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#38bdf8;"></div><span class="text-gray-400">Pending Out</span></div>
-            <div class="flex items-center gap-1 text-xs"><div style="width:10px;height:10px;border-radius:3px;background:#6b7280;"></div><span class="text-gray-400">Rejected</span></div>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-4">Completion Rate</div>
-          <div class="flex items-center gap-6">
-            <div class="ring-wrap">
-              <svg width="110" height="110" viewBox="0 0 110 110">
-                <circle cx="55" cy="55" r="44" fill="none" stroke="#1a1d28" stroke-width="12"/>
-                <circle id="videoRing" cx="55" cy="55" r="44" fill="none"
-                  stroke="#ef4444" stroke-width="12"
-                  stroke-dasharray="276.5" stroke-dashoffset="276.5"
-                  stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
-              </svg>
-              <div class="ring-center">
-                <div id="videoRingPct" class="text-lg font-black">0%</div>
-                <div class="text-xs text-gray-500">success</div>
-              </div>
-            </div>
-            <div class="flex-1 text-sm text-gray-400 leading-relaxed">
-              Out of all video tasks assigned, <span id="videoSuccessDesc" class="text-white font-bold"></span> were completed successfully.
-              <div class="mt-3 text-xs text-gray-500">Rejected tasks do not count toward your completion score.</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════
-         ENGAGEMENT (LIKE & COMMENT)
-    ══════════════════════════════════════ -->
-    <div id="engageSection" class="hidden fade-in delay-4">
-
-      <div class="flex items-center gap-3 mb-6">
-        <div class="section-pill" style="background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.25);">
-          💬 Like &amp; Comment Group
-        </div>
-        <div id="engageLastWork" class="lw-chip"></div>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-
-        <div class="stat-card" style="border-color:rgba(34,197,94,0.2);">
-          <div class="text-xs text-gray-500 mb-2">Total Likes/Comments Got</div>
-          <div id="engageTotal" class="text-3xl font-black text-green-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">engagements earned</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Deleted by Others</div>
-          <div id="engageDeleted" class="text-3xl font-black text-red-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">removed</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Pending You→Others</div>
-          <div id="engagePendOut" class="text-3xl font-black text-yellow-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">to complete</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="text-xs text-gray-500 mb-2">Pending Others→You</div>
-          <div id="engagePendIn" class="text-3xl font-black text-blue-400">0</div>
-          <div class="text-xs text-gray-500 mt-1">incoming</div>
-        </div>
-
-      </div>
-
-      <!-- Engagement chart -->
-      <div class="grid md:grid-cols-2 gap-5">
-
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-5">Engagement Health Score</div>
-
-          <div class="flex flex-col gap-4">
-            <div>
-              <div class="flex justify-between mb-2 text-xs">
-                <span class="text-gray-400">Engagements Earned</span>
-                <span id="engProgGainedLbl" class="text-green-400 font-bold">0</span>
-              </div>
-              <div class="prog-track"><div id="engProgGained" class="prog-fill" style="background:linear-gradient(90deg,#22c55e,#86efac);width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-2 text-xs">
-                <span class="text-gray-400">Deleted / Lost</span>
-                <span id="engProgDeletedLbl" class="text-red-400 font-bold">0</span>
-              </div>
-              <div class="prog-track"><div id="engProgDeleted" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-2 text-xs">
-                <span class="text-gray-400">Pending Outgoing</span>
-                <span id="engProgOutLbl" class="text-yellow-400 font-bold">0</span>
-              </div>
-              <div class="prog-track"><div id="engProgOut" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-2 text-xs">
-                <span class="text-gray-400">Pending Incoming</span>
-                <span id="engProgInLbl" class="text-blue-400 font-bold">0</span>
-              </div>
-              <div class="prog-track"><div id="engProgIn" class="prog-fill" style="background:#38bdf8;width:0%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-4">Net Engagement</div>
-          <div class="flex items-end gap-2 mb-1">
-            <div id="engNetValue" class="text-5xl font-black text-green-400">0</div>
-            <div class="text-gray-500 text-sm pb-2">net score</div>
-          </div>
-          <div class="text-xs text-gray-500 mb-5">Earned minus deleted</div>
-
-          <div class="ring-wrap mx-auto" style="display:flex;justify-content:center;">
-            <svg width="130" height="130" viewBox="0 0 130 130">
-              <circle cx="65" cy="65" r="52" fill="none" stroke="#1a1d28" stroke-width="14"/>
-              <circle id="engRing" cx="65" cy="65" r="52" fill="none"
-                stroke="#22c55e" stroke-width="14"
-                stroke-dasharray="326.7" stroke-dashoffset="326.7"
-                stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease;transform:rotate(-90deg);transform-origin:65px 65px"/>
-            </svg>
-            <div class="ring-center" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-              <div class="text-center">
+              <div style="position:absolute;text-align:center;pointer-events:none;">
                 <div id="engRingPct" class="text-xl font-black">0%</div>
                 <div class="text-xs text-gray-500">retention</div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
 
-    <!-- ── WATCHTIME SECTION (placeholder) ── -->
-    <div id="watchtimeSection" class="hidden fade-in delay-4">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="section-pill" style="background:rgba(251,191,36,0.1);color:#fde68a;border:1px solid rgba(251,191,36,0.25);">
-          ⏱ Watch Time Group
+      <!-- ── WATCHTIME ── -->
+      <div id="watchtimeSection" class="hidden fade-in delay-4 mb-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="section-pill" style="background:rgba(251,191,36,0.1);color:#fde68a;border:1px solid rgba(251,191,36,0.25);">⏱ Watch Time Group</div>
+        </div>
+        <div class="card p-8 text-center">
+          <div class="text-4xl mb-3">⏱️</div>
+          <div class="font-bold text-lg mb-2">Watch Time Analytics</div>
+          <div class="text-gray-400 text-sm">Watch Time performance data will appear here once your admin adds it to the system.</div>
         </div>
       </div>
-      <div class="card p-8 text-center">
-        <div class="text-4xl mb-3">⏱️</div>
-        <div class="font-bold text-lg mb-2">Watch Time Analytics</div>
-        <div class="text-gray-400 text-sm">Watch Time performance data will appear here once your admin adds it to the system.</div>
-      </div>
-    </div>
 
+    </div><!-- /activeContent -->
+
+  </div><!-- inner flex-col -->
   </div><!-- /dashContent -->
 
 </div>
 </main>
 
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
 <script>
-/* ══════════════════════════════════════════════
-   CONFIG — replace with your deployed script URL
-══════════════════════════════════════════════ */
+'use strict';
+
+/* ── CONFIG ── */
 var API = "https://script.google.com/macros/s/AKfycbwSLPanLfTKYqNh1CylShOWP35S7nMw9yOCnit0wFeKGmoI4utxK9SdJOZm1TiGnOLqmg/exec";
 
-/* ── READ localStorage ── */
-var usercode  = (localStorage.getItem("usercode")  || "").trim().toUpperCase();
-var username  = localStorage.getItem("username") || "";
+/* ── SESSION ── */
+var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
+var username = localStorage.getItem("username") || "";
 
-if(!usercode){
-  window.location.href = "signin.html";
+/* Auth guard — only redirect if no session at all.
+   Blocked users ARE allowed to see this page (they see the blocked banner). */
+if (!usercode || !username) {
+  window.location.replace("signin.html");
 }
 
-/* ══════════════════════════════════════════════
-   LOAD DASHBOARD
-══════════════════════════════════════════════ */
-async function loadDashboard(){
+/* ── POPULATE NAV ── */
+setText("navUserName",      username || "Member");
+setText("dropdownUserName", username || "Member");
+setText("dropdownUserCode", usercode ? "#" + usercode : "");
+
+/* ══════════════════════════════════════
+   LOAD
+══════════════════════════════════════ */
+async function loadDashboard() {
   show("loadingState");
   hide("errorState");
   hide("dashContent");
@@ -869,399 +749,324 @@ async function loadDashboard(){
   try {
     var res  = await fetch(API + "?action=dashboard&usercode=" + encodeURIComponent(usercode));
     var data = await res.json();
-
-    if(data.error){ throw new Error(data.error); }
-
+    if (data.error) throw new Error(data.error);
     renderDashboard(data);
-
-  } catch(err){
-    show("errorState");
+  } catch (err) {
     hide("loadingState");
-    document.getElementById("errorMsg").textContent = err.message || "Network error. Please try again.";
+    show("errorState");
+    setText("errorMsg", err.message || "Network error. Please try again.");
   }
 }
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════
    RENDER
-══════════════════════════════════════════════ */
-function renderDashboard(data){
-    var m = data.member;
+══════════════════════════════════════ */
+function renderDashboard(data) {
+  var m  = data.member              || {};
+  var sp = data.subsPerformance     || {};
+  var vp = data.videoPerformance    || {};
+  var ep = data.engagementPerformance || {};
 
-  if(m.status){
-      localStorage.setItem("status", m.status);
-  }
-  
-  var m   = data.member;
-  var sp  = data.subsPerformance;
-  var vp  = data.videoPerformance;
-  var ep  = data.engagementPerformance;
+  /* Save refreshed status */
+  if (m.status) localStorage.setItem("status", m.status);
 
-  /* header */
-  document.getElementById("chipName").textContent    = m.userName || username || "Member";
-  document.getElementById("chipCode").textContent    = m.userCode  || usercode;
-  document.getElementById("welcomeSubtitle").textContent = "Welcome back, " + (m.userName || username) + " · " + fmtDate(m.dateOfJoin);
+  var isBlocked  = (m.status || "").toLowerCase() === "blocked";
+  var isComplete = m.accountCompleted === "Yes";
 
-  /* info row */
-  document.getElementById("infoCountry").textContent  = m.country       || "—";
-  document.getElementById("infoJoin").textContent     = fmtDate(m.dateOfJoin) || "—";
-  document.getElementById("infoStatus").textContent   = m.status        || "—";
-  document.getElementById("infoChannels").textContent = data.workingAccountsCount || 0;
+  /* ── Header ── */
+  setText("chipName",        m.userName || username || "Member");
+  setText("chipCode",        m.userCode || usercode);
+  setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · " + fmtDate(m.dateOfJoin));
+
+  /* ── Info row ── */
+  setText("infoCountry",  m.country || "—");
+  setText("infoJoin",     fmtDate(m.dateOfJoin) || "—");
+  setText("infoChannels", data.workingAccountsCount || 0);
+
+  /* Status chip with colour */
+  var statusEl = document.getElementById("infoStatus");
+  statusEl.textContent = m.status || "—";
+  statusEl.className = "font-bold text-sm";
+  var sl = (m.status || "").toLowerCase();
+  if (sl === "active")  statusEl.classList.add("status-active");
+  if (sl === "blocked") statusEl.classList.add("status-blocked");
+  if (sl === "pending") statusEl.classList.add("status-pending");
+
   show("memberInfoRow");
 
-  /* account completed check */
-  if(m.accountCompleted !== "Yes"){
-    show("incompleteBanner");
-    /* still show the rest but warn */
+  /* ════════════════════════════════════
+     BLOCKED BRANCH
+  ════════════════════════════════════ */
+  if (isBlocked) {
+
+    /* Show blocked banner */
+    show("blockedBanner");
+
+    /* Show reason if available */
+    if (m.blockedReason && m.blockedReason.trim()) {
+      setText("blockedReasonText", m.blockedReason.trim());
+      document.getElementById("blockedReasonBox").classList.remove("hidden");
+      document.getElementById("blockedReasonBox").style.display = "flex";
+    }
+
+    /* Change avatar to locked icon */
+    document.getElementById("chipAvatar").textContent = "🔒";
+
+    /* Disable ALL nav links except Support */
+    var toDisable = [
+      "lnkDashboard","lnkChannels","lnkGroups","lnkHowTo","lnkExtension",
+      "mLnkDashboard","mLnkChannels","mLnkGroups","mLnkHowTo","mLnkExtension",
+      "ddProfile"
+    ];
+    toDisable.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) {
+        el.classList.add("nav-disabled");
+        el.removeAttribute("href");
+      }
+    });
+
+    /* Hide all group & analytics content */
+    document.getElementById("activeContent").style.display = "none";
+
+    hide("loadingState");
+    show("dashContent");
+    return; /* stop here */
   }
 
-  /* ── GROUPS ── */
-  var groups = [];
-  if(m.inSubscribersWork    === "Yes") groups.push({ key:"subs",    label:"👥 Subscribers",   color:"#7c3aed", bg:"rgba(124,58,237,0.15)", border:"rgba(124,58,237,0.4)" });
-  if(m.inVideoTaskWork      === "Yes") groups.push({ key:"video",   label:"🎬 Video Watch",    color:"#ef4444", bg:"rgba(239,68,68,0.12)",   border:"rgba(239,68,68,0.4)" });
-  if(m.inWatchtimeWork      === "Yes") groups.push({ key:"watch",   label:"⏱ Watch Time",     color:"#fbbf24", bg:"rgba(251,191,36,0.12)",  border:"rgba(251,191,36,0.4)" });
-  if(m.inLikeAndCommentWork === "Yes") groups.push({ key:"engage",  label:"💬 Like & Comment", color:"#22c55e", bg:"rgba(34,197,94,0.12)",   border:"rgba(34,197,94,0.4)" });
+  /* ════════════════════════════════════
+     ACCOUNT INCOMPLETE CHECK
+  ════════════════════════════════════ */
+  if (!isComplete) {
+    show("incompleteBanner");
+    /* Still render groups & stats below */
+  }
 
-  if(groups.length > 0){
-    var badgeHtml = "";
-    groups.forEach(function(g){
-      badgeHtml += '<div class="group-badge" style="background:' + g.bg + ';border-color:' + g.border + ';color:' + g.color + ';">'
-        + g.label + ' <span style="opacity:.6;font-size:10px;font-weight:500;">Active</span></div>';
-    });
-    document.getElementById("groupBadgesWrap").innerHTML = badgeHtml;
+  /* ── Groups ── */
+  var groups = [];
+  if (m.inSubscribersWork    === "Yes") groups.push({ label:"👥 Subscribers",   color:"#7c3aed", bg:"rgba(124,58,237,0.15)", border:"rgba(124,58,237,0.4)" });
+  if (m.inVideoTaskWork      === "Yes") groups.push({ label:"🎬 Video Watch",    color:"#ef4444", bg:"rgba(239,68,68,0.12)",  border:"rgba(239,68,68,0.4)" });
+  if (m.inWatchtimeWork      === "Yes") groups.push({ label:"⏱ Watch Time",     color:"#fbbf24", bg:"rgba(251,191,36,0.12)", border:"rgba(251,191,36,0.4)" });
+  if (m.inLikeAndCommentWork === "Yes") groups.push({ label:"💬 Like & Comment", color:"#22c55e", bg:"rgba(34,197,94,0.12)",  border:"rgba(34,197,94,0.4)" });
+
+  if (groups.length > 0) {
+    document.getElementById("groupBadgesWrap").innerHTML = groups.map(function(g){
+      return '<div class="group-badge" style="background:' + g.bg + ';border-color:' + g.border + ';color:' + g.color + ';">'
+        + g.label + ' <span style="opacity:.55;font-size:10px;font-weight:500;">Active</span></div>';
+    }).join("");
     show("groupsSection");
   } else {
     show("noGroupsMsg");
   }
 
-  /* ── SUBSCRIBERS ── */
-  if(m.inSubscribersWork === "Yes"){
-    document.getElementById("subsTotal").textContent    = fmt(sp.totalSubscribersGet);
-    document.getElementById("subsDone").textContent     = fmt(sp.totalSubscribeChannels);
-    document.getElementById("subsUnsub").textContent    = fmt(sp.totalUnsubscribeChannels);
-    document.getElementById("subsPendOut").textContent  = fmt(sp.pendingSubscribeToOthers);
-    document.getElementById("subsUnsubCount").textContent = fmt(sp.totalUnsubscribeByOthers);
-    document.getElementById("subsPendIn").textContent   = fmt(sp.pendingSubscribeFromOthers);
-    document.getElementById("subsLimitUsed").textContent = fmt(sp.totalSubscribersGet);
-    document.getElementById("subsLimitMax").textContent  = fmt(sp.subscribersLimit);
-    document.getElementById("subsLastWork").textContent  = sp.lastTimeWork ? "Last: " + fmtDate(sp.lastTimeWork) : "No activity yet";
+  /* ── Subscribers ── */
+  if (m.inSubscribersWork === "Yes") {
+    var gained   = +(sp.totalSubscribersGet        || 0);
+    var lost     = +(sp.totalUnsubscribeByOthers   || 0);
+    var pendIn   = +(sp.pendingSubscribeFromOthers || 0);
+    var total    = Math.max(gained + lost + pendIn, 1);
+    var netPct   = Math.round((gained / total) * 100);
+    var limitPct = sp.subscribersLimit > 0
+      ? Math.min(Math.round((gained / sp.subscribersLimit) * 100), 100) : 0;
 
-    var gained = sp.totalSubscribersGet;
-    var lost   = sp.totalUnsubscribeByOthers;
-    var pendIn = sp.pendingSubscribeFromOthers;
-    var total  = Math.max(gained + lost + pendIn, 1);
-    var netPct = Math.round((gained / total) * 100);
-    var limitPct = sp.subscribersLimit > 0 ? Math.min(Math.round((gained / sp.subscribersLimit)*100),100) : 0;
-
-    document.getElementById("subsRingPct").textContent = netPct + "%";
-    document.getElementById("subsLegGained").textContent = fmt(gained);
-    document.getElementById("subsLegLost").textContent   = fmt(lost);
-    document.getElementById("subsLegPendIn").textContent = fmt(pendIn);
-    document.getElementById("subsLimitMsg").textContent  = sp.limitReached === "Yes"
-      ? "⚠️ You have reached your subscriber limit."
-      : limitPct + "% of your limit used.";
+    setText("subsTotal",     fmt(sp.totalSubscribersGet));
+    setText("subsDone",      fmt(sp.totalSubscribeChannels));
+    setText("subsUnsub",     fmt(sp.totalUnsubscribeChannels));
+    setText("subsPendOut",   fmt(sp.pendingSubscribeToOthers));
+    setText("subsUnsubCount",fmt(sp.totalUnsubscribeByOthers));
+    setText("subsPendIn",    fmt(sp.pendingSubscribeFromOthers));
+    setText("subsLimitUsed", fmt(sp.totalSubscribersGet));
+    setText("subsLimitMax",  fmt(sp.subscribersLimit));
+    setText("subsLastWork",  sp.lastTimeWork ? "Last: " + fmtDate(sp.lastTimeWork) : "No activity yet");
+    setText("subsRingPct",   netPct + "%");
+    setText("subsLegGained", fmt(gained));
+    setText("subsLegLost",   fmt(lost));
+    setText("subsLegPendIn", fmt(pendIn));
+    setText("subsLimitMsg",  sp.limitReached === "Yes"
+      ? "⚠️ Subscriber limit reached." : limitPct + "% of limit used.");
 
     after(200, function(){
-      setRing("subsRingGained", netPct, 44);
-      setProg("subsProgGained", Math.round((gained/total)*100));
-      setProg("subsProgLost",   Math.round((lost/total)*100));
-      setProg("subsProgPendIn", Math.round((pendIn/total)*100));
+      setRing("subsRingGained", netPct, 276.5);
+      setProg("subsProgGained", Math.round((gained / total) * 100));
+      setProg("subsProgLost",   Math.round((lost   / total) * 100));
+      setProg("subsProgPendIn", Math.round((pendIn / total) * 100));
       setProg("subsLimitBar",   limitPct);
     });
-
     show("subsSection");
   }
 
-  /* ── VIDEO ── */
-  if(m.inVideoTaskWork === "Yes"){
-    var vw  = vp.totalVideoWatched;
-    var vpf = vp.totalVideoWatchedPendingFromOthers;
-    var vpb = vp.totalVideoWatchedPendingByOthers;
-    var vr  = vp.totalVideoWatchingRejects;
+  /* ── Video ── */
+  if (m.inVideoTaskWork === "Yes") {
+    var vw   = +(vp.totalVideoWatched                  || 0);
+    var vpf  = +(vp.totalVideoWatchedPendingFromOthers || 0);
+    var vpb  = +(vp.totalVideoWatchedPendingByOthers   || 0);
+    var vr   = +(vp.totalVideoWatchingRejects          || 0);
     var vtot = Math.max(vw + vpf + vpb + vr, 1);
-    var vSucc = Math.round((vw / vtot)*100);
+    var vSucc= Math.round((vw / vtot) * 100);
 
-    document.getElementById("videoWatched").textContent  = fmt(vw);
-    document.getElementById("videoPendIn").textContent   = fmt(vpf);
-    document.getElementById("videoPendOut").textContent  = fmt(vpb);
-    document.getElementById("videoRejects").textContent  = fmt(vr);
-    document.getElementById("videoLastWork").textContent = vp.lastTimeWork ? "Last: " + fmtDate(vp.lastTimeWork) : "No activity yet";
-    document.getElementById("videoSuccessDesc").textContent = fmt(vw) + " videos";
-    document.getElementById("videoRingPct").textContent  = vSucc + "%";
+    setText("videoWatched",    fmt(vw));
+    setText("videoPendIn",     fmt(vpf));
+    setText("videoPendOut",    fmt(vpb));
+    setText("videoRejects",    fmt(vr));
+    setText("videoLastWork",   vp.lastTimeWork ? "Last: " + fmtDate(vp.lastTimeWork) : "No activity yet");
+    setText("videoSuccessDesc",fmt(vw) + " videos");
+    setText("videoRingPct",    vSucc + "%");
 
-    /* bar chart */
     var bars = [
-      { val:vw,  color:"#ef4444", label:"Watched" },
-      { val:vpf, color:"#fbbf24", label:"Pend In" },
-      { val:vpb, color:"#38bdf8", label:"Pend Out" },
-      { val:vr,  color:"#6b7280", label:"Rejected" }
+      { val:vw,  color:"#ef4444" },
+      { val:vpf, color:"#fbbf24" },
+      { val:vpb, color:"#38bdf8" },
+      { val:vr,  color:"#6b7280" }
     ];
     var maxBar = Math.max.apply(null, bars.map(function(b){ return b.val; })) || 1;
-    var barHtml = "";
-    bars.forEach(function(b){
-      var h = Math.round((b.val / maxBar)*80);
-      barHtml += '<div class="bar" style="height:' + h + 'px;background:' + b.color + ';" data-val="' + b.val + '" title="' + b.label + ': ' + b.val + '"></div>';
-    });
-    document.getElementById("videoBarChart").innerHTML = barHtml;
+    document.getElementById("videoBarChart").innerHTML = bars.map(function(b){
+      var h = Math.max(Math.round((b.val / maxBar) * 76), 4);
+      return '<div class="bar" style="height:' + h + 'px;background:' + b.color + ';" data-val="' + b.val + '"></div>';
+    }).join("");
 
-    after(200, function(){
-      setRing("videoRing", vSucc, 44);
-    });
-
+    after(200, function(){ setRing("videoRing", vSucc, 276.5); });
     show("videoSection");
   }
 
-  /* ── ENGAGEMENT ── */
-  if(m.inLikeAndCommentWork === "Yes"){
-    var eg  = ep.totalCommentLikeGet;
-    var ed  = ep.totalCommentLikeDelete;
-    var epo = ep.pendingCommentLikeToOthers;
-    var epi = ep.pendingCommentLikeFromOthers;
+  /* ── Engagement ── */
+  if (m.inLikeAndCommentWork === "Yes") {
+    var eg   = +(ep.totalCommentLikeGet            || 0);
+    var ed   = +(ep.totalCommentLikeDelete         || 0);
+    var epo  = +(ep.pendingCommentLikeToOthers     || 0);
+    var epi  = +(ep.pendingCommentLikeFromOthers   || 0);
     var etot = Math.max(eg + ed + epo + epi, 1);
-    var eret = eg > 0 ? Math.round(((eg - ed) / eg)*100) : 0;
-    eret = Math.max(0, eret);
-    var enet = eg - ed;
+    var eret = eg > 0 ? Math.max(Math.round(((eg - ed) / eg) * 100), 0) : 0;
 
-    document.getElementById("engageTotal").textContent   = fmt(eg);
-    document.getElementById("engageDeleted").textContent = fmt(ed);
-    document.getElementById("engagePendOut").textContent = fmt(epo);
-    document.getElementById("engagePendIn").textContent  = fmt(epi);
-    document.getElementById("engageLastWork").textContent = ep.lastTimeWork ? "Last: " + fmtDate(ep.lastTimeWork) : "No activity yet";
-    document.getElementById("engNetValue").textContent   = fmt(Math.max(0, enet));
-    document.getElementById("engRingPct").textContent    = eret + "%";
-
-    document.getElementById("engProgGainedLbl").textContent  = fmt(eg);
-    document.getElementById("engProgDeletedLbl").textContent = fmt(ed);
-    document.getElementById("engProgOutLbl").textContent     = fmt(epo);
-    document.getElementById("engProgInLbl").textContent      = fmt(epi);
+    setText("engageTotal",      fmt(eg));
+    setText("engageDeleted",    fmt(ed));
+    setText("engagePendOut",    fmt(epo));
+    setText("engagePendIn",     fmt(epi));
+    setText("engageLastWork",   ep.lastTimeWork ? "Last: " + fmtDate(ep.lastTimeWork) : "No activity yet");
+    setText("engNetValue",      fmt(Math.max(eg - ed, 0)));
+    setText("engRingPct",       eret + "%");
+    setText("engProgGainedLbl", fmt(eg));
+    setText("engProgDeletedLbl",fmt(ed));
+    setText("engProgOutLbl",    fmt(epo));
+    setText("engProgInLbl",     fmt(epi));
 
     after(200, function(){
-      setProg("engProgGained",  Math.round((eg  / etot)*100));
-      setProg("engProgDeleted", Math.round((ed  / etot)*100));
-      setProg("engProgOut",     Math.round((epo / etot)*100));
-      setProg("engProgIn",      Math.round((epi / etot)*100));
-      setRingCustom("engRing", eret, 52, 326.7);
+      setProg("engProgGained",  Math.round((eg  / etot) * 100));
+      setProg("engProgDeleted", Math.round((ed  / etot) * 100));
+      setProg("engProgOut",     Math.round((epo / etot) * 100));
+      setProg("engProgIn",      Math.round((epi / etot) * 100));
+      setRing("engRing", eret, 326.7);
     });
-
     show("engageSection");
   }
 
-  /* ── WATCHTIME ── */
-  if(m.inWatchtimeWork === "Yes"){
-    show("watchtimeSection");
-  }
+  /* ── Watchtime ── */
+  if (m.inWatchtimeWork === "Yes") show("watchtimeSection");
 
   hide("loadingState");
   show("dashContent");
 }
 
-/* ══════════════════════════════════════════════
-   ANIMATION HELPERS
-══════════════════════════════════════════════ */
-function setRing(id, pct, r){
-  var circ = 2 * Math.PI * r;
-  var offset = circ - (pct / 100) * circ;
-  document.getElementById(id).style.strokeDashoffset = offset;
+/* ══════════════════════════════════════
+   CHART HELPERS
+══════════════════════════════════════ */
+function setRing(id, pct, circ) {
+  var el = document.getElementById(id);
+  if (el) el.style.strokeDashoffset = circ - (pct / 100) * circ;
 }
 
-function setRingCustom(id, pct, r, circ){
-  var offset = circ - (pct / 100) * circ;
-  document.getElementById(id).style.strokeDashoffset = offset;
+function setProg(id, pct) {
+  var el = document.getElementById(id);
+  if (el) el.style.width = Math.min(Math.max(pct, 0), 100) + "%";
 }
 
-function setProg(id, pct){
-  document.getElementById(id).style.width = Math.min(pct, 100) + "%";
+function after(ms, fn) { setTimeout(fn, ms); }
+
+/* ══════════════════════════════════════
+   DOM HELPERS
+══════════════════════════════════════ */
+function show(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove("hidden");
+  if (el.style.display === "none") el.style.display = "";
 }
 
-function after(ms, fn){ setTimeout(fn, ms); }
+function hide(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add("hidden");
+}
 
-/* ══════════════════════════════════════════════
+function setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* ══════════════════════════════════════
    UTILS
-══════════════════════════════════════════════ */
-function fmt(n){
-  if(n === undefined || n === null || n === "") return "0";
-  return Number(n).toLocaleString();
+══════════════════════════════════════ */
+function fmt(n) {
+  var num = parseFloat(n);
+  return isNaN(num) ? "0" : num.toLocaleString();
 }
 
-function fmtDate(d){
-  if(!d) return "";
+function fmtDate(d) {
+  if (!d) return "";
   var dt = new Date(d);
-  if(isNaN(dt)) return d;
+  if (isNaN(dt.getTime())) return String(d);
   return dt.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
 }
 
-function show(id){ document.getElementById(id).classList.remove("hidden"); }
-function hide(id){ document.getElementById(id).classList.add("hidden"); }
+/* ══════════════════════════════════════
+   LOGOUT
+══════════════════════════════════════ */
+function logoutUser() {
+  if (!confirm("Are you sure you want to logout?")) return;
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.replace("signin.html");
+}
 
+/* ══════════════════════════════════════
+   MENUS
+══════════════════════════════════════ */
+var mobileMenuBtn   = document.getElementById("mobileMenuBtn");
+var mobileMenu      = document.getElementById("mobileMenu");
+var profileBtn      = document.getElementById("profileBtn");
+var profileDropdown = document.getElementById("profileDropdown");
+var notifBtn        = document.getElementById("notifBtn");
+var notifDropdown   = document.getElementById("notifDropdown");
+
+mobileMenuBtn.addEventListener("click", function(e){
+  e.stopPropagation();
+  profileDropdown.classList.add("hidden");
+  notifDropdown.classList.add("hidden");
+  mobileMenu.classList.toggle("hidden");
+});
+
+profileBtn.addEventListener("click", function(e){
+  e.stopPropagation();
+  mobileMenu.classList.add("hidden");
+  notifDropdown.classList.add("hidden");
+  profileDropdown.classList.toggle("hidden");
+});
+
+notifBtn.addEventListener("click", function(e){
+  e.stopPropagation();
+  mobileMenu.classList.add("hidden");
+  profileDropdown.classList.add("hidden");
+  notifDropdown.classList.toggle("hidden");
+});
+
+document.addEventListener("click", function(){
+  mobileMenu.classList.add("hidden");
+  profileDropdown.classList.add("hidden");
+  notifDropdown.classList.add("hidden");
+});
 
 /* ── KICK OFF ── */
 loadDashboard();
 </script>
-
-
-
-<script>
-
-/* =========================
-   MOBILE MENU
-========================= */
-
-const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
-
-if(mobileMenuBtn){
-    mobileMenuBtn.addEventListener("click", function(e){
-        e.stopPropagation();
-
-        profileDropdown?.classList.add("hidden");
-        notifDropdown?.classList.add("hidden");
-
-        mobileMenu.classList.toggle("hidden");
-    });
-}
-
-/* =========================
-   PROFILE MENU
-========================= */
-
-const profileBtn = document.getElementById("profileBtn");
-const profileDropdown = document.getElementById("profileDropdown");
-
-if(profileBtn){
-    profileBtn.addEventListener("click", function(e){
-        e.stopPropagation();
-
-        mobileMenu?.classList.add("hidden");
-        notifDropdown?.classList.add("hidden");
-
-        profileDropdown.classList.toggle("hidden");
-    });
-}
-
-/* =========================
-   NOTIFICATION MENU
-========================= */
-
-const notifBtn = document.getElementById("notifBtn");
-const notifDropdown = document.getElementById("notifDropdown");
-
-if(notifBtn){
-    notifBtn.addEventListener("click", function(e){
-        e.stopPropagation();
-
-        mobileMenu?.classList.add("hidden");
-        profileDropdown?.classList.add("hidden");
-
-        notifDropdown.classList.toggle("hidden");
-    });
-}
-
-/* =========================
-   CLOSE MENUS WHEN CLICKING OUTSIDE
-========================= */
-
-document.addEventListener("click", function(e){
-
-    if(
-        mobileMenu &&
-        !mobileMenu.contains(e.target) &&
-        !mobileMenuBtn?.contains(e.target)
-    ){
-        mobileMenu.classList.add("hidden");
-    }
-
-    if(
-        profileDropdown &&
-        !profileDropdown.contains(e.target) &&
-        !profileBtn?.contains(e.target)
-    ){
-        profileDropdown.classList.add("hidden");
-    }
-
-    if(
-        notifDropdown &&
-        !notifDropdown.contains(e.target) &&
-        !notifBtn?.contains(e.target)
-    ){
-        notifDropdown.classList.add("hidden");
-    }
-
-});
-
-/* =========================
-   LOGOUT
-========================= */
-
-function logoutUser(){
-
-    if(!confirm("Are you sure you want to logout?")){
-        return;
-    }
-
-    localStorage.clear();
-    sessionStorage.clear();
-
-    window.location.replace("signin.html");
-}
-
-
-
-</script>
-
-
-<script>
-
-/* =========================
-   CURRENT USER
-========================= */
-
-const CURRENT_USER = {
-    usercode: localStorage.getItem("usercode") || "",
-    username: localStorage.getItem("username") || "",
-    status: localStorage.getItem("status") || "",
-    country: localStorage.getItem("country") || "",
-    data: JSON.parse(localStorage.getItem("memberData") || "{}")
-};
-
-document.getElementById("navUserName").textContent =
-    CURRENT_USER.username || "Member";
-
-document.getElementById("dropdownUserName").textContent =
-    CURRENT_USER.username || "Member";
-
-document.getElementById("dropdownUserCode").textContent =
-    CURRENT_USER.usercode || "";
-
-/* =========================
-   LOAD USER INFO IN MENU
-========================= */
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    const usercode = localStorage.getItem("usercode") || "";
-    const username = localStorage.getItem("username") || "";
-    const status   = localStorage.getItem("status") || "";
-
-    const navUserName = document.getElementById("navUserName");
-    const dropdownUserName = document.getElementById("dropdownUserName");
-    const dropdownUserCode = document.getElementById("dropdownUserCode");
-
-    if(navUserName){
-        navUserName.textContent = username || "Member";
-    }
-
-    if(dropdownUserName){
-        dropdownUserName.textContent = username || "Member";
-    }
-
-    if(dropdownUserCode){
-        dropdownUserCode.textContent =
-            usercode ? "#" + usercode : "No ID";
-    }
-
-});
-
-</script>
-
 
 </body>
 </html>
