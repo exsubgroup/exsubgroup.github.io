@@ -15,6 +15,8 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
+
+
 <style>
 
 :root{
@@ -99,8 +101,12 @@ body::before{
     transition:0.3s ease;
 }
 
-.join-btn:hover{
+.join-btn:hover:not(:disabled){
     transform:translateY(-2px);
+}
+
+.join-btn:disabled{
+    cursor:not-allowed;
 }
 
 .gradient-text{
@@ -209,9 +215,17 @@ body::before{
 
         <!-- GROUPS GRID -->
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="groupsContainer" class="relative">
 
-            <!-- GROUP -->
+            <!-- LOADING OVERLAY -->
+            <div id="groupsLoading" class="flex flex-col items-center justify-center py-24">
+                <div class="w-10 h-10 border-[3px] border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+                <p class="text-muted text-sm mt-4">Checking your group eligibility…</p>
+            </div>
+
+            <div id="groupsGrid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- GROUP: SUBSCRIBERS -->
 
             <div class="card card-hover rounded-3xl p-6">
 
@@ -251,15 +265,17 @@ body::before{
 
                     </div>
 
-                    <button class="join-btn">
+                    <button class="join-btn" id="btn-subscribers" data-group="subscribers">
                         Join Group
                     </button>
 
                 </div>
 
+                <div id="reason-subscribers" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+
             </div>
 
-            <!-- GROUP -->
+            <!-- GROUP: VIDEO BOOST -->
 
             <div class="card card-hover rounded-3xl p-6">
 
@@ -299,15 +315,17 @@ body::before{
 
                     </div>
 
-                    <button class="join-btn">
+                    <button class="join-btn" id="btn-video" data-group="video">
                         Join Group
                     </button>
 
                 </div>
 
+                <div id="reason-video" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+
             </div>
 
-            <!-- GROUP -->
+            <!-- GROUP: WATCH TIME -->
 
             <div class="card card-hover rounded-3xl p-6">
 
@@ -347,15 +365,17 @@ body::before{
 
                     </div>
 
-                    <button class="join-btn">
+                    <button class="join-btn" id="btn-watchtime" data-group="watchtime">
                         Join Group
                     </button>
 
                 </div>
 
+                <div id="reason-watchtime" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+
             </div>
 
-            <!-- GROUP -->
+            <!-- GROUP: ENGAGEMENT -->
 
             <div class="card card-hover rounded-3xl p-6">
 
@@ -395,11 +415,15 @@ body::before{
 
                     </div>
 
-                    <button class="join-btn">
+                    <button class="join-btn" id="btn-engagement" data-group="engagement">
                         Join Group
                     </button>
 
                 </div>
+
+                <div id="reason-engagement" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+
+            </div>
 
             </div>
 
@@ -469,6 +493,173 @@ document.addEventListener("click", () => {
   document.getElementById("profileDropdown").classList.add("hidden");
   document.getElementById("notifDropdown").classList.add("hidden");
 });
+</script>
+
+<script>
+    const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
+
+if (!savedUsername || !savedPassword) {
+  window.location.href = "signin.html";
+}
+
+/* Populate navbar straight from localStorage — no extra request needed */
+document.getElementById("navUserName").innerText      = savedUsername || "Member";
+document.getElementById("dropdownUserName").innerText = savedUsername || "Member";
+document.getElementById("dropdownUserCode").innerText = "ID #" + (savedUserCode || "0000");
+
+</script>
+
+<!-- =========================================================
+     GROUPS BACKEND WIRING
+     Handles: join-status check, eligibility-based button states,
+     join action. Remove-from-group is stubbed server-side.
+========================================================= -->
+<script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxCyKs2f9gVK0Ds1dRsLlmgQmssMxrtKu_w6zFckyqi0cT3bldTCNu9XNFOpRpYDCU4/exec"; // ends in /exec
+
+const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement"];
+
+async function callBackend(action, data) {
+  const res = await fetch(WEBAPP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight
+    body: JSON.stringify({ action, ...data })
+  });
+  return res.json();
+}
+
+function setButtonState(btn, state, reason, groupKey) {
+  // state: "joined" | "eligible" | "ineligible"
+  const reasonEl = groupKey ? document.getElementById("reason-" + groupKey) : null;
+
+  btn.classList.remove("opacity-50", "cursor-not-allowed");
+  btn.disabled = false;
+  btn.title = "";
+
+  if (state === "joined") {
+    btn.textContent = "Already Joined";
+    btn.style.background = "linear-gradient(180deg,#22c55e 0%,#16a34a 100%)";
+    btn.disabled = true;
+    if (reasonEl) reasonEl.classList.add("hidden");
+  } else if (state === "eligible") {
+    btn.textContent = "Join Group";
+    btn.style.background = "linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%)";
+    if (reasonEl) reasonEl.classList.add("hidden");
+  } else {
+    btn.textContent = "Not Eligible";
+    btn.style.background = "#3a3d47";
+    btn.classList.add("opacity-50", "cursor-not-allowed");
+    btn.disabled = true;
+    btn.title = reason || "Requirements not met";
+    if (reasonEl) {
+      reasonEl.textContent = "⚠ " + (reason || "Requirements not met.");
+      reasonEl.classList.remove("hidden");
+    }
+  }
+}
+
+function showGroupsGrid() {
+  const loading = document.getElementById("groupsLoading");
+  const grid = document.getElementById("groupsGrid");
+  if (loading) loading.classList.add("hidden");
+  if (grid) grid.classList.remove("hidden");
+}
+
+function showGroupsError(message) {
+  const loading = document.getElementById("groupsLoading");
+  if (!loading) return;
+  loading.innerHTML =
+    '<p class="text-red-400 text-sm text-center max-w-sm">' +
+    (message || "Couldn't load group status. Please refresh the page.") +
+    '</p>';
+}
+
+async function loadGroupsStatus() {
+  if (!savedUserCode) {
+    console.warn("[groups-debug] savedUserCode is empty, skipping status load");
+    showGroupsGrid();
+    return;
+  }
+
+  console.log("[groups-debug] calling getGroupsStatus with usercode:", JSON.stringify(savedUserCode));
+
+  try {
+    const res = await callBackend("getGroupsStatus", { usercode: savedUserCode });
+    console.log("[groups-debug] raw response:", res);
+
+    if (!res.success) {
+      console.error("getGroupsStatus failed:", res.message);
+      showGroupsError(res.message);
+      return;
+    }
+
+    GROUP_KEYS.forEach(key => {
+      const btn = document.getElementById("btn-" + key);
+      if (!btn) {
+        console.warn("[groups-debug] no button found for key:", key);
+        return;
+      }
+      const g = res.data.groups[key];
+      console.log("[groups-debug]", key, "=>", g);
+      if (!g) return;
+
+      if (g.joined) {
+        setButtonState(btn, "joined", null, key);
+      } else if (g.eligible) {
+        setButtonState(btn, "eligible", null, key);
+      } else {
+        setButtonState(btn, "ineligible", g.reason, key);
+      }
+    });
+
+    showGroupsGrid();
+  } catch (err) {
+    console.error("Failed to load groups status:", err);
+    showGroupsError("Couldn't connect to the server. Please refresh the page.");
+  }
+}
+
+async function handleJoinClick(e) {
+  const btn = e.currentTarget;
+  const groupKey = btn.dataset.group;
+  if (!groupKey || btn.disabled) return;
+
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Joining...";
+
+  try {
+    const res = await callBackend("joinGroup", { usercode: savedUserCode, group: groupKey });
+    if (res.success) {
+      setButtonState(btn, "joined", null, groupKey);
+    } else {
+      alert(res.message || "Could not join group.");
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  } catch (err) {
+    console.error("Join group failed:", err);
+    alert("Something went wrong. Please try again.");
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+// Stub — wire this up once removeFromGroup is implemented server-side
+async function handleRemoveClick(e) {
+  const btn = e.currentTarget;
+  const groupKey = btn.dataset.group;
+  const res = await callBackend("removeFromGroup", { usercode: savedUserCode, group: groupKey });
+  alert(res.message || "Remove not available yet.");
+}
+
+document.querySelectorAll(".join-btn[data-group]").forEach(btn => {
+  btn.addEventListener("click", handleJoinClick);
+});
+
+loadGroupsStatus();
 </script>
 
 </body>

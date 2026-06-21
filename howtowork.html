@@ -855,6 +855,20 @@ document.addEventListener("click", () => {
 });
 </script>
 
+<script>
+    const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
 
+if (!savedUsername || !savedPassword) {
+  window.location.href = "signin.html";
+}
+
+/* Populate navbar straight from localStorage — no extra request needed */
+document.getElementById("navUserName").innerText      = savedUsername || "Member";
+document.getElementById("dropdownUserName").innerText = savedUsername || "Member";
+document.getElementById("dropdownUserCode").innerText = "ID #" + (savedUserCode || "0000");
+
+</script>
 </body>
 </html>
