@@ -410,6 +410,86 @@ body::before{
 }
 .btn-video-del:hover{ background:#ef4444; }
 
+/* PLAYLIST VIDEO CARD VARIANTS */
+.btn-video-add{
+  flex:1;
+  background:#0f1118;
+  color:#4ade80;
+  border:1px solid #4ade80;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:12px; font-weight:600;
+  cursor:pointer; transition:0.2s ease;
+}
+.btn-video-add:hover{ background:#22c55e; color:#0a0b10; }
+.btn-video-add:disabled{ opacity:0.35; cursor:not-allowed; }
+.btn-video-remove{
+  flex:1;
+  background:#dc2626;
+  color:white;
+  border:none;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:12px; font-weight:600;
+  cursor:pointer; transition:0.2s ease;
+}
+.btn-video-remove:hover{ background:#ef4444; }
+.video-card.in-playlist{ border-color:rgba(74,222,128,0.5); }
+.video-card.in-playlist::after{
+  content:'✓ In Playlist';
+  position:absolute;
+}
+
+/* PLAYLIST PROGRESS */
+.playlist-progress-wrap{
+  background:#0f1118;
+  border:1px solid #1f2330;
+  border-radius:16px;
+  padding:18px;
+}
+.playlist-progress-bar-track{
+  width:100%; height:10px;
+  background:#1a1d27;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:10px;
+  position:relative;
+}
+.playlist-progress-bar-fill{
+  height:100%;
+  border-radius:20px;
+  transition:width 0.4s ease, background 0.3s ease;
+}
+.playlist-zone-marker{
+  position:absolute;
+  top:0; bottom:0;
+  width:2px;
+  background:rgba(255,255,255,0.4);
+}
+
+/* PLAYLIST STATUS CARD */
+.playlist-status-card{
+  background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
+  border:1px solid #242938;
+  border-radius:24px;
+  padding:24px;
+}
+.playlist-name-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(139,92,246,0.12);
+  border:1px solid rgba(139,92,246,0.3);
+  color:#a78bfa;
+  font-weight:700; font-size:15px;
+  padding:8px 16px; border-radius:14px;
+}
+.copy-btn{
+  background:#1a1d27; border:1px solid #252936;
+  color:#8a8f9e; border-radius:8px;
+  padding:4px 8px; font-size:11px; cursor:pointer;
+  transition:0.2s ease;
+}
+.copy-btn:hover{ border-color:#8b5cf6; color:white; }
+
 /* PAGINATION */
 .pagination{ display:flex; gap:6px; align-items:center; justify-content:center; }
 .page-btn{
@@ -551,6 +631,7 @@ body::before{
   <div class="flex items-center gap-3 mb-8 overflow-x-auto pb-2">
     <button class="section-tab active" id="tabPromo" onclick="switchTab('promo')">📢 Promotional Channel</button>
     <button class="section-tab" id="tabVideos" onclick="switchTab('videos')">🎬 Promotional Videos</button>
+    <button class="section-tab" id="tabPlaylist" onclick="switchTab('playlist')">📃 Promotional Playlist</button>
     <button class="section-tab" id="tabWorking" onclick="switchTab('working')">⚙️ Working Channel</button>
   </div>
 
@@ -622,6 +703,113 @@ body::before{
     </div>
   </div>
 
+  <!-- ===== PLAYLIST SECTION ===== -->
+  <div id="sectionPlaylist" class="hidden">
+    <div class="card rounded-3xl p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-2">
+        <div>
+          <h2 class="text-2xl font-bold">📃 Promotional Channel Playlist</h2>
+          <p class="text-muted text-sm mt-1">Build a playlist from your promotional videos. Total duration must be between 30 and 35 minutes.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- No promo channel at all -->
+    <div id="playlistNoChannel" class="hidden card rounded-3xl p-6">
+      <div class="empty-state">
+        <div class="empty-icon">📢</div>
+        <h2 class="text-xl font-bold mb-2">Add a Promotional Channel First</h2>
+        <p class="text-muted text-sm">You need a promotional channel with videos before you can build a playlist.</p>
+      </div>
+    </div>
+
+    <!-- STAGE 1: building selection (no playlist row yet) -->
+    <div id="playlistStageBuild" class="hidden card rounded-3xl p-6 mb-6">
+      <div class="playlist-progress-wrap mb-2">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <div class="text-sm font-semibold text-white">Selected Duration</div>
+            <div class="text-muted text-xs mt-0.5">Target: 30:00 – 35:00 minutes</div>
+          </div>
+          <div id="playlistDurationLabel" class="text-lg font-black text-white">0:00</div>
+        </div>
+        <div class="playlist-progress-bar-track">
+          <div id="playlistProgressFill" class="playlist-progress-bar-fill" style="width:0%;background:#8b5cf6;"></div>
+          <div class="playlist-zone-marker" style="left:85.7%;" title="30 min"></div>
+        </div>
+        <div id="playlistHintText" class="text-xs text-muted mt-3">Select promotional videos below until your total falls between 30 and 35 minutes.</div>
+      </div>
+      <div class="flex justify-end">
+        <button id="btnCreatePlaylist" onclick="createPlaylistRow()" disabled
+          class="bg-purple-600 hover:bg-purple-500 transition px-6 py-3 rounded-xl font-semibold text-sm opacity-40 cursor-not-allowed">
+          ✅ Create Playlist
+        </button>
+      </div>
+    </div>
+
+    <!-- STAGE 2: playlist row exists, not yet confirmed on YouTube -->
+    <div id="playlistStagePending" class="hidden playlist-status-card mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div>
+          <div class="text-xs uppercase tracking-wide text-muted font-semibold mb-2">Step 2 — Create this exact playlist on YouTube</div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="playlist-name-pill">📃 <span id="pendingPlaylistName">—</span></span>
+            <button class="copy-btn" onclick="copyPlaylistName()">📋 Copy Name</button>
+          </div>
+          <p class="text-muted text-sm mt-3 max-w-[560px]">
+            Go to your YouTube Studio and create a new playlist using <strong class="text-white">exactly</strong> this name (case-insensitive is fine, but spelling must match), then add the same videos listed below. Once done, click "Set Playlist for Group" so we can verify it.
+          </p>
+        </div>
+        <div class="flex flex-col gap-3 min-w-[200px]">
+          <button onclick="setPlaylistForGroup()" class="bg-green-700 hover:bg-green-600 transition px-5 py-3 rounded-xl font-semibold text-sm">
+            ✅ Set Playlist for Group
+          </button>
+          <button onclick="deletePlaylistFlow()" class="bg-[#0f1118] border border-red-500 text-red-400 hover:bg-red-600 hover:text-white transition px-5 py-3 rounded-xl font-semibold text-sm">
+            🗑️ Start Over
+          </button>
+        </div>
+      </div>
+      <div class="playlist-progress-wrap mt-5">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="text-sm font-semibold text-white">Selected Duration (editable until confirmed)</div>
+          <div id="playlistDurationLabel2" class="text-lg font-black text-white">0:00</div>
+        </div>
+        <div class="playlist-progress-bar-track">
+          <div id="playlistProgressFill2" class="playlist-progress-bar-fill" style="width:0%;background:#8b5cf6;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3: confirmed and ready -->
+    <div id="playlistStageReady" class="hidden playlist-status-card mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs uppercase tracking-wide font-bold mb-2" style="color:#4ade80;">✅ Playlist Ready for Group</div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="playlist-name-pill">📃 <span id="readyPlaylistName">—</span></span>
+          </div>
+          <p class="text-muted text-sm mt-3">Total duration: <strong id="readyPlaylistDuration" class="text-white">—</strong></p>
+        </div>
+        <div>
+          <button onclick="deletePlaylistFlow()" class="bg-[#0f1118] border border-red-500 text-red-400 hover:bg-red-600 hover:text-white transition px-5 py-3 rounded-xl font-semibold text-sm">
+            🗑️ Reset Playlist
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO SOURCE LIST for playlist selection -->
+    <div id="playlistVideoSection" class="hidden card rounded-3xl p-6">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+        <h3 class="text-lg font-bold">Your Promotional Videos</h3>
+        <div class="search-wrap" style="max-width:320px;">
+          <input id="playlistVideoSearch" class="search-bar" type="text" placeholder="Search videos…" oninput="renderPlaylistVideoGrid()">
+        </div>
+      </div>
+      <div id="playlistVideoContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+    </div>
+  </div>
+
   <!-- ===== WORKING SECTION ===== -->
   <div id="sectionWorking" class="hidden">
     <div class="card rounded-3xl p-6">
@@ -649,7 +837,7 @@ body::before{
 /* =========================================================
    CONFIG
 ========================================================= */
-const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxQISzJioFoKxFHnvURaZi19Zd7CtJw3cAyRGRvwz0zVv3Hr31rwz6pTCVlQFp1O7jkoA/exec";
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbzuvTuKV13vnUEbW_v7zUjsH7g0fs__3CvtdJc8nBKYiCf28glk_r9r1jxMyX_f8BljsQ/exec";
 
 /* =========================================================
    SESSION — load directly from what login already saved.
@@ -680,6 +868,13 @@ let currentPage     = 1;
 const VIDEOS_PER_PAGE = 20;
 let promoChannelId  = null;     // store the promo channel's YouTube channelId
 
+// Playlist state
+let playlistRecord       = null;   // { PlaylistId, PlaylistName, HasPlaylistReady, PlaylistSize } or null
+let playlistSelectedUrls = new Set(); // urls currently in the playlist-videos sheet
+let playlistTotalSeconds = 0;
+const PLAYLIST_MIN_SECONDS = 30 * 60;
+const PLAYLIST_MAX_SECONDS = 35 * 60;
+
 /* =========================================================
    CHANNEL TYPES
 ========================================================= */
@@ -700,11 +895,12 @@ const CHANNEL_TYPES = [
 ========================================================= */
 function switchTab(tab) {
   currentTab = tab;
-  ['promo','videos','working'].forEach(t => {
+  ['promo','videos','playlist','working'].forEach(t => {
     document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
     document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
   });
   if (tab === 'videos') renderVideoPage();
+  if (tab === 'playlist') renderPlaylistTab();
 }
 
 /* =========================================================
@@ -944,6 +1140,7 @@ function setVideos(videos) {
   currentPage = 1;
   updateVideoStats();
   if (currentTab === 'videos') renderVideoPage();
+  if (currentTab === 'playlist') renderPlaylistVideoGrid();
 }
 
 function updateVideoStats() {
@@ -1183,6 +1380,264 @@ async function deleteSingleVideo(videoId) {
 }
 
 /* =========================================================
+   PLAYLIST TAB — RENDER + LOGIC
+========================================================= */
+function secondsToLabel(totalSeconds) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+async function renderPlaylistTab() {
+  // No promo channel at all
+  document.getElementById('playlistNoChannel').classList.toggle('hidden', !!promoChannelId);
+  document.getElementById('playlistStageBuild').classList.add('hidden');
+  document.getElementById('playlistStagePending').classList.add('hidden');
+  document.getElementById('playlistStageReady').classList.add('hidden');
+  document.getElementById('playlistVideoSection').classList.add('hidden');
+
+  if (!promoChannelId) return;
+
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=getMyPlaylist`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      Swal.fire({ icon:'error', title:'Error', text:d.message || 'Unable to load playlist data.' });
+      return;
+    }
+
+    playlistRecord       = d.playlist || null;
+    playlistSelectedUrls = new Set(d.selectedVideoUrls || []);
+    playlistTotalSeconds = d.totalSeconds || 0;
+
+    const isReady = playlistRecord && String(playlistRecord.HasPlaylistReady).toLowerCase() === 'yes';
+
+    if (!playlistRecord) {
+      // STAGE 1 — building selection
+      document.getElementById('playlistStageBuild').classList.remove('hidden');
+      document.getElementById('playlistVideoSection').classList.remove('hidden');
+      updatePlaylistProgressUI();
+    } else if (!isReady) {
+      // STAGE 2 — created, pending YouTube confirmation
+      document.getElementById('playlistStagePending').classList.remove('hidden');
+      document.getElementById('playlistVideoSection').classList.remove('hidden');
+      document.getElementById('pendingPlaylistName').innerText = playlistRecord.PlaylistName;
+      updatePlaylistProgressUI();
+    } else {
+      // STAGE 3 — confirmed ready
+      document.getElementById('playlistStageReady').classList.remove('hidden');
+      document.getElementById('readyPlaylistName').innerText = playlistRecord.PlaylistName;
+      document.getElementById('readyPlaylistDuration').innerText = secondsToLabel(playlistRecord.PlaylistSize) + ' min';
+    }
+
+    renderPlaylistVideoGrid();
+  } catch (err) {
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to load playlist: ' + err.message });
+  }
+}
+
+function updatePlaylistProgressUI() {
+  const pct = Math.min(100, (playlistTotalSeconds / PLAYLIST_MAX_SECONDS) * 100);
+  const inRange = playlistTotalSeconds >= PLAYLIST_MIN_SECONDS && playlistTotalSeconds <= PLAYLIST_MAX_SECONDS;
+  const overMax = playlistTotalSeconds > PLAYLIST_MAX_SECONDS;
+  const color = overMax ? '#ef4444' : (inRange ? '#4ade80' : '#8b5cf6');
+
+  ['playlistDurationLabel','playlistDurationLabel2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = secondsToLabel(playlistTotalSeconds);
+  });
+  ['playlistProgressFill','playlistProgressFill2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.width = pct + '%'; el.style.background = color; }
+  });
+
+  const hint = document.getElementById('playlistHintText');
+  if (hint) {
+    if (overMax) {
+      hint.innerHTML = `<span style="color:#f87171;">⚠️ Too long! Remove some videos — must be 35:00 or under.</span>`;
+    } else if (inRange) {
+      hint.innerHTML = `<span style="color:#4ade80;">✅ Perfect! You're within the 30–35 minute range. Click "Create Playlist" below.</span>`;
+    } else {
+      const remaining = PLAYLIST_MIN_SECONDS - playlistTotalSeconds;
+      hint.innerText = `Select more videos. You need at least ${secondsToLabel(remaining)} more to reach 30 minutes.`;
+    }
+  }
+
+  const btn = document.getElementById('btnCreatePlaylist');
+  if (btn) {
+    btn.disabled = !inRange;
+    btn.classList.toggle('opacity-40', !inRange);
+    btn.classList.toggle('cursor-not-allowed', !inRange);
+  }
+}
+
+function renderPlaylistVideoGrid() {
+  const container = document.getElementById('playlistVideoContainer');
+  if (!container) return;
+
+  const isLocked = playlistRecord && String(playlistRecord.HasPlaylistReady).toLowerCase() === 'yes';
+  const q = (document.getElementById('playlistVideoSearch')?.value || '').toLowerCase().trim();
+
+  const activeVideos = allVideos.filter(v => (v.VideoStatus||'').toLowerCase() !== 'deleted');
+  const list = q ? activeVideos.filter(v => (v.VideoTitle||'').toLowerCase().includes(q)) : activeVideos;
+
+  if (list.length === 0) {
+    container.innerHTML = emptyState('🎬','No Videos Found', allVideos.length === 0
+      ? 'Add your promotional channel videos in the Promotional Videos tab first.'
+      : 'No videos match your search.');
+    return;
+  }
+
+  container.innerHTML = list.map((v, idx) => playlistVideoCardHTML(v, idx, isLocked)).join('');
+}
+
+function playlistVideoCardHTML(v, idx, isLocked) {
+  const thumb    = v.VideoThumbnail || 'https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb';
+  const title    = v.VideoTitle || 'Untitled Video';
+  const duration = v.VideoDurationText || '—';
+  const url      = v.VideoUrl || '#';
+  const seconds  = Number(v.VideoDurationSeconds) || 0;
+  const inPlaylist = playlistSelectedUrls.has(url);
+
+  const actionHTML = isLocked
+    ? `<span class="video-status-badge ${inPlaylist ? 'status-active' : 'status-deleted'}" style="width:100%;text-align:center;padding:8px;">${inPlaylist ? '✅ In Playlist' : '—'}</span>`
+    : inPlaylist
+      ? `<button class="btn-video-remove" onclick="removeFromPlaylist('${url}')">➖ Remove</button>`
+      : `<button class="btn-video-add" onclick="addToPlaylist('${url}', ${seconds})">➕ Add</button>`;
+
+  return `<div class="video-card${inPlaylist ? ' in-playlist' : ''}" style="animation-delay:${(idx%24)*0.03}s">
+    <a href="${url}" target="_blank" class="video-thumb-wrap">
+      <img src="${thumb}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb'">
+      <span class="video-duration">${duration}</span>
+    </a>
+    <div class="video-info">
+      <div class="video-title" title="${title}">${title}</div>
+      <div class="video-meta">
+        ${inPlaylist ? `<span class="video-status-badge status-active">✅ Selected</span>` : ''}
+      </div>
+    </div>
+    <div class="video-actions">${actionHTML}</div>
+  </div>`;
+}
+
+async function addToPlaylist(videoUrl, videoSeconds) {
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=addVideoToPlaylist`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&videoUrl=${encodeURIComponent(videoUrl)}`
+      + `&videoSeconds=${encodeURIComponent(videoSeconds)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    playlistSelectedUrls.add(videoUrl);
+    playlistTotalSeconds = d.totalSeconds;
+    updatePlaylistProgressUI();
+    renderPlaylistVideoGrid();
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to add video' }); }
+}
+
+async function removeFromPlaylist(videoUrl) {
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=removeVideoFromPlaylist`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&videoUrl=${encodeURIComponent(videoUrl)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    playlistSelectedUrls.delete(videoUrl);
+    playlistTotalSeconds = d.totalSeconds;
+    updatePlaylistProgressUI();
+    renderPlaylistVideoGrid();
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to remove video' }); }
+}
+
+async function createPlaylistRow() {
+  if (playlistTotalSeconds < PLAYLIST_MIN_SECONDS || playlistTotalSeconds > PLAYLIST_MAX_SECONDS) return;
+  Swal.fire({ title:'Creating playlist…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=createPlaylistRow`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({
+      icon:'success',
+      title:'Playlist Created!',
+      html:`Your playlist name is <strong style="color:#a78bfa">${d.playlistName}</strong>.<br><br>Now create a YouTube playlist with this exact name and add these same videos.`,
+      confirmButtonText:'Got it'
+    });
+    renderPlaylistTab();
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to create playlist' }); }
+}
+
+function copyPlaylistName() {
+  if (!playlistRecord) return;
+  navigator.clipboard.writeText(playlistRecord.PlaylistName).then(() => {
+    Swal.fire({ icon:'success', title:'Copied!', timer:1000, showConfirmButton:false });
+  });
+}
+
+async function setPlaylistForGroup() {
+  if (!promoChannelId) return;
+  Swal.fire({
+    title:'🔍 Verifying on YouTube…',
+    text:'Searching your channel for the matching playlist and checking its videos.',
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setPlaylistForGroup`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(promoChannelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      Swal.fire({ icon:'error', title:'Not Ready Yet', text:d.message });
+      renderPlaylistTab();
+      return;
+    }
+    Swal.fire({ icon:'success', title:'Playlist Confirmed!', text:d.message, timer:2200, showConfirmButton:false });
+    setTimeout(() => renderPlaylistTab(), 2300);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to verify playlist' }); }
+}
+
+async function deletePlaylistFlow() {
+  const confirm = await Swal.fire({
+    icon:'warning', title:'Reset Playlist?',
+    text:'This will remove your playlist setup and selected videos so you can start over.',
+    showCancelButton:true,
+    confirmButtonColor:'#dc2626',
+    confirmButtonText:'Yes, Reset',
+    cancelButtonText:'Cancel'
+  });
+  if (!confirm.isConfirmed) return;
+  Swal.fire({ title:'Resetting…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=deletePlaylist`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Reset!', timer:1200, showConfirmButton:false });
+    setTimeout(() => renderPlaylistTab(), 1300);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to reset playlist' }); }
+}
+
+/* =========================================================
    ADD CHANNEL MODAL
 ========================================================= */
 function openAddModal(type) {
@@ -1349,8 +1804,8 @@ async function updateWorkingChannelYT(channelId) {
 /* =========================================================
    DELETE CHANNEL
    For the promo channel, the backend now also cascades and
-   removes every video row tied to that channel — so the
-   confirmation copy mentions this.
+   removes every video row AND any playlist data tied to that
+   channel — so the confirmation copy mentions this.
 ========================================================= */
 async function deleteChannel(type, channelId) {
   const isPromo = type !== 'working';
@@ -1358,7 +1813,7 @@ async function deleteChannel(type, channelId) {
     icon:'warning',
     title: isPromo ? 'Delete Promotional Channel?' : 'Delete Working Channel?',
     text: isPromo
-      ? 'This cannot be undone. All videos linked to this channel will also be permanently deleted.'
+      ? 'This cannot be undone. All videos and any playlist linked to this channel will also be permanently deleted.'
       : 'This cannot be undone.',
     showCancelButton:true,
     confirmButtonColor:'#dc2626',
