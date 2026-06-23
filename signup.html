@@ -3,818 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>EXSUB Group - Sign Up</title>
-
 <link rel="icon" href="images/logo.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <style>
-.rounded-popup {
-  border-radius: 15px; /* Adjust the px value for more or less rounding */
-}
-
-select{
-  appearance:none;
-  -webkit-appearance:none;
-  -moz-appearance:none;
-}
-
-:root{
-  --bg:#050508;
-  --card:#12141c;
-  --border:#1e212c;
-  --purple:#7c3aed;
-}
-
-*{
-  font-family:Inter,sans-serif;
-}
-
-body{
-  background:var(--bg);
-  color:white;
-  overflow-x:hidden;
-}
-
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at top, rgba(124,58,237,.18), transparent 35%),
-    radial-gradient(circle at bottom, rgba(124,58,237,.12), transparent 40%);
-  pointer-events:none;
-}
-
-.glass-nav{
-  background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.06);
-}
-
-.card{
-  background:linear-gradient(180deg,#151821 0%,#101219 100%);
-  border:1px solid var(--border);
-}
-
-.input{
-  width:100%;
-  padding:13px 15px;
-  border-radius:14px;
-  background:#0f1117;
-  border:1px solid #1e212c;
-  color:white;
-  outline:none;
-  transition:.2s;
-}
-
-.input:focus{
-  border-color:#7c3aed;
-  box-shadow:0 0 0 3px rgba(124,58,237,.15);
-}
-
-.btn-purple{
-  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
-  box-shadow:0 0 25px rgba(124,58,237,.35);
-}
-
-.btn-purple:hover{
-  transform:translateY(-1px);
-}
-
-.text-muted{
-  color:#8a8f9e;
-}
-
+.rounded-popup{border-radius:15px}
+select{appearance:none;-webkit-appearance:none;-moz-appearance:none}
+:root{--bg:#050508;--card:#12141c;--border:#1e212c;--purple:#7c3aed}
+*{font-family:Inter,sans-serif}
+body{background:var(--bg);color:white;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at top,rgba(124,58,237,.18),transparent 35%),radial-gradient(circle at bottom,rgba(124,58,237,.12),transparent 40%);pointer-events:none}
+.glass-nav{background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
+.card{background:linear-gradient(180deg,#151821 0%,#101219 100%);border:1px solid var(--border)}
+.input{width:100%;padding:13px 15px;border-radius:14px;background:#0f1117;border:1px solid #1e212c;color:white;outline:none;transition:.2s}
+.input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.btn-purple{background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);box-shadow:0 0 25px rgba(124,58,237,.35)}
+.btn-purple:hover{transform:translateY(-1px)}
+.text-muted{color:#8a8f9e}
+.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:8px}
+.avatar-option{width:52px;height:52px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;object-fit:cover;background:#1e212c}
+.avatar-option:hover{border-color:#7c3aed;transform:scale(1.08)}
+.avatar-option.selected{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(124,58,237,.25)}
+.avatar-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid #7c3aed;background:#1e212c;flex-shrink:0}
+.upload-label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:#1a1d27;border:1px dashed #3a3f52;color:#8a8f9e;font-size:12px;padding:7px 14px;border-radius:10px;transition:.2s}
+.upload-label:hover{border-color:#7c3aed;color:white}
+.tab-btn{flex:1;padding:8px 0;font-size:13px;border-radius:10px;font-weight:500;transition:.2s;cursor:pointer;color:#8a8f9e;background:transparent;border:none}
+.tab-btn.active{background:#7c3aed;color:white}
 </style>
 </head>
-
 <body>
 
 <!-- NAVBAR -->
 <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-
   <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
-
-    <!-- Logo -->
     <a href="/" class="flex items-center gap-2">
-
       <img src="images/logo.svg" class="w-6 h-6 object-contain">
-
-      <span class="font-semibold text-[17px]">
-        EXSUB Group
-      </span>
-
+      <span class="font-semibold text-[17px]">EXSUB Group</span>
     </a>
-
-    <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-7 text-[13px]">
-
-      <a href="/Members" class="hover:text-gray-200 transition">
-        Members
-      </a>
-
-      <a href="/HowtoWork" class="hover:text-gray-200 transition">
-        How to Work
-      </a>
-
-      <a href="/ExsubExtension" class="hover:text-gray-200 transition">
-        Browser Extension
-      </a>
-
+      <a href="/Members" class="hover:text-gray-200 transition">Members</a>
+      <a href="/HowtoWork" class="hover:text-gray-200 transition">How to Work</a>
+      <a href="/ExsubExtension" class="hover:text-gray-200 transition">Browser Extension</a>
     </div>
-
-    <!-- Right Side -->
     <div class="flex items-center gap-3">
-
-      <a href="signin.html"
-         class="hidden sm:block text-[13px] hover:text-gray-200 transition">
-
-        Log In
-
-      </a>
-
-      <a href="signup.html"
-         class="bg-white text-black text-[13px] font-medium px-4 py-[8px] rounded-full hover:bg-gray-100 transition">
-
-        Create Account
-
-      </a>
-
-      <!-- Mobile Button -->
+      <a href="signin.html" class="hidden sm:block text-[13px] hover:text-gray-200 transition">Log In</a>
+      <a href="signup.html" class="bg-white text-black text-[13px] font-medium px-4 py-[8px] rounded-full hover:bg-gray-100 transition">Create Account</a>
       <button id="menuBtn" class="md:hidden text-white">
-
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="w-6 h-6"
-             fill="none"
-             viewBox="0 0 24 24"
-             stroke="currentColor">
-
-          <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"/>
-
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
-
       </button>
-
     </div>
-
   </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobileMenu"
-       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-5 flex flex-col gap-5 text-[14px]">
-
+  <div id="mobileMenu" class="hidden md:hidden mt-2 glass-nav rounded-2xl p-5 flex flex-col gap-5 text-[14px]">
     <a href="Members.html">Members</a>
-
     <a href="HowtoWork.html">How to Work</a>
-
     <a href="ExsubExtension.html">Browser Extension</a>
-
     <div class="border-t border-white/10 pt-4 flex flex-col gap-3">
-
-      <a href="signup.html"
-         class="btn-purple text-center py-3 rounded-full font-medium">
-
-        Create Account
-
-      </a>
-
-      <a href="signin.html"
-         class="bg-white text-center text-black py-3 rounded-full font-medium">
-
-        Login
-
-      </a>
-
+      <a href="signup.html" class="btn-purple text-center py-3 rounded-full font-medium">Create Account</a>
+      <a href="signin.html" class="bg-white text-center text-black py-3 rounded-full font-medium">Login</a>
     </div>
-
   </div>
-
 </nav>
-
 
 <!-- SIGNUP SECTION -->
 <section class="min-h-screen flex items-center justify-center px-4 pt-32 pb-14 relative z-10">
-
   <div class="w-full max-w-[470px]">
-
-    <!-- Heading -->
     <div class="text-center mb-8">
-
-      <img src="images/logo.svg"
-           class="w-14 h-14 mx-auto mb-5">
-
-      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight">
-        Create Your Account
-      </h1>
-
+      <img src="images/logo.svg" class="w-14 h-14 mx-auto mb-5">
+      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight">Create Your Account</h1>
       <p class="text-muted text-[14px] mt-3 max-w-[350px] mx-auto leading-relaxed">
         Join EXSUB Group and start growing your YouTube channel with real engagement and active creators.
       </p>
-
     </div>
 
-    <!-- Card -->
     <div class="card rounded-[28px] p-6 sm:p-8">
-
       <form id="signupForm" class="space-y-5">
+
+        <!-- PROFILE PICTURE -->
+        <div>
+          <label class="text-[13px] text-gray-300 block mb-3">Profile Picture</label>
+          <div class="flex items-center gap-4 mb-4">
+            <img id="avatarPreview" class="avatar-preview" src="" alt="Avatar">
+            <div>
+              <p class="text-[12px] text-gray-300 font-medium mb-2">Selected avatar</p>
+              <label class="upload-label" for="customImageInput">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4"/>
+                </svg>
+                Upload Image
+              </label>
+              <input type="file" id="customImageInput" accept="image/*" class="hidden">
+              <p class="text-[10px] text-muted mt-1">JPG, PNG, WEBP — max 2MB</p>
+            </div>
+          </div>
+          <div class="flex gap-1 bg-[#0f1117] p-1 rounded-[12px] mb-3">
+            <button type="button" class="tab-btn active" id="tabAvatars">Choose Avatar</button>
+            <button type="button" class="tab-btn" id="tabUpload">Uploaded</button>
+          </div>
+          <div id="avatarGridWrap">
+            <div class="avatar-grid" id="avatarGrid"></div>
+          </div>
+          <div id="uploadedPanel" class="hidden text-center py-5"></div>
+        </div>
 
         <!-- Username -->
         <div>
-
-          <label class="text-[13px] text-gray-300 block mb-2">
-            Username
-          </label>
-
-          <input type="text"
-                 id="username"
-                 maxlength="20"
-                 placeholder="Enter username"
-                 class="input"
-                 required>
-
-          <p class="text-[11px] text-muted mt-2">
-            Username must be unique, without spaces and less than 20 characters.
-          </p>
-
+          <label class="text-[13px] text-gray-300 block mb-2">Username</label>
+          <input type="text" id="username" maxlength="7" placeholder="Enter username" class="input" required>
+          <p class="text-[11px] text-muted mt-2">Must be unique, no spaces, and 5–7 characters.</p>
         </div>
 
         <!-- Password -->
-        <!-- Password -->
-<div>
-
-  <label class="text-[13px] text-gray-300 block mb-2">
-    Password
-  </label>
-
-  <div class="relative">
-
-    <input type="password"
-           id="password"
-           maxlength="20"
-           placeholder="Create password"
-           class="input pr-12"
-           required>
-
-    <!-- SHOW / HIDE BUTTON -->
-    <button type="button"
-            id="togglePassword"
-            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition">
-
-      <!-- EYE ICON -->
-      <svg id="eyeOpen"
-           xmlns="http://www.w3.org/2000/svg"
-           width="20"
-           height="20"
-           fill="none"
-           viewBox="0 0 24 24"
-           stroke="currentColor">
-
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5
-                 c4.478 0 8.268 2.943 9.542 7
-                 -1.274 4.057-5.064 7-9.542 7
-                 -4.477 0-8.268-2.943-9.542-7z"/>
-
-      </svg>
-
-      <!-- EYE OFF ICON -->
-      <svg id="eyeClose"
-           xmlns="http://www.w3.org/2000/svg"
-           width="20"
-           height="20"
-           fill="none"
-           viewBox="0 0 24 24"
-           stroke="currentColor"
-           class="hidden">
-
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13.875 18.825A10.05 10.05 0 0112 19
-                 c-4.478 0-8.268-2.943-9.542-7
-                 a9.956 9.956 0 012.293-3.95"/>
-
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6.223 6.223A9.953 9.953 0 0112 5
-                 c4.478 0 8.268 2.943 9.542 7
-                 a9.97 9.97 0 01-4.132 5.411"/>
-
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 12a3 3 0 11-6 0"/>
-
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 3l18 18"/>
-
-      </svg>
-
-    </button>
-
-  </div>
-
-  <p class="text-[11px] text-muted mt-2">
-    Password must be between 7 to 20 characters and cannot contain spaces.
-  </p>
-
-</div>
+        <div>
+          <label class="text-[13px] text-gray-300 block mb-2">Password</label>
+          <div class="relative">
+            <input type="password" id="password" maxlength="7" placeholder="Create password" class="input pr-12" required>
+            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition">
+              <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg id="eyeClose" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hidden">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.223 6.223A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.132 5.411"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"/>
+              </svg>
+            </button>
+          </div>
+          <p class="text-[11px] text-muted mt-2">Must be 5–7 characters and cannot contain spaces.</p>
+        </div>
 
         <!-- Country -->
         <div>
-
-          <label class="text-[13px] text-gray-300 block mb-2">
-            Country
-          </label>
-
+          <label class="text-[13px] text-gray-300 block mb-2">Country</label>
           <div class="relative">
-
             <select id="country" class="input pr-12" required>
-
               <option value="">Select Country</option>
-
-              <option>Pakistan</option>
-              <option>India</option>
-              <option>Bangladesh</option>
-              <option>United States</option>
-              <option>United Kingdom</option>
-              <option>Canada</option>
-              <option>Australia</option>
-              <option>Germany</option>
-              <option>France</option>
-              <option>Saudi Arabia</option>
-              <option>UAE</option>
-              <option>Turkey</option>
-              <option>Indonesia</option>
-              <option>Malaysia</option>
-              <option>Brazil</option>
-
+              <option>Pakistan</option><option>India</option><option>Bangladesh</option>
+              <option>United States</option><option>United Kingdom</option><option>Canada</option>
+              <option>Australia</option><option>Germany</option><option>France</option>
+              <option>Saudi Arabia</option><option>UAE</option><option>Turkey</option>
+              <option>Indonesia</option><option>Malaysia</option><option>Brazil</option>
             </select>
-
-            <!-- Arrow -->
             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   width="16"
-                   height="16"
-                   fill="none"
-                   viewBox="0 0 24 24"
-                   stroke="white"
-                   stroke-width="2">
-
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M19 9l-7 7-7-7"/>
-
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
               </svg>
-
             </div>
-
           </div>
-
         </div>
 
-        <!-- Button -->
-        <button type="submit"
-                id="submitBtn"
-                class="btn-purple w-full text-white py-[13px] rounded-[14px] font-medium transition">
-
+        <button type="submit" id="submitBtn" class="btn-purple w-full text-white py-[13px] rounded-[14px] font-medium transition">
           Create Account
-
         </button>
-
       </form>
 
-      <!-- Bottom -->
       <div class="text-center mt-6">
-
         <p class="text-[13px] text-muted">
-
           Already have an account?
-
-          <a href="/signin.html"
-             class="text-[#8b5cf6] hover:text-[#a78bfa] transition">
-
-            Log In
-
-          </a>
-
+          <a href="/signin.html" class="text-[#8b5cf6] hover:text-[#a78bfa] transition">Log In</a>
         </p>
-
       </div>
-
     </div>
-
   </div>
-
 </section>
 
 <!-- HELP BOX -->
 <div class="mt-6 px-4 pb-10">
-
   <div class="max-w-[470px] mx-auto">
-
     <div class="card rounded-[24px] p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-
-      <!-- Left -->
       <div class="flex items-start gap-4">
-
         <div class="w-14 h-14 rounded-2xl bg-green-500/15 flex items-center justify-center shrink-0">
-
-          <!-- WhatsApp Icon -->
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="28"
-               height="28"
-               viewBox="0 0 24 24"
-               fill="#22c55e">
-
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#22c55e">
             <path d="M20.52 3.48A11.8 11.8 0 0012.04 0C5.52 0 .2 5.32.2 11.84c0 2.08.56 4.12 1.6 5.92L0 24l6.44-1.68a11.83 11.83 0 005.6 1.44h.04c6.52 0 11.84-5.32 11.84-11.84 0-3.16-1.24-6.12-3.4-8.44z"/>
-
           </svg>
-
         </div>
-
         <div>
-
-          <h3 class="text-[17px] font-semibold">
-            Need Help Creating Your Account?
-          </h3>
-
+          <h3 class="text-[17px] font-semibold">Need Help Creating Your Account?</h3>
           <p class="text-muted text-[13px] mt-2 leading-relaxed max-w-[420px]">
-            If you face any problem while creating your EXSUB account,
-            contact our support team on WhatsApp for quick help.
+            If you face any problem while creating your EXSUB account, contact our support team on WhatsApp for quick help.
           </p>
-
         </div>
-
       </div>
-
-      <!-- Buttons -->
       <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-
-        <a href="https://wa.me/923118937287"
-           target="_blank"
-           class="bg-[#22c55e] hover:bg-[#16a34a] transition text-white text-center px-5 py-3 rounded-full text-[13px] font-medium">
-
+        <a href="https://wa.me/923118937287" target="_blank" class="bg-[#22c55e] hover:bg-[#16a34a] transition text-white text-center px-5 py-3 rounded-full text-[13px] font-medium">
           WhatsApp Support
-
         </a>
-
       </div>
-
     </div>
-
   </div>
-
 </div>
 
-
 <script>
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyG9yANoRV5S93IBnk_hqfPUnwPFyGcpleByfD1qcVjldztWQycUrpPxdELe3AbUuCHPQ/exec";
 
-const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycby_BP4T85ZSNF5erfIWbpMdgwgltihqmYvr-wxSR1KyIeHqNQzKjwMG4PejzUNhBx5WgQ/exec";
+/* ===== AVATARS ===== */
+const SEEDS = ["alpha","bravo","charlie","delta","echo","foxtrot","golf","hotel","india","juliet"];
+const avUrl = s => `https://api.dicebear.com/8.x/adventurer/svg?seed=${s}&backgroundColor=1e212c`;
 
-const signupForm =
-document.getElementById("signupForm");
+let selectedAvatarUrl = avUrl(SEEDS[0]);
+let customImageBase64 = null;
+let isUsingCustom = false;
 
-const submitBtn =
-document.getElementById("submitBtn");
+const avatarPreview  = document.getElementById("avatarPreview");
+const avatarGrid     = document.getElementById("avatarGrid");
+const customInput    = document.getElementById("customImageInput");
+const tabAvatars     = document.getElementById("tabAvatars");
+const tabUpload      = document.getElementById("tabUpload");
+const avatarGridWrap = document.getElementById("avatarGridWrap");
+const uploadedPanel  = document.getElementById("uploadedPanel");
 
-const usernameInput =
-document.getElementById("username");
+SEEDS.forEach((seed, idx) => {
+  const img = document.createElement("img");
+  img.src = avUrl(seed);
+  img.className = "avatar-option" + (idx === 0 ? " selected" : "");
+  img.addEventListener("click", () => {
+    document.querySelectorAll(".avatar-option").forEach(el => el.classList.remove("selected"));
+    img.classList.add("selected");
+    selectedAvatarUrl = avUrl(seed);
+    isUsingCustom = false;
+    customImageBase64 = null;
+    avatarPreview.src = selectedAvatarUrl;
+  });
+  avatarGrid.appendChild(img);
+});
+avatarPreview.src = selectedAvatarUrl;
 
-const passwordInput =
-document.getElementById("password");
-
-
-// REMOVE SPACES LIVE
-usernameInput.addEventListener("input", () => {
-
-  usernameInput.value =
-    usernameInput.value
-      .replace(/\s/g, "")
-      .slice(0, 20);
-
+tabAvatars.addEventListener("click", () => {
+  tabAvatars.classList.add("active"); tabUpload.classList.remove("active");
+  avatarGridWrap.classList.remove("hidden"); uploadedPanel.classList.add("hidden");
+});
+tabUpload.addEventListener("click", () => {
+  tabUpload.classList.add("active"); tabAvatars.classList.remove("active");
+  avatarGridWrap.classList.add("hidden"); uploadedPanel.classList.remove("hidden");
+  uploadedPanel.innerHTML = customImageBase64
+    ? `<img src="${customImageBase64}" class="w-20 h-20 rounded-full object-cover mx-auto border-2 border-purple-500 mb-2"><p class="text-[11px] text-green-400">Custom image selected ✓</p>`
+    : `<p class="text-[12px] text-muted">No image uploaded yet. Use the button above.</p>`;
 });
 
-passwordInput.addEventListener("input", () => {
-
-  passwordInput.value =
-    passwordInput.value
-      .replace(/\s/g, "")
-      .slice(0, 20);
-
+customInput.addEventListener("change", () => {
+  const file = customInput.files[0];
+  if (!file) return;
+  if (file.size > 2*1024*1024) {
+    return Swal.fire({icon:"error",title:"Image Too Large",text:"Please upload an image under 2MB",background:"#12141c",color:"#fff",confirmButtonColor:"#7c3aed",customClass:{popup:"rounded-popup"}});
+  }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    customImageBase64 = ev.target.result;
+    isUsingCustom = true;
+    avatarPreview.src = customImageBase64;
+    document.querySelectorAll(".avatar-option").forEach(el => el.classList.remove("selected"));
+    tabUpload.click();
+  };
+  reader.readAsDataURL(file);
 });
 
+/* ===== FORM ===== */
+const signupForm    = document.getElementById("signupForm");
+const submitBtn     = document.getElementById("submitBtn");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
 
-// SUBMIT
-signupForm.addEventListener("submit", async (e) => {
+usernameInput.addEventListener("input", () => { usernameInput.value = usernameInput.value.replace(/\s/g,"").slice(0,7); });
+passwordInput.addEventListener("input", () => { passwordInput.value = passwordInput.value.replace(/\s/g,"").slice(0,7); });
 
+signupForm.addEventListener("submit", async e => {
   e.preventDefault();
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+  const country  = document.getElementById("country").value;
 
-  const username =
-    usernameInput.value.trim();
+  const err = (title,text) => Swal.fire({icon:"error",title,text,background:"#12141c",color:"#fff",confirmButtonColor:"#7c3aed",customClass:{popup:"rounded-popup"}});
 
-  const password =
-    passwordInput.value.trim();
+  if (username.length < 5) return err("Invalid Username","Username must be at least 5 characters");
+  if (username.length > 7) return err("Invalid Username","Username cannot be more than 7 characters");
+  if (username.includes(" ")) return err("Invalid Username","Username cannot contain spaces");
+  if (password.length < 5) return err("Weak Password","Password must be at least 5 characters");
+  if (password.length > 7) return err("Weak Password","Password cannot be more than 7 characters");
+  if (password.includes(" ")) return err("Weak Password","Password cannot contain spaces");
+  if (!country) return err("Country Required","Please select your country");
 
-  const country =
-    document.getElementById("country").value;
-
-
-  // USERNAME VALIDATION
-  if (username.length < 7) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Username",
-      text: "Username must be at least 7 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if (username.length > 20) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Username",
-      text: "Username cannot be more than 20 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if (username.includes(" ")) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Username",
-      text: "Username cannot contain spaces",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-
-  // PASSWORD VALIDATION
-  if (password.length < 7) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Weak Password",
-      text: "Password must be at least 7 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if (password.length > 20) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Weak Password",
-      text: "Password cannot be more than 20 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if (password.includes(" ")) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Weak Password",
-      text: "Password cannot contain spaces",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
+  const profilePicture = isUsingCustom && customImageBase64 ? customImageBase64 : selectedAvatarUrl;
 
   submitBtn.innerText = "Creating...";
   submitBtn.disabled = true;
 
-
   try {
-
-    const response = await fetch(WEB_APP_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        username,
-        password,
-        country
-      })
-    });
-
-    const data = await response.json();
-
-
+    const res  = await fetch(WEB_APP_URL, { method:"POST", body: JSON.stringify({username,password,country,profilePicture}) });
+    const data = await res.json();
     if (data.status === "success") {
-
-      // SAVE LOGIN
-      localStorage.setItem(
-        "username",
-        data.username
-      );
-
-      localStorage.setItem(
-        "usercode",
-        data.usercode
-      );
-
-      Swal.fire({
-        icon: "success",
-        title: "Account Created",
-        text: "Welcome to EXSUB Group",
-        background: "#12141c",
-        color: "#fff",
-        confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-      }).then(() => {
-
-        window.location.href = "Profile.html";
-
-      });
-
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("usercode", data.usercode);
+      Swal.fire({icon:"success",title:"Account Created",text:"Welcome to EXSUB Group",background:"#12141c",color:"#fff",confirmButtonColor:"#7c3aed",customClass:{popup:"rounded-popup"}})
+        .then(() => { window.location.href = "Profile.html"; });
     } else {
-
-      Swal.fire({
-        icon: "error",
-        title: "Signup Failed",
-        text: data.message,
-        background: "#12141c",
-        color: "#fff",
-        confirmButtonColor: "#7c3aed", 
-        customClass: { popup: "rounded-popup"}
-      });
-
+      err("Signup Failed", data.message);
     }
-
-  } catch (err) {
-
-    Swal.fire({
-      icon: "error",
-      title: "Server Error",
-      text: "Something went wrong",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
+  } catch(ex) {
+    err("Server Error","Something went wrong");
   }
-
 
   submitBtn.innerText = "Create Account";
   submitBtn.disabled = false;
-
 });
 
-
-// MOBILE MENU
-const menuBtn =
-document.getElementById("menuBtn");
-
-const mobileMenu =
-document.getElementById("mobileMenu");
-
-menuBtn.addEventListener("click", () => {
-
-  mobileMenu.classList.toggle("hidden");
-
+/* ===== MOBILE MENU ===== */
+document.getElementById("menuBtn").addEventListener("click", () => {
+  document.getElementById("mobileMenu").classList.toggle("hidden");
 });
 
-</script>
-
-<script>
-
-// PASSWORD SHOW / HIDE
-
-const togglePassword =
-document.getElementById("togglePassword");
-
-const eyeOpen =
-document.getElementById("eyeOpen");
-
-const eyeClose =
-document.getElementById("eyeClose");
-
+/* ===== PASSWORD TOGGLE ===== */
+const togglePassword = document.getElementById("togglePassword");
+const eyeOpen  = document.getElementById("eyeOpen");
+const eyeClose = document.getElementById("eyeClose");
 togglePassword.addEventListener("click", () => {
-
   if (passwordInput.type === "password") {
-
-    passwordInput.type = "text";
-
-    eyeOpen.classList.add("hidden");
-    eyeClose.classList.remove("hidden");
-
+    passwordInput.type = "text"; eyeOpen.classList.add("hidden"); eyeClose.classList.remove("hidden");
   } else {
-
-    passwordInput.type = "password";
-
-    eyeOpen.classList.remove("hidden");
-    eyeClose.classList.add("hidden");
-
+    passwordInput.type = "password"; eyeOpen.classList.remove("hidden"); eyeClose.classList.add("hidden");
   }
-
 });
 
-</script>
-
-<script>
-
-// RANDOM USERNAME + PASSWORD
-
-function randomString(length) {
-
-  const chars =
-    "abcdefghijklmnopqrstuvwxyz0123456789";
-
-  let result = "";
-
-  for (let i = 0; i < length; i++) {
-
-    result +=
-      chars.charAt(
-        Math.floor(Math.random() * chars.length)
-      );
-
-  }
-
-  return result;
-
+/* ===== AUTO-FILL ===== */
+function randomString(len) {
+  const c = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let r = "";
+  for (let i=0;i<len;i++) r += c[Math.floor(Math.random()*c.length)];
+  return r;
 }
-
-// AUTO FILL WHEN PAGE LOADS
 window.addEventListener("load", () => {
-
-  // only if empty
-  if (!usernameInput.value) {
-
-    usernameInput.value =
-      "ex" + randomString(8);
-
-  }
-
-  if (!passwordInput.value) {
-
-    passwordInput.value =
-      randomString(10);
-
-  }
-
+  if (!usernameInput.value) usernameInput.value = randomString(6);
+  if (!passwordInput.value) passwordInput.value = randomString(6);
 });
-
 </script>
-
 </body>
 </html>

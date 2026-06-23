@@ -3,139 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Profile</title>
-
+<title>Profile – EXSUB Group</title>
 <link rel="icon" href="images/logo.svg">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <script src="https://cdn.tailwindcss.com"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
+:root{--bg:#050508;--card:#12141c;--border:#1e212c;--purple:#7c3aed;--purple2:#8b5cf6;--text-muted:#8a8f9e}
+*{font-family:'Inter',sans-serif}
+body{background:var(--bg);color:white;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);z-index:0;pointer-events:none}
+.glass-nav{background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);color:white}
+.card{background:linear-gradient(180deg,#151821 0%,#101219 100%);border:1px solid var(--border);box-shadow:0 1px 0 rgba(255,255,255,0.03) inset}
+.text-muted{color:var(--text-muted)}
+.gradient-text{background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.input-box{width:100%;background:#0f1118;border:1px solid #232632;border-radius:16px;padding:15px 18px;color:white;outline:none;transition:0.3s ease;font-size:14px}
+.input-box:focus{border-color:#7c3aed;box-shadow:0 0 0 4px rgba(124,58,237,0.15)}
+.input-box:disabled{opacity:0.45;cursor:not-allowed}
+.label{display:block;margin-bottom:10px;font-size:14px;font-weight:600}
+.save-btn{background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);color:white;border:none;padding:14px 28px;border-radius:16px;font-weight:700;transition:0.3s ease;cursor:pointer}
+.save-btn:hover{transform:translateY(-2px)}
+.save-btn:disabled{opacity:0.5;transform:none;cursor:not-allowed;pointer-events:none}
+.ghost-btn{background:#171a24;border:1px solid #2a2e3d;padding:14px 24px;border-radius:16px;font-size:14px;font-weight:600;transition:0.3s ease;cursor:pointer;color:white}
+.ghost-btn:hover{border-color:#7c3aed}
+.ghost-btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
+.danger-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:14px 24px;border-radius:16px;font-size:14px;font-weight:600;color:#f87171;transition:0.3s ease;cursor:pointer}
+.danger-btn:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
+.danger-btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
+.profile-image{width:120px;height:120px;border-radius:30px;object-fit:cover;border:3px solid rgba(124,58,237,0.5)}
+.upload-btn{background:#171a24;border:1px solid #2a2e3d;padding:10px 18px;border-radius:14px;font-size:13px;transition:0.3s ease;cursor:pointer;color:white;display:inline-block}
+.upload-btn:hover{border-color:#7c3aed}
+.upload-btn.disabled-btn{opacity:0.4;cursor:not-allowed;pointer-events:none}
+.skeleton{background:linear-gradient(90deg,#1a1d27 25%,#232636 50%,#1a1d27 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:12px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.badge-active{background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
+.badge-blocked{background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25)}
+.stat-card{background:#0f1118;border:1px solid #232632;border-radius:20px;padding:16px 20px}
+.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.avatar-opt{width:48px;height:48px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;object-fit:cover}
+.avatar-opt:hover{border-color:#7c3aed;transform:scale(1.08)}
+.avatar-opt.sel{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(124,58,237,.25)}
+.avatar-opt.disabled-avatar{cursor:not-allowed;opacity:0.4;pointer-events:none}
+select.input-box{appearance:none;-webkit-appearance:none}
 
-:root{
-    --bg:#050508;
-    --card:#12141c;
-    --border:#1e212c;
-    --purple:#7c3aed;
-    --purple2:#8b5cf6;
-    --text-muted:#8a8f9e;
+/* BLOCKED BANNER */
+.blocked-banner{
+  background:linear-gradient(135deg,rgba(239,68,68,0.15) 0%,rgba(185,28,28,0.1) 100%);
+  border:1px solid rgba(239,68,68,0.4);
+  border-radius:24px;
+  padding:28px 32px;
+  margin-bottom:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:14px;
+  animation: pulseRed 2.5s ease-in-out infinite;
 }
-
-*{
-    font-family:'Inter',sans-serif;
+@keyframes pulseRed{
+  0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+  50%{box-shadow:0 0 0 8px rgba(239,68,68,0.08)}
 }
-
-body{
-    background:var(--bg);
-    color:white;
-    overflow-x:hidden;
+.blocked-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(239,68,68,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  border:2px solid rgba(239,68,68,0.3);
 }
-
-body::before{
-    content:'';
-    position:fixed;
-    top:-50%;
-    left:-50%;
-    width:200%;
-    height:200%;
-    background:
-    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
-    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
-    z-index:0;
-    pointer-events:none;
+.blocked-contact-btn{
+  background:linear-gradient(180deg,#ef4444 0%,#b91c1c 100%);
+  color:white;border:none;padding:12px 28px;
+  border-radius:14px;font-weight:700;font-size:14px;
+  cursor:pointer;transition:0.3s;text-decoration:none;
+  display:inline-block;
 }
+.blocked-contact-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(239,68,68,0.3)}
 
-.glass-nav{
-    background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.06);
-    color:white;
+/* BLOCKED OVERLAY on form */
+.blocked-form-overlay{
+  position:relative;
 }
-
-.card{
-    background:linear-gradient(180deg,#151821 0%,#101219 100%);
-    border:1px solid var(--border);
-    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset;
+.blocked-form-overlay::after{
+  content:'🔒 Account Blocked';
+  position:absolute;inset:0;
+  background:rgba(5,5,8,0.6);
+  border-radius:32px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:#f87171;
+  letter-spacing:0.5px;
+  backdrop-filter:blur(2px);
+  pointer-events:all;
+  cursor:not-allowed;
 }
-
-.text-muted{
-    color:var(--text-muted);
-}
-
-.gradient-text{
-    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.input-box{
-    width:100%;
-    background:#0f1118;
-    border:1px solid #232632;
-    border-radius:16px;
-    padding:15px 18px;
-    color:white;
-    outline:none;
-    transition:0.3s ease;
-    font-size:14px;
-}
-
-.input-box:focus{
-    border-color:#7c3aed;
-    box-shadow:0 0 0 4px rgba(124,58,237,0.15);
-}
-
-.label{
-    display:block;
-    margin-bottom:10px;
-    font-size:14px;
-    font-weight:600;
-}
-
-.save-btn{
-    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
-    color:white;
-    border:none;
-    padding:14px 28px;
-    border-radius:16px;
-    font-weight:700;
-    transition:0.3s ease;
-}
-
-.save-btn:hover{
-    transform:translateY(-2px);
-}
-
-.profile-image{
-    width:120px;
-    height:120px;
-    border-radius:30px;
-    object-fit:cover;
-    border:3px solid rgba(124,58,237,0.5);
-}
-
-.upload-btn{
-    background:#171a24;
-    border:1px solid #2a2e3d;
-    padding:10px 18px;
-    border-radius:14px;
-    font-size:13px;
-    transition:0.3s ease;
-}
-
-.upload-btn:hover{
-    border-color:#7c3aed;
-}
-
 </style>
-
 </head>
-
 <body>
 
 <!-- NAVBAR -->
@@ -146,13 +111,13 @@ body::before{
       <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
       <span class="font-semibold text-[17px]">Exsub Group</span>
     </div>
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-      <a href="channels.html" class="text-white hover:text-purple-300 transition">Channels</a>
-      <a href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
-      <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+    <div class="hidden md:flex items-center gap-8 text-[13px]" id="navLinks">
+      <a href="analytics.html" class="text-white hover:text-purple-300 transition nav-lockable">Dashboard</a>
+      <a href="channels.html"  class="text-white hover:text-purple-300 transition nav-lockable">Channels</a>
+      <a href="groups.html"    class="text-white hover:text-purple-300 transition nav-lockable">Groups</a>
+      <a href="howtowork.html" class="text-white hover:text-purple-300 transition nav-lockable">How To Work</a>
+      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition nav-lockable">Exsub Extension</a>
+      <a href="support.html"   class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
     </div>
     <div class="flex items-center gap-2">
       <div class="relative">
@@ -164,16 +129,16 @@ body::before{
       </div>
       <div class="relative">
         <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+          <img id="navAvatar" src="https://api.dicebear.com/8.x/adventurer/svg?seed=alpha&backgroundColor=1e212c" class="w-8 h-8 rounded-full object-cover">
           <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
         </button>
         <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
           <div class="p-4 border-b border-[#232632]">
             <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+              <img id="dropAvatar" src="https://api.dicebear.com/8.x/adventurer/svg?seed=alpha&backgroundColor=1e212c" class="w-12 h-12 rounded-full object-cover">
               <div>
                 <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #----</p>
               </div>
             </div>
           </div>
@@ -188,327 +153,629 @@ body::before{
   </div>
   <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
     <div class="flex flex-col gap-4 text-sm">
-      <a href="analytics.html" class="text-white">Dashboard</a>
-      <a href="channels.html" class="text-white">Channels</a>
-      <a href="groups.html" class="text-white">Groups</a>
-      <a href="howtowork.html" class="text-white">How To Work</a>
-      <a href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a href="support.html" class="text-white">Contact &amp; Support</a>
+      <a href="analytics.html" class="text-white nav-lockable">Dashboard</a>
+      <a href="channels.html"  class="text-white nav-lockable">Channels</a>
+      <a href="groups.html"    class="text-white nav-lockable">Groups</a>
+      <a href="howtowork.html" class="text-white nav-lockable">How To Work</a>
+      <a href="exsubextension.html" class="text-white nav-lockable">Exsub Extension</a>
+      <a href="support.html"   class="text-white">Contact &amp; Support</a>
       <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
     </div>
   </div>
 </nav>
 
 <!-- MAIN -->
-
 <main class="relative z-10 pt-32 pb-20 px-4">
-
-    <div class="max-w-[900px] mx-auto">
-
-        <!-- HEADER -->
-
-        <div class="text-center mb-10">
-
-            <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-
-                👤 Member Profile
-
-            </div>
-
-            <h1 class="text-4xl md:text-5xl font-black gradient-text">
-
-                Edit Your Profile
-
-            </h1>
-
-            <p class="text-muted mt-5 max-w-[650px] mx-auto leading-7">
-
-                Update your personal information, profile image and account details.
-
-            </p>
-
-        </div>
-
-        <!-- PROFILE CARD -->
-
-        <div class="card rounded-[32px] p-6 md:p-8">
-
-            <!-- PROFILE TOP -->
-
-            <div class="flex flex-col md:flex-row items-center gap-8 pb-8 border-b border-[#232632]">
-
-                <div class="relative">
-
-                    <img
-                    id="profilePreview"
-                    src="https://i.pravatar.cc/200"
-                    class="profile-image">
-
-                </div>
-
-                <div class="flex-1">
-
-                    <h2 class="text-3xl font-bold">
-                        Mazhar Saleem
-                    </h2>
-
-                    <p class="text-muted mt-2">
-                        EXSUB Member ID : #EX24571
-                    </p>
-
-                    <div class="flex flex-wrap gap-3 mt-5">
-
-                        <button class="upload-btn">
-                            Upload Photo
-                        </button>
-
-                        <button class="upload-btn">
-                            Remove Photo
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- FORM -->
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-
-                <!-- USERNAME -->
-
-                <div>
-
-                    <label class="label">
-                        Full Name
-                    </label>
-
-                    <input
-                    type="text"
-                    class="input-box"
-                    value="Mazhar Saleem"
-                    placeholder="Enter your full name">
-
-                </div>
-
-                <!-- USERNAME -->
-
-                <div>
-
-                    <label class="label">
-                        Username
-                    </label>
-
-                    <input
-                    type="text"
-                    class="input-box"
-                    value="mazhar"
-                    placeholder="Enter username">
-
-                </div>
-
-                <!-- EMAIL -->
-
-                <div>
-
-                    <label class="label">
-                        Email Address
-                    </label>
-
-                    <input
-                    type="email"
-                    class="input-box"
-                    value="mazhar@gmail.com"
-                    placeholder="Enter email address">
-
-                </div>
-
-                <!-- PHONE -->
-
-                <div>
-
-                    <label class="label">
-                        Phone Number
-                    </label>
-
-                    <input
-                    type="text"
-                    class="input-box"
-                    value="+92 300 0000000"
-                    placeholder="Enter phone number">
-
-                </div>
-
-                <!-- COUNTRY -->
-
-                <div>
-
-                    <label class="label">
-                        Country
-                    </label>
-
-                    <input
-                    type="text"
-                    class="input-box"
-                    value="Pakistan"
-                    placeholder="Enter country">
-
-                </div>
-
-                <!-- JOIN DATE -->
-
-                <div>
-
-                    <label class="label">
-                        Join Date
-                    </label>
-
-                    <input
-                    type="text"
-                    class="input-box"
-                    value="25 May 2026"
-                    disabled>
-
-                </div>
-
-            </div>
-
-            <!-- BIO -->
-
-            <div class="mt-6">
-
-                <label class="label">
-                    Bio
-                </label>
-
-                <textarea
-                class="input-box min-h-[140px] resize-none"
-                placeholder="Write about yourself...">YouTube creator focused on growing channels, engagement and community support.</textarea>
-
-            </div>
-
-            <!-- PASSWORD SECTION -->
-
-            <div class="mt-10">
-
-                <h2 class="text-2xl font-bold mb-6">
-                    Change Password
-                </h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                    <div>
-
-                        <label class="label">
-                            Current Password
-                        </label>
-
-                        <input
-                        type="password"
-                        class="input-box"
-                        placeholder="Current password">
-
-                    </div>
-
-                    <div>
-
-                        <label class="label">
-                            New Password
-                        </label>
-
-                        <input
-                        type="password"
-                        class="input-box"
-                        placeholder="New password">
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- BUTTONS -->
-
-            <div class="flex flex-wrap gap-4 mt-10">
-
-                <button class="save-btn">
-                    Save Changes
-                </button>
-
-                <button class="upload-btn">
-                    Cancel
-                </button>
-
-            </div>
-
-        </div>
-
+  <div class="max-w-[900px] mx-auto">
+
+    <!-- PAGE HEADER -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+        👤 Member Profile
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black gradient-text">Edit Your Profile</h1>
+      <p class="text-muted mt-5 max-w-[650px] mx-auto leading-7">Update your personal information, profile image and account details.</p>
     </div>
 
+    <!-- LOADING SKELETON -->
+    <div id="loadingState" class="card rounded-[32px] p-8 space-y-6">
+      <div class="flex gap-6 items-center">
+        <div class="skeleton w-[120px] h-[120px] rounded-[30px] shrink-0"></div>
+        <div class="flex-1 space-y-3">
+          <div class="skeleton h-8 w-48 rounded-xl"></div>
+          <div class="skeleton h-5 w-32 rounded-xl"></div>
+          <div class="skeleton h-9 w-40 rounded-xl mt-2"></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="skeleton h-14 rounded-2xl"></div>
+        <div class="skeleton h-14 rounded-2xl"></div>
+        <div class="skeleton h-14 rounded-2xl"></div>
+        <div class="skeleton h-14 rounded-2xl"></div>
+      </div>
+      <div class="skeleton h-32 rounded-2xl"></div>
+    </div>
+
+    <!-- BLOCKED BANNER (hidden by default) -->
+    <div id="blockedBanner" class="hidden blocked-banner">
+      <div class="blocked-icon">🚫</div>
+      <div>
+        <h2 class="text-2xl font-black text-red-400 mb-2">Your Account Has Been Blocked</h2>
+        <p class="text-red-300/80 text-sm leading-relaxed max-w-[520px] mx-auto">
+          Your EXSUB account has been suspended by an administrator. You cannot access any features until the block is lifted.
+          Please contact our support team for more information.
+        </p>
+      </div>
+      <a href="support.html" class="blocked-contact-btn">📩 Contact Support</a>
+    </div>
+
+    <!-- PROFILE CARD (hidden until loaded) -->
+    <div id="profileCard" class="hidden">
+
+      <!-- STATS ROW -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div class="stat-card text-center">
+          <p class="text-muted text-xs mb-1">Status</p>
+          <span id="statStatus" class="badge badge-active">● Active</span>
+        </div>
+        <div class="stat-card text-center">
+          <p class="text-muted text-xs mb-1">Member ID</p>
+          <p id="statCode" class="text-sm font-bold text-purple-400">#----</p>
+        </div>
+        <div class="stat-card text-center">
+          <p class="text-muted text-xs mb-1">Joined</p>
+          <p id="statJoin" class="text-sm font-semibold">--/--/----</p>
+        </div>
+        <div class="stat-card text-center">
+          <p class="text-muted text-xs mb-1">Country</p>
+          <p id="statCountry" class="text-sm font-semibold">--</p>
+        </div>
+      </div>
+
+      <!-- MAIN FORM CARD -->
+      <div id="mainFormCard" class="card rounded-[32px] p-6 md:p-8">
+
+        <!-- PROFILE TOP -->
+        <div class="flex flex-col md:flex-row items-center gap-8 pb-8 border-b border-[#232632]">
+          <div class="relative">
+            <img id="profilePreview" src="" class="profile-image" alt="Profile">
+          </div>
+          <div class="flex-1">
+            <h2 id="profileName" class="text-3xl font-bold">--</h2>
+            <p class="text-muted mt-1 text-sm" id="profileCodeLabel">EXSUB Member ID: #----</p>
+
+            <!-- Photo actions -->
+            <div class="flex flex-wrap gap-3 mt-5" id="photoActionBtns">
+              <label for="photoUploadInput" class="upload-btn" id="uploadPhotoLabel">📷 Upload Photo</label>
+              <input type="file" id="photoUploadInput" accept=".jpg,.jpeg,.png" class="hidden">
+              <button id="removePhotoBtn" class="upload-btn">🗑 Remove Photo</button>
+            </div>
+            <p class="text-[11px] text-muted mt-2">Only <strong class="text-gray-300">JPEG, JPG, PNG</strong> allowed — max 2MB.</p>
+
+            <!-- Mini avatar picker -->
+            <div class="mt-4">
+              <p class="text-xs text-muted mb-1">Or choose a default avatar:</p>
+              <div class="avatar-grid" id="miniAvatarGrid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM FIELDS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+
+          <div>
+            <label class="label">Username <span class="text-red-400">*</span></label>
+            <input type="text" id="fUsername" maxlength="7" class="input-box" placeholder="5–7 characters, no spaces">
+            <p class="text-[11px] text-muted mt-1">5–7 characters, no spaces, must be unique.</p>
+          </div>
+
+          <div>
+            <label class="label">Member ID</label>
+            <input type="text" id="fUserCode" class="input-box" disabled>
+          </div>
+
+          <div>
+            <label class="label">
+              WhatsApp Number
+              <span class="text-xs text-muted font-normal">(with country code)</span>
+            </label>
+            <input type="tel" id="fWhatsapp" class="input-box" placeholder="+923001234567" maxlength="16">
+            <p class="text-[11px] text-muted mt-1">Numbers only with country code. Example: +923001234567</p>
+          </div>
+
+          <div>
+            <label class="label">Facebook Profile Link</label>
+            <input type="url" id="fFacebook" class="input-box" placeholder="https://facebook.com/yourprofile">
+            <p class="text-[11px] text-muted mt-1">Must be a facebook.com or fb.com profile link.</p>
+          </div>
+
+          <div>
+            <label class="label">Country <span class="text-red-400">*</span></label>
+            <div class="relative">
+              <select id="fCountry" class="input-box pr-10">
+                <option value="">Select Country</option>
+                <option>Pakistan</option><option>India</option><option>Bangladesh</option>
+                <option>United States</option><option>United Kingdom</option><option>Canada</option>
+                <option>Australia</option><option>Germany</option><option>France</option>
+                <option>Saudi Arabia</option><option>UAE</option><option>Turkey</option>
+                <option>Indonesia</option><option>Malaysia</option><option>Brazil</option>
+              </select>
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Join Date</label>
+            <input type="text" id="fJoinDate" class="input-box" disabled>
+          </div>
+
+        </div>
+
+        <!-- BIO -->
+        <div class="mt-6">
+          <label class="label">Bio</label>
+          <textarea id="fBio" class="input-box min-h-[120px] resize-none" maxlength="200" placeholder="Write about yourself..."></textarea>
+          <p class="text-[11px] text-muted mt-1">Max 200 characters.</p>
+        </div>
+
+        <!-- CHANGE PASSWORD -->
+        <div class="mt-10">
+          <h2 class="text-xl font-bold mb-6">🔒 Change Password</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="label">Current Password <span class="text-red-400">*</span></label>
+              <input type="password" id="fCurrentPwd" class="input-box" placeholder="Enter current password" maxlength="7">
+            </div>
+            <div>
+              <label class="label">New Password <span class="text-red-400">*</span></label>
+              <input type="password" id="fNewPwd" class="input-box" placeholder="5–7 characters, no spaces" maxlength="7">
+            </div>
+          </div>
+          <p class="text-[12px] text-muted mt-3">Leave both fields empty if you don't want to change your password.</p>
+        </div>
+
+        <!-- SAVE BUTTONS -->
+        <div class="flex flex-wrap gap-4 mt-10">
+          <button id="saveBtn" class="save-btn" onclick="saveProfile()">💾 Save Changes</button>
+          <button id="resetBtn" class="ghost-btn" onclick="loadProfile()">↩ Reset</button>
+        </div>
+
+        <!-- DANGER ZONE -->
+        <div class="mt-10 border border-red-500/20 rounded-[20px] p-6 bg-red-500/5">
+          <h3 class="text-red-400 font-bold text-lg mb-2">⚠️ Danger Zone</h3>
+          <p class="text-muted text-sm mb-5">Deleting your account is permanent and cannot be undone. All your data, channels, and progress will be lost.</p>
+          <button id="deleteBtn" class="danger-btn" onclick="deleteAccount()">🗑 Delete My Account</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div id="errorState" class="hidden card rounded-[32px] p-10 text-center">
+      <p class="text-5xl mb-4">😕</p>
+      <h3 class="text-xl font-bold mb-2">Failed to Load Profile</h3>
+      <p class="text-muted text-sm mb-6">Please check your connection and try again.</p>
+      <button class="save-btn" onclick="loadProfile()">Try Again</button>
+    </div>
+
+  </div>
 </main>
 
 <!-- FOOTER -->
-
 <footer class="relative z-10 border-t border-[#1e212c]">
-
-    <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
-
-        <div>
-
-            <div class="flex items-center gap-2">
-
-                <img src="images/logo.svg" class="w-6 h-6">
-
-                <span class="font-semibold">
-                    Exsub Group
-                </span>
-
-            </div>
-
-            <p class="text-muted text-sm mt-3">
-                Grow together with creators worldwide.
-            </p>
-
-        </div>
-
-        <div class="flex gap-6 text-sm text-muted">
-
-            <a href="#" class="hover:text-white transition">
-                Privacy
-            </a>
-
-            <a href="#" class="hover:text-white transition">
-                Terms
-            </a>
-
-            <a href="#" class="hover:text-white transition">
-                Support
-            </a>
-
-        </div>
-
+  <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <img src="images/logo.svg" class="w-6 h-6">
+        <span class="font-semibold">Exsub Group</span>
+      </div>
+      <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
     </div>
-
+    <div class="flex gap-6 text-sm text-muted">
+      <a href="#" class="hover:text-white transition">Privacy</a>
+      <a href="#" class="hover:text-white transition">Terms</a>
+      <a href="support.html" class="hover:text-white transition">Support</a>
+    </div>
+  </div>
 </footer>
 
-
 <script>
+/* ============================================================
+   CONFIG
+============================================================ */
+const WEB_APP_URL   = "https://script.google.com/macros/s/AKfycbx9iWxNfqlVIAgUF4uUNoXIzX_BrmsFZB7l0AGq5CN5YLxqenqaugPXk8BO12kM2sG5/exec";
+const AVATAR_SEEDS  = ["alpha","bravo","charlie","delta","echo","foxtrot","golf","hotel","india","juliet"];
+const avUrl         = s => `https://api.dicebear.com/8.x/adventurer/svg?seed=${s}&backgroundColor=1e212c`;
 
-    /* =========================================================
-   LOGOUT + MENUS
-========================================================= */
-function logoutUser() { localStorage.clear(); window.location.href = "index.html"; }
+/* ============================================================
+   STATE
+============================================================ */
+let currentUser  = null;
+let newPhotoData = null;
+let photoChanged = false;
+let isBlocked    = false;
 
+/* ============================================================
+   AUTH GUARD
+============================================================ */
+const storedCode = localStorage.getItem("usercode");
+if (!storedCode) window.location.href = "signin.html";
+
+/* ============================================================
+   AVATAR GRID
+============================================================ */
+const miniGrid = document.getElementById("miniAvatarGrid");
+AVATAR_SEEDS.forEach(seed => {
+  const img   = document.createElement("img");
+  img.src     = avUrl(seed);
+  img.className = "avatar-opt";
+  img.title   = seed;
+  img.addEventListener("click", () => {
+    if (isBlocked) return;
+    document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
+    img.classList.add("sel");
+    newPhotoData = avUrl(seed);
+    photoChanged = true;
+    document.getElementById("profilePreview").src = newPhotoData;
+  });
+  miniGrid.appendChild(img);
+});
+
+/* ============================================================
+   PHOTO UPLOAD
+============================================================ */
+document.getElementById("photoUploadInput").addEventListener("change", function () {
+  if (isBlocked) return;
+  const file = this.files[0];
+  if (!file) return;
+
+  // Format check — only jpg, jpeg, png
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+  const ext          = file.name.split(".").pop().toLowerCase();
+  const allowedExts  = ["jpg","jpeg","png"];
+
+  if (!allowedTypes.includes(file.type) || !allowedExts.includes(ext)) {
+    this.value = "";
+    return swalErr("Invalid File Type", "Only JPEG, JPG and PNG images are allowed.");
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    this.value = "";
+    return swalErr("Image Too Large", "Please upload an image under 2MB.");
+  }
+
+  const reader = new FileReader();
+  reader.onload = ev => {
+    newPhotoData = ev.target.result;
+    photoChanged = true;
+    document.getElementById("profilePreview").src = newPhotoData;
+    document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("removePhotoBtn").addEventListener("click", () => {
+  if (isBlocked) return;
+  newPhotoData = avUrl("alpha");
+  photoChanged = true;
+  document.getElementById("profilePreview").src = newPhotoData;
+  document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
+});
+
+/* ============================================================
+   WHATSAPP — numbers + + only, no letters
+============================================================ */
+document.getElementById("fWhatsapp").addEventListener("input", function () {
+  // Allow + at start, digits only after
+  let val = this.value;
+  // Keep leading + then strip all non-digits
+  const hasPlus = val.startsWith("+");
+  val = val.replace(/[^\d]/g, "");
+  this.value = (hasPlus ? "+" : "") + val;
+});
+
+/* ============================================================
+   LOAD PROFILE
+============================================================ */
+async function loadProfile() {
+  showState("loading");
+  try {
+    const res  = await fetch(`${WEB_APP_URL}?action=getProfile&usercode=${encodeURIComponent(storedCode)}`);
+    const data = await res.json();
+
+    if (data.status !== "success") { showState("error"); return; }
+
+    currentUser = data.profile;
+    populateForm(currentUser);
+
+    isBlocked = (currentUser.status === "Blocked");
+    showState("profile");
+
+    if (isBlocked) applyBlockedState();
+
+  } catch(e) {
+    showState("error");
+  }
+}
+
+/* ============================================================
+   POPULATE FORM
+============================================================ */
+function populateForm(p) {
+  const pic = p.profilePicture || avUrl("alpha");
+
+  // Navbar + dropdown
+  document.getElementById("profilePreview").src    = pic;
+  document.getElementById("navAvatar").src         = pic;
+  document.getElementById("dropAvatar").src        = pic;
+  document.getElementById("profileName").textContent      = p.username || "Member";
+  document.getElementById("profileCodeLabel").textContent = `EXSUB Member ID: #${p.userCode}`;
+  document.getElementById("navUserName").textContent      = p.username || "Member";
+  document.getElementById("dropdownUserName").textContent = p.username || "Member";
+  document.getElementById("dropdownUserCode").textContent = `ID #${p.userCode}`;
+
+  // Stats bar
+  document.getElementById("statCode").textContent    = `#${p.userCode}`;
+  document.getElementById("statJoin").textContent    = p.dateOfJoin ? p.dateOfJoin.split(" ")[0] : "--";
+  document.getElementById("statCountry").textContent = p.country || "--";
+
+  const statusBadge = document.getElementById("statStatus");
+  if (p.status === "Active") {
+    statusBadge.className   = "badge badge-active";
+    statusBadge.textContent = "● Active";
+  } else {
+    statusBadge.className   = "badge badge-blocked";
+    statusBadge.textContent = "🚫 Blocked";
+  }
+
+  // Fields
+  document.getElementById("fUsername").value  = p.username || "";
+  document.getElementById("fUserCode").value  = p.userCode || "";
+  document.getElementById("fWhatsapp").value  = p.whatsappNumber || "";
+  document.getElementById("fFacebook").value  = p.facebookId || "";
+  document.getElementById("fBio").value       = p.bio || "";
+  document.getElementById("fJoinDate").value  = p.dateOfJoin ? p.dateOfJoin.split(" ")[0] : "";
+  setSelectValue("fCountry", p.country);
+
+  // Reset photo state
+  newPhotoData = null;
+  photoChanged = false;
+  document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
+  document.getElementById("fCurrentPwd").value = "";
+  document.getElementById("fNewPwd").value     = "";
+}
+
+function setSelectValue(id, val) {
+  const sel = document.getElementById(id);
+  for (let opt of sel.options) {
+    if (opt.value === val || opt.text === val) { sel.value = opt.value; return; }
+  }
+}
+
+/* ============================================================
+   BLOCKED STATE — disable everything except Contact & Support
+============================================================ */
+function applyBlockedState() {
+  // Show blocked banner
+  document.getElementById("blockedBanner").classList.remove("hidden");
+
+  // Add overlay to main form card
+  document.getElementById("mainFormCard").classList.add("blocked-form-overlay");
+
+  // Disable all inputs, selects, textareas
+  document.querySelectorAll("#mainFormCard input, #mainFormCard textarea, #mainFormCard select").forEach(el => {
+    el.disabled = true;
+  });
+
+  // Disable buttons
+  ["saveBtn","resetBtn","deleteBtn","removePhotoBtn"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = true; el.classList.add("disabled-btn"); }
+  });
+
+  // Disable photo upload label
+  document.getElementById("uploadPhotoLabel").classList.add("disabled-btn");
+  document.getElementById("photoUploadInput").disabled = true;
+
+  // Disable avatar grid
+  document.querySelectorAll(".avatar-opt").forEach(el => el.classList.add("disabled-avatar"));
+
+  // Lock nav links (except Contact & Support)
+  document.querySelectorAll(".nav-lockable").forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      Swal.fire({
+        icon: "error",
+        title: "Account Blocked",
+        text: "Your account is blocked. Please contact support.",
+        background: "#12141c",
+        color: "#fff",
+        confirmButtonColor: "#ef4444",
+        confirmButtonText: "Contact Support",
+      }).then(r => { if (r.isConfirmed) window.location.href = "support.html"; });
+    });
+  });
+}
+
+/* ============================================================
+   SAVE PROFILE
+============================================================ */
+async function saveProfile() {
+  if (isBlocked) return;
+
+  const username   = document.getElementById("fUsername").value.trim();
+  const whatsapp   = document.getElementById("fWhatsapp").value.trim();
+  const facebook   = document.getElementById("fFacebook").value.trim();
+  const bio        = document.getElementById("fBio").value.trim();
+  const country    = document.getElementById("fCountry").value;
+  const currentPwd = document.getElementById("fCurrentPwd").value.trim();
+  const newPwd     = document.getElementById("fNewPwd").value.trim();
+
+  /* --- Username --- */
+  if (!username)                                   return swalErr("Required","Username cannot be empty");
+  if (username.length < 5 || username.length > 7) return swalErr("Invalid Username","Username must be 5–7 characters");
+  if (username.includes(" "))                      return swalErr("Invalid Username","Username cannot contain spaces");
+
+  /* --- Country --- */
+  if (!country) return swalErr("Required","Please select your country");
+
+  /* --- WhatsApp --- */
+  if (whatsapp) {
+    if (!/^\+\d{7,15}$/.test(whatsapp)) {
+      return swalErr("Invalid WhatsApp Number",
+        "WhatsApp must start with + and contain only digits.\nExample: +923001234567");
+    }
+  }
+
+  /* --- Facebook --- */
+  if (facebook) {
+    const fbPattern = /^https?:\/\/(www\.)?(facebook\.com|fb\.com)\/.+/i;
+    if (!fbPattern.test(facebook)) {
+      return swalErr("Invalid Facebook Link",
+        "Please enter a valid Facebook profile link.\nExample: https://facebook.com/yourprofile");
+    }
+  }
+
+  /* --- Password --- */
+  let changePassword = false;
+  if (currentPwd || newPwd) {
+    if (!currentPwd) return swalErr("Password Required","Please enter your current password");
+    if (!newPwd)     return swalErr("Password Required","Please enter your new password");
+    if (currentPwd !== currentUser.password) return swalErr("Wrong Password","Current password is incorrect");
+    if (newPwd.length < 5 || newPwd.length > 7) return swalErr("Invalid Password","New password must be 5–7 characters");
+    if (newPwd.includes(" "))  return swalErr("Invalid Password","New password cannot contain spaces");
+    changePassword = true;
+  }
+
+  const finalPhoto = photoChanged ? newPhotoData : (currentUser.profilePicture || avUrl("alpha"));
+
+  const btn = document.getElementById("saveBtn");
+  btn.textContent = "Saving...";
+  btn.disabled    = true;
+
+  try {
+    const payload = {
+      action: "updateProfile",
+      usercode: storedCode,
+      username,
+      whatsappNumber: whatsapp,
+      facebookId:     facebook,
+      bio,
+      country,
+      profilePicture: finalPhoto
+    };
+    if (changePassword) payload.newPassword = newPwd;
+
+    const res  = await fetch(WEB_APP_URL, { method:"POST", body: JSON.stringify(payload) });
+    const data = await res.json();
+
+    if (data.status === "success") {
+      localStorage.setItem("username", username);
+      currentUser = { ...currentUser, username, whatsappNumber: whatsapp, facebookId: facebook, bio, country, profilePicture: finalPhoto };
+      if (changePassword) currentUser.password = newPwd;
+
+      Swal.fire({ icon:"success", title:"Profile Updated", text:"Your changes have been saved.", background:"#12141c", color:"#fff", confirmButtonColor:"#7c3aed" });
+      populateForm(currentUser);
+    } else {
+      swalErr("Update Failed", data.message);
+    }
+  } catch(e) {
+    swalErr("Server Error","Something went wrong. Please try again.");
+  }
+
+  btn.textContent = "💾 Save Changes";
+  btn.disabled    = false;
+}
+
+/* ============================================================
+   DELETE ACCOUNT
+============================================================ */
+async function deleteAccount() {
+  if (isBlocked) return;
+
+  const r1 = await Swal.fire({
+    icon: "warning",
+    title: "Delete Account?",
+    html: `<p style="color:#8a8f9e;font-size:14px">This will <strong style="color:#f87171">permanently delete</strong> your account and all data. This cannot be undone.</p>`,
+    showCancelButton:  true,
+    confirmButtonText: "Yes, Delete",
+    cancelButtonText:  "Cancel",
+    confirmButtonColor:"#ef4444",
+    cancelButtonColor: "#232632",
+    background:"#12141c", color:"#fff"
+  });
+  if (!r1.isConfirmed) return;
+
+  const r2 = await Swal.fire({
+    icon: "warning",
+    title: "Are you absolutely sure?",
+    text: "Type DELETE to confirm",
+    input: "text",
+    inputPlaceholder: "DELETE",
+    showCancelButton:  true,
+    confirmButtonText: "Delete Forever",
+    confirmButtonColor:"#ef4444",
+    cancelButtonColor: "#232632",
+    background:"#12141c", color:"#fff",
+    preConfirm: val => {
+      if (val !== "DELETE") { Swal.showValidationMessage("You must type DELETE exactly"); return false; }
+    }
+  });
+  if (!r2.isConfirmed) return;
+
+  try {
+    const res  = await fetch(WEB_APP_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", usercode: storedCode }) });
+    const data = await res.json();
+    if (data.status === "success") {
+      await Swal.fire({ icon:"success", title:"Account Deleted", text:"Your account has been permanently deleted.", background:"#12141c", color:"#fff", confirmButtonColor:"#7c3aed" });
+      localStorage.clear();
+      window.location.href = "index.html";
+    } else {
+      swalErr("Delete Failed", data.message);
+    }
+  } catch(e) {
+    swalErr("Server Error","Something went wrong.");
+  }
+}
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function showState(s) {
+  document.getElementById("loadingState").classList.toggle("hidden", s !== "loading");
+  document.getElementById("profileCard").classList.toggle("hidden", s !== "profile");
+  document.getElementById("errorState").classList.toggle("hidden",  s !== "error");
+}
+
+function swalErr(title, text) {
+  return Swal.fire({ icon:"error", title, text, background:"#12141c", color:"#fff", confirmButtonColor:"#7c3aed" });
+}
+
+function logoutUser() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+/* ============================================================
+   NAV MENUS
+============================================================ */
 document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
-document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
-document.getElementById("notifBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
+document.getElementById("profileBtn").addEventListener("click",    e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
+document.getElementById("notifBtn").addEventListener("click",      e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
 document.addEventListener("click", () => {
   document.getElementById("mobileMenu").classList.add("hidden");
   document.getElementById("profileDropdown").classList.add("hidden");
   document.getElementById("notifDropdown").classList.add("hidden");
 });
-</script>
 
+/* ============================================================
+   INIT
+============================================================ */
+loadProfile();
+</script>
 </body>
 </html>
