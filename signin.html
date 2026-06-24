@@ -110,37 +110,21 @@ body::before{
 
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2">
-
       <img src="images/logo.svg" class="w-6 h-6 object-contain">
-
-      <span class="font-semibold text-[17px]">
-        EXSUB Group
-      </span>
-
+      <span class="font-semibold text-[17px]">EXSUB Group</span>
     </a>
 
     <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-7 text-[13px]">
-
-      <a href="Members.html" class="hover:text-gray-200 transition">
-        Members
-      </a>
-
-      <a href="HowtoWork.html" class="hover:text-gray-200 transition">
-        How to Work
-      </a>
-
-      <a href="BrowserExtension.html" class="hover:text-gray-200 transition">
-        Browser Extension
-      </a>
-
+      <a href="Members.html" class="hover:text-gray-200 transition">Members</a>
+      <a href="HowtoWork.html" class="hover:text-gray-200 transition">How to Work</a>
+      <a href="BrowserExtension.html" class="hover:text-gray-200 transition">Browser Extension</a>
     </div>
 
     <!-- Right Side -->
     <div class="flex items-center gap-3">
 
-      <a href="signup.html"
-         class="hidden sm:block text-[13px] hover:text-gray-200 transition">
+      <a href="signup.html" class="hidden sm:block text-[13px] hover:text-gray-200 transition">
         Create Account
       </a>
 
@@ -151,20 +135,9 @@ body::before{
 
       <!-- Mobile Button -->
       <button id="menuBtn" class="md:hidden text-white">
-
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="w-6 h-6"
-             fill="none"
-             viewBox="0 0 24 24"
-             stroke="currentColor">
-
-          <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"/>
-
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
-
       </button>
 
     </div>
@@ -172,29 +145,14 @@ body::before{
   </div>
 
   <!-- Mobile Menu -->
-  <div id="mobileMenu"
-       class="hidden md:hidden mt-2 glass-nav rounded-2xl p-5 flex flex-col gap-5 text-[14px]">
-
+  <div id="mobileMenu" class="hidden md:hidden mt-2 glass-nav rounded-2xl p-5 flex flex-col gap-5 text-[14px]">
     <a href="Members.html">Members</a>
-
     <a href="HowtoWork.html">How to Work</a>
-
     <a href="BrowserExtension.html">Browser Extension</a>
-
     <div class="border-t border-white/10 pt-4 flex flex-col gap-3">
-
-      <a href="signup.html"
-         class="btn-purple text-center py-3 rounded-full font-medium">
-        Create Account
-      </a>
-
-      <a href="signin.html"
-         class="bg-white text-center text-black py-3 rounded-full font-medium">
-        Log In
-      </a>
-
+      <a href="signup.html" class="btn-purple text-center py-3 rounded-full font-medium">Create Account</a>
+      <a href="signin.html" class="bg-white text-center text-black py-3 rounded-full font-medium">Log In</a>
     </div>
-
   </div>
 
 </nav>
@@ -208,8 +166,7 @@ body::before{
     <!-- Heading -->
     <div class="text-center mb-8">
 
-      <img src="images/logo.svg"
-           class="w-14 h-14 mx-auto mb-5">
+      <img src="images/logo.svg" class="w-14 h-14 mx-auto mb-5">
 
       <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight">
         Welcome Back
@@ -228,68 +185,44 @@ body::before{
 
         <!-- Username -->
         <div>
-
-          <label class="text-[13px] text-gray-300 block mb-2">
-            Username
-          </label>
-
+          <label class="text-[13px] text-gray-300 block mb-2">Username</label>
           <input type="text"
                  id="username"
                  placeholder="Enter your username"
                  class="input"
                  maxlength="20"
                  required>
-
           <p class="text-[11px] text-muted mt-2">
-            Username must be between 7 and 20 characters without spaces.
+            Username must be between 5 and 7 characters without spaces.
           </p>
-
         </div>
 
         <!-- Password -->
         <div>
-
-          <label class="text-[13px] text-gray-300 block mb-2">
-            Password
-          </label>
-
+          <label class="text-[13px] text-gray-300 block mb-2">Password</label>
           <div class="password-box">
-
             <input type="password"
                    id="password"
                    placeholder="Enter your password"
                    class="input pr-12"
                    maxlength="20"
                    required>
-
-            <span id="togglePassword"
-                  class="eye-btn">
-              👁️
-            </span>
-
+            <span id="togglePassword" class="eye-btn">👁️</span>
           </div>
-
           <p class="text-[11px] text-muted mt-2">
-            Password must be between 7 and 20 characters without spaces.
+            Password must be between 5 and 7 characters without spaces.
           </p>
-
         </div>
 
         <!-- Remember -->
         <div class="flex items-center justify-between text-[13px]">
 
           <label class="flex items-center gap-2 text-muted">
-
-            <input type="checkbox"
-                   id="rememberMe"
-                   class="accent-purple-600">
-
+            <input type="checkbox" id="rememberMe" class="accent-purple-600">
             Remember Me
-
           </label>
 
-          <a href="#"
-             class="text-[#8b5cf6] hover:text-[#a78bfa] transition">
+          <a href="#" class="text-[#8b5cf6] hover:text-[#a78bfa] transition">
             Forgot Password?
           </a>
 
@@ -299,27 +232,17 @@ body::before{
         <button type="submit"
                 id="loginBtn"
                 class="btn-purple w-full text-white py-[13px] rounded-[14px] font-medium transition">
-
           Log In
-
         </button>
 
       </form>
 
       <!-- Bottom -->
       <div class="text-center mt-6">
-
         <p class="text-[13px] text-muted">
-
-          Don’t have an account?
-
-          <a href="signup.html"
-             class="text-[#8b5cf6] hover:text-[#a78bfa] transition">
-            Create Account
-          </a>
-
+          Don't have an account?
+          <a href="signup.html" class="text-[#8b5cf6] hover:text-[#a78bfa] transition">Create Account</a>
         </p>
-
       </div>
 
     </div>
@@ -332,354 +255,106 @@ body::before{
 
 <script>
 
-/* WEB APP URL */
+/* =========================
+   CONFIG
+========================= */
+
 const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbw4RFl8Au7jX1xqQ13ETfNoyuQVkRndM56fP3S6uB3XN3ay6gzBZV4IIMYuGR5siZjzig/exec";
+  "https://script.google.com/macros/s/AKfycbxIsxOtYrq3_2Cy4VGzTJ4jkzaGuJ0Gox5t1xqJEw8NQ3b6LrRvLJH2-2KUmyYwT_HToQ/exec";
 
 
-/* MOBILE MENU */
-const menuBtn =
-document.getElementById("menuBtn");
+/* =========================
+   MOBILE MENU
+========================= */
 
-const mobileMenu =
-document.getElementById("mobileMenu");
-
-menuBtn.addEventListener("click", () => {
-
-  mobileMenu.classList.toggle("hidden");
-
-});
+document.getElementById("menuBtn")
+  .addEventListener("click", () => {
+    document.getElementById("mobileMenu")
+      .classList.toggle("hidden");
+  });
 
 
-/* PASSWORD TOGGLE */
-const togglePassword =
-document.getElementById("togglePassword");
+/* =========================
+   PASSWORD TOGGLE
+========================= */
 
-const passwordInput =
-document.getElementById("password");
+const togglePassword = document.getElementById("togglePassword");
+const passwordInput  = document.getElementById("password");
 
 togglePassword.addEventListener("click", () => {
-
   if(passwordInput.type === "password"){
-
     passwordInput.type = "text";
     togglePassword.innerHTML = "🙈";
-
   }else{
-
     passwordInput.type = "password";
     togglePassword.innerHTML = "👁️";
-
   }
-
 });
 
 
-/* INPUTS */
-const usernameInput =
-document.getElementById("username");
+/* =========================
+   INPUTS
+========================= */
 
-const loginForm =
-document.getElementById("loginForm");
-
-const loginBtn =
-document.getElementById("loginBtn");
+const usernameInput = document.getElementById("username");
+const loginForm     = document.getElementById("loginForm");
+const loginBtn      = document.getElementById("loginBtn");
 
 
-/* REMOVE SPACES LIVE */
+/* STRIP SPACES LIVE */
 usernameInput.addEventListener("input", () => {
-
-  usernameInput.value =
-    usernameInput.value
-      .replace(/\s/g, "")
-      .slice(0, 20);
-
+  usernameInput.value = usernameInput.value.replace(/\s/g, "").slice(0, 20);
 });
 
 passwordInput.addEventListener("input", () => {
-
-  passwordInput.value =
-    passwordInput.value
-      .replace(/\s/g, "")
-      .slice(0, 20);
-
+  passwordInput.value = passwordInput.value.replace(/\s/g, "").slice(0, 20);
 });
 
 
 /* =========================
-   AUTO LOGIN CHECK
+   HELPERS
 ========================= */
 
-window.addEventListener("load", async () => {
+/* Save all member data to localStorage */
+function saveMember(member, password, remember) {
 
-  const savedUsername =
-    localStorage.getItem("username");
-
-  const savedPassword =
-    localStorage.getItem("password");
-
-
-  /* FILL INPUTS */
-  if(savedUsername){
-
-    usernameInput.value = savedUsername;
-
+  if(remember){
+    localStorage.setItem("username", member.username);
+    localStorage.setItem("password", password);
   }
 
-  if(savedPassword){
+  localStorage.setItem("usercode",      member.usercode);
+  localStorage.setItem("status",        member.accountStatus);
+  localStorage.setItem("profilePicture",member.profilePicture || "");
+  localStorage.setItem("bio",           member.bio || "");
+  localStorage.setItem("whatsappNumber",member.whatsappNumber || "");
+  localStorage.setItem("facebookId",    member.facebookId || "");
+  localStorage.setItem("dateOfJoin",    member.dateOfJoin || "");
+  localStorage.setItem("country",       member.country || "");
+  localStorage.setItem("accountCompleted",     member.accountCompleted || "No");
+  localStorage.setItem("inSubscribersWork",    member.inSubscribersWork || "No");
+  localStorage.setItem("inVideoTaskWork",      member.inVideoTaskWork || "No");
+  localStorage.setItem("inWatchtimeWork",      member.inWatchtimeWork || "No");
+  localStorage.setItem("inLikeAndCommentWork", member.inLikeAndCommentWork || "No");
 
-    passwordInput.value = savedPassword;
-
-  }
-
-
-  /* AUTO LOGIN */
-  if(savedUsername && savedPassword){
-
-    try{
-
-      const response = await fetch(WEB_APP_URL, {
-
-        method: "POST",
-
-        body: JSON.stringify({
-
-          action: "login",
-          username: savedUsername,
-          password: savedPassword
-
-        })
-
-      });
-
-      const data =
-        await response.json();
-
-
-      if(data.status === "success"){
-
-        /* ACCOUNT ACTIVE CHECK */
-        if(data.accountStatus === "Active"){
-
-          localStorage.setItem(
-            "usercode",
-            data.usercode
-          );
-
-          localStorage.setItem(
-            "status",
-            data.accountStatus
-          );
-
-          /* INSTANT REDIRECT */
-          window.location.href =
-            "analytics.html";
-
-       }else{
-
-  localStorage.removeItem("username");
-  localStorage.removeItem("password");
-  localStorage.removeItem("usercode");
-  localStorage.removeItem("status");
-
-  Swal.fire({
-    icon: "error",
-    title: "Account Banned",
-    html: `
-      <div style="font-size:14px; line-height:1.7;">
-        You are banned from the EXSUB Group.<br><br>
-        Please contact admin on WhatsApp.
-      </div>
-    `,
-    background: "#12141c",
-    color: "#fff",
-    confirmButtonColor: "#22c55e",
-    confirmButtonText: "Contact Admin",
-    showCancelButton: true,
-    cancelButtonText: "Close",
-    cancelButtonColor: "#2a2d38"
-  }).then((result) => {
-
-    if(result.isConfirmed){
-
-      window.open(
-        "https://wa.me/923118937287",
-        "_blank"
-      );
-
-    }
-
-  });
-
+  // Also store full object for convenience
+  localStorage.setItem("memberData", JSON.stringify(member));
 }
 
-      }else{
+/* Clear all saved session data */
+function clearSession() {
+  const keys = [
+    "username","password","usercode","status",
+    "profilePicture","bio","whatsappNumber","facebookId",
+    "dateOfJoin","country","accountCompleted",
+    "inSubscribersWork","inVideoTaskWork","inWatchtimeWork",
+    "inLikeAndCommentWork","memberData"
+  ];
+  keys.forEach(k => localStorage.removeItem(k));
+}
 
-        /* REMOVE WRONG LOGIN */
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
-
-      }
-
-    }catch(error){
-
-      console.log("Auto login failed");
-
-    }
-
-  }
-
-});
-
-
-/* =========================
-   LOGIN
-========================= */
-
-loginForm.addEventListener("submit", async (e) => {
-
-  e.preventDefault();
-
-  const username =
-    usernameInput.value.trim();
-
-  const password =
-    passwordInput.value.trim();
-
-  const rememberMe =
-    document.getElementById("rememberMe").checked;
-
-
-  /* USERNAME VALIDATION */
-  if(username.length < 7){
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Username",
-      text: "Username must be at least 7 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if(username.length > 20){
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Username",
-      text: "Username cannot be more than 20 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if(username.includes(" ")){
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Username",
-      text: "Username cannot contain spaces",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-
-  /* PASSWORD VALIDATION */
-  if(password.length < 7){
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Password",
-      text: "Password must be at least 7 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if(password.length > 20){
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Password",
-      text: "Password cannot be more than 20 characters",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-  if(password.includes(" ")){
-
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Password",
-      text: "Password cannot contain spaces",
-      background: "#12141c",
-      color: "#fff",
-      confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
-    });
-
-    return;
-
-  }
-
-
-  loginBtn.innerText = "Checking...";
-  loginBtn.disabled = true;
-
-
-  try{
-
-    const response = await fetch(WEB_APP_URL, {
-
-      method: "POST",
-
-      body: JSON.stringify({
-
-        action: "login",
-        username: username,
-        password: password
-
-      })
-
-    });
-
-    const data =
-      await response.json();
-
-
-    /* LOGIN SUCCESS */
-    if(data.status === "success"){
-
-      /* BLOCK CHECK */
-    if(data.accountStatus !== "Active"){
-
+/* Show banned alert */
+function showBannedAlert() {
   Swal.fire({
     icon: "error",
     title: "Account Banned",
@@ -695,61 +370,190 @@ loginForm.addEventListener("submit", async (e) => {
     confirmButtonText: "Contact Admin",
     showCancelButton: true,
     cancelButtonText: "Close",
-      customClass: { popup: "rounded-popup"},
     cancelButtonColor: "#2a2d38",
-    customClass: {
-      popup: 'rounded-[24px]'
-    }
+    customClass: { popup: "rounded-[24px]" }
   }).then((result) => {
-
     if(result.isConfirmed){
-
-      window.open(
-        "https://wa.me/923118937287",
-        "_blank"
-      );
-
+      window.open("https://wa.me/923118937287", "_blank");
     }
-
   });
-
-  /* REMOVE SAVED LOGIN */
-  localStorage.removeItem("username");
-  localStorage.removeItem("password");
-  localStorage.removeItem("usercode");
-  localStorage.removeItem("status");
-
-  loginBtn.innerText = "Log In";
-  loginBtn.disabled = false;
-
-  return;
-
 }
 
-      /* SAVE LOGIN */
-      if(rememberMe){
 
-        localStorage.setItem(
-          "username",
-          data.username
-        );
+/* =========================
+   AUTO LOGIN CHECK
+========================= */
 
-        localStorage.setItem(
-          "password",
-          password
-        );
+window.addEventListener("load", async () => {
+
+  const savedUsername = localStorage.getItem("username");
+  const savedPassword = localStorage.getItem("password");
+
+  /* Pre-fill inputs */
+  if(savedUsername) usernameInput.value = savedUsername;
+  if(savedPassword) passwordInput.value = savedPassword;
+
+  /* Attempt auto login if both saved */
+  if(savedUsername && savedPassword){
+
+    try{
+
+      const response = await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action:   "login",
+          username: savedUsername,
+          password: savedPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if(data.status === "success"){
+
+        if(data.accountStatus === "Active"){
+
+          /* Save full member data */
+          saveMember(data.member, savedPassword, true);
+
+          /* Instant redirect */
+          window.location.href = "analytics.html";
+
+        }else{
+
+          clearSession();
+          showBannedAlert();
+
+        }
+
+      }else{
+
+        /* Credentials no longer valid — clear saved login */
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
 
       }
 
-      localStorage.setItem(
-        "usercode",
-        data.usercode
-      );
+    }catch(error){
+      console.log("Auto login failed:", error);
+    }
 
-      localStorage.setItem(
-        "status",
-        data.accountStatus
-      );
+  }
+
+});
+
+
+/* =========================
+   MANUAL LOGIN
+========================= */
+
+loginForm.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  const username   = usernameInput.value.trim();
+  const password   = passwordInput.value.trim();
+  const rememberMe = document.getElementById("rememberMe").checked;
+
+  /* --- Validation --- */
+
+  if(username.length < 5){
+    return Swal.fire({
+      icon: "error",
+      title: "Invalid Username",
+      text: "Username must be at least 5 characters",
+      background: "#12141c", color: "#fff",
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup" }
+    });
+  }
+
+  if(username.length > 7){
+    return Swal.fire({
+      icon: "error",
+      title: "Invalid Username",
+      text: "Username cannot be more than 7 characters",
+      background: "#12141c", color: "#fff",
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup" }
+    });
+  }
+
+  if(/\s/.test(username)){
+    return Swal.fire({
+      icon: "error",
+      title: "Invalid Username",
+      text: "Username cannot contain spaces",
+      background: "#12141c", color: "#fff",
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup" }
+    });
+  }
+
+  if(password.length < 5){
+    return Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "Password must be at least 5 characters",
+      background: "#12141c", color: "#fff",
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup" }
+    });
+  }
+
+  if(password.length > 7){
+    return Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "Password cannot be more than 7 characters",
+      background: "#12141c", color: "#fff",
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup" }
+    });
+  }
+
+  if(/\s/.test(password)){
+    return Swal.fire({
+      icon: "error",
+      title: "Invalid Password",
+      text: "Password cannot contain spaces",
+      background: "#12141c", color: "#fff",
+      confirmButtonColor: "#7c3aed",
+      customClass: { popup: "rounded-popup" }
+    });
+  }
+
+  /* --- Send Request --- */
+
+  loginBtn.innerText = "Checking...";
+  loginBtn.disabled  = true;
+
+  try{
+
+    const response = await fetch(WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action:   "login",
+        username: username,
+        password: password
+      })
+    });
+
+    const data = await response.json();
+
+    if(data.status === "success"){
+
+      /* Banned check */
+      if(data.accountStatus !== "Active"){
+        clearSession();
+        showBannedAlert();
+        loginBtn.innerText = "Log In";
+        loginBtn.disabled  = false;
+        return;
+      }
+
+      /* Save session */
+      saveMember(data.member, password, rememberMe);
 
       Swal.fire({
         icon: "success",
@@ -758,12 +562,9 @@ loginForm.addEventListener("submit", async (e) => {
         background: "#12141c",
         color: "#fff",
         confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
+        customClass: { popup: "rounded-popup" }
       }).then(() => {
-
-        window.location.href =
-          "analytics.html";
-
+        window.location.href = "analytics.html";
       });
 
     }else{
@@ -771,11 +572,11 @@ loginForm.addEventListener("submit", async (e) => {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: data.message,
+        text: data.message || "Invalid credentials",
         background: "#12141c",
         color: "#fff",
         confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
+        customClass: { popup: "rounded-popup" }
       });
 
     }
@@ -785,17 +586,17 @@ loginForm.addEventListener("submit", async (e) => {
     Swal.fire({
       icon: "error",
       title: "Server Error",
-      text: "Something went wrong",
+      text: "Something went wrong. Please try again.",
       background: "#12141c",
       color: "#fff",
       confirmButtonColor: "#7c3aed",
-      customClass: { popup: "rounded-popup"}
+      customClass: { popup: "rounded-popup" }
     });
 
   }
 
   loginBtn.innerText = "Log In";
-  loginBtn.disabled = false;
+  loginBtn.disabled  = false;
 
 });
 

@@ -353,8 +353,10 @@ body::before{
             <div class="text-2xl font-black text-red-400 mb-1">Account Not Completed!</div>
             <div class="text-red-300 font-semibold mb-2">Your account setup is incomplete. You cannot work in our group until your account is fully ready.</div>
             <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">You need to setup two things:</div>
-            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">1 — Add your promotional channel and your working channel.</div>
-            <div class="text-sm"      style="color:rgba(252,165,165,0.75);">2 — Join any group to start.</div>
+            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">1 — Add your promotional channel </div>            
+            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">2 — Add videos ad playlist for promotional channel.</div>
+            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">3 — Add working channel.</div>
+            <div class="text-sm"      style="color:rgba(252,165,165,0.75);">4 — Join any group to start.</div>
           </div>
           <a href="support.html"
             class="px-6 py-3 rounded-xl font-bold text-sm flex-shrink-0"
@@ -848,7 +850,7 @@ body::before{
 'use strict';
 
 /* ── CONFIG ── */
-var API = "https://script.google.com/macros/s/AKfycbxgEZkkPEfk96WMSWNK1YR9r7NXyz9gWASsGY6hIimZD5APZWWvURGr5OD47xn_w76RwA/exec";
+var API = "https://script.google.com/macros/s/AKfycby_Q4l6nf6NVxpR2pSQ6pGkCiujWTEgnT4uEypS2jrBP60_UBS4r193KufL5gFYH1C5WQ/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
@@ -891,6 +893,13 @@ function renderDashboard(data) {
   setText("chipName",        m.userName || username || "Member");
   setText("chipCode",        m.userCode || usercode);
   setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · Joined " + fmtDate(m.dateOfJoin));
+
+  /* Profile picture in nav avatar */
+  if (m.profilePicture) {
+    document.querySelectorAll('img[src="https://i.pravatar.cc/100"]').forEach(function(img){
+      img.src = m.profilePicture;
+    });
+  }
 
   /* Member info row */
   setText("infoCountry",  m.country || "—");
@@ -946,23 +955,12 @@ function renderDashboard(data) {
     show("noGroupsMsg");
   }
 
-  /* ════════════════════════════════════════
-     SUBSCRIBERS
-     col[1] TotalSubscribersGet
-     col[2] TotalSubscribeChannels
-     col[3] TotalUnsubscribByYou        ← NEW (was TotalUnsubscribeChannels)
-     col[4] PendingSubscribeToOthers
-     col[5] PendingSubscribeFromOthers
-     col[6] TotalUnsubscribeByOthers
-     col[7] LimitReached
-     col[8] SubscribersLimit
-     col[9] LasttimeWork
-  ════════════════════════════════════════ */
+  /* ── SUBSCRIBERS ── */
   if (m.inSubscribersWork === "Yes") {
     var gained      = +(sp.totalSubscribersGet        || 0);
-    var lostByOth   = +(sp.totalUnsubscribeByOthers   || 0);   // col 6
-    var pendIn      = +(sp.pendingSubscribeFromOthers  || 0);   // col 5
-    var unsubByYou  = +(sp.totalUnsubscribeByYou       || 0);   // col 3 NEW
+    var lostByOth   = +(sp.totalUnsubscribeByOthers   || 0);
+    var pendIn      = +(sp.pendingSubscribeFromOthers  || 0);
+    var unsubByYou  = +(sp.totalUnsubscribeByYou       || 0);
     var total       = Math.max(gained + lostByOth + pendIn, 1);
     var netPct      = Math.round((gained / total) * 100);
     var limitPct    = sp.subscribersLimit > 0
@@ -995,21 +993,13 @@ function renderDashboard(data) {
     show("subsSection");
   }
 
-  /* ════════════════════════════════════════
-     VIDEO
-     col[1] TotalVideoWatched
-     col[2] TotalVideoWatchedPendingFromOthers
-     col[3] TotalVideoWatchedPendingByOthers
-     col[4] TotalYourVideoWatchingRejects        ← NEW
-     col[5] TotalVideoWatchingRejectsOfOthers    ← NEW
-     col[6] LasttimeWork
-  ════════════════════════════════════════ */
+  /* ── VIDEO ── */
   if (m.inVideoTaskWork === "Yes") {
     var vw         = +(vp.totalVideoWatched                       || 0);
     var vpf        = +(vp.totalVideoWatchedPendingFromOthers      || 0);
     var vpb        = +(vp.totalVideoWatchedPendingByOthers        || 0);
-    var vYourRej   = +(vp.totalYourVideoWatchingRejects           || 0);  // col 4 NEW
-    var vOthRej    = +(vp.totalVideoWatchingRejectsOfOthers       || 0);  // col 5 NEW
+    var vYourRej   = +(vp.totalYourVideoWatchingRejects           || 0);
+    var vOthRej    = +(vp.totalVideoWatchingRejectsOfOthers       || 0);
     var vtot       = Math.max(vw + vpf + vpb + vYourRej + vOthRej, 1);
     var vSucc      = Math.round((vw / vtot) * 100);
 
@@ -1039,23 +1029,14 @@ function renderDashboard(data) {
     show("videoSection");
   }
 
-  /* ════════════════════════════════════════
-     ENGAGEMENT
-     col[1] TotalComtLikeDone
-     col[2] TotalComtLikeGet
-     col[3] TotalComtLikeDeletedByYou       ← SPLIT (was single "TotalComtLikeDelete")
-     col[4] TotalComtLikeDeleteByOthers     ← NEW
-     col[5] PendingComtLiketoOthers
-     col[6] PendingComtLikeFromOthers
-     col[7] LasttimeWork
-  ════════════════════════════════════════ */
+  /* ── ENGAGEMENT ── */
   if (m.inLikeAndCommentWork === "Yes") {
     var edone      = +(ep.totalCommentLikeDone          || 0);
     var eg         = +(ep.totalCommentLikeGet           || 0);
-    var edByYou    = +(ep.totalCommentLikeDeletedByYou  || 0);  // col 3 NEW
-    var edByOth    = +(ep.totalCommentLikeDeleteByOthers|| 0);  // col 4 NEW
-    var epo        = +(ep.pendingCommentLikeToOthers    || 0);  // col 5
-    var epi        = +(ep.pendingCommentLikeFromOthers  || 0);  // col 6
+    var edByYou    = +(ep.totalCommentLikeDeletedByYou  || 0);
+    var edByOth    = +(ep.totalCommentLikeDeleteByOthers|| 0);
+    var epo        = +(ep.pendingCommentLikeToOthers    || 0);
+    var epi        = +(ep.pendingCommentLikeFromOthers  || 0);
     var etot       = Math.max(edone + eg + edByYou + edByOth + epo + epi, 1);
     var totalDel   = edByYou + edByOth;
     var eret       = eg > 0 ? Math.max(Math.round(((eg - totalDel) / eg) * 100), 0) : 0;
@@ -1086,34 +1067,26 @@ function renderDashboard(data) {
     show("engageSection");
   }
 
-  /* ════════════════════════════════════════
-     PLAYLIST / WATCHTIME
-     col[1] TotalPlaylistWatched
-     col[2] TotalPlaylistWatchedPendingtoOthers
-     col[3] TotalPlaylistWatchedPendingFromOthers
-     col[4] TotalPlaylistWatchingCheatingByYou      ← NEW
-     col[5] TotalPlaylistWatchingCheatingByOthers   ← NEW
-     col[6] LasttimeWork
-  ════════════════════════════════════════ */
+  /* ── PLAYLIST / WATCHTIME ── */
   if (m.inWatchtimeWork === "Yes") {
     var pw         = +(pp.totalPlaylistWatched                        || 0);
     var ppo        = +(pp.totalPlaylistWatchedPendingToOthers         || 0);
     var ppi        = +(pp.totalPlaylistWatchedPendingFromOthers       || 0);
-    var pCheatYou  = +(pp.totalPlaylistWatchingCheatingByYou          || 0);  // col 4 NEW
-    var pCheatOth  = +(pp.totalPlaylistWatchingCheatingByOthers       || 0);  // col 5 NEW
+    var pCheatYou  = +(pp.totalPlaylistWatchingCheatingByYou          || 0);
+    var pCheatOth  = +(pp.totalPlaylistWatchingCheatingByOthers       || 0);
     var ptot       = Math.max(pw + ppo + ppi + pCheatYou + pCheatOth, 1);
 
-    setText("playlistWatched",              fmt(pw));
-    setText("playlistPendOut",              fmt(ppo));
-    setText("playlistPendIn",              fmt(ppi));
-    setText("playlistCheatByYou",          fmt(pCheatYou));
-    setText("playlistCheatByOthers",       fmt(pCheatOth));
-    setText("playlistLastWorkTxt",         pp.lastTimeWork ? "Last active: " + fmtDate(pp.lastTimeWork) : "No activity yet");
-    setText("playlistProgWatchedLbl",      fmt(pw));
-    setText("playlistProgOutLbl",          fmt(ppo));
-    setText("playlistProgInLbl",          fmt(ppi));
-    setText("playlistProgCheatByYouLbl",   fmt(pCheatYou));
-    setText("playlistProgCheatByOthersLbl",fmt(pCheatOth));
+    setText("playlistWatched",               fmt(pw));
+    setText("playlistPendOut",               fmt(ppo));
+    setText("playlistPendIn",                fmt(ppi));
+    setText("playlistCheatByYou",            fmt(pCheatYou));
+    setText("playlistCheatByOthers",         fmt(pCheatOth));
+    setText("playlistLastWorkTxt",           pp.lastTimeWork ? "Last active: " + fmtDate(pp.lastTimeWork) : "No activity yet");
+    setText("playlistProgWatchedLbl",        fmt(pw));
+    setText("playlistProgOutLbl",            fmt(ppo));
+    setText("playlistProgInLbl",             fmt(ppi));
+    setText("playlistProgCheatByYouLbl",     fmt(pCheatYou));
+    setText("playlistProgCheatByOthersLbl",  fmt(pCheatOth));
 
     if (pCheatYou > 0) { show("playlistCheatWarning"); }
 
@@ -1129,7 +1102,6 @@ function renderDashboard(data) {
 
   hide("loadingState"); show("dashContent");
 }
-
 /* ══════════════════ GOOGLE APPS SCRIPT — updated field mapping ══════════════════
    The Apps Script must return these renamed/new fields:
 
