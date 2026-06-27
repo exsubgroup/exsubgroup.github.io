@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscriber Tasks — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+    --bg: #050508;
+    --card: #12141c;
+    --card2: #161922;
+    --border: #1e212c;
+    --purple: #7c3aed;
+    --purple2: #8b5cf6;
+    --muted: #8a8f9e;
+}
+
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: white;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background:
+        radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
+        radial-gradient(ellipse at bottom, rgba(124,58,237,0.08) 0%, transparent 50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* GRADIENT TEXT */
+.gradient-text {
+    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* NAV */
+.glass-nav {
+    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: white;
+}
+
+/* CARDS */
+.card {
+    background: linear-gradient(180deg, #151821 0%, #101219 100%);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
+}
+
+.task-card {
+    background: linear-gradient(180deg, #151821 0%, #101219 100%);
+    border: 1px solid var(--border);
+    transition: 0.3s ease;
+}
+.task-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(124,58,237,0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+.text-muted { color: var(--muted); }
+
+/* BUTTONS */
+.btn-purple {
+    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    transition: 0.25s;
+    cursor: pointer;
+}
+.btn-purple:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: 0.25s;
+    cursor: pointer;
+}
+.btn-outline:hover:not(:disabled) { border-color: var(--purple); color: white; }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-teal {
+    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
+    color: white;
+    border: none;
+    transition: 0.25s;
+    cursor: pointer;
+}
+.btn-teal:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+
+.btn-red {
+    background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+    color: white;
+    border: none;
+    transition: 0.25s;
+    cursor: pointer;
+}
+.btn-red:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+
+/* FILTER TABS */
+.filter-tab {
+    background: #161922;
+    border: 1px solid #232632;
+    transition: 0.25s;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+}
+.filter-tab:hover { border-color: var(--purple); color: white; }
+.filter-tab.active {
+    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+    border-color: transparent;
+    color: white;
+}
+
+/* STATUS BADGE */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* INSTRUCTIONS BOX */
+.instructions-box {
+    background: rgba(124,58,237,0.08);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+
+/* ISSUE BOX */
+.issue-box {
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.18);
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+.issue-box.open { display: block; }
+
+/* MODAL */
+.modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s;
+}
+.modal-bg.open { opacity: 1; visibility: visible; }
+
+.modal-box {
+    background: linear-gradient(180deg, #151821 0%, #101219 100%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 28px;
+    width: 100%;
+    max-width: 500px;
+    transform: scale(0.95);
+    transition: 0.25s;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-bg.open .modal-box { transform: scale(1); }
+
+/* SKELETON */
+.skeleton {
+    background: linear-gradient(90deg, #1a1d27 25%, #21253a 50%, #1a1d27 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 24px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+/* TOAST */
+#toast {
+    position: fixed; bottom: 24px; right: 24px;
+    z-index: 999;
+    background: linear-gradient(180deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 13px 22px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+    max-width: 320px;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: linear-gradient(180deg, #ef4444, #b91c1c); }
+
+/* FULL-PAGE LOADING */
+#pageLoader {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    transition: opacity 0.4s ease;
+}
+#pageLoader.hidden { opacity: 0; pointer-events: none; }
+#pageLoader .spin {
+    width: 44px; height: 44px;
+    border: 3px solid rgba(124,58,237,0.2);
+    border-top-color: #8b5cf6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+input, textarea { color: white; }
+input::placeholder, textarea::placeholder { color: #7d8395; }
+
+/* STEP INDICATOR */
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(124,58,237,0.25);
+    border: 1px solid rgba(124,58,237,0.5);
+    color: #a78bfa;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* PAIRED STATUS badge */
+.paired-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+/* ISSUE PILL SELECTOR */
+.issue-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.06);
+    color: #f87171;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+.issue-pill:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.6); }
+.issue-pill.selected { background: rgba(239,68,68,0.25); border-color: #ef4444; color: #fca5a5; }
+
+/* COPY HANDLE BTN */
+.copy-handle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.25);
+    cursor: pointer;
+    transition: 0.2s;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+.copy-handle-btn:hover { background: rgba(124,58,237,0.35); }
+.copy-handle-btn svg { width: 11px; height: 11px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ FULL-PAGE LOADER ═══ -->
+<div id="pageLoader">
+    <div class="spin"></div>
+    <p style="color: var(--muted); font-size: 14px;">Loading your tasks…</p>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast"></div>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+
+        <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+            <img src="images/logo.svg" class="w-7 h-7 hidden md:block" onerror="this.style.display='none'">
+            <span class="font-semibold text-[17px]">Exsub Group</span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+            <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="channels.html" class="text-white hover:text-purple-300 transition">Channels</a>
+            <a href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
+            <a href="subscriberstask.html" class="text-purple-300 font-semibold">Tasks</a>
+            <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
+            <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <div class="relative">
+                <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
+                <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+                    <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
+                    <div class="p-4 text-sm text-gray-400">No new notifications</div>
+                </div>
+            </div>
+            <div class="relative">
+                <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+                    <img id="navAvatar" src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+                    <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
+                </button>
+                <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+                    <div class="p-4 border-b border-[#232632]">
+                        <div class="flex items-center gap-3">
+                            <img id="dropAvatar" src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+                            <div>
+                                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
+                                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-2">
+                        <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+                        <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
+                        <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+        <div class="flex flex-col gap-4 text-sm">
+            <a href="analytics.html" class="text-white">Dashboard</a>
+            <a href="channels.html" class="text-white">Channels</a>
+            <a href="groups.html" class="text-white">Groups</a>
+            <a href="subscriberstask.html" class="text-purple-300 font-semibold">Tasks</a>
+            <a href="howtowork.html" class="text-white">How To Work</a>
+            <a href="exsubextension.html" class="text-white">Exsub Extension</a>
+            <a href="support.html" class="text-white">Contact &amp; Support</a>
+            <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="max-w-[1200px] mx-auto px-4 pt-28 pb-12 relative z-10">
+
+    <!-- ═══ PAGE HEADER ═══ -->
+    <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+            📺 Subscriber Star System
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black gradient-text">Subscriber Tasks</h1>
+        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
+            Subscribe to member channels and earn their subscription back.
+            Watch a video, subscribe, and grow your channel together with creators worldwide.
+        </p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-6">
+
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
+
+        <!-- PROFILE CARD -->
+        <div class="card rounded-3xl p-5">
+            <div class="flex items-center gap-4">
+                <img id="sideAvatar" src="https://i.pravatar.cc/100"
+                    class="w-14 h-14 rounded-2xl border-2 border-purple-500 object-cover flex-shrink-0">
+                <div class="min-w-0">
+                    <h2 id="sideName" class="font-semibold text-base truncate">—</h2>
+                    <p id="sideCode" class="text-muted text-sm">—</p>
+                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium">Active</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK STATS -->
+        <div class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-4">My Task Stats</h2>
+            <div class="space-y-3 text-sm">
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
+                    <span id="st-nowork" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span>
+                    <span id="st-subscribed" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Unsubscribed</span>
+                    <span id="st-unsub" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
+                    <span id="st-rejected" class="font-bold">—</span>
+                </div>
+                <div class="border-t border-[#232632] pt-3 flex items-center justify-between">
+                    <span class="text-muted">Total Tasks</span>
+                    <span id="st-total" class="font-bold text-purple-400">—</span>
+                </div>
+            </div>
+
+            <!-- Exchange status counts -->
+            <div class="mt-4 pt-4 border-t border-[#232632] space-y-2.5 text-sm">
+                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Sub Back</span>
+                    <span id="st-awaiting" class="font-bold text-blue-400">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span>
+                    <span id="st-both" class="font-bold text-teal-400">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBSCRIPTION LIMIT CARD — no button, proof is uploaded via extension -->
+        <div id="limitCard" class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Subscription Limit</h2>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-muted">Subscribed</span>
+                    <span id="lim-subscribed" class="font-bold">—</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-muted">Limit</span>
+                    <span id="lim-limit" class="font-bold text-purple-400">—</span>
+                </div>
+                <div id="lim-reached-row" class="hidden flex justify-between">
+                    <span class="text-muted">Status</span>
+                    <span class="font-bold text-red-400">Limit Reached</span>
+                </div>
+            </div>
+            <div id="lim-bar-wrap" class="mt-3">
+                <div class="w-full bg-[#1a1d27] rounded-full h-2">
+                    <div id="lim-bar" class="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all" style="width:0%"></div>
+                </div>
+            </div>
+            <p class="text-xs text-muted mt-3 leading-relaxed">
+                📎 You can submit Subscription proof via the
+                <a href="exsubextension.html" class="text-purple-300 underline hover:text-purple-200">Exsub Extension</a>.
+            </p>
+        </div>
+
+    </aside>
+
+    <!-- ─── CONTENT ─── -->
+    <main class="flex-1 min-w-0">
+
+        <!-- BLOCKED BANNER -->
+        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-800/60" style="background:linear-gradient(180deg,#1c0a0a,#120606);">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
+                <div>
+                    <h3 class="font-semibold text-red-300 mb-1">Group Access Restricted</h3>
+                    <p id="blockedMsg" class="text-red-400/80 text-sm leading-relaxed">Your account has been restricted from the Subscribers Group.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP BAR -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+            <div>
+                <h2 class="text-2xl font-bold">My Tasks</h2>
+                <p class="text-muted mt-1 text-sm">Track your subscriber exchange tasks below</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input id="searchInput" type="text" placeholder="Search Task ID or Member…"
+                    oninput="applyFilter()"
+                    class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[48px] outline-none w-full sm:w-[210px] text-sm focus:border-purple-500 transition">
+                <!-- PROOF BUTTON → links to proof page -->
+                <a href="proof.html"
+                    class="btn-teal px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm no-underline">
+                    🎥 View Proofs
+                </a>
+                <!-- CREATE TASKS BUTTON -->
+                <button id="createBtn" onclick="openCreateModal()"
+                    class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Create Tasks
+                </button>
+            </div>
+        </div>
+
+        <!-- HOW IT WORKS BANNER -->
+        <div class="card rounded-3xl p-5 mb-6 border border-purple-500/15">
+            <h3 class="font-semibold text-sm text-purple-300 mb-3">📋 How Subscriber Tasks Work</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div>Open the target channel on YouTube and <strong class="text-white">pick any video</strong> to watch</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div>Watch the video for at least <strong class="text-white">2 full minutes</strong> (minimum 1 min before subscribing)</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div><strong class="text-white">Subscribe</strong> to the channel, then come back and click <em>Mark Subscribed</em></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER TABS -->
+        <div class="flex flex-wrap gap-2 mb-6">
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('NotWorkYet',this)">
+                <span class="dot bg-yellow-400 mr-1"></span>Not Started
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('Subscribed',this)">
+                <span class="dot bg-green-400 mr-1"></span>Subscribed
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('Unsubscribed',this)">
+                <span class="dot bg-red-400 mr-1"></span>Unsubscribed
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('Rejected',this)">
+                <span class="dot bg-gray-400 mr-1"></span>Rejected
+            </button>
+            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('All',this)">All Tasks</button>
+        </div>
+
+        <!-- TASK LIST (skeletons shown first) -->
+        <div id="taskList" class="space-y-4">
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">📋</div>
+            <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                You don't have any tasks here yet.<br>
+                Click <strong class="text-white">Create Tasks</strong> to generate new subscriber tasks and start growing!
+            </p>
+            <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
+        </div>
+
+        <!-- PAGINATION -->
+        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
+        </div>
+
+    </main>
+</div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="relative z-10 border-t border-[#1e212c]">
+    <div class="max-w-[1400px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <img src="images/logo.svg" class="w-6 h-6" onerror="this.style.display='none'">
+                <span class="font-semibold">Exsub Group</span>
+            </div>
+            <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
+        </div>
+        <div class="flex gap-6 text-sm text-muted">
+            <a href="#" class="hover:text-white transition">Privacy</a>
+            <a href="#" class="hover:text-white transition">Terms</a>
+            <a href="support.html" class="hover:text-white transition">Support</a>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══ CREATE TASKS MODAL ═══ -->
+<div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">Create Subscriber Tasks</h2>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+        <p class="text-muted text-sm mb-5 leading-relaxed">
+            The system will find up to <strong class="text-white">20 members</strong> you haven't worked with yet and create <strong class="text-white">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
+        </p>
+        <div class="bg-[#1a1d27] border border-[#232632] rounded-2xl p-4 mb-5 space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Your Pending (Not Started) Tasks</span>
+                <span id="modalPendingCount" class="font-bold text-lg">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Can Create Tasks</span>
+                <span id="modalCanCreate" class="font-semibold">—</span>
+            </div>
+        </div>
+        <div id="createResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
+        <div class="flex gap-3">
+            <button onclick="closeCreateModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doCreateBtn" onclick="doCreateTasks()" class="btn-purple flex-1 py-3 rounded-2xl text-sm font-semibold">Generate Tasks</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ TASK DETAIL MODAL ═══ -->
+<div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
+    <div class="modal-box max-w-[540px]">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">Task Detail</h2>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+        <div id="detailBody" class="space-y-4"></div>
+    </div>
+</div>
+
+<!-- ═══ REPORT ISSUE MODAL ═══ -->
+<div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
+    <div class="modal-box max-w-[480px]">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-bold text-red-300">⚠ Report Issue</h2>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white transition text-lg">✕</button>
+        </div>
+
+        <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
+
+        <!-- Preset issues -->
+        <div class="flex flex-wrap gap-2 mb-4">
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Channel is deleted')">🗑 Channel deleted</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Channel is private')">🔒 Channel private</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Comments disabled')">💬 Comments disabled</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'No videos on channel')">📹 No videos</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Subscription not working')">⚡ Sub not working</button>
+        </div>
+
+        <!-- Custom message -->
+        <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
+        <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
+            class="w-full bg-[#1a1d27] border border-[#232632] rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
+
+        <input type="hidden" id="issueTaskId">
+        <div id="issuePillSelected" class="text-xs text-red-400 mb-3 min-h-[16px]"></div>
+
+        <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
+
+        <div class="flex gap-3">
+            <button onclick="closeIssueModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doIssueBtn" onclick="doSubmitIssue()" class="btn-red flex-1 py-3 rounded-2xl text-sm font-semibold">Submit Issue</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ SCRIPTS ═══ -->
+<script>
+/* ──────────────────────────────────────────
+   AUTH + LOGOUT
+────────────────────────────────────────── */
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
+}
+
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
+
+if (!savedUsername || !savedPassword) {
+    window.location.href = "signin.html";
+}
+
+/* ──────────────────────────────────────────
+   NAVBAR MENUS
+────────────────────────────────────────── */
+document.getElementById("mobileMenuBtn").addEventListener("click", e => {
+    e.stopPropagation();
+    document.getElementById("mobileMenu").classList.toggle("hidden");
+});
+document.getElementById("profileBtn").addEventListener("click", e => {
+    e.stopPropagation();
+    document.getElementById("profileDropdown").classList.toggle("hidden");
+});
+document.getElementById("notifBtn").addEventListener("click", e => {
+    e.stopPropagation();
+    document.getElementById("notifDropdown").classList.toggle("hidden");
+});
+document.addEventListener("click", () => {
+    document.getElementById("mobileMenu").classList.add("hidden");
+    document.getElementById("profileDropdown").classList.add("hidden");
+    document.getElementById("notifDropdown").classList.add("hidden");
+});
+
+document.getElementById("navUserName").textContent     = savedUsername || "Member";
+document.getElementById("dropdownUserName").textContent = savedUsername || "Member";
+document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCode || "0000");
+</script>
+
+<script>
+/* ──────────────────────────────────────────
+   CONFIG
+────────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxEkeX58fp73CZRI4E6A4zLCyq7KkXGtwvXJFz95b3WIDjam--I4lwBna7XaDezc3-Zfg/exec';
+const USER_CODE  = savedUserCode;
+
+/* ──────────────────────────────────────────
+   STATE
+────────────────────────────────────────── */
+let allTasks    = [];
+let filtered    = [];
+let activeTab   = 'All';
+let currentPage = 1;
+const PER_PAGE  = 10;
+let member      = null;
+let perfStats   = null;
+let isBlocked   = false;
+
+// Channel caches
+// channelNameCache:   channelId → channelName
+// channelHandleCache: channelId → channelHandle (e.g. @ma7hargaming)
+let channelNameCache   = {};
+let channelHandleCache = {};
+
+/* ──────────────────────────────────────────
+   BOOT
+────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    try {
+        const res  = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
+        const data = await res.json();
+
+        hideLoader();
+
+        if (!data.success) {
+            showToast(data.message || 'Error loading data', true);
+            clearSkeletons();
+            return;
+        }
+
+        member    = data.member;
+        perfStats = data.perfStats || null;
+        allTasks  = data.tasks || [];
+
+        if (data.channelNames) {
+            channelNameCache = data.channelNames;
+        }
+        // Server should also return channelHandles map: channelId → handle
+        if (data.channelHandles) {
+            channelHandleCache = data.channelHandles;
+        }
+
+        renderMember();
+        checkBlock();
+        calcStats();
+        renderLimitCard();
+        applyFilter();
+
+    } catch (e) {
+        hideLoader();
+        clearSkeletons();
+        showToast('Could not connect to server.', true);
+    }
+}
+
+function hideLoader() {
+    const loader = document.getElementById('pageLoader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.style.display = 'none', 400);
+}
+
+/* ──────────────────────────────────────────
+   RENDER MEMBER
+────────────────────────────────────────── */
+function renderMember() {
+    if (!member) return;
+
+    const pic  = member.ProfilePicture || 'https://i.pravatar.cc/100';
+    const name = member.UserName  || savedUsername || '—';
+    const code = member.UserCode  || savedUserCode || '—';
+
+    document.getElementById('navAvatar').src               = pic;
+    document.getElementById('navUserName').textContent     = name;
+    document.getElementById('dropAvatar').src              = pic;
+    document.getElementById('dropdownUserName').textContent = name;
+    document.getElementById('dropdownUserCode').textContent = `ID #${code}`;
+    document.getElementById('sideAvatar').src              = pic;
+    document.getElementById('sideName').textContent        = name;
+    document.getElementById('sideCode').textContent        = `ID #${code}`;
+
+    const st   = member.Status || 'Active';
+    const stEl = document.getElementById('sideStatus');
+    stEl.textContent = st;
+    if      (st === 'Active')    stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium';
+    else if (st === 'Suspended') stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-400 font-medium';
+    else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 font-medium';
+}
+
+/* ──────────────────────────────────────────
+   BLOCK CHECK
+────────────────────────────────────────── */
+function checkBlock() {
+    if (!member) return;
+    const suspended = member.ViolationFlag === 'Suspended';
+    const disabled  = member.SubscribersPromotionActive === 'No';
+
+    if (suspended || disabled) {
+        isBlocked = true;
+        document.getElementById('blockedBanner').classList.remove('hidden');
+        document.getElementById('blockedMsg').textContent = suspended
+            ? `Your account is suspended until ${member.SuspendedUntil || 'further notice'}. Reason: ${member.ViolationReason || 'Policy violation.'}`
+            : 'Subscriber group promotion is currently disabled for your account. Clear your pending tasks or submit your subscription list via the Exsub Extension to re-enable.';
+
+        const btn = document.getElementById('createBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-40', 'cursor-not-allowed');
+    }
+}
+
+/* ──────────────────────────────────────────
+   STATS
+────────────────────────────────────────── */
+function calcStats() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+
+    document.getElementById('st-nowork').textContent     = myTasks.filter(t => t.Status === 'NotWorkYet').length;
+    document.getElementById('st-subscribed').textContent = myTasks.filter(t => t.Status === 'Subscribed').length;
+    document.getElementById('st-unsub').textContent      = myTasks.filter(t => t.Status === 'Unsubscribed').length;
+    document.getElementById('st-rejected').textContent   = myTasks.filter(t => t.Status === 'Rejected').length;
+    document.getElementById('st-total').textContent      = myTasks.length;
+
+    const awaitingCount = myTasks.filter(t =>
+        t.Status === 'Subscribed' && t.PairedStatus !== 'Subscribed'
+    ).length;
+    const bothCount = myTasks.filter(t =>
+        t.Status === 'Subscribed' && t.PairedStatus === 'Subscribed'
+    ).length;
+
+    document.getElementById('st-awaiting').textContent = awaitingCount;
+    document.getElementById('st-both').textContent     = bothCount;
+}
+
+/* ──────────────────────────────────────────
+   LIMIT CARD
+────────────────────────────────────────── */
+function renderLimitCard() {
+    if (!perfStats) return;
+
+    const subscribed  = parseInt(perfStats.TotalSubscribeChannels) || 0;
+    const limit       = parseInt(perfStats.SubscribersLimit) || 50;
+    const reached     = perfStats.LimitReached === 'Yes';
+    const pct         = Math.min(100, Math.round(subscribed / limit * 100));
+
+    document.getElementById('lim-subscribed').textContent = subscribed;
+    document.getElementById('lim-limit').textContent      = limit;
+    document.getElementById('lim-bar').style.width        = pct + '%';
+
+    if (reached) {
+        document.getElementById('lim-reached-row').classList.remove('hidden');
+        document.getElementById('lim-bar').classList.add('bg-red-500');
+        document.getElementById('lim-bar').classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
+    }
+}
+
+/* ──────────────────────────────────────────
+   FILTER + SEARCH
+────────────────────────────────────────── */
+function setTab(tab, btn) {
+    activeTab   = tab;
+    currentPage = 1;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter();
+}
+
+function applyFilter() {
+    const q = (document.getElementById('searchInput').value || '').toLowerCase();
+
+    filtered = allTasks.filter(t => {
+        if (t.UserCode !== USER_CODE) return false;
+
+        const tabMatch =
+            activeTab === 'All'          ? true :
+            activeTab === 'NotWorkYet'   ? t.Status === 'NotWorkYet' :
+            activeTab === 'Subscribed'   ? t.Status === 'Subscribed' :
+            activeTab === 'Unsubscribed' ? t.Status === 'Unsubscribed' :
+            activeTab === 'Rejected'     ? t.Status === 'Rejected' :
+            true;
+
+        const chanName   = (channelNameCache[t.TargetChannelId]   || '').toLowerCase();
+        const chanHandle = (channelHandleCache[t.TargetChannelId] || '').toLowerCase();
+        const searchMatch = !q ||
+            (t.TaskID          || '').toLowerCase().includes(q) ||
+            (t.TargetUserCode  || '').toLowerCase().includes(q) ||
+            (t.TargetChannelId || '').toLowerCase().includes(q) ||
+            chanName.includes(q) ||
+            chanHandle.includes(q);
+
+        return tabMatch && searchMatch;
+    });
+
+    currentPage = 1;
+    renderList();
+}
+
+/* ──────────────────────────────────────────
+   RENDER LIST
+────────────────────────────────────────── */
+function renderList() {
+    const list  = document.getElementById('taskList');
+    const empty = document.getElementById('emptyState');
+    const pages = document.getElementById('paginationBar');
+
+    if (filtered.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        pages.classList.add('hidden');
+        return;
+    }
+
+    empty.classList.add('hidden');
+
+    const total = Math.ceil(filtered.length / PER_PAGE);
+    currentPage = Math.min(currentPage, total);
+    const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+    list.innerHTML = slice.map(taskCard).join('');
+
+    if (filtered.length > PER_PAGE) {
+        pages.classList.remove('hidden');
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${total}`;
+        document.getElementById('prevBtn').disabled     = currentPage === 1;
+        document.getElementById('nextBtn').disabled     = currentPage === total;
+    } else {
+        pages.classList.add('hidden');
+    }
+}
+
+function changePage(d) {
+    currentPage += d;
+    renderList();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function clearSkeletons() {
+    document.getElementById('taskList').innerHTML = '';
+    document.getElementById('emptyState').classList.remove('hidden');
+}
+
+/* ──────────────────────────────────────────
+   HELPERS
+────────────────────────────────────────── */
+const STATUS_CFG = {
+    'NotWorkYet':   { bg: 'bg-yellow-500/15', text: 'text-yellow-400', dot: 'bg-yellow-400', label: 'Not Started'  },
+    'Subscribed':   { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Subscribed'   },
+    'Unsubscribed': { bg: 'bg-red-500/15',    text: 'text-red-400',    dot: 'bg-red-400',    label: 'Unsubscribed' },
+    'Rejected':     { bg: 'bg-gray-500/15',   text: 'text-gray-400',   dot: 'bg-gray-400',   label: 'Rejected'     },
+};
+
+function pairedBadge(t) {
+    if (t.Status !== 'Subscribed') return '';
+    if (t.PairedStatus === 'Subscribed') {
+        return `<span class="paired-badge bg-teal-500/15 text-teal-400">✓ They Subbed Back</span>`;
+    } else {
+        return `<span class="paired-badge bg-blue-500/15 text-blue-400">⏳ Awaiting Their Sub</span>`;
+    }
+}
+
+function getChannelName(id)   { return channelNameCache[id]   || null; }
+function getChannelHandle(id) { return channelHandleCache[id] || null; }
+
+/**
+ * Build YouTube search URL for a channel handle.
+ * If handle is available: https://www.youtube.com/results?search_query=@handle
+ * If no handle, fallback to direct channel URL.
+ */
+function buildChannelUrl(channelId) {
+    const handle = getChannelHandle(channelId);
+    if (handle) {
+        const h = handle.startsWith('@') ? handle : '@' + handle;
+        return `https://www.youtube.com/results?search_query=${encodeURIComponent(h)}`;
+    }
+    return `https://www.youtube.com/channel/${channelId}`;
+}
+
+function copyHandle(handle, btn) {
+    const h = handle.startsWith('@') ? handle : '@' + handle;
+    navigator.clipboard.writeText(h).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+    }).catch(() => showToast('Could not copy handle.', true));
+}
+
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+
+/* ──────────────────────────────────────────
+   TASK CARD
+────────────────────────────────────────── */
+function taskCard(t) {
+    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', dot: 'bg-gray-400', label: t.Status };
+
+    const canMark    = t.Status === 'NotWorkYet' && !isBlocked;
+    const chanName   = getChannelName(t.TargetChannelId);
+    const chanHandle = getChannelHandle(t.TargetChannelId);
+    const chanUrl    = buildChannelUrl(t.TargetChannelId);
+
+    // Channel display
+    const chanDisplay = chanName
+        ? `<span class="font-semibold text-white">${chanName}</span>`
+        : `<span class="font-mono text-purple-300 text-sm">${t.TargetChannelId || '—'}</span>`;
+
+    // Handle row with copy button
+    const handleRow = chanHandle
+        ? (() => {
+            const h = chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle;
+            const escaped = h.replace(/'/g, "\\'");
+            return `
+            <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="text-xs text-purple-400 font-mono">${h}</span>
+                <button class="copy-handle-btn" onclick="copyHandle('${escaped}',this)" title="Copy handle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#a78bfa">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>`;
+        })()
+        : (t.TargetChannelId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${t.TargetChannelId}</div>` : '');
+
+    // Issue display
+    const issueRow = t.Issue
+        ? `<span class="text-xs text-red-400 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
+        : '';
+
+    return `
+    <div class="task-card rounded-3xl p-5">
+        <!-- TOP ROW: ID + Badges -->
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+            <code class="text-xs text-muted font-mono bg-[#1a1d27] px-2.5 py-1 rounded-lg">${t.TaskID}</code>
+            <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
+            ${pairedBadge(t)}
+            ${issueRow}
+        </div>
+
+        <div class="flex flex-col xl:flex-row gap-5">
+            <!-- LEFT: Channel info -->
+            <div class="flex-1 min-w-0">
+
+                <!-- Channel instruction box -->
+                <div class="instructions-box mb-3">
+                    <p class="text-xs text-purple-300 font-semibold mb-2">📺 Subscribe to this channel:</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-[#1a1d27] flex items-center justify-center text-lg flex-shrink-0">▶</div>
+                        <div class="min-w-0 flex-1">
+                            <div class="text-sm">${chanDisplay}</div>
+                            ${handleRow}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issue section -->
+                <div class="issue-box mt-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-red-400/80 font-medium">⚠ Report Issue with this task</span>
+                        <button onclick="openIssueModal('${t.TaskID}')"
+                            class="text-xs text-red-400 hover:text-red-300 underline transition">
+                            ${t.Issue ? 'Update Issue' : 'Report'}
+                        </button>
+                    </div>
+                    ${t.Issue ? `<p class="text-xs text-red-400/70 mt-1">Current: ${t.Issue}</p>` : ''}
+                </div>
+
+                <!-- Meta -->
+                <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
+                    <span>Member: <span class="text-white/70">${t.TargetUserCode || '—'}</span></span>
+                    <span>Created: <span class="text-white/70">${fmtDate(t.CreatedDate)}</span></span>
+                    ${t.WorkedDate  ? `<span>Worked: <span class="text-white/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
+                    ${t.CheckedDate ? `<span>Checked: <span class="text-white/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
+                </div>
+            </div>
+
+            <!-- RIGHT: Actions -->
+            <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[160px] flex-shrink-0">
+                ${t.TargetChannelId ? `
+                <a href="${chanUrl}" target="_blank" rel="noopener"
+                    class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                    ▶ Open Channel
+                </a>` : ''}
+                ${canMark
+                    ? `<button onclick="doMarkSubscribed('${t.TaskID}')"
+                        class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                        ✓ Mark Subscribed
+                       </button>`
+                    : `<button onclick="openDetail('${t.TaskID}')"
+                        class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
+                        View Details
+                       </button>`
+                }
+            </div>
+        </div>
+    </div>`;
+}
+
+/* ──────────────────────────────────────────
+   MARK SUBSCRIBED
+────────────────────────────────────────── */
+async function doMarkSubscribed(taskId) {
+    showToast('Updating task status…');
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'markSubscribed', taskId, userCode: USER_CODE })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            const now = new Date().toISOString();
+            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+            if (myTask) {
+                myTask.Status       = 'Subscribed';
+                myTask.WorkedDate   = now;
+                myTask.PairedStatus = data.pairedStatus || (data.bothSubscribed ? 'Subscribed' : 'NotWorkYet');
+            }
+            showToast(data.bothSubscribed ? '🎉 Both subscribed! Exchange complete!' : '✅ Task marked as Subscribed!');
+            calcStats();
+            applyFilter();
+        } else {
+            showToast(data.message || 'Update failed.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+}
+
+/* ──────────────────────────────────────────
+   DETAIL MODAL
+────────────────────────────────────────── */
+function openDetail(taskId) {
+    const t = allTasks.find(x => x.TaskID === taskId);
+    if (!t) return;
+
+    const sc         = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', label: t.Status };
+    const chanName   = getChannelName(t.TargetChannelId);
+    const chanHandle = getChannelHandle(t.TargetChannelId);
+    const chanUrl    = buildChannelUrl(t.TargetChannelId);
+
+    const h = chanHandle
+        ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle)
+        : null;
+
+    let partnerLabel = '—';
+    let partnerClass = 'text-muted';
+    if (t.Status === 'Subscribed') {
+        if (t.PairedStatus === 'Subscribed') {
+            partnerLabel = 'Subscribed Back ✓';
+            partnerClass = 'text-teal-400';
+        } else {
+            partnerLabel = 'Not Yet Subscribed';
+            partnerClass = 'text-blue-400';
+        }
+    } else {
+        partnerLabel = 'Awaiting Your Action';
+        partnerClass = 'text-muted';
+    }
+
+    const escapedHandle = h ? h.replace(/'/g, "\\'") : '';
+
+    document.getElementById('detailBody').innerHTML = `
+        <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-[#1a1d27] rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Task ID</div>
+                <div class="font-mono font-semibold text-purple-400">${t.TaskID}</div>
+            </div>
+            <div class="bg-[#1a1d27] rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Your Status</div>
+                <div class="font-semibold ${sc.text}">${sc.label}</div>
+            </div>
+            <div class="bg-[#1a1d27] rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">You (Worker)</div>
+                <div class="font-semibold">${t.UserCode || '—'}</div>
+            </div>
+            <div class="bg-[#1a1d27] rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Target Member</div>
+                <div class="font-semibold text-purple-300">${t.TargetUserCode || '—'}</div>
+            </div>
+            <div class="bg-[#1a1d27] rounded-2xl p-4 col-span-2">
+                <div class="text-muted text-xs mb-1">Target Channel</div>
+                <div class="font-semibold">${chanName || '—'}</div>
+                ${h ? `
+                <div class="flex items-center gap-1.5 mt-1">
+                    <span class="font-mono text-xs text-purple-400">${h}</span>
+                    <button class="copy-handle-btn" onclick="copyHandle('${escapedHandle}',this)" title="Copy handle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>` : ''}
+                <div class="font-mono text-xs text-muted mt-0.5">${t.TargetChannelId || '—'}</div>
+            </div>
+            <div class="bg-[#1a1d27] rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Partner Sub Status</div>
+                <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
+            </div>
+            <div class="bg-[#1a1d27] rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Issue</div>
+                <div class="${t.Issue ? 'text-red-400' : 'text-muted'} text-xs">${t.Issue || 'None'}</div>
+            </div>
+        </div>
+
+        ${t.TargetChannelId ? `
+        <a href="${chanUrl}" target="_blank" rel="noopener"
+            class="btn-purple w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-1">
+            ▶ Open Channel on YouTube
+        </a>` : ''}
+
+        <button onclick="closeDetailModal(); openIssueModal('${t.TaskID}')"
+            class="btn-red w-full py-3 rounded-2xl text-sm font-semibold text-center mt-2">
+            ⚠ Report / Update Issue
+        </button>
+
+        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#232632]">
+            <div>Created: ${fmtDate(t.CreatedDate)}</div>
+            ${t.WorkedDate  ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>`  : ''}
+            ${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}
+            ${t.LastUpdated ? `<div>Updated: ${fmtDate(t.LastUpdated)}</div>` : ''}
+        </div>`;
+
+    document.getElementById('detailModal').classList.add('open');
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+}
+
+/* ──────────────────────────────────────────
+   CREATE TASKS MODAL
+────────────────────────────────────────── */
+function openCreateModal() {
+    if (isBlocked) { showToast('Your account is restricted from this group.', true); return; }
+
+    const pending = allTasks.filter(t => t.Status === 'NotWorkYet' && t.UserCode === USER_CODE).length;
+    document.getElementById('modalPendingCount').textContent = pending;
+
+    const canCreate = pending < 5;
+    const canEl = document.getElementById('modalCanCreate');
+    canEl.textContent = canCreate ? 'Yes — tasks will be created' : 'No — complete your pending tasks first';
+    canEl.className   = `font-semibold ${canCreate ? 'text-green-400' : 'text-red-400'}`;
+
+    const btn = document.getElementById('doCreateBtn');
+    btn.disabled = !canCreate;
+    btn.classList.toggle('opacity-40', !canCreate);
+
+    document.getElementById('createResultBox').classList.add('hidden');
+    document.getElementById('createModal').classList.add('open');
+}
+
+function closeCreateModal() {
+    document.getElementById('createModal').classList.remove('open');
+}
+
+async function doCreateTasks() {
+    const btn = document.getElementById('doCreateBtn');
+    btn.textContent = 'Creating…';
+    btn.disabled    = true;
+
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'createSubscriberTasks', userCode: USER_CODE })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('createResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            box.textContent = `✅ ${data.created} new task(s) created! (${data.pairs} paired tasks created for other members too)`;
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            if (data.newTasks?.length) {
+                allTasks = [...allTasks, ...data.newTasks];
+                if (data.channelNames)   Object.assign(channelNameCache,   data.channelNames);
+                if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+                calcStats();
+                applyFilter();
+            }
+            showToast(`${data.created} task(s) created!`);
+        } else {
+            box.textContent = data.message || 'Could not create tasks.';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.textContent = 'Generate Tasks';
+    btn.disabled    = false;
+}
+
+/* ──────────────────────────────────────────
+   REPORT ISSUE MODAL
+────────────────────────────────────────── */
+let selectedIssuePill = '';
+
+function openIssueModal(taskId) {
+    selectedIssuePill = '';
+    document.getElementById('issueTaskId').value    = taskId;
+    document.getElementById('issueCustomText').value = '';
+    document.getElementById('issuePillSelected').textContent = '';
+    document.getElementById('issueResultBox').classList.add('hidden');
+
+    // Reset all pills
+    document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
+
+    // Pre-fill if task already has an issue
+    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (t && t.Issue) {
+        document.getElementById('issueCustomText').value = t.Issue;
+    }
+
+    document.getElementById('issueModal').classList.add('open');
+}
+
+function closeIssueModal() {
+    document.getElementById('issueModal').classList.remove('open');
+}
+
+function toggleIssuePill(btn, label) {
+    const wasSelected = btn.classList.contains('selected');
+    document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
+
+    if (wasSelected) {
+        selectedIssuePill = '';
+        document.getElementById('issuePillSelected').textContent = '';
+    } else {
+        btn.classList.add('selected');
+        selectedIssuePill = label;
+        document.getElementById('issuePillSelected').textContent = `Selected: ${label}`;
+    }
+}
+
+async function doSubmitIssue() {
+    const taskId     = document.getElementById('issueTaskId').value;
+    const customText = (document.getElementById('issueCustomText').value || '').trim();
+
+    // issueTitle = the selected preset pill label (or custom text if no pill)
+    const issueTitle = selectedIssuePill || customText;
+    // issueDescription = extra detail text (only meaningful when a pill is also selected)
+    const issueDescription = selectedIssuePill ? customText : '';
+
+    if (!issueTitle) {
+        showToast('Please select an issue type or write a description.', true);
+        return;
+    }
+
+    // Look up the task to get the TargetUserCode (channel owner being reported)
+    const task = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (!task) {
+        showToast('Task not found.', true);
+        return;
+    }
+
+    const targetUserCode = task.TargetUserCode;
+
+    const btn = document.getElementById('doIssueBtn');
+    btn.textContent = 'Submitting…';
+    btn.disabled    = true;
+
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action:          'reportIssue',
+                taskId,
+                reporterCode:    USER_CODE,       // person filing the issue
+                targetUserCode,                    // UserCode of the channel owner (goes into sheet UserCode col)
+                issueTitle,                        // preset label or free text
+                issueDescription,                  // extra detail (may be empty)
+                issueType:       selectedIssuePill || 'Custom'  // category label for admin filtering
+            })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('issueResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            box.textContent = `✅ Issue reported: "${issueTitle}"`;
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+
+            // Update local task so the card re-renders with the issue label
+            const issueDisplayText = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
+            task.Issue = issueDisplayText;
+
+            showToast('Issue reported successfully.');
+            applyFilter();
+            setTimeout(closeIssueModal, 1600);
+        } else {
+            box.textContent = data.message || 'Could not submit issue.';
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.textContent = 'Submit Issue';
+    btn.disabled    = false;
+}
+</script>
+</body>
+</html>

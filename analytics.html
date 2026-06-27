@@ -163,6 +163,34 @@ body::before{
 ::-webkit-scrollbar-track{ background:transparent; }
 ::-webkit-scrollbar-thumb{ background:#252938; border-radius:4px; }
 
+/* ── ISSUE CARD ── */
+.issue-card{
+  border-radius:14px; padding:14px 18px;
+  display:flex; align-items:flex-start; gap:12px;
+  border:1px solid; transition:.25s;
+}
+.issue-open   { background:rgba(239,68,68,0.07);  border-color:rgba(239,68,68,0.28); }
+.issue-pending{ background:rgba(251,191,36,0.07); border-color:rgba(251,191,36,0.28); }
+.issue-resolved{ background:rgba(34,197,94,0.07); border-color:rgba(34,197,94,0.28); }
+.issue-badge{
+  display:inline-flex; align-items:center; padding:2px 10px; border-radius:999px;
+  font-size:10px; font-weight:700; letter-spacing:.4px; white-space:nowrap;
+}
+/* ── GROUP TASK CARD ── */
+.group-task-card{
+  border-radius:20px; padding:22px 24px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  border:1px solid; transition:.3s; flex-wrap:wrap;
+}
+.group-task-card:hover{ transform:translateY(-2px); }
+.start-task-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 22px; border-radius:12px;
+  font-size:13px; font-weight:700; text-decoration:none;
+  transition:.2s; white-space:nowrap; flex-shrink:0;
+}
+.start-task-btn:hover{ opacity:.85; transform:scale(1.03); }
+
 /* ── FADE IN ── */
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:translateY(0); } }
 .fade-in{ animation:fadeUp .5s ease both; }
@@ -191,6 +219,7 @@ body::before{
       <a id="lnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
       <a id="lnkChannels"  href="channels.html"       class="text-white hover:text-purple-300 transition">Channels</a>
       <a id="lnkGroups"    href="groups.html"         class="text-white hover:text-purple-300 transition">Groups</a>
+            <a href="subscriberstask.html" class="text-white hover:text-purple-300 transition">Tasks</a>
       <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
       <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
       <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
@@ -277,21 +306,12 @@ body::before{
   <div class="flex flex-col gap-8">
 
     <!-- ── HEADER ── -->
-    <div class="fade-in flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs mb-3">
-          📊 Member Analytics
-        </div>
-        <h1 class="text-4xl font-black gradient-text">Your Dashboard</h1>
-        <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1"></div>
+    <div class="fade-in">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs mb-3">
+        📊 Member Analytics
       </div>
-      <div class="card px-5 py-3 flex items-center gap-3">
-        <div id="chipAvatar" style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>
-        <div>
-          <div id="chipName"  class="font-bold text-sm"></div>
-          <div id="chipCode"  class="text-xs text-purple-400 font-semibold"></div>
-        </div>
-      </div>
+      <h1 class="text-4xl font-black gradient-text">Your Dashboard</h1>
+      <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1"></div>
     </div>
 
     <!-- ── BLOCKED BANNER ── -->
@@ -396,13 +416,22 @@ body::before{
     <!-- ══════════════════ ACTIVE CONTENT ══════════════════ -->
     <div id="activeContent">
 
-      <!-- ── MY GROUPS ── -->
+      <!-- ── ISSUES PANEL ── -->
+      <div id="issuesPanel" class="hidden fade-in delay-1 mb-8">
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+          <h2 class="text-lg font-bold flex items-center gap-2">⚠️ <span>Your Issues</span></h2>
+          <a id="viewAllIssuesBtn" href="issues.html" class="hidden text-xs text-yellow-400 hover:text-yellow-300 transition font-medium">View all issues →</a>
+        </div>
+        <div id="issuesList" class="flex flex-col gap-3"></div>
+      </div>
+
+      <!-- ── MY GROUPS (task cards) ── -->
       <div id="groupsSection" class="hidden fade-in delay-2 mb-8">
         <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
           <h2 class="text-xl font-bold">My Groups</h2>
           <a href="groups.html" class="text-xs text-purple-400 hover:text-purple-300 transition font-medium">Join more groups →</a>
         </div>
-        <div id="groupBadgesWrap" class="flex flex-wrap gap-3 mb-4"></div>
+        <div id="groupTaskCards" class="flex flex-col gap-4 mb-4"></div>
         <div class="card p-4 flex items-center gap-3">
           <span style="font-size:18px;">💡</span>
           <span class="text-gray-400 text-sm">Want to join more groups? Go to
@@ -852,6 +881,12 @@ body::before{
 /* ── CONFIG ── */
 var API = "https://script.google.com/macros/s/AKfycby_Q4l6nf6NVxpR2pSQ6pGkCiujWTEgnT4uEypS2jrBP60_UBS4r193KufL5gFYH1C5WQ/exec";
 
+/* Issues sheet config */
+var ISSUES_SHEET_ID   = "1KR3c40qahWw_JIkmQtxFhVl-8VMS3PmrlFJ_1lC6Cso";
+var ISSUES_SHEET_NAME = "Sheet1";
+var ISSUES_URL = "https://docs.google.com/spreadsheets/d/" + ISSUES_SHEET_ID
+  + "/gviz/tq?tqx=out:json&sheet=" + encodeURIComponent(ISSUES_SHEET_NAME);
+
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
 var username = localStorage.getItem("username") || "";
@@ -876,6 +911,94 @@ async function loadDashboard() {
   }
 }
 
+/* ══════════════════ ISSUES ══════════════════ */
+async function loadIssues() {
+  try {
+    var res  = await fetch(ISSUES_URL);
+    var text = await res.text();
+    /* gviz returns: google.visualization.Query.setResponse({...}) */
+    var json = JSON.parse(text.replace(/^[^(]+\(/, "").replace(/\);?\s*$/, ""));
+    var rows = json.table.rows || [];
+    /* cols: 0=UserCode 1=IssueTitle 2=IssueDescription 3=IssueType 4=IssueStatus
+             5=AdminReply 6=CreatedDate 7=UpdatedDate */
+    var myIssues = rows.map(function(r){
+      return {
+        userCode:    (r.c[0] && r.c[0].v) ? String(r.c[0].v).trim().toUpperCase() : "",
+        title:       (r.c[1] && r.c[1].v) ? String(r.c[1].v).trim() : "",
+        description: (r.c[2] && r.c[2].v) ? String(r.c[2].v).trim() : "",
+        type:        (r.c[3] && r.c[3].v) ? String(r.c[3].v).trim() : "",
+        status:      (r.c[4] && r.c[4].v) ? String(r.c[4].v).trim().toLowerCase() : "open",
+        adminReply:  (r.c[5] && r.c[5].v) ? String(r.c[5].v).trim() : "",
+        createdDate: (r.c[6] && r.c[6].v) ? String(r.c[6].v).trim() : "",
+        updatedDate: (r.c[7] && r.c[7].v) ? String(r.c[7].v).trim() : ""
+      };
+    }).filter(function(i){ return i.userCode === usercode && i.title; });
+
+    if (myIssues.length === 0) return;
+
+    /* Group by title — show each unique title once (with count if >1) */
+    var grouped = {};
+    myIssues.forEach(function(issue){
+      var key = issue.title.toLowerCase();
+      if (!grouped[key]) grouped[key] = { issue: issue, count: 0 };
+      grouped[key].count++;
+    });
+    var uniqueIssues = Object.values(grouped);
+    var toShow = uniqueIssues.slice(0, 2);
+    var hasMore = uniqueIssues.length > 2;
+
+    var issueTypeIcon = { bug:"🐛", complaint:"📣", request:"📝", warning:"⚠️" };
+
+    document.getElementById("issuesList").innerHTML = toShow.map(function(g){
+      var i = g.issue;
+      var statusKey = i.status;
+      var cls  = statusKey === "resolved" ? "issue-resolved"
+               : statusKey === "pending"  ? "issue-pending"
+               :                            "issue-open";
+      var statusColor = statusKey === "resolved" ? "#86efac"
+                      : statusKey === "pending"  ? "#fde68a"
+                      :                            "#fca5a5";
+      var badgeBg = statusKey === "resolved" ? "rgba(34,197,94,0.2)"
+                  : statusKey === "pending"  ? "rgba(251,191,36,0.2)"
+                  :                            "rgba(239,68,68,0.2)";
+      var icon = issueTypeIcon[i.type.toLowerCase()] || "⚠️";
+      var countBadge = g.count > 1
+        ? '<span style="background:rgba(255,255,255,0.08);border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700;color:#9ca3af;margin-left:6px;">×' + g.count + '</span>'
+        : "";
+      var adminBlock = i.adminReply
+        ? '<div style="margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);">'
+          + '<span style="font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.4px;">Admin Reply</span>'
+          + '<div style="font-size:12px;color:#c4b5fd;margin-top:3px;">' + i.adminReply + '</div>'
+          + '</div>'
+        : "";
+      return '<div class="issue-card ' + cls + '">'
+        + '<span style="font-size:20px;flex-shrink:0;">' + icon + '</span>'
+        + '<div class="flex-1 min-w-0">'
+        +   '<div class="flex items-center gap-2 flex-wrap">'
+        +     '<span class="font-bold text-sm">' + i.title + '</span>'
+        +     countBadge
+        +     '<span class="issue-badge" style="background:' + badgeBg + ';color:' + statusColor + ';">' + i.status.toUpperCase() + '</span>'
+        +     (i.type ? '<span class="issue-badge" style="background:rgba(255,255,255,0.07);color:#9ca3af;">' + i.type + '</span>' : '')
+        +   '</div>'
+        +   (i.description ? '<div style="font-size:12px;color:#9ca3af;margin-top:4px;line-height:1.5;">' + i.description.substring(0,120) + (i.description.length>120?"…":"") + '</div>' : '')
+        +   adminBlock
+        + '</div>'
+        + '</div>';
+    }).join("");
+
+    if (hasMore) {
+      var btn = document.getElementById("viewAllIssuesBtn");
+      btn.classList.remove("hidden");
+      btn.textContent = "View all " + uniqueIssues.length + " issues →";
+    }
+
+    show("issuesPanel");
+  } catch(e) {
+    /* Issues panel stays hidden on error — non-critical */
+    console.warn("Issues load failed:", e);
+  }
+}
+
 /* ══════════════════ RENDER ══════════════════ */
 function renderDashboard(data) {
   var m  = data.member               || {};
@@ -890,8 +1013,6 @@ function renderDashboard(data) {
   var isComplete = m.accountCompleted === "Yes";
 
   /* Header */
-  setText("chipName",        m.userName || username || "Member");
-  setText("chipCode",        m.userCode || usercode);
   setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · Joined " + fmtDate(m.dateOfJoin));
 
   /* Profile picture in nav avatar */
@@ -915,7 +1036,7 @@ function renderDashboard(data) {
   if (sl === "pending") statusEl.classList.add("status-pending");
   show("memberInfoRow");
 
-  /* ── BLOCKED ── */
+    /* ── BLOCKED ── */
   if (isBlocked) {
     show("blockedBanner"); hide("memberInfoRow");
     if (m.blockedReason && m.blockedReason.trim()) {
@@ -923,7 +1044,6 @@ function renderDashboard(data) {
       var rb = document.getElementById("blockedReasonBox");
       rb.classList.remove("hidden"); rb.style.display = "flex";
     }
-    document.getElementById("chipAvatar").textContent = "🔒";
     ["lnkDashboard","lnkChannels","lnkGroups","lnkHowTo","lnkExtension",
      "mLnkDashboard","mLnkChannels","mLnkGroups","mLnkHowTo","mLnkExtension","ddProfile"]
     .forEach(function(id){
@@ -938,17 +1058,28 @@ function renderDashboard(data) {
   /* ── INCOMPLETE ── */
   if (!isComplete) { show("incompleteBanner"); }
 
-  /* ── GROUPS ── */
-  var groups = [];
-  if (m.inSubscribersWork    === "Yes") groups.push({ label:"👥 Subscribers",   color:"#7c3aed", bg:"rgba(124,58,237,0.15)", border:"rgba(124,58,237,0.4)" });
-  if (m.inVideoTaskWork      === "Yes") groups.push({ label:"🎬 Video Watch",    color:"#ef4444", bg:"rgba(239,68,68,0.12)",  border:"rgba(239,68,68,0.4)" });
-  if (m.inWatchtimeWork      === "Yes") groups.push({ label:"⏱ Watch Time",     color:"#fbbf24", bg:"rgba(251,191,36,0.12)", border:"rgba(251,191,36,0.4)" });
-  if (m.inLikeAndCommentWork === "Yes") groups.push({ label:"💬 Like & Comment", color:"#22c55e", bg:"rgba(34,197,94,0.12)",  border:"rgba(34,197,94,0.4)" });
+  /* ── GROUPS (task cards) ── */
+  var groupDefs = [
+    { key:"inSubscribersWork",    label:"Subscribers Group",    emoji:"👥", color:"#a78bfa", bg:"rgba(124,58,237,0.15)", border:"rgba(124,58,237,0.35)", desc:"Exchange subscriptions with other members and grow your channel." },
+    { key:"inVideoTaskWork",      label:"Video Watch Group",    emoji:"🎬", color:"#fca5a5", bg:"rgba(239,68,68,0.12)",  border:"rgba(239,68,68,0.35)",   desc:"Watch videos from other members and earn watch-time for yours." },
+    { key:"inWatchtimeWork",      label:"Watch Time Group",     emoji:"⏱", color:"#fde68a", bg:"rgba(251,191,36,0.12)", border:"rgba(251,191,36,0.35)",  desc:"Complete playlist watch tasks and boost your channel watchtime." },
+    { key:"inLikeAndCommentWork", label:"Like & Comment Group", emoji:"💬", color:"#86efac", bg:"rgba(34,197,94,0.12)",  border:"rgba(34,197,94,0.35)",   desc:"Give and receive likes and comments to boost engagement." }
+  ];
 
-  if (groups.length > 0) {
-    document.getElementById("groupBadgesWrap").innerHTML = groups.map(function(g){
-      return '<div class="group-badge" style="background:' + g.bg + ';border-color:' + g.border + ';color:' + g.color + ';">'
-        + g.label + ' <span style="opacity:.55;font-size:10px;font-weight:500;">Active</span></div>';
+  var activeGroups = groupDefs.filter(function(g){ return m[g.key] === "Yes"; });
+
+  if (activeGroups.length > 0) {
+    document.getElementById("groupTaskCards").innerHTML = activeGroups.map(function(g){
+      return '<div class="group-task-card" style="background:' + g.bg + ';border-color:' + g.border + ';">'
+        + '<div class="flex items-center gap-4 flex-1 min-w-0">'
+        +   '<div style="width:52px;height:52px;border-radius:14px;background:' + g.bg + ';border:1px solid ' + g.border + ';display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">' + g.emoji + '</div>'
+        +   '<div class="min-w-0">'
+        +     '<div class="font-bold text-base" style="color:' + g.color + ';">' + g.label + '</div>'
+        +     '<div class="text-xs text-gray-400 mt-0.5 leading-relaxed">' + g.desc + '</div>'
+        +   '</div>'
+        + '</div>'
+        + '<a href="subscriberstask.html" class="start-task-btn" style="background:' + g.bg + ';border:1px solid ' + g.border + ';color:' + g.color + ';">▶ Start Task</a>'
+        + '</div>';
     }).join("");
     show("groupsSection");
   } else {
@@ -1199,6 +1330,7 @@ document.addEventListener("click", function(){
 
 /* ── KICK OFF ── */
 loadDashboard();
+loadIssues();
 </script>
 
 </body>
