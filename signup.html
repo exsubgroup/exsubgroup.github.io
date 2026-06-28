@@ -112,15 +112,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
         <!-- Username -->
         <div>
           <label class="text-[13px] text-gray-300 block mb-2">Username</label>
-          <input type="text" id="username" maxlength="7" placeholder="Enter username" class="input" required>
-          <p class="text-[11px] text-muted mt-2">Must be unique, no spaces, and 5–7 characters.</p>
+          <input type="text" id="username" maxlength="15" placeholder="Enter username" class="input" required>
+<p class="text-[11px] text-muted mt-2">Must be unique, no spaces, and 5–15 characters.</p>
         </div>
 
         <!-- Password -->
         <div>
           <label class="text-[13px] text-gray-300 block mb-2">Password</label>
           <div class="relative">
-            <input type="password" id="password" maxlength="7" placeholder="Create password" class="input pr-12" required>
+           <input type="password" id="password" maxlength="15" placeholder="Create password" class="input pr-12" required>
             <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition">
               <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -134,7 +134,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
               </svg>
             </button>
           </div>
-          <p class="text-[11px] text-muted mt-2">Must be 5–7 characters and cannot contain spaces.</p>
+          <p class="text-[11px] text-muted mt-2">Must be 5–15 characters and cannot contain spaces.</p>
         </div>
 
         <!-- Country -->
@@ -142,12 +142,50 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
           <label class="text-[13px] text-gray-300 block mb-2">Country</label>
           <div class="relative">
             <select id="country" class="input pr-12" required>
-              <option value="">Select Country</option>
-              <option>Pakistan</option><option>India</option><option>Bangladesh</option>
-              <option>United States</option><option>United Kingdom</option><option>Canada</option>
-              <option>Australia</option><option>Germany</option><option>France</option>
-              <option>Saudi Arabia</option><option>UAE</option><option>Turkey</option>
-              <option>Indonesia</option><option>Malaysia</option><option>Brazil</option>
+            <option value="">Select Country</option>
+            <option>Afghanistan</option><option>Albania</option><option>Algeria</option>
+            <option>Angola</option><option>Argentina</option><option>Armenia</option>
+            <option>Australia</option><option>Austria</option><option>Azerbaijan</option>
+            <option>Bahrain</option><option>Bangladesh</option><option>Belarus</option>
+            <option>Belgium</option><option>Bolivia</option><option>Bosnia and Herzegovina</option>
+            <option>Brazil</option><option>Bulgaria</option><option>Cambodia</option>
+            <option>Cameroon</option><option>Canada</option><option>Chile</option>
+            <option>China</option><option>Colombia</option><option>Congo</option>
+            <option>Costa Rica</option><option>Croatia</option><option>Cuba</option>
+            <option>Czech Republic</option><option>Denmark</option><option>Dominican Republic</option>
+            <option>Ecuador</option><option>Egypt</option><option>Estonia</option>
+            <option>Ethiopia</option><option>Finland</option><option>France</option>
+            <option>Georgia</option><option>Germany</option><option>Ghana</option>
+            <option>Greece</option><option>Guatemala</option><option>Honduras</option>
+            <option>Hungary</option><option>Iceland</option><option>India</option>
+            <option>Indonesia</option><option>Iran</option><option>Iraq</option>
+            <option>Ireland</option><option>Italy</option><option>Jamaica</option>
+            <option>Japan</option><option>Jordan</option><option>Kazakhstan</option>
+            <option>Kenya</option><option>Kuwait</option><option>Kyrgyzstan</option>
+            <option>Latvia</option><option>Lebanon</option><option>Libya</option>
+            <option>Lithuania</option><option>Luxembourg</option><option>Malaysia</option>
+            <option>Maldives</option><option>Mali</option><option>Malta</option>
+            <option>Mauritius</option><option>Mexico</option><option>Moldova</option>
+            <option>Mongolia</option><option>Montenegro</option><option>Morocco</option>
+            <option>Mozambique</option><option>Myanmar</option><option>Nepal</option>
+            <option>Netherlands</option><option>New Zealand</option><option>Nicaragua</option>
+            <option>Nigeria</option><option>North Macedonia</option><option>Norway</option>
+            <option>Oman</option><option>Pakistan</option><option>Panama</option>
+            <option>Paraguay</option><option>Peru</option><option>Philippines</option>
+            <option>Poland</option><option>Portugal</option><option>Qatar</option>
+            <option>Romania</option><option>Russia</option><option>Rwanda</option>
+            <option>Saudi Arabia</option><option>Senegal</option><option>Serbia</option>
+            <option>Singapore</option><option>Slovakia</option><option>Slovenia</option>
+            <option>Somalia</option><option>South Africa</option><option>South Korea</option>
+            <option>Spain</option><option>Sri Lanka</option><option>Sudan</option>
+            <option>Sweden</option><option>Switzerland</option><option>Syria</option>
+            <option>Taiwan</option><option>Tajikistan</option><option>Tanzania</option>
+            <option>Thailand</option><option>Trinidad and Tobago</option><option>Tunisia</option>
+            <option>Turkey</option><option>Turkmenistan</option><option>UAE</option>
+            <option>Uganda</option><option>Ukraine</option><option>United Kingdom</option>
+            <option>United States</option><option>Uruguay</option><option>Uzbekistan</option>
+            <option>Venezuela</option><option>Vietnam</option><option>Yemen</option>
+            <option>Zambia</option><option>Zimbabwe</option>
             </select>
             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
@@ -199,7 +237,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyG9yANoRV5S93IBnk_hqfPUnwPFyGcpleByfD1qcVjldztWQycUrpPxdELe3AbUuCHPQ/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw10PBRkfsKSXbnZ_--nznKFGBYZakqEPG5SL-nplgVU-RgKN_k-dDFoVPdnZGUwZodwg/exec";
 
 /* ===== AVATARS ===== */
 const SEEDS = ["alpha","bravo","charlie","delta","echo","foxtrot","golf","hotel","india","juliet"];
@@ -268,8 +306,8 @@ const submitBtn     = document.getElementById("submitBtn");
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
 
-usernameInput.addEventListener("input", () => { usernameInput.value = usernameInput.value.replace(/\s/g,"").slice(0,7); });
-passwordInput.addEventListener("input", () => { passwordInput.value = passwordInput.value.replace(/\s/g,"").slice(0,7); });
+usernameInput.addEventListener("input", () => { usernameInput.value = usernameInput.value.replace(/\s/g,"").slice(0,15); });
+passwordInput.addEventListener("input", () => { passwordInput.value = passwordInput.value.replace(/\s/g,"").slice(0,15); });
 
 signupForm.addEventListener("submit", async e => {
   e.preventDefault();
@@ -279,11 +317,9 @@ signupForm.addEventListener("submit", async e => {
 
   const err = (title,text) => Swal.fire({icon:"error",title,text,background:"#12141c",color:"#fff",confirmButtonColor:"#7c3aed",customClass:{popup:"rounded-popup"}});
 
-  if (username.length < 5) return err("Invalid Username","Username must be at least 5 characters");
-  if (username.length > 7) return err("Invalid Username","Username cannot be more than 7 characters");
+if (username.length > 15) return err("Invalid Username","Username cannot be more than 15 characters");
   if (username.includes(" ")) return err("Invalid Username","Username cannot contain spaces");
-  if (password.length < 5) return err("Weak Password","Password must be at least 5 characters");
-  if (password.length > 7) return err("Weak Password","Password cannot be more than 7 characters");
+if (password.length > 15) return err("Weak Password","Password cannot be more than 15 characters");
   if (password.includes(" ")) return err("Weak Password","Password cannot contain spaces");
   if (!country) return err("Country Required","Please select your country");
 
@@ -336,8 +372,8 @@ function randomString(len) {
   return r;
 }
 window.addEventListener("load", () => {
-  if (!usernameInput.value) usernameInput.value = randomString(6);
-  if (!passwordInput.value) passwordInput.value = randomString(6);
+  if (!usernameInput.value) usernameInput.value = randomString(8);
+ if (!passwordInput.value) passwordInput.value = randomString(8);
 });
 </script>
 </body>
