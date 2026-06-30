@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Watching Proof — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root{
+  --bg:#050508;
+  --card:#12141c;
+  --card2:#101219;
+  --border:#1e212c;
+  --purple:#7c3aed;
+  --purple2:#8b5cf6;
+  --text-muted:#8a8f9e;
+}
+*{ font-family:'Inter',sans-serif; }
+body{ background:var(--bg); color:white; overflow-x:hidden; }
+body::before{
+  content:'';
+  position:fixed;
+  top:-50%; left:-50%;
+  width:200%; height:200%;
+  background:
+    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
+    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
+  z-index:0; pointer-events:none;
+}
+
+/* LOADING OVERLAY */
+#loadingOverlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(5,5,8,0.97);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:24px;
+  transition:opacity 0.4s ease;
+}
+#loadingOverlay.hide{ opacity:0; pointer-events:none; }
+.loader-ring{
+  width:64px; height:64px;
+  border:3px solid #1e212c;
+  border-top-color:#8b5cf6;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.loader-dots{ display:flex; gap:6px; }
+.loader-dots span{
+  width:8px; height:8px; border-radius:50%;
+  background:#8b5cf6;
+  animation:bounce 1.2s ease-in-out infinite;
+}
+.loader-dots span:nth-child(2){ animation-delay:0.2s; }
+.loader-dots span:nth-child(3){ animation-delay:0.4s; }
+@keyframes bounce{
+  0%,80%,100%{ transform:translateY(0); opacity:0.4; }
+  40%{ transform:translateY(-10px); opacity:1; }
+}
+
+.glass-nav{
+  background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.06);
+}
+.card{
+  background:linear-gradient(180deg,#151821 0%,#101219 100%);
+  border:1px solid var(--border);
+}
+.text-muted{ color:var(--text-muted); }
+.gradient-text{
+  background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* SECTION TABS */
+.section-tab{
+  padding:10px 22px;
+  border-radius:12px;
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:0.25s ease;
+  white-space:nowrap;
+}
+.section-tab.active{
+  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+  border-color:#8b5cf6;
+  color:white;
+}
+.section-tab:not(.active){
+  background:#0f1118;
+  border-color:#1f2330;
+  color:#8a8f9e;
+}
+.section-tab:not(.active):hover{ border-color:#8b5cf6; color:white; }
+
+/* SWAL OVERRIDES */
+.swal2-popup{
+  background:#12141c !important;
+  border:1px solid #1e212c !important;
+  border-radius:24px !important;
+  color:white !important;
+}
+.swal2-title{ color:white !important; }
+.swal2-html-container{ color:#c0c4d0 !important; }
+.swal2-confirm{
+  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%) !important;
+  border:none !important; border-radius:12px !important;
+  padding:12px 28px !important; font-weight:600 !important;
+}
+.swal2-cancel{
+  background:#1a1d27 !important; border:1px solid #252936 !important;
+  border-radius:12px !important; padding:12px 28px !important;
+  color:white !important; font-weight:600 !important;
+}
+
+/* PROOF TABLE */
+.proof-table-wrap{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:13px; }
+thead th{
+  background:#0d0f17; color:#8a8f9e;
+  padding:11px 14px; text-align:left;
+  font-weight:600; font-size:11px;
+  text-transform:uppercase; letter-spacing:0.05em;
+  border-bottom:1px solid #1e212c;
+  white-space:nowrap;
+}
+tbody tr{ border-bottom:1px solid #161922; transition:background 0.12s; }
+tbody tr:hover{ background:#0f1118; }
+tbody td{ padding:11px 14px; vertical-align:middle; }
+
+.badge{
+  display:inline-flex; align-items:center;
+  padding:3px 10px; border-radius:20px;
+  font-size:11px; font-weight:600;
+}
+.b-valid{   background:rgba(34,197,94,0.12);  color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+.b-pending{ background:rgba(245,158,11,0.12); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); }
+.b-cheating{background:rgba(239,68,68,0.12);  color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+.b-insufficient{ background:rgba(139,92,246,0.1); color:#a78bfa; border:1px solid rgba(139,92,246,0.25); }
+.b-default{ background:#1a1d27; color:#8a8f9e; border:1px solid #252936; }
+
+.proof-thumb{
+  width:86px; height:50px; object-fit:cover;
+  border-radius:10px; border:1px solid #1e212c;
+  vertical-align:middle; cursor:pointer; transition:0.2s ease;
+}
+.proof-thumb:hover{ transform:scale(1.06); border-color:#8b5cf6; }
+.proof-link{
+  color:#8b5cf6; text-decoration:none; font-size:12px;
+  display:inline-flex; align-items:center; gap:4px;
+}
+.proof-link:hover{ color:#a78bfa; text-decoration:underline; }
+.vtitle{
+  font-weight:600; color:white; max-width:220px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  font-size:13px;
+}
+.vsub{ font-size:11px; color:#8a8f9e; margin-top:2px; }
+.expand-btn{
+  background:#0f1118; border:1px solid #252936;
+  color:#8b5cf6; padding:5px 12px;
+  border-radius:8px; font-size:12px;
+  font-weight:600; cursor:pointer; transition:0.2s ease;
+  white-space:nowrap;
+}
+.expand-btn:hover{ background:#8b5cf6; color:white; border-color:#8b5cf6; }
+
+/* SUB-ROWS */
+.sub-rows-row{ display:none; }
+.sub-rows-row.open{ display:table-row; }
+.sub-rows-td{
+  background:#08090e;
+  padding:0 14px 16px;
+  border-bottom:1px solid #1e212c;
+}
+.sub-table{ width:100%; font-size:12px; border-collapse:collapse; }
+.sub-table th{
+  color:#8a8f9e; padding:7px 10px; text-align:left;
+  border-bottom:1px solid #1a1d27; font-size:10px;
+  text-transform:uppercase; letter-spacing:0.05em;
+}
+.sub-table td{ padding:7px 10px; border-bottom:1px solid #0f1118; vertical-align:middle; }
+
+/* STATS CHIPS */
+.stat-chip{
+  background:linear-gradient(180deg,#151821 0%,#101219 100%);
+  border:1px solid #1e212c; border-radius:16px;
+  padding:14px 20px;
+}
+.stat-chip .sv{ font-size:1.4rem; font-weight:800; color:#8b5cf6; display:block; }
+.stat-chip .sl{ font-size:11px; color:#8a8f9e; margin-top:2px; }
+
+/* PAGINATION */
+.pagination{ display:flex; gap:6px; align-items:center; }
+.page-btn{
+  width:36px; height:36px;
+  background:#0f1118; border:1px solid #1f2330;
+  border-radius:10px; color:#8a8f9e;
+  font-size:13px; font-weight:600;
+  cursor:pointer; transition:0.2s ease;
+  display:flex; align-items:center; justify-content:center;
+}
+.page-btn:hover{ border-color:#8b5cf6; color:white; }
+.page-btn.active{ background:#8b5cf6; border-color:#8b5cf6; color:white; }
+.page-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+
+/* EMPTY STATE */
+.empty-state{ text-align:center; padding:60px 20px; }
+.empty-icon{
+  width:72px; height:72px; border-radius:22px;
+  background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:30px; margin-bottom:20px;
+}
+
+/* WATCH TIME BAR */
+.wt-bar-track{
+  width:100%; height:6px; background:#1a1d27;
+  border-radius:20px; overflow:hidden; margin-top:4px;
+}
+.wt-bar-fill{
+  height:100%; border-radius:20px;
+  background:linear-gradient(90deg,#8b5cf6,#4ade80);
+  transition:width 0.4s ease;
+}
+
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(14px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.fade-up{ animation:fadeUp 0.35s ease both; }
+
+#notifDropdown{ transition:all 0.2s ease; }
+
+@media(max-width:768px){
+  .section-tab{ padding:8px 14px; font-size:12px; }
+  .vtitle{ max-width:130px; }
+  .proof-thumb{ width:60px; height:36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your proof records…</p>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
+      <span class="font-semibold text-[17px]">Exsub Group</span>
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-[13px]">
+      <a href="analytics.html"      class="text-white hover:text-purple-300 transition">Dashboard</a>
+      <a href="channels.html"       class="text-white hover:text-purple-300 transition">Channels</a>
+      <a href="groups.html"         class="text-white hover:text-purple-300 transition">Groups</a>
+      <a href="subscriberstask.html" class="text-purple-300 font-semibold">Tasks</a>
+      <a href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
+      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
+      <a href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="relative">
+        <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
+        <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
+          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
+          <div class="p-4 text-sm text-gray-400">No new notifications</div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+          <img id="navAvatar" src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
+        </button>
+        <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+          <div class="p-4 border-b border-[#232632]">
+            <div class="flex items-center gap-3">
+              <img id="dropdownAvatar" src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+              <div>
+                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
+                <p  id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+              </div>
+            </div>
+          </div>
+          <div class="py-2">
+            <a href="profile.html"  class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+            <a href="support.html"  class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
+            <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+    <div class="flex flex-col gap-4 text-sm">
+      <a href="analytics.html"       class="text-white">Dashboard</a>
+      <a href="channels.html"        class="text-white">Channels</a>
+      <a href="groups.html"          class="text-white">Groups</a>
+      <a href="subscriberstask.html" class="text-purple-300 font-semibold">Tasks</a>
+      <a href="howtowork.html"       class="text-white">How To Work</a>
+      <a href="exsubextension.html"  class="text-white">Exsub Extension</a>
+      <a href="support.html"         class="text-white">Contact &amp; Support</a>
+      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="relative z-10 pt-32 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+  <!-- PAGE HEADER -->
+  <div class="text-center mb-10">
+    <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+      📸 Watching Proof Center
+    </div>
+    <h1 class="text-4xl md:text-5xl font-black gradient-text mb-4">Your Watching Proof</h1>
+    <p class="text-muted max-w-[660px] mx-auto text-[15px] leading-7">
+      Track every watch proof submitted by you or for your content — grouped by video, with full screenshot access and status details.
+    </p>
+  </div>
+
+  <!-- BLOCKED VIEW (hidden by default) -->
+  <div id="blockedView" class="hidden">
+    <div class="card rounded-3xl p-12 text-center">
+      <div class="empty-icon mx-auto">🚫</div>
+      <h2 class="text-2xl font-bold text-red-400 mb-3">Account Blocked</h2>
+      <p id="blockedMsg" class="text-muted text-sm max-w-md mx-auto mb-6">Your account is not active.</p>
+      <button onclick="logoutUser()"
+        class="bg-red-600 hover:bg-red-500 transition px-6 py-3 rounded-xl font-semibold text-sm">
+        ← Back to Login
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="mainContent" class="hidden">
+
+    <!-- TABS -->
+    <div class="flex items-center gap-3 mb-7 overflow-x-auto pb-2">
+      <button class="section-tab active" id="tabWatched" onclick="switchTab('watched')">📺 Videos I Watched</button>
+      <button class="section-tab"        id="tabMine"    onclick="switchTab('mine')">👁️ My Videos Watched by Others</button>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="statsBar"></div>
+
+    <!-- TABLE CARD -->
+    <div class="card rounded-3xl p-6">
+      <div class="proof-table-wrap">
+        <table>
+          <thead id="theadRow"></thead>
+          <tbody id="proofTbody"></tbody>
+        </table>
+      </div>
+      <div id="emptyMsg" class="hidden empty-state">
+        <div class="empty-icon">📭</div>
+        <h2 class="text-xl font-bold mb-2">No Records Found</h2>
+        <p class="text-muted text-sm">No proof records found for this view.</p>
+      </div>
+      <!-- PAGINATION -->
+      <div class="pagination mt-7 justify-center" id="pagination"></div>
+    </div>
+
+  </div><!-- /mainContent -->
+</div>
+</main>
+
+<script>
+/* ================================================================
+   CONFIG
+================================================================ */
+const GAS_URL   = 'https://script.google.com/macros/s/AKfycbzAUwBFh_cHAsvSW5lpP-J1kZl1X9Tm3GxHwkeL6ggVWOCXzdwGGEawna6Tzd0ocPVveQ/exec'; // ← replace after deploying Code.gs
+const PAGE_SIZE = 15;
+
+/* ================================================================
+   SESSION  (lowercase key — matches channels.html)
+================================================================ */
+const savedUserCode = localStorage.getItem('usercode') || sessionStorage.getItem('usercode') || '';
+const savedUsername = localStorage.getItem('username') || '';
+const savedPassword = localStorage.getItem('password') || '';
+
+if (!savedUserCode && !savedUsername) {
+  window.location.href = 'signin.html';
+}
+
+/* Populate nav immediately from localStorage */
+document.getElementById('navUserName').innerText      = savedUsername || 'Member';
+document.getElementById('dropdownUserName').innerText = savedUsername || 'Member';
+document.getElementById('dropdownUserCode').innerText = 'ID #' + (savedUserCode || '0000');
+
+/* ================================================================
+   HELPER
+================================================================ */
+function fmtDuration(d) {
+  if (d === undefined || d === null || d === '') return '—';
+  const s = String(d);
+
+  // Already a clean "M:SS" or "H:MM:SS" string — show as-is
+  if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(s)) return s;
+
+  // Looks like a serialized Date (Sheets time-only value)
+  const dt = new Date(s);
+  if (!isNaN(dt.getTime())) {
+    const h = dt.getHours();
+    const m = String(dt.getMinutes()).padStart(2, '0');
+    const sec = String(dt.getSeconds()).padStart(2, '0');
+    return h > 0 ? `${h}:${m}:${sec}` : `${dt.getMinutes()}:${sec}`;
+  }
+
+  return esc(s);
+}
+/* ================================================================
+   STATE
+================================================================ */
+let currentTab  = 'watched';
+let watchedData = [];   // grouped by VideoTitle
+let mineData    = [];
+let currentPage = 1;
+
+/* ================================================================
+   BOOT
+================================================================ */
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res  = await fetch(`${GAS_URL}?action=getProofData&userCode=${encodeURIComponent(savedUserCode)}`);
+    const json = await res.json();
+
+    if (!json.success) { showError(json.message || 'Server error.'); return; }
+
+    const m = json.member;
+
+    /* Set avatar if available */
+    if (m.ProfilePicture) {
+      const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(m.UserName||savedUsername)}&background=7c3aed&color=fff`;
+      ['navAvatar','dropdownAvatar'].forEach(id => {
+        const el = document.getElementById(id);
+        el.src = m.ProfilePicture;
+        el.onerror = () => { el.src = fallback; };
+      });
+    }
+
+    /* Blocked? */
+    if (m.Status !== 'Active') {
+      hideLoading();
+      let msg = `Your account status is <strong>${esc(m.Status)}</strong>.`;
+      if (m.ViolationReason) msg += ` Reason: ${esc(m.ViolationReason)}.`;
+      if (m.SuspendedUntil)  msg += ` Suspended until: ${esc(m.SuspendedUntil)}.`;
+      document.getElementById('blockedMsg').innerHTML = msg;
+      document.getElementById('blockedView').classList.remove('hidden');
+      return;
+    }
+
+    watchedData = groupByTitle(json.watched || []);
+    mineData    = groupByTitle(json.mine    || []);
+
+    hideLoading();
+    document.getElementById('mainContent').classList.remove('hidden');
+    renderTab();
+
+  } catch(e) {
+    showError('Network error: ' + e.message);
+  }
+});
+
+/* ================================================================
+   GROUP records by VideoTitle (combine duplicates)
+================================================================ */
+function groupByTitle(records) {
+  const map = {};
+  records.forEach(r => {
+    const key = (r.VideoTitle||'').trim() || r.VideoId || '_unknown';
+    if (!map[key]) {
+      map[key] = {
+        VideoTitle   : r.VideoTitle,
+        VideoId      : r.VideoId,
+        ChannelName  : r.ChannelName,
+        VideoDuration: r.VideoDuration,
+        TaskType     : r.TaskType,
+        entries      : []
+      };
+    }
+    map[key].entries.push(r);
+  });
+  /* Sort each group by Timestamp desc so last record is entries[0] */
+  Object.values(map).forEach(g => {
+    g.entries.sort((a,b) => new Date(b.Timestamp||0) - new Date(a.Timestamp||0));
+  });
+  return Object.values(map);
+}
+
+/* ================================================================
+   HELPERS
+================================================================ */
+function hideLoading() {
+  const ov = document.getElementById('loadingOverlay');
+  ov.classList.add('hide');
+  setTimeout(()=>ov.style.display='none', 500);
+}
+function showError(msg) {
+  hideLoading();
+  document.getElementById('loadingOverlay').style.display = 'none';
+  Swal.fire({ icon:'error', title:'Error', text:msg });
+}
+function logoutUser() { localStorage.clear(); window.location.href='signin.html'; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(s){ if(!s)return'—'; try{return new Date(s).toLocaleString();}catch{return s;} }
+function fmtSec(s){ const n=Number(s)||0; if(n<60)return n+'s'; return Math.floor(n/60)+'m '+( n%60)+'s'; }
+
+function bestStatus(entries) {
+  for (const s of ['Valid','Pending','Insufficient','Cheating'])
+    if (entries.some(e=>e.Checked===s)) return s;
+  return entries[0]?.Checked || '—';
+}
+function badgeHtml(s) {
+  const cls = {Valid:'b-valid',Pending:'b-pending',Cheating:'b-cheating',Insufficient:'b-insufficient'}[s] || 'b-default';
+  return `<span class="badge ${cls}">${esc(s||'—')}</span>`;
+}
+function watchTimePct(play, stop) {
+  const p = Number(play)||0, st = Number(stop)||0, total = p+st;
+  if (!total) return 0;
+  return Math.min(100, Math.round((p/total)*100));
+}
+
+/* ================================================================
+   TAB SWITCH
+================================================================ */
+function switchTab(tab) {
+  currentTab = tab; currentPage = 1;
+  document.getElementById('tabWatched').classList.toggle('active', tab==='watched');
+  document.getElementById('tabMine').classList.toggle('active',    tab==='mine');
+  renderTab();
+}
+function renderTab() {
+  const data = currentTab==='watched' ? watchedData : mineData;
+  renderStats(data);
+  renderTable(data);
+}
+
+/* ================================================================
+   STATS BAR
+================================================================ */
+function renderStats(data) {
+  const total   = data.length;
+  const entries = data.reduce((s,g)=>s+g.entries.length, 0);
+  const valid   = data.reduce((s,g)=>s+g.entries.filter(e=>e.Checked==='Valid').length, 0);
+  const cheat   = data.reduce((s,g)=>s+g.entries.filter(e=>e.Checked==='Cheating').length, 0);
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-chip fade-up"><span class="sv">${total}</span><span class="sl">Unique Videos</span></div>
+    <div class="stat-chip fade-up" style="animation-delay:.05s"><span class="sv">${entries}</span><span class="sl">Total Proofs</span></div>
+    <div class="stat-chip fade-up" style="animation-delay:.1s"><span class="sv" style="color:#4ade80">${valid}</span><span class="sl">Valid Proofs</span></div>
+    <div class="stat-chip fade-up" style="animation-delay:.15s"><span class="sv" style="color:#f87171">${cheat}</span><span class="sl">Cheating Flags</span></div>`;
+}
+
+/* ================================================================
+   MAIN TABLE
+================================================================ */
+function renderTable(data) {
+  const isW   = currentTab === 'watched';
+  const tbody = document.getElementById('proofTbody');
+  const thead = document.getElementById('theadRow');
+  const empty = document.getElementById('emptyMsg');
+
+  thead.innerHTML = `<tr>
+    <th>#</th>
+    <th>Thumbnail</th>
+    <th>Video Title</th>
+    <th>${isW ? 'Channel' : 'Worker'}</th>
+    <th>Duration</th>
+    <th>Task Type</th>
+    <th>▶ Play (last)</th>
+    <th>⏸ Stop (last)</th>
+    <th>Watch Ratio</th>
+    <th>Proofs</th>
+    <th>Best Status</th>
+    <th></th>
+  </tr>`;
+  tbody.innerHTML = '';
+
+  if (!data.length) {
+    empty.classList.remove('hidden');
+    renderPagination(0);
+    return;
+  }
+  empty.classList.add('hidden');
+
+  const start = (currentPage-1)*PAGE_SIZE;
+  const page  = data.slice(start, start+PAGE_SIZE);
+
+  page.forEach((g, idx) => {
+    const n    = start + idx + 1;
+    const id   = 'sr-' + n;
+    const best = bestStatus(g.entries);
+
+    /* Last record is entries[0] (sorted desc) */
+    const last     = g.entries[0] || {};
+    const playS    = Number(last.PlaySeconds)  || 0;
+    const stopS    = Number(last.StopSeconds)  || 0;
+    const pct      = watchTimePct(playS, stopS);
+    const barColor = pct >= 80 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
+
+    const thumb  = g.VideoId ? `https://img.youtube.com/vi/${g.VideoId}/mqdefault.jpg` : '';
+    const ytLink = g.VideoId ? `https://www.youtube.com/watch?v=${g.VideoId}` : '#';
+    const col4   = isW ? esc(g.ChannelName||'—') : esc(last.UserCode||'—');
+
+    const tr = document.createElement('tr');
+    tr.className = 'fade-up';
+    tr.style.animationDelay = (idx * 0.03) + 's';
+    tr.innerHTML = `
+      <td class="text-muted text-xs">${n}</td>
+      <td>
+        <a href="${ytLink}" target="_blank" rel="noopener">
+          <img class="proof-thumb" src="${esc(thumb)}" alt=""
+               onerror="this.style.opacity='.2'"/>
+        </a>
+      </td>
+      <td>
+        <div class="vtitle" title="${esc(g.VideoTitle||'')}">${esc(g.VideoTitle||'Unknown Title')}</div>
+        <div class="vsub">${esc(g.VideoId||'')}</div>
+      </td>
+      <td class="text-sm" style="color:#c0c4d0">${col4}</td>
+  <td class="text-muted text-xs">${fmtDuration(g.VideoDuration)}</td>
+      <td>${badgeHtml(g.TaskType||'—')}</td>
+      <td>
+        <span style="color:#4ade80;font-weight:700;font-size:13px">${fmtSec(playS)}</span>
+      </td>
+      <td>
+        <span style="color:#f87171;font-weight:700;font-size:13px">${fmtSec(stopS)}</span>
+      </td>
+      <td style="min-width:90px">
+        <div style="font-size:11px;color:#8a8f9e;margin-bottom:3px">${pct}% playing</div>
+        <div class="wt-bar-track">
+          <div class="wt-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+        </div>
+      </td>
+      <td style="font-weight:700;color:#8b5cf6;font-size:14px">${g.entries.length}</td>
+      <td>${badgeHtml(best)}</td>
+      <td>
+        <button class="expand-btn" id="btn-${id}" onclick="toggleSub('${id}')">▼ Details</button>
+      </td>`;
+    tbody.appendChild(tr);
+
+    /* Sub-row */
+    const subTr = document.createElement('tr');
+    subTr.id = id; subTr.className = 'sub-rows-row';
+    const subTd = document.createElement('td');
+    subTd.colSpan = 12; subTd.className = 'sub-rows-td';
+    subTd.innerHTML = buildSubTable(g.entries, isW);
+    subTr.appendChild(subTd);
+    tbody.appendChild(subTr);
+  });
+
+  renderPagination(data.length);
+}
+
+/* ================================================================
+   SUB-TABLE (expanded details)
+================================================================ */
+function buildSubTable(entries, isW) {
+  const rows = entries.map((e, i) => {
+    const playS = Number(e.PlaySeconds)||0;
+    const stopS = Number(e.StopSeconds)||0;
+    const pct   = watchTimePct(playS, stopS);
+    const bar   = pct >= 80 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
+    const isLast = i === 0;
+    const screenshotHtml = e.ProofScreenshot
+      ? `<a class="proof-link" href="${esc(e.ProofScreenshot)}" target="_blank" rel="noopener">📸 Screenshot</a>`
+      : '<span style="color:#555">—</span>';
+    return `<tr style="${isLast ? 'background:rgba(139,92,246,0.07)' : ''}">
+      <td style="color:#8a8f9e">${isLast ? '⭐ Last' : '#'+(i+1)}</td>
+      <td style="color:#c0c4d0">${fmtDate(e.Timestamp)}</td>
+      <td style="color:#a78bfa">${esc(isW ? (e.TargetUserCode||'—') : (e.UserCode||'—'))}</td>
+      <td>
+        <span style="color:#4ade80;font-weight:700">${fmtSec(playS)}</span>
+        <span style="color:#555;margin:0 4px">/</span>
+        <span style="color:#f87171;font-weight:700">${fmtSec(stopS)}</span>
+      </td>
+      <td style="min-width:80px">
+        <div style="font-size:10px;color:#8a8f9e;margin-bottom:2px">${pct}%</div>
+        <div class="wt-bar-track">
+          <div class="wt-bar-fill" style="width:${pct}%;background:${bar}"></div>
+        </div>
+      </td>
+      <td style="color:#8a8f9e">${esc(e.TaskID||'—')}</td>
+      <td>${badgeHtml(e.Checked)}</td>
+      <td style="color:#8a8f9e;font-size:11px;max-width:200px">${esc(e.CheckRemarks||'—')}</td>
+      <td>${screenshotHtml}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div style="padding-top:12px">
+    <table class="sub-table">
+      <thead>
+        <tr>
+          <th>Entry</th>
+          <th>Timestamp</th>
+          <th>${isW ? 'Target' : 'Worker'}</th>
+          <th>▶ Play / ⏸ Stop</th>
+          <th>Ratio</th>
+          <th>Task ID</th>
+          <th>Status</th>
+          <th>Remarks</th>
+          <th>Screenshot</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function toggleSub(id) {
+  const row = document.getElementById(id);
+  const btn = document.getElementById('btn-'+id);
+  if (!row) return;
+  const open = row.classList.toggle('open');
+  if (btn) btn.textContent = open ? '▲ Close' : '▼ Details';
+}
+
+/* ================================================================
+   PAGINATION
+================================================================ */
+function renderPagination(total) {
+  const pages = Math.ceil(total / PAGE_SIZE);
+  const pg    = document.getElementById('pagination');
+  if (pages <= 1) { pg.innerHTML = ''; return; }
+
+  let h = `<button class="page-btn" ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
+  for (let i=1; i<=pages; i++) {
+    if (pages>8 && i>2 && i<pages-1 && Math.abs(i-currentPage)>2) {
+      if (i===3||i===pages-2) h += `<span style="color:#555;padding:0 4px">…</span>`;
+      continue;
+    }
+    h += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  h += `<button class="page-btn" ${currentPage===pages?'disabled':''} onclick="goPage(${currentPage+1})">›</button>`;
+  h += `<span class="text-muted text-xs ml-2">Page ${currentPage} / ${pages} · ${total} groups</span>`;
+  pg.innerHTML = h;
+}
+function goPage(p) {
+  currentPage = p;
+  const data = currentTab==='watched' ? watchedData : mineData;
+  renderTable(data);
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ================================================================
+   NAV MENU EVENTS
+================================================================ */
+document.getElementById("mobileMenuBtn").addEventListener("click", e => {
+  e.stopPropagation();
+  document.getElementById("mobileMenu").classList.toggle("hidden");
+});
+document.getElementById("profileBtn").addEventListener("click", e => {
+  e.stopPropagation();
+  document.getElementById("profileDropdown").classList.toggle("hidden");
+});
+document.getElementById("notifBtn").addEventListener("click", e => {
+  e.stopPropagation();
+  document.getElementById("notifDropdown").classList.toggle("hidden");
+});
+document.addEventListener("click", () => {
+  document.getElementById("mobileMenu").classList.add("hidden");
+  document.getElementById("profileDropdown").classList.add("hidden");
+  document.getElementById("notifDropdown").classList.add("hidden");
+});
+</script>
+</body>
+</html>

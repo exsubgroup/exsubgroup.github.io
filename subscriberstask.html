@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 :root {
     --bg: #050508;
@@ -41,7 +43,6 @@ body::before {
     pointer-events: none;
 }
 
-/* GRADIENT TEXT */
 .gradient-text {
     background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%);
     -webkit-background-clip: text;
@@ -49,7 +50,6 @@ body::before {
     background-clip: text;
 }
 
-/* NAV */
 .glass-nav {
     background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
     backdrop-filter: blur(20px);
@@ -57,7 +57,6 @@ body::before {
     color: white;
 }
 
-/* CARDS */
 .card {
     background: linear-gradient(180deg, #151821 0%, #101219 100%);
     border: 1px solid var(--border);
@@ -75,9 +74,18 @@ body::before {
     box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
 
+/* Unsubscribed task card — red highlight + pinned look */
+.task-card.unsubscribed-card {
+    border-color: rgba(239,68,68,0.45);
+    background: linear-gradient(180deg, #1c0e0e 0%, #110808 100%);
+}
+.task-card.unsubscribed-card:hover {
+    border-color: rgba(239,68,68,0.75);
+    box-shadow: 0 20px 40px rgba(239,68,68,0.12);
+}
+
 .text-muted { color: var(--muted); }
 
-/* BUTTONS */
 .btn-purple {
     background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
     color: white;
@@ -116,7 +124,6 @@ body::before {
 }
 .btn-red:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
 
-/* FILTER TABS */
 .filter-tab {
     background: #161922;
     border: 1px solid #232632;
@@ -131,8 +138,22 @@ body::before {
     border-color: transparent;
     color: white;
 }
+.filter-tab:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+.filter-tab:disabled:hover {
+    border-color: #232632;
+    color: var(--muted);
+}
+.filter-tab.active:disabled {
+    opacity: 1;
+    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+    border-color: transparent;
+    color: white;
+}
 
-/* STATUS BADGE */
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -150,7 +171,6 @@ body::before {
     flex-shrink: 0;
 }
 
-/* INSTRUCTIONS BOX */
 .instructions-box {
     background: rgba(124,58,237,0.08);
     border: 1px solid rgba(124,58,237,0.2);
@@ -158,16 +178,21 @@ body::before {
     padding: 10px 14px;
 }
 
-/* ISSUE BOX */
 .issue-box {
     background: rgba(239,68,68,0.06);
     border: 1px solid rgba(239,68,68,0.18);
     border-radius: 14px;
     padding: 10px 14px;
 }
-.issue-box.open { display: block; }
 
-/* MODAL */
+/* Punishment banner inside unsubscribed card */
+.punishment-box {
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+
 .modal-bg {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.75);
@@ -197,7 +222,6 @@ body::before {
 }
 .modal-bg.open .modal-box { transform: scale(1); }
 
-/* SKELETON */
 .skeleton {
     background: linear-gradient(90deg, #1a1d27 25%, #21253a 50%, #1a1d27 75%);
     background-size: 200% 100%;
@@ -206,7 +230,6 @@ body::before {
 }
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
-/* TOAST */
 #toast {
     position: fixed; bottom: 24px; right: 24px;
     z-index: 999;
@@ -225,7 +248,6 @@ body::before {
 #toast.show { transform: translateY(0); opacity: 1; }
 #toast.error { background: linear-gradient(180deg, #ef4444, #b91c1c); }
 
-/* FULL-PAGE LOADING */
 #pageLoader {
     position: fixed; inset: 0;
     background: var(--bg);
@@ -250,7 +272,6 @@ body::before {
 input, textarea { color: white; }
 input::placeholder, textarea::placeholder { color: #7d8395; }
 
-/* STEP INDICATOR */
 .step-item {
     display: flex;
     align-items: flex-start;
@@ -275,7 +296,6 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     margin-top: 1px;
 }
 
-/* PAIRED STATUS badge */
 .paired-badge {
     display: inline-flex;
     align-items: center;
@@ -286,7 +306,6 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-weight: 500;
 }
 
-/* ISSUE PILL SELECTOR */
 .issue-pill {
     display: inline-flex;
     align-items: center;
@@ -304,7 +323,6 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 .issue-pill:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.6); }
 .issue-pill.selected { background: rgba(239,68,68,0.25); border-color: #ef4444; color: #fca5a5; }
 
-/* COPY HANDLE BTN */
 .copy-handle-btn {
     display: inline-flex;
     align-items: center;
@@ -320,20 +338,50 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 }
 .copy-handle-btn:hover { background: rgba(124,58,237,0.35); }
 .copy-handle-btn svg { width: 11px; height: 11px; }
+
+/* SweetAlert2 dark theme overrides */
+.swal2-popup {
+    background: #151821 !important;
+    border: 1px solid #1e212c !important;
+    color: white !important;
+    border-radius: 24px !important;
+    font-family: 'Inter', sans-serif !important;
+}
+.swal2-title { color: white !important; font-family: 'Inter', sans-serif !important; }
+.swal2-html-container { color: #8a8f9e !important; font-family: 'Inter', sans-serif !important; }
+.swal2-confirm {
+    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%) !important;
+    border-radius: 14px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+}
+.swal2-cancel {
+    background: transparent !important;
+    border: 1px solid #1e212c !important;
+    color: #8a8f9e !important;
+    border-radius: 14px !important;
+    font-family: 'Inter', sans-serif !important;
+}
+.swal2-deny {
+    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%) !important;
+    border-radius: 14px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+}
 </style>
 </head>
 <body>
 
-<!-- ═══ FULL-PAGE LOADER ═══ -->
+<!-- FULL-PAGE LOADER -->
 <div id="pageLoader">
     <div class="spin"></div>
     <p style="color: var(--muted); font-size: 14px;">Loading your tasks…</p>
 </div>
 
-<!-- ═══ TOAST ═══ -->
+<!-- TOAST -->
 <div id="toast"></div>
 
-<!-- ═══ NAVBAR ═══ -->
+<!-- NAVBAR -->
 <nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
     <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
 
@@ -402,10 +450,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     </div>
 </nav>
 
-<!-- ═══ MAIN ═══ -->
+<!-- MAIN -->
 <div class="max-w-[1200px] mx-auto px-4 pt-28 pb-12 relative z-10">
 
-    <!-- ═══ PAGE HEADER ═══ -->
+    <!-- PAGE HEADER -->
     <div class="text-center mb-12">
         <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
             📺 Subscriber Star System
@@ -419,7 +467,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 
     <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- ─── SIDEBAR ─── -->
+    <!-- SIDEBAR -->
     <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
 
         <!-- PROFILE CARD -->
@@ -442,6 +490,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
                     <span id="st-nowork" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                    <span id="st-pending" class="font-bold">�</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span>
@@ -472,10 +524,14 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span>
                     <span id="st-both" class="font-bold text-teal-400">—</span>
                 </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
+                    <span id="st-theirpending" class="font-bold text-orange-400">—</span>
+                </div>
             </div>
         </div>
 
-        <!-- SUBSCRIPTION LIMIT CARD — no button, proof is uploaded via extension -->
+        <!-- SUBSCRIPTION LIMIT CARD -->
         <div id="limitCard" class="card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-3">Subscription Limit</h2>
             <div class="space-y-2 text-sm">
@@ -498,14 +554,20 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 </div>
             </div>
             <p class="text-xs text-muted mt-3 leading-relaxed">
-                📎 You can submit Subscription proof via the
+                📎 Submit your Subscription proof via the
                 <a href="exsubextension.html" class="text-purple-300 underline hover:text-purple-200">Exsub Extension</a>.
             </p>
+            <!-- Verify button shown when limit is reached -->
+            <div id="lim-verify-wrap" class="hidden mt-3">
+                <button onclick="showLimitReachedAlert()" class="btn-teal w-full py-2.5 rounded-2xl text-sm font-semibold">
+                    🔍 Verify My Subscriptions
+                </button>
+            </div>
         </div>
 
     </aside>
 
-    <!-- ─── CONTENT ─── -->
+    <!-- CONTENT -->
     <main class="flex-1 min-w-0">
 
         <!-- BLOCKED BANNER -->
@@ -515,6 +577,27 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 <div>
                     <h3 class="font-semibold text-red-300 mb-1">Group Access Restricted</h3>
                     <p id="blockedMsg" class="text-red-400/80 text-sm leading-relaxed">Your account has been restricted from the Subscribers Group.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- UNSUBSCRIBED WARNING BANNER (shown when member has unsubscribed tasks) -->
+        <div id="unsubBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-600/50" style="background:linear-gradient(180deg,#200a0a,#140606);">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-red-300 mb-1">You Have Unsubscribed Channels!</h3>
+                    <p class="text-red-400/80 text-sm leading-relaxed mb-3">
+                        You have <strong id="unsubCount" class="text-red-300">0</strong> task(s) where you unsubscribed from a channel.
+                        You <strong class="text-white">must re-subscribe</strong> to these channels before you can do any other work.
+                        These tasks are pinned at the top.
+                    </p>
+                    <div class="flex gap-3 flex-wrap">
+                        <button onclick="setTab('Unsubscribed', document.querySelector('.filter-tab[data-tab=Unsubscribed]'))"
+                            class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+                            View Unsubscribed Tasks
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -529,12 +612,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 <input id="searchInput" type="text" placeholder="Search Task ID or Member…"
                     oninput="applyFilter()"
                     class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[48px] outline-none w-full sm:w-[210px] text-sm focus:border-purple-500 transition">
-                <!-- PROOF BUTTON → links to proof page -->
-                <a href="proof.html"
+                <a href="subscribersproof.html"
                     class="btn-teal px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm no-underline">
                     🎥 View Proofs
                 </a>
-                <!-- CREATE TASKS BUTTON -->
                 <button id="createBtn" onclick="openCreateModal()"
                     class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
@@ -567,22 +648,25 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 
         <!-- FILTER TABS -->
         <div class="flex flex-wrap gap-2 mb-6">
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('NotWorkYet',this)">
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
                 <span class="dot bg-yellow-400 mr-1"></span>Not Started
             </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('Subscribed',this)">
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
+                <span class="dot bg-orange-400 mr-1"></span>Pending
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Subscribed" onclick="setTab('Subscribed',this)">
                 <span class="dot bg-green-400 mr-1"></span>Subscribed
             </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('Unsubscribed',this)">
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Unsubscribed" onclick="setTab('Unsubscribed',this)">
                 <span class="dot bg-red-400 mr-1"></span>Unsubscribed
             </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('Rejected',this)">
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
                 <span class="dot bg-gray-400 mr-1"></span>Rejected
             </button>
-            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" onclick="setTab('All',this)">All Tasks</button>
+            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
         </div>
 
-        <!-- TASK LIST (skeletons shown first) -->
+        <!-- TASK LIST -->
         <div id="taskList" class="space-y-4">
             <div class="skeleton h-[200px]"></div>
             <div class="skeleton h-[200px]"></div>
@@ -611,7 +695,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 </div>
 </div>
 
-<!-- ═══ FOOTER ═══ -->
+<!-- FOOTER -->
 <footer class="relative z-10 border-t border-[#1e212c]">
     <div class="max-w-[1400px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
         <div>
@@ -629,7 +713,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     </div>
 </footer>
 
-<!-- ═══ CREATE TASKS MODAL ═══ -->
+<!-- CREATE TASKS MODAL -->
 <div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
@@ -657,7 +741,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     </div>
 </div>
 
-<!-- ═══ TASK DETAIL MODAL ═══ -->
+<!-- TASK DETAIL MODAL -->
 <div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
     <div class="modal-box max-w-[540px]">
         <div class="flex items-center justify-between mb-6">
@@ -668,7 +752,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     </div>
 </div>
 
-<!-- ═══ REPORT ISSUE MODAL ═══ -->
+<!-- REPORT ISSUE MODAL -->
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
@@ -678,7 +762,6 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 
         <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
 
-        <!-- Preset issues -->
         <div class="flex flex-wrap gap-2 mb-4">
             <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
             <button class="issue-pill" onclick="toggleIssuePill(this,'Channel is deleted')">🗑 Channel deleted</button>
@@ -689,7 +772,6 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
             <button class="issue-pill" onclick="toggleIssuePill(this,'Subscription not working')">⚡ Sub not working</button>
         </div>
 
-        <!-- Custom message -->
         <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
         <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
             class="w-full bg-[#1a1d27] border border-[#232632] rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
@@ -706,11 +788,11 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     </div>
 </div>
 
-<!-- ═══ SCRIPTS ═══ -->
+<!-- SCRIPTS -->
 <script>
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    AUTH + LOGOUT
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function logoutUser() {
     localStorage.clear();
     window.location.href = "signin.html";
@@ -724,9 +806,9 @@ if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    NAVBAR MENUS
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 document.getElementById("mobileMenuBtn").addEventListener("click", e => {
     e.stopPropagation();
     document.getElementById("mobileMenu").classList.toggle("hidden");
@@ -745,21 +827,21 @@ document.addEventListener("click", () => {
     document.getElementById("notifDropdown").classList.add("hidden");
 });
 
-document.getElementById("navUserName").textContent     = savedUsername || "Member";
+document.getElementById("navUserName").textContent      = savedUsername || "Member";
 document.getElementById("dropdownUserName").textContent = savedUsername || "Member";
 document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCode || "0000");
 </script>
 
 <script>
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    CONFIG
-────────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxEkeX58fp73CZRI4E6A4zLCyq7KkXGtwvXJFz95b3WIDjam--I4lwBna7XaDezc3-Zfg/exec';
+──────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMUzy3IxlyiNxX1GmaDSmq3dXQLSUMk3FYUh_3xeyqg4u7YnyqKMvz6N70zJZEsJ2FDQ/exec';
 const USER_CODE  = savedUserCode;
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    STATE
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 let allTasks    = [];
 let filtered    = [];
 let activeTab   = 'All';
@@ -768,16 +850,17 @@ const PER_PAGE  = 10;
 let member      = null;
 let perfStats   = null;
 let isBlocked   = false;
+let hasUnsub    = false;   // true if member has any Unsubscribed tasks
+let forcedTaskTab = null;
 
-// Channel caches
-// channelNameCache:   channelId → channelName
-// channelHandleCache: channelId → channelHandle (e.g. @ma7hargaming)
 let channelNameCache   = {};
 let channelHandleCache = {};
+let channelImageCache  = {};
+let channelIdCache     = {};
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    BOOT
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
@@ -797,19 +880,23 @@ async function init() {
         perfStats = data.perfStats || null;
         allTasks  = data.tasks || [];
 
-        if (data.channelNames) {
-            channelNameCache = data.channelNames;
-        }
-        // Server should also return channelHandles map: channelId → handle
-        if (data.channelHandles) {
-            channelHandleCache = data.channelHandles;
-        }
+        if (data.channelNames)   channelNameCache   = data.channelNames;
+        if (data.channelHandles) channelHandleCache = data.channelHandles;
+        if (data.channelImages)  channelImageCache  = data.channelImages;
+        if (data.channelIds)     channelIdCache     = data.channelIds;
 
         renderMember();
         checkBlock();
+        checkUnsubscribed();
         calcStats();
         renderLimitCard();
+        enforceTaskPriorityTabs();
         applyFilter();
+
+        // After loading, if limit is reached auto-show alert
+        if (perfStats && perfStats.LimitReached === 'Yes') {
+            setTimeout(showLimitReachedAlert, 800);
+        }
 
     } catch (e) {
         hideLoader();
@@ -824,12 +911,11 @@ function hideLoader() {
     setTimeout(() => loader.style.display = 'none', 400);
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    RENDER MEMBER
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function renderMember() {
     if (!member) return;
-
     const pic  = member.ProfilePicture || 'https://i.pravatar.cc/100';
     const name = member.UserName  || savedUsername || '—';
     const code = member.UserCode  || savedUserCode || '—';
@@ -851,9 +937,9 @@ function renderMember() {
     else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 font-medium';
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    BLOCK CHECK
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function checkBlock() {
     if (!member) return;
     const suspended = member.ViolationFlag === 'Suspended';
@@ -872,13 +958,36 @@ function checkBlock() {
     }
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
+   CHECK UNSUBSCRIBED
+──────────────────────────────────────── */
+function checkUnsubscribed() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+    const unsubTasks = myTasks.filter(t => t.Status === 'Unsubscribed');
+    hasUnsub = unsubTasks.length > 0;
+
+    const banner = document.getElementById('unsubBanner');
+    if (hasUnsub) {
+        banner.classList.remove('hidden');
+        document.getElementById('unsubCount').textContent = unsubTasks.length;
+        // Also disable create button
+        const btn = document.getElementById('createBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-40', 'cursor-not-allowed');
+        btn.title = 'You must re-subscribe to your unsubscribed channels first.';
+    } else {
+        banner.classList.add('hidden');
+    }
+}
+
+/* ────────────────────────────────────────
    STATS
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function calcStats() {
     const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
 
     document.getElementById('st-nowork').textContent     = myTasks.filter(t => t.Status === 'NotWorkYet').length;
+    document.getElementById('st-pending').textContent    = myTasks.filter(t => t.Status === 'Pending').length;
     document.getElementById('st-subscribed').textContent = myTasks.filter(t => t.Status === 'Subscribed').length;
     document.getElementById('st-unsub').textContent      = myTasks.filter(t => t.Status === 'Unsubscribed').length;
     document.getElementById('st-rejected').textContent   = myTasks.filter(t => t.Status === 'Rejected').length;
@@ -890,14 +999,19 @@ function calcStats() {
     const bothCount = myTasks.filter(t =>
         t.Status === 'Subscribed' && t.PairedStatus === 'Subscribed'
     ).length;
+    // "Their Pending": tasks where WE subscribed but partner hasn't yet
+    const theirPendingCount = myTasks.filter(t =>
+        t.Status === 'Subscribed' && (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending')
+    ).length;
 
-    document.getElementById('st-awaiting').textContent = awaitingCount;
-    document.getElementById('st-both').textContent     = bothCount;
+    document.getElementById('st-awaiting').textContent    = awaitingCount;
+    document.getElementById('st-both').textContent        = bothCount;
+    document.getElementById('st-theirpending').textContent = theirPendingCount;
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    LIMIT CARD
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function renderLimitCard() {
     if (!perfStats) return;
 
@@ -912,55 +1026,244 @@ function renderLimitCard() {
 
     if (reached) {
         document.getElementById('lim-reached-row').classList.remove('hidden');
-        document.getElementById('lim-bar').classList.add('bg-red-500');
-        document.getElementById('lim-bar').classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
+        document.getElementById('lim-verify-wrap').classList.remove('hidden');
+        const bar = document.getElementById('lim-bar');
+        bar.classList.add('bg-red-500');
+        bar.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
     }
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
+   LIMIT REACHED SWAL ALERT
+──────────────────────────────────────── */
+async function showLimitReachedAlert() {
+    const limit = perfStats ? (parseInt(perfStats.SubscribersLimit) || 50) : 50;
+
+    const result = await Swal.fire({
+        title: '🔒 Subscription Limit Reached',
+        html: `
+            <div style="text-align:left;line-height:1.7;font-size:14px;color:#8a8f9e;">
+                <p style="margin-bottom:12px;">You have reached your subscription limit of <strong style="color:white;">${limit} channels</strong>.</p>
+                <p style="margin-bottom:12px;">To continue creating new tasks, you need to:</p>
+                <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
+                    <li style="margin-bottom:6px;">Submit your YouTube subscription list via the <strong style="color:#a78bfa;">Exsub Extension</strong></li>
+                    <li style="margin-bottom:6px;">Click <strong style="color:#2dd4bf;">Verify My Subscriptions</strong> below to confirm your subscriptions</li>
+                    <li style="margin-bottom:6px;">Our system will verify your subscribed channels and unlock your limit</li>
+                </ol>
+                <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
+                    ⚠ If any channel is found unsubscribed, that task will be marked <strong>Unsubscribed</strong> and you will be required to re-subscribe before continuing.
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: '🔍 Verify My Subscriptions',
+        denyButtonText: '📎 Open Extension',
+        cancelButtonText: 'Close',
+        reverseButtons: false,
+        allowOutsideClick: true,
+        customClass: {
+            popup: 'swal2-popup',
+            title: 'swal2-title',
+            htmlContainer: 'swal2-html-container',
+        }
+    });
+
+    if (result.isConfirmed) {
+        await doVerifySubscriptions();
+    } else if (result.isDenied) {
+        window.open('exsubextension.html', '_blank');
+    }
+}
+
+/* ────────────────────────────────────────
+   VERIFY SUBSCRIPTIONS (check against sheet)
+──────────────────────────────────────── */
+async function doVerifySubscriptions() {
+    Swal.fire({
+        title: 'Verifying Subscriptions…',
+        html: '<p style="color:#8a8f9e;font-size:14px;">Checking your subscription list against all your tasks. This may take a moment.</p>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'verifySubscriptions', userCode: USER_CODE })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            // Update local task statuses from server response
+            if (data.results) {
+                data.results.forEach(r => {
+                    const t = allTasks.find(x => x.TaskID === r.taskId && x.UserCode === USER_CODE);
+                    if (t) {
+                        t.Status      = r.newStatus;
+                        t.CheckedDate = r.checkedDate || new Date().toISOString();
+                    }
+                });
+            }
+
+            checkUnsubscribed();
+            calcStats();
+            enforceTaskPriorityTabs();
+            applyFilter();
+
+            const unsubFound  = data.unsubscribedCount || 0;
+            const verifiedSub = data.verifiedCount     || 0;
+
+            if (unsubFound > 0) {
+                Swal.fire({
+                    title: '⚠ Verification Complete — Issues Found',
+                    html: `
+                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#8a8f9e;">
+                            <p>✅ Verified subscribed: <strong style="color:#4ade80;">${verifiedSub}</strong></p>
+                            <p>❌ Found unsubscribed: <strong style="color:#f87171;">${unsubFound}</strong></p>
+                            <div style="margin-top:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
+                                You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed before you can continue working. These tasks are now pinned at the top.
+                            </div>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    confirmButtonText: 'View Unsubscribed Tasks',
+                    customClass: { popup: 'swal2-popup' }
+                }).then(() => {
+                    setTab('Unsubscribed', document.querySelector('.filter-tab[data-tab="Unsubscribed"]'));
+                });
+            } else {
+                // Update perfStats limit if returned
+                if (data.newLimit && perfStats) {
+                    perfStats.LimitReached    = 'No';
+                    perfStats.SubscribersLimit = String(data.newLimit);
+                    renderLimitCard();
+                    document.getElementById('lim-verify-wrap').classList.add('hidden');
+                }
+
+                Swal.fire({
+                    title: '🎉 All Subscriptions Verified!',
+                    html: `
+                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#8a8f9e;">
+                            <p>✅ All <strong style="color:#4ade80;">${verifiedSub}</strong> subscriptions confirmed.</p>
+                            ${data.newLimit ? `<p style="margin-top:8px;">🚀 Your limit has been increased to <strong style="color:#a78bfa;">${data.newLimit}</strong> channels.</p>` : ''}
+                            <p style="margin-top:8px;">You can now create new tasks!</p>
+                        </div>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'Great!',
+                    customClass: { popup: 'swal2-popup' }
+                });
+            }
+        } else {
+            Swal.fire({
+                title: 'Verification Failed',
+                html: `<p style="color:#8a8f9e;font-size:14px;">${data.message || 'Could not verify subscriptions. Please make sure you have submitted your subscription list via the Exsub Extension.'}</p>`,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: { popup: 'swal2-popup' }
+            });
+        }
+    } catch (e) {
+        Swal.fire({
+            title: 'Connection Error',
+            html: '<p style="color:#8a8f9e;font-size:14px;">Could not reach the server. Please try again.</p>',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: { popup: 'swal2-popup' }
+        });
+    }
+}
+
+/* ────────────────────────────────────────
    FILTER + SEARCH
-────────────────────────────────────────── */
+──────────────────────────────────────── */
+function enforceTaskPriorityTabs() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+    const hasUnsubTasks = myTasks.some(t => t.Status === 'Unsubscribed');
+    const hasPendingTasks = myTasks.some(t => t.Status === 'Pending');
+
+    const previousForcedTab = forcedTaskTab;
+    forcedTaskTab = hasUnsubTasks ? 'Unsubscribed' : (hasPendingTasks ? 'Pending' : null);
+    if (!forcedTaskTab && previousForcedTab) {
+        activeTab = 'All';
+        currentPage = 1;
+    }
+
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        const tabName = tab.dataset.tab;
+        const shouldDisable = !!forcedTaskTab && tabName !== forcedTaskTab;
+        tab.disabled = shouldDisable;
+        tab.classList.toggle('active', tabName === (forcedTaskTab || activeTab));
+        if (shouldDisable) {
+            tab.title = forcedTaskTab === 'Unsubscribed'
+                ? 'Complete unsubscribed tasks first.'
+                : 'Complete pending subscribe-back tasks first.';
+        } else {
+            tab.removeAttribute('title');
+        }
+    });
+
+    if (forcedTaskTab) {
+        activeTab = forcedTaskTab;
+        currentPage = 1;
+    }
+}
 function setTab(tab, btn) {
+    if (forcedTaskTab && tab !== forcedTaskTab) return;
     activeTab   = tab;
     currentPage = 1;
     document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     applyFilter();
 }
 
 function applyFilter() {
+    enforceTaskPriorityTabs();
     const q = (document.getElementById('searchInput').value || '').toLowerCase();
 
-    filtered = allTasks.filter(t => {
+    let base = allTasks.filter(t => {
         if (t.UserCode !== USER_CODE) return false;
 
         const tabMatch =
             activeTab === 'All'          ? true :
             activeTab === 'NotWorkYet'   ? t.Status === 'NotWorkYet' :
+            activeTab === 'Pending'      ? t.Status === 'Pending' :
             activeTab === 'Subscribed'   ? t.Status === 'Subscribed' :
             activeTab === 'Unsubscribed' ? t.Status === 'Unsubscribed' :
             activeTab === 'Rejected'     ? t.Status === 'Rejected' :
             true;
 
-        const chanName   = (channelNameCache[t.TargetChannelId]   || '').toLowerCase();
-        const chanHandle = (channelHandleCache[t.TargetChannelId] || '').toLowerCase();
+        const chanKey    = t.TargetUserCode || t.TargetChannelId || '';
+        const chanId     = t.TargetChannelId || channelIdCache[chanKey] || '';
+        const chanName   = (t.TargetChannelName || channelNameCache[chanKey] || channelNameCache[chanId] || '').toLowerCase();
+        const chanHandle = (t.TargetChannelHandle || channelHandleCache[chanKey] || channelHandleCache[chanId] || '').toLowerCase();
         const searchMatch = !q ||
             (t.TaskID          || '').toLowerCase().includes(q) ||
             (t.TargetUserCode  || '').toLowerCase().includes(q) ||
-            (t.TargetChannelId || '').toLowerCase().includes(q) ||
+            chanId.toLowerCase().includes(q) ||
             chanName.includes(q) ||
             chanHandle.includes(q);
 
         return tabMatch && searchMatch;
     });
 
+    // Sort: Unsubscribed first, then Pending, then NotWorkYet, then Subscribed, then Rejected
+    base.sort((a, b) => {
+        const ORDER = { 'Unsubscribed': 0, 'Pending': 1, 'NotWorkYet': 2, 'Subscribed': 3, 'Rejected': 4 };
+        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
+    });
+
+    filtered    = base;
     currentPage = 1;
     renderList();
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    RENDER LIST
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function renderList() {
     const list  = document.getElementById('taskList');
     const empty = document.getElementById('emptyState');
@@ -1002,35 +1305,64 @@ function clearSkeletons() {
     document.getElementById('emptyState').classList.remove('hidden');
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    HELPERS
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 const STATUS_CFG = {
     'NotWorkYet':   { bg: 'bg-yellow-500/15', text: 'text-yellow-400', dot: 'bg-yellow-400', label: 'Not Started'  },
+    'Pending':      { bg: 'bg-orange-500/15', text: 'text-orange-400', dot: 'bg-orange-400', label: 'Pending'      },
     'Subscribed':   { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Subscribed'   },
     'Unsubscribed': { bg: 'bg-red-500/15',    text: 'text-red-400',    dot: 'bg-red-400',    label: 'Unsubscribed' },
     'Rejected':     { bg: 'bg-gray-500/15',   text: 'text-gray-400',   dot: 'bg-gray-400',   label: 'Rejected'     },
 };
 
+/**
+ * pairedBadge: shows the PARTNER's subscription status from this member's perspective.
+ * - If I subscribed and partner also subscribed → "They Subbed Back"
+ * - If I subscribed but partner is still pending → "Their Sub: Pending"
+ * - If I haven't subscribed yet, the partner's side is irrelevant
+ */
 function pairedBadge(t) {
     if (t.Status !== 'Subscribed') return '';
     if (t.PairedStatus === 'Subscribed') {
         return `<span class="paired-badge bg-teal-500/15 text-teal-400">✓ They Subbed Back</span>`;
+    } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+        return `<span class="paired-badge bg-orange-500/15 text-orange-400">⏳ Their Sub: Pending</span>`;
     } else {
         return `<span class="paired-badge bg-blue-500/15 text-blue-400">⏳ Awaiting Their Sub</span>`;
     }
 }
 
-function getChannelName(id)   { return channelNameCache[id]   || null; }
-function getChannelHandle(id) { return channelHandleCache[id] || null; }
+function getChannelKey(t) {
+    return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
+}
 
-/**
- * Build YouTube search URL for a channel handle.
- * If handle is available: https://www.youtube.com/results?search_query=@handle
- * If no handle, fallback to direct channel URL.
- */
-function buildChannelUrl(channelId) {
-    const handle = getChannelHandle(channelId);
+function getChannelId(t) {
+    const key = getChannelKey(t);
+    return (t && t.TargetChannelId) || channelIdCache[key] || '';
+}
+
+function getChannelName(t) {
+    const key = getChannelKey(t);
+    const id  = getChannelId(t);
+    return (t && t.TargetChannelName) || channelNameCache[key] || channelNameCache[id] || null;
+}
+
+function getChannelHandle(t) {
+    const key = getChannelKey(t);
+    const id  = getChannelId(t);
+    return (t && t.TargetChannelHandle) || channelHandleCache[key] || channelHandleCache[id] || null;
+}
+
+function getChannelImage(t) {
+    const key = getChannelKey(t);
+    const id  = getChannelId(t);
+    return (t && t.TargetChannelImage) || channelImageCache[key] || channelImageCache[id] || '';
+}
+
+function buildChannelUrl(t) {
+    const channelId = getChannelId(t);
+    const handle = getChannelHandle(t);
     if (handle) {
         const h = handle.startsWith('@') ? handle : '@' + handle;
         return `https://www.youtube.com/results?search_query=${encodeURIComponent(h)}`;
@@ -1061,23 +1393,27 @@ function showToast(msg, isError = false) {
     setTimeout(() => { t.className = ''; }, 3200);
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    TASK CARD
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function taskCard(t) {
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', dot: 'bg-gray-400', label: t.Status };
 
-    const canMark    = t.Status === 'NotWorkYet' && !isBlocked;
-    const chanName   = getChannelName(t.TargetChannelId);
-    const chanHandle = getChannelHandle(t.TargetChannelId);
-    const chanUrl    = buildChannelUrl(t.TargetChannelId);
+    const isUnsubscribed = t.Status === 'Unsubscribed';
+    // Unsubscribed tasks: all actions disabled, must re-subscribe
+    // NotWorkYet tasks: can mark subscribed (unless globally blocked or has unsub tasks)
+    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isBlocked && !hasUnsub;
 
-    // Channel display
+    const chanId     = getChannelId(t);
+    const chanName   = getChannelName(t);
+    const chanHandle = getChannelHandle(t);
+    const chanImage  = getChannelImage(t);
+    const chanUrl    = buildChannelUrl(t);
+
     const chanDisplay = chanName
         ? `<span class="font-semibold text-white">${chanName}</span>`
-        : `<span class="font-mono text-purple-300 text-sm">${t.TargetChannelId || '—'}</span>`;
+        : `<span class="font-mono text-purple-300 text-sm">${chanId || '—'}</span>`;
 
-    // Handle row with copy button
     const handleRow = chanHandle
         ? (() => {
             const h = chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle;
@@ -1093,21 +1429,90 @@ function taskCard(t) {
                 </button>
             </div>`;
         })()
-        : (t.TargetChannelId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${t.TargetChannelId}</div>` : '');
+        : (chanId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${chanId}</div>` : '');
 
-    // Issue display
     const issueRow = t.Issue
         ? `<span class="text-xs text-red-400 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
 
+    // Punishment block for unsubscribed cards
+    const punishmentBlock = isUnsubscribed ? `
+        <div class="punishment-box mt-3">
+            <p class="text-xs text-red-300 font-semibold mb-1">🚫 Action Required — Re-Subscribe</p>
+            <p class="text-xs text-red-400/80 leading-relaxed">
+                You have unsubscribed from this channel. You <strong class="text-red-300">must re-subscribe</strong> to it on YouTube and then submit your subscription list via the Exsub Extension to resolve this task.
+                Until resolved, all other actions are locked.
+            </p>
+            <a href="${chanUrl}" target="_blank" rel="noopener"
+                class="btn-red inline-flex items-center justify-center gap-2 mt-3 px-4 py-2 rounded-xl text-xs font-semibold">
+                ▶ Re-Subscribe Now
+            </a>
+        </div>` : '';
+
+    // Issue / report section (hidden for unsubscribed, as the punishment block already explains)
+    const issueSection = !isUnsubscribed ? `
+        <div class="issue-box mt-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-red-400/80 font-medium">⚠ Report Issue with this task</span>
+                <button onclick="openIssueModal('${t.TaskID}')"
+                    class="text-xs text-red-400 hover:text-red-300 underline transition">
+                    ${t.Issue ? 'Update Issue' : 'Report'}
+                </button>
+            </div>
+            ${t.Issue ? `<p class="text-xs text-red-400/70 mt-1">Current: ${t.Issue}</p>` : ''}
+        </div>` : '';
+
+    // Right-side action buttons
+    let actionButtons = '';
+    if (isUnsubscribed) {
+        // Unsubscribed: only open channel, no mark button
+        actionButtons = `
+            ${chanId ? `
+            <a href="${chanUrl}" target="_blank" rel="noopener"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-60">
+                ▶ Open Channel
+            </a>` : ''}
+            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-400">
+                🔒 Actions Locked
+            </div>`;
+    } else if (canMark) {
+        actionButtons = `
+            ${chanId ? `
+            <a href="${chanUrl}" target="_blank" rel="noopener"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                ▶ Open Channel
+            </a>` : ''}
+            <button onclick="doMarkSubscribed('${t.TaskID}')"
+                class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                ✓ Mark Subscribed
+            </button>`;
+    } else {
+        actionButtons = `
+            ${chanId ? `
+            <a href="${chanUrl}" target="_blank" rel="noopener"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                ▶ Open Channel
+            </a>` : ''}
+            <button onclick="openDetail('${t.TaskID}')"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
+                View Details
+            </button>`;
+    }
+
+    // Pinned indicator for unsubscribed
+    const pinnedBadge = isUnsubscribed
+        ? `<span class="text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
+        : '';
+
     return `
-    <div class="task-card rounded-3xl p-5">
-        <!-- TOP ROW: ID + Badges -->
+    <div class="task-card ${isUnsubscribed ? 'unsubscribed-card' : ''} rounded-3xl p-5">
+        <!-- TOP ROW -->
         <div class="flex flex-wrap items-center gap-2 mb-4">
             <code class="text-xs text-muted font-mono bg-[#1a1d27] px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
             ${pairedBadge(t)}
             ${issueRow}
+            ${pinnedBadge}
         </div>
 
         <div class="flex flex-col xl:flex-row gap-5">
@@ -1116,9 +1521,11 @@ function taskCard(t) {
 
                 <!-- Channel instruction box -->
                 <div class="instructions-box mb-3">
-                    <p class="text-xs text-purple-300 font-semibold mb-2">📺 Subscribe to this channel:</p>
+                    <p class="text-xs text-purple-300 font-semibold mb-2">📺 ${isUnsubscribed ? 'Re-subscribe to this channel:' : 'Subscribe to this channel:'}</p>
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-[#1a1d27] flex items-center justify-center text-lg flex-shrink-0">▶</div>
+                        ${chanImage
+                            ? `<img src="${chanImage}" alt="" class="w-11 h-11 rounded-xl object-cover bg-[#1a1d27] border border-[#252936] flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-11 h-11 rounded-xl bg-[#1a1d27] flex items-center justify-center text-lg flex-shrink-0&quot;>?</div>'">`
+                            : `<div class="w-11 h-11 rounded-xl bg-[#1a1d27] flex items-center justify-center text-lg flex-shrink-0">?</div>`}
                         <div class="min-w-0 flex-1">
                             <div class="text-sm">${chanDisplay}</div>
                             ${handleRow}
@@ -1126,17 +1533,8 @@ function taskCard(t) {
                     </div>
                 </div>
 
-                <!-- Issue section -->
-                <div class="issue-box mt-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-red-400/80 font-medium">⚠ Report Issue with this task</span>
-                        <button onclick="openIssueModal('${t.TaskID}')"
-                            class="text-xs text-red-400 hover:text-red-300 underline transition">
-                            ${t.Issue ? 'Update Issue' : 'Report'}
-                        </button>
-                    </div>
-                    ${t.Issue ? `<p class="text-xs text-red-400/70 mt-1">Current: ${t.Issue}</p>` : ''}
-                </div>
+                ${punishmentBlock}
+                ${issueSection}
 
                 <!-- Meta -->
                 <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
@@ -1149,30 +1547,28 @@ function taskCard(t) {
 
             <!-- RIGHT: Actions -->
             <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[160px] flex-shrink-0">
-                ${t.TargetChannelId ? `
-                <a href="${chanUrl}" target="_blank" rel="noopener"
-                    class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                    ▶ Open Channel
-                </a>` : ''}
-                ${canMark
-                    ? `<button onclick="doMarkSubscribed('${t.TaskID}')"
-                        class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                        ✓ Mark Subscribed
-                       </button>`
-                    : `<button onclick="openDetail('${t.TaskID}')"
-                        class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
-                        View Details
-                       </button>`
-                }
+                ${actionButtons}
             </div>
         </div>
     </div>`;
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    MARK SUBSCRIBED
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 async function doMarkSubscribed(taskId) {
+    // Block if member has unsubscribed tasks
+    if (hasUnsub) {
+        showToast('You must resolve your unsubscribed tasks first.', true);
+        return;
+    }
+
+    // Block if limit reached
+    if (perfStats && perfStats.LimitReached === 'Yes') {
+        showLimitReachedAlert();
+        return;
+    }
+
     showToast('Updating task status…');
     try {
         const res  = await fetch(SCRIPT_URL, {
@@ -1194,35 +1590,46 @@ async function doMarkSubscribed(taskId) {
             calcStats();
             applyFilter();
         } else {
-            showToast(data.message || 'Update failed.', true);
+            // Check if blocked due to limit
+            if (data.limitReached) {
+                showLimitReachedAlert();
+            } else {
+                showToast(data.message || 'Update failed.', true);
+            }
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    DETAIL MODAL
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function openDetail(taskId) {
     const t = allTasks.find(x => x.TaskID === taskId);
     if (!t) return;
 
     const sc         = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', label: t.Status };
-    const chanName   = getChannelName(t.TargetChannelId);
-    const chanHandle = getChannelHandle(t.TargetChannelId);
-    const chanUrl    = buildChannelUrl(t.TargetChannelId);
+    const chanId     = getChannelId(t);
+    const chanName   = getChannelName(t);
+    const chanHandle = getChannelHandle(t);
+    const chanImage  = getChannelImage(t);
+    const chanUrl    = buildChannelUrl(t);
 
     const h = chanHandle
         ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle)
         : null;
 
+    // Partner status label
     let partnerLabel = '—';
     let partnerClass = 'text-muted';
     if (t.Status === 'Subscribed') {
         if (t.PairedStatus === 'Subscribed') {
             partnerLabel = 'Subscribed Back ✓';
             partnerClass = 'text-teal-400';
+        } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+            partnerLabel = 'Pending (Not Yet Subscribed)';
+            partnerClass = 'text-orange-400';
         } else {
             partnerLabel = 'Not Yet Subscribed';
             partnerClass = 'text-blue-400';
@@ -1265,7 +1672,7 @@ function openDetail(taskId) {
                         </svg>
                     </button>
                 </div>` : ''}
-                <div class="font-mono text-xs text-muted mt-0.5">${t.TargetChannelId || '—'}</div>
+                <div class="font-mono text-xs text-muted mt-0.5">${chanId || '—'}</div>
             </div>
             <div class="bg-[#1a1d27] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Partner Sub Status</div>
@@ -1277,7 +1684,7 @@ function openDetail(taskId) {
             </div>
         </div>
 
-        ${t.TargetChannelId ? `
+        ${chanId ? `
         <a href="${chanUrl}" target="_blank" rel="noopener"
             class="btn-purple w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-1">
             ▶ Open Channel on YouTube
@@ -1302,13 +1709,20 @@ function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('open');
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    CREATE TASKS MODAL
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 function openCreateModal() {
     if (isBlocked) { showToast('Your account is restricted from this group.', true); return; }
+    if (hasUnsub)  { showToast('Resolve your unsubscribed tasks first.', true); return; }
 
-    const pending = allTasks.filter(t => t.Status === 'NotWorkYet' && t.UserCode === USER_CODE).length;
+    // Check limit
+    if (perfStats && perfStats.LimitReached === 'Yes') {
+        showLimitReachedAlert();
+        return;
+    }
+
+    const pending = allTasks.filter(t => (t.Status === 'NotWorkYet' || t.Status === 'Pending') && t.UserCode === USER_CODE).length;
     document.getElementById('modalPendingCount').textContent = pending;
 
     const canCreate = pending < 5;
@@ -1350,13 +1764,21 @@ async function doCreateTasks() {
                 allTasks = [...allTasks, ...data.newTasks];
                 if (data.channelNames)   Object.assign(channelNameCache,   data.channelNames);
                 if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+                if (data.channelImages)  Object.assign(channelImageCache,  data.channelImages);
+                if (data.channelIds)     Object.assign(channelIdCache,     data.channelIds);
                 calcStats();
+                enforceTaskPriorityTabs();
                 applyFilter();
             }
             showToast(`${data.created} task(s) created!`);
         } else {
-            box.textContent = data.message || 'Could not create tasks.';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            if (data.limitReached) {
+                closeCreateModal();
+                showLimitReachedAlert();
+            } else {
+                box.textContent = data.message || 'Could not create tasks.';
+                box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            }
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -1366,22 +1788,19 @@ async function doCreateTasks() {
     btn.disabled    = false;
 }
 
-/* ──────────────────────────────────────────
+/* ────────────────────────────────────────
    REPORT ISSUE MODAL
-────────────────────────────────────────── */
+──────────────────────────────────────── */
 let selectedIssuePill = '';
 
 function openIssueModal(taskId) {
     selectedIssuePill = '';
-    document.getElementById('issueTaskId').value    = taskId;
+    document.getElementById('issueTaskId').value     = taskId;
     document.getElementById('issueCustomText').value = '';
     document.getElementById('issuePillSelected').textContent = '';
     document.getElementById('issueResultBox').classList.add('hidden');
-
-    // Reset all pills
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
 
-    // Pre-fill if task already has an issue
     const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
     if (t && t.Issue) {
         document.getElementById('issueCustomText').value = t.Issue;
@@ -1411,10 +1830,7 @@ function toggleIssuePill(btn, label) {
 async function doSubmitIssue() {
     const taskId     = document.getElementById('issueTaskId').value;
     const customText = (document.getElementById('issueCustomText').value || '').trim();
-
-    // issueTitle = the selected preset pill label (or custom text if no pill)
     const issueTitle = selectedIssuePill || customText;
-    // issueDescription = extra detail text (only meaningful when a pill is also selected)
     const issueDescription = selectedIssuePill ? customText : '';
 
     if (!issueTitle) {
@@ -1422,15 +1838,10 @@ async function doSubmitIssue() {
         return;
     }
 
-    // Look up the task to get the TargetUserCode (channel owner being reported)
     const task = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
-    if (!task) {
-        showToast('Task not found.', true);
-        return;
-    }
+    if (!task) { showToast('Task not found.', true); return; }
 
     const targetUserCode = task.TargetUserCode;
-
     const btn = document.getElementById('doIssueBtn');
     btn.textContent = 'Submitting…';
     btn.disabled    = true;
@@ -1440,13 +1851,13 @@ async function doSubmitIssue() {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
-                action:          'reportIssue',
+                action: 'reportIssue',
                 taskId,
-                reporterCode:    USER_CODE,       // person filing the issue
-                targetUserCode,                    // UserCode of the channel owner (goes into sheet UserCode col)
-                issueTitle,                        // preset label or free text
-                issueDescription,                  // extra detail (may be empty)
-                issueType:       selectedIssuePill || 'Custom'  // category label for admin filtering
+                reporterCode:    USER_CODE,
+                targetUserCode,
+                issueTitle,
+                issueDescription,
+                issueType: selectedIssuePill || 'Custom'
             })
         });
         const data = await res.json();
@@ -1456,11 +1867,7 @@ async function doSubmitIssue() {
         if (data.success) {
             box.textContent = `✅ Issue reported: "${issueTitle}"`;
             box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
-
-            // Update local task so the card re-renders with the issue label
-            const issueDisplayText = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
-            task.Issue = issueDisplayText;
-
+            task.Issue = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
             showToast('Issue reported successfully.');
             applyFilter();
             setTimeout(closeIssueModal, 1600);
