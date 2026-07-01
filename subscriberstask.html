@@ -12,6 +12,49 @@
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
+
+#mobileBottomNav{
+  display:none;
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:999;
+  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: white;
+  border-radius:999px;
+  padding:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
+  backdrop-filter:blur(16px);
+}
+#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
+#mobileBottomNav a{
+  position:relative;
+  width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  color:#ffffff;
+  transition:0.25s ease;
+  text-decoration:none;
+}
+#mobileBottomNav a svg{
+  width:22px; height:22px;
+  stroke:currentColor; fill:none;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+  transition:0.25s ease;
+}
+#mobileBottomNav a:active{ transform:scale(0.92); }
+#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
+#mobileBottomNav a.active svg{ stroke:#0f1118; }
+
+@media (max-width: 767px){
+  #mobileBottomNav{ display:block; }
+  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
+}
+
+
 :root {
     --bg: #050508;
     --card: #12141c;
@@ -836,7 +879,7 @@ document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCod
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMUzy3IxlyiNxX1GmaDSmq3dXQLSUMk3FYUh_3xeyqg4u7YnyqKMvz6N70zJZEsJ2FDQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9SdG_gRheNcOz9FMZ86AmWN7pA0FbaktEcwEKGW408257zBSUhL9eY0DtC_MqswqF0w/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -1482,10 +1525,10 @@ function taskCard(t) {
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ▶ Open Channel
             </a>` : ''}
-            <button onclick="doMarkSubscribed('${t.TaskID}')"
-                class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                ✓ Mark Subscribed
-            </button>`;
+           <button onclick="doMarkSubscribed('${t.TaskID}', this)"
+    class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+    ✓ Mark Subscribed
+</button>`;
     } else {
         actionButtons = `
             ${chanId ? `
@@ -1556,7 +1599,10 @@ function taskCard(t) {
 /* ────────────────────────────────────────
    MARK SUBSCRIBED
 ──────────────────────────────────────── */
-async function doMarkSubscribed(taskId) {
+/* ────────────────────────────────────────
+   MARK SUBSCRIBED
+──────────────────────────────────────── */
+async function doMarkSubscribed(taskId, btnEl) {
     // Block if member has unsubscribed tasks
     if (hasUnsub) {
         showToast('You must resolve your unsubscribed tasks first.', true);
@@ -1569,7 +1615,17 @@ async function doMarkSubscribed(taskId) {
         return;
     }
 
-    showToast('Updating task status…');
+    const originalHTML = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = `
+        <span class="inline-flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Checking...
+        </span>`;
+
     try {
         const res  = await fetch(SCRIPT_URL, {
             method: 'POST',
@@ -1589,19 +1645,34 @@ async function doMarkSubscribed(taskId) {
             showToast(data.bothSubscribed ? '🎉 Both subscribed! Exchange complete!' : '✅ Task marked as Subscribed!');
             calcStats();
             applyFilter();
+            // no need to restore the button — this card gets re-rendered by applyFilter()
+        } else if (data.proofMissing) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Proof Not Found',
+                text: 'Please watch the video and subscribe first using the Exsub Extension. Your task is not complete yet.',
+                background: '#12141c',
+                color: '#fff',
+                confirmButtonColor: '#7c3aed',
+                confirmButtonText: 'Got it'
+            });
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+        } else if (data.limitReached) {
+            showLimitReachedAlert();
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
         } else {
-            // Check if blocked due to limit
-            if (data.limitReached) {
-                showLimitReachedAlert();
-            } else {
-                showToast(data.message || 'Update failed.', true);
-            }
+            showToast(data.message || 'Update failed.', true);
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
         }
     } catch (e) {
         showToast('Connection error.', true);
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalHTML;
     }
 }
-
 /* ────────────────────────────────────────
    DETAIL MODAL
 ──────────────────────────────────────── */
@@ -1882,6 +1953,41 @@ async function doSubmitIssue() {
     btn.textContent = 'Submit Issue';
     btn.disabled    = false;
 }
+</script>
+
+<nav id="mobileBottomNav">
+  <div class="bn-inner">
+
+    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
+  <path d="M10 9l5 3-5 3V9z"/>
+</svg></a>
+
+    <a href="videotasks.html" data-page="videotasks.html" title="Video Task">
+      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+    </a>
+
+    <a href="playlisttasks.html" data-page="playlisttasks.html" title="Playlist Task">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9"></circle>
+  <polyline points="12 7 12 12 16 14"></polyline>
+</svg> </a>
+
+    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </a>
+
+  </div>
+</nav>
+
+<script>
+(function(){
+  const current = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
+    if (a.getAttribute("data-page") === current) a.classList.add("active");
+  });
+})();
 </script>
 </body>
 </html>
