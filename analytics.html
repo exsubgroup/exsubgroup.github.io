@@ -93,16 +93,6 @@ body::before{
 }
 
 /* ── ALERTS ── */
-.alert-incomplete{
-  background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(220,38,38,0.06));
-  border:2px solid rgba(239,68,68,0.5);
-  border-radius:20px; padding:24px 28px;
-  position:relative; overflow:hidden;
-}
-.alert-incomplete::before{
-  content:''; position:absolute; inset:0;
-  background:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(239,68,68,0.04) 8px,rgba(239,68,68,0.04) 16px);
-}
 .alert-blocked{
   background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(127,29,29,0.15));
   border:2px solid rgba(239,68,68,0.7);
@@ -209,7 +199,7 @@ body::before{
 ::-webkit-scrollbar-track{ background:transparent; }
 ::-webkit-scrollbar-thumb{ background:#252938; border-radius:4px; }
 
-/* ── ISSUE CARD ── */
+/* ── ISSUE CARD (legacy, kept for compatibility) ── */
 .issue-card{
   border-radius:14px; padding:14px 18px;
   display:flex; align-items:flex-start; gap:12px;
@@ -222,6 +212,59 @@ body::before{
   display:inline-flex; align-items:center; padding:2px 10px; border-radius:999px;
   font-size:10px; font-weight:700; letter-spacing:.4px; white-space:nowrap;
 }
+
+/* ── ISSUES GRID (new, full list, PC-optimized) ── */
+.issues-grid{
+  display:grid; grid-template-columns:1fr; gap:14px;
+}
+@media (min-width:900px){
+  .issues-grid{ grid-template-columns:1fr 1fr; }
+}
+.issue-tile{
+  background:linear-gradient(135deg,rgba(239,68,68,0.09),rgba(15,17,23,0.4)),
+             linear-gradient(180deg,#15171f,#0f1117);
+  border:1px solid rgba(239,68,68,0.22); border-left:4px solid #ef4444;
+  border-radius:14px;
+  padding:18px 20px 16px 18px; transition:.25s; position:relative; overflow:hidden;
+}
+.issue-tile:hover{ border-color:rgba(239,68,68,0.4); border-left-color:#f87171; transform:translateY(-2px); }
+.issue-tile-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; }
+.issue-tile-icon{
+  width:34px; height:34px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25);
+}
+.issue-tile-title{ font-size:15px; font-weight:800; color:#fff; line-height:1.35; }
+.issue-status-pill{
+  display:inline-flex; align-items:center; gap:5px; padding:3px 11px; border-radius:999px;
+  font-size:10px; font-weight:700; letter-spacing:.5px; white-space:nowrap; text-transform:uppercase;
+  flex-shrink:0;
+}
+.pill-open   { background:rgba(239,68,68,0.16);  color:#fca5a5; }
+.pill-pending{ background:rgba(214,169,79,0.14); color:#e7c374; }
+.pill-resolved{ background:rgba(79,184,168,0.14); color:#7fd6c5; }
+.issue-tile-desc{
+  font-size:12.5px; color:#9aa1b2; line-height:1.65; margin-top:8px;
+}
+.issue-tile-desc.clamped{
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.issue-read-more{
+  background:none; border:none; padding:0; margin-top:6px;
+  font-size:11.5px; font-weight:700; color:#f87171; cursor:pointer;
+  display:inline-flex; align-items:center; gap:3px;
+}
+.issue-read-more:hover{ color:#fca5a5; text-decoration:underline; }
+.issue-tile-meta{
+  display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; padding-top:12px;
+  border-top:1px solid rgba(239,68,68,0.12); font-size:11px; color:#666d80;
+}
+.issue-tile-reply{
+  margin-top:12px; padding:10px 13px; border-radius:10px;
+  background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.18);
+}
+
 /* ── GROUP TASK CARD ── */
 .group-task-card{
   border-radius:20px; padding:22px 24px;
@@ -410,27 +453,13 @@ body::before{
       </div>
     </div>
 
-    <!-- ── ACCOUNT INCOMPLETE BANNER ── -->
-    <div id="incompleteBanner" class="hidden fade-in delay-1">
-      <div class="alert-incomplete pulse-red">
-        <div class="relative z-10 flex flex-wrap items-center gap-5">
-          <div style="font-size:52px;flex-shrink:0;">🚫</div>
-          <div class="flex-1">
-            <div class="text-2xl font-black text-red-400 mb-1">Account Not Completed!</div>
-            <div class="text-red-300 font-semibold mb-2">Your account setup is incomplete. You cannot work in our group until your account is fully ready.</div>
-            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">You need to setup two things:</div>
-            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">1 — Add your promotional channel </div>            
-            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">2 — Add videos ad playlist for promotional channel.</div>
-            <div class="text-sm mb-1" style="color:rgba(252,165,165,0.75);">3 — Add working channel.</div>
-            <div class="text-sm"      style="color:rgba(252,165,165,0.75);">4 — Join any group to start.</div>
-          </div>
-          <a href="support.html"
-            class="px-6 py-3 rounded-xl font-bold text-sm flex-shrink-0"
-            style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;text-decoration:none;">
-            Contact Admin For Help →
-          </a>
-        </div>
+    <!-- ── YOUR ISSUES (full list, PC-optimized) ── -->
+    <div id="allIssuesSection" class="hidden fade-in delay-1">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <h2 class="text-lg font-bold flex items-center gap-2"><span>Issues</span></h2>
+        <span id="issuesCountBadge" class="text-xs text-gray-500"></span>
       </div>
+      <div id="allIssuesList" class="issues-grid"></div>
     </div>
 
     <!-- ── MEMBER INFO ROW ── -->
@@ -461,15 +490,6 @@ body::before{
 
     <!-- ══════════════════ ACTIVE CONTENT ══════════════════ -->
     <div id="activeContent">
-
-      <!-- ── ISSUES PANEL ── -->
-      <div id="issuesPanel" class="hidden fade-in delay-1 mb-8">
-        <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-          <h2 class="text-lg font-bold flex items-center gap-2">⚠️ <span>Your Issues</span></h2>
-          <a id="viewAllIssuesBtn" href="issues.html" class="hidden text-xs text-yellow-400 hover:text-yellow-300 transition font-medium">View all issues →</a>
-        </div>
-        <div id="issuesList" class="flex flex-col gap-3"></div>
-      </div>
 
       <!-- ── MY GROUPS (task cards) ── -->
       <div id="groupsSection" class="hidden fade-in delay-2 mb-8">
@@ -925,13 +945,7 @@ body::before{
 'use strict';
 
 /* ── CONFIG ── */
-var API = "https://script.google.com/macros/s/AKfycby_Q4l6nf6NVxpR2pSQ6pGkCiujWTEgnT4uEypS2jrBP60_UBS4r193KufL5gFYH1C5WQ/exec";
-
-/* Issues sheet config */
-var ISSUES_SHEET_ID   = "1KR3c40qahWw_JIkmQtxFhVl-8VMS3PmrlFJ_1lC6Cso";
-var ISSUES_SHEET_NAME = "Sheet1";
-var ISSUES_URL = "https://docs.google.com/spreadsheets/d/" + ISSUES_SHEET_ID
-  + "/gviz/tq?tqx=out:json&sheet=" + encodeURIComponent(ISSUES_SHEET_NAME);
+var API = "https://script.google.com/macros/s/AKfycbw0f9hZ70_oC_Ip6yiatl0b1ntOpwQj5cqtg6LbmE_jHCW03LRkKsMUjBVngQwzW8o7sg/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
@@ -958,91 +972,99 @@ async function loadDashboard() {
 }
 
 /* ══════════════════ ISSUES ══════════════════ */
-async function loadIssues() {
+function renderIssues(rawIssues) {
   try {
-    var res  = await fetch(ISSUES_URL);
-    var text = await res.text();
-    /* gviz returns: google.visualization.Query.setResponse({...}) */
-    var json = JSON.parse(text.replace(/^[^(]+\(/, "").replace(/\);?\s*$/, ""));
-    var rows = json.table.rows || [];
-    /* cols: 0=UserCode 1=IssueTitle 2=IssueDescription 3=IssueType 4=IssueStatus
-             5=AdminReply 6=CreatedDate 7=UpdatedDate */
-    var myIssues = rows.map(function(r){
-      return {
-        userCode:    (r.c[0] && r.c[0].v) ? String(r.c[0].v).trim().toUpperCase() : "",
-        title:       (r.c[1] && r.c[1].v) ? String(r.c[1].v).trim() : "",
-        description: (r.c[2] && r.c[2].v) ? String(r.c[2].v).trim() : "",
-        type:        (r.c[3] && r.c[3].v) ? String(r.c[3].v).trim() : "",
-        status:      (r.c[4] && r.c[4].v) ? String(r.c[4].v).trim().toLowerCase() : "open",
-        adminReply:  (r.c[5] && r.c[5].v) ? String(r.c[5].v).trim() : "",
-        createdDate: (r.c[6] && r.c[6].v) ? String(r.c[6].v).trim() : "",
-        updatedDate: (r.c[7] && r.c[7].v) ? String(r.c[7].v).trim() : ""
-      };
-    }).filter(function(i){ return i.userCode === usercode && i.title; });
+    var myIssues = (rawIssues || []).filter(function(i){ return i && i.userCode === usercode && i.title; });
 
-    if (myIssues.length === 0) return;
+    if (myIssues.length === 0) { hide("allIssuesSection"); return; }
 
-    /* Group by title — show each unique title once (with count if >1) */
+    /* Group by title — merge duplicates, keep the most recently updated copy, tally count */
     var grouped = {};
     myIssues.forEach(function(issue){
       var key = issue.title.toLowerCase();
       if (!grouped[key]) grouped[key] = { issue: issue, count: 0 };
       grouped[key].count++;
+      /* prefer the entry with the latest updatedDate/createdDate as the display copy */
+      var prevDate = grouped[key].issue.updatedDate || grouped[key].issue.createdDate || "";
+      var curDate  = issue.updatedDate || issue.createdDate || "";
+      if (curDate && (!prevDate || new Date(curDate) >= new Date(prevDate))) {
+        grouped[key].issue = issue;
+      }
     });
-    var uniqueIssues = Object.values(grouped);
-    var toShow = uniqueIssues.slice(0, 2);
-    var hasMore = uniqueIssues.length > 2;
+    var uniqueIssues = Object.values(grouped).sort(function(a, b){
+      var da = new Date(a.issue.updatedDate || a.issue.createdDate || 0).getTime() || 0;
+      var db = new Date(b.issue.updatedDate || b.issue.createdDate || 0).getTime() || 0;
+      return db - da;
+    });
 
     var issueTypeIcon = { bug:"🐛", complaint:"📣", request:"📝", warning:"⚠️" };
 
-    document.getElementById("issuesList").innerHTML = toShow.map(function(g){
+    document.getElementById("allIssuesList").innerHTML = uniqueIssues.map(function(g, idx){
       var i = g.issue;
       var statusKey = i.status;
-      var cls  = statusKey === "resolved" ? "issue-resolved"
-               : statusKey === "pending"  ? "issue-pending"
-               :                            "issue-open";
-      var statusColor = statusKey === "resolved" ? "#86efac"
-                      : statusKey === "pending"  ? "#fde68a"
-                      :                            "#fca5a5";
-      var badgeBg = statusKey === "resolved" ? "rgba(34,197,94,0.2)"
-                  : statusKey === "pending"  ? "rgba(251,191,36,0.2)"
-                  :                            "rgba(239,68,68,0.2)";
-      var icon = issueTypeIcon[i.type.toLowerCase()] || "⚠️";
+      var pillCls = statusKey === "resolved" ? "pill-resolved"
+                  : statusKey === "pending"  ? "pill-pending"
+                  :                            "pill-open";
+      var icon = issueTypeIcon[(i.type || "").toLowerCase()] || "⚠️";
       var countBadge = g.count > 1
-        ? '<span style="background:rgba(255,255,255,0.08);border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700;color:#9ca3af;margin-left:6px;">×' + g.count + '</span>'
+        ? '<span style="background:rgba(255,255,255,0.06);border-radius:999px;padding:1px 9px;font-size:10px;font-weight:700;color:#8b93a8;">×' + g.count + '</span>'
         : "";
       var adminBlock = i.adminReply
-        ? '<div style="margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);">'
+        ? '<div class="issue-tile-reply">'
           + '<span style="font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.4px;">Admin Reply</span>'
-          + '<div style="font-size:12px;color:#c4b5fd;margin-top:3px;">' + i.adminReply + '</div>'
+          + '<div style="font-size:12.5px;color:#c4b5fd;margin-top:3px;line-height:1.5;">' + i.adminReply + '</div>'
           + '</div>'
         : "";
-      return '<div class="issue-card ' + cls + '">'
-        + '<span style="font-size:20px;flex-shrink:0;">' + icon + '</span>'
-        + '<div class="flex-1 min-w-0">'
-        +   '<div class="flex items-center gap-2 flex-wrap">'
-        +     '<span class="font-bold text-sm">' + i.title + '</span>'
-        +     countBadge
-        +     '<span class="issue-badge" style="background:' + badgeBg + ';color:' + statusColor + ';">' + i.status.toUpperCase() + '</span>'
-        +     (i.type ? '<span class="issue-badge" style="background:rgba(255,255,255,0.07);color:#9ca3af;">' + i.type + '</span>' : '')
+      var metaBits = [];
+      if (i.createdDate) metaBits.push('<span>🗓 Reported: ' + fmtDate(i.createdDate) + '</span>');
+      if (i.updatedDate) metaBits.push('<span>🔄 Updated: ' + fmtDate(i.updatedDate) + '</span>');
+      var metaBlock = metaBits.length
+        ? '<div class="issue-tile-meta">' + metaBits.join("") + '</div>'
+        : "";
+
+      /* Description: clamp to 2 lines with a Read more / Read less toggle when long enough to matter */
+      var needsToggle = i.description && i.description.length > 110;
+      var descBlock = i.description
+        ? '<div class="issue-tile-desc' + (needsToggle ? ' clamped' : '') + '" id="issueDesc' + idx + '">' + i.description + '</div>'
+          + (needsToggle
+              ? '<button type="button" class="issue-read-more" id="issueReadBtn' + idx + '" onclick="toggleIssueDesc(' + idx + ')">Read more ▾</button>'
+              : '')
+        : "";
+
+      return '<div class="issue-tile">'
+        + '<div class="issue-tile-head">'
+        +   '<div class="flex items-center gap-3 min-w-0">'
+        +     '<div class="issue-tile-icon">' + icon + '</div>'
+        +     '<div class="min-w-0">'
+        +       '<div class="flex items-center gap-2 flex-wrap">'
+        +         '<span class="issue-tile-title">' + i.title + '</span>' + countBadge
+        +       '</div>'
+        +       (i.type ? '<div style="font-size:11px;color:#666d80;margin-top:2px;text-transform:capitalize;">' + i.type + '</div>' : '')
+        +     '</div>'
         +   '</div>'
-        +   (i.description ? '<div style="font-size:12px;color:#9ca3af;margin-top:4px;line-height:1.5;">' + i.description.substring(0,120) + (i.description.length>120?"…":"") + '</div>' : '')
-        +   adminBlock
+        +   '<span class="issue-status-pill ' + pillCls + '">' + i.status + '</span>'
         + '</div>'
+        + descBlock
+        + adminBlock
+        + metaBlock
         + '</div>';
     }).join("");
 
-    if (hasMore) {
-      var btn = document.getElementById("viewAllIssuesBtn");
-      btn.classList.remove("hidden");
-      btn.textContent = "View all " + uniqueIssues.length + " issues →";
-    }
-
-    show("issuesPanel");
+    setText("issuesCountBadge", uniqueIssues.length + (uniqueIssues.length === 1 ? " issue" : " issues"));
+    show("allIssuesSection");
   } catch(e) {
     /* Issues panel stays hidden on error — non-critical */
-    console.warn("Issues load failed:", e);
+    console.warn("Issues render failed:", e);
   }
+}
+
+function toggleIssueDesc(idx) {
+  var desc = document.getElementById("issueDesc" + idx);
+  var btn  = document.getElementById("issueReadBtn" + idx);
+  if (!desc || !btn) return;
+  desc.classList.toggle("clamped");
+  var isClamped = desc.classList.contains("clamped");
+  btn.textContent = isClamped ? "Read more ▾" : "Read less ▴";
 }
 
 /* ══════════════════ RENDER ══════════════════ */
@@ -1053,11 +1075,11 @@ function renderDashboard(data) {
   var ep = data.engagementPerformance|| {};
   var pp = data.playlistPerformance  || {};
 
+  renderIssues(data.issues || []);
+
   if (m.status) localStorage.setItem("status", m.status);
 
   var isBlocked  = (m.status || "").toLowerCase() === "blocked";
-  var isComplete = m.accountCompleted === "Yes";
-
   /* Header */
   setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · Joined " + fmtDate(m.dateOfJoin));
 
@@ -1102,14 +1124,12 @@ function renderDashboard(data) {
   }
 
   /* ── INCOMPLETE ── */
-  if (!isComplete) { show("incompleteBanner"); }
-
   /* ── GROUPS (task cards) ── */
   var groupDefs = [
-    { key:"inSubscribersWork",    label:"Subscribers Group",    emoji:"👥", color:"#a78bfa", bg:"rgba(124,58,237,0.15)", border:"rgba(124,58,237,0.35)", desc:"Exchange subscriptions with other members and grow your channel." },
-    { key:"inVideoTaskWork",      label:"Video Watch Group",    emoji:"🎬", color:"#fca5a5", bg:"rgba(239,68,68,0.12)",  border:"rgba(239,68,68,0.35)",   desc:"Watch videos from other members and earn watch-time for yours." },
-    { key:"inWatchtimeWork",      label:"Watch Time Group",     emoji:"⏱", color:"#fde68a", bg:"rgba(251,191,36,0.12)", border:"rgba(251,191,36,0.35)",  desc:"Complete playlist watch tasks and boost your channel watchtime." },
-    { key:"inLikeAndCommentWork", label:"Like & Comment Group", emoji:"💬", color:"#86efac", bg:"rgba(34,197,94,0.12)",  border:"rgba(34,197,94,0.35)",   desc:"Give and receive likes and comments to boost engagement." }
+    { key:"inSubscribersWork",    label:"Subscribers Group",    emoji:"👥", color:"#b3a1f5", bg:"rgba(139,124,246,0.13)", border:"rgba(139,124,246,0.32)", desc:"Exchange subscriptions with other members and grow your channel." },
+    { key:"inVideoTaskWork",      label:"Video Watch Group",    emoji:"🎬", color:"#7fc7e8", bg:"rgba(56,155,214,0.13)",  border:"rgba(56,155,214,0.32)",  desc:"Watch videos from other members and earn watch-time for yours." },
+    { key:"inWatchtimeWork",      label:"Watch Time Group",     emoji:"⏱", color:"#e0bd7a", bg:"rgba(214,169,79,0.13)",  border:"rgba(214,169,79,0.32)",  desc:"Complete playlist watch tasks and boost your channel watchtime." },
+    { key:"inLikeAndCommentWork", label:"Like & Comment Group", emoji:"💬", color:"#79cdc0", bg:"rgba(45,181,168,0.13)",  border:"rgba(45,181,168,0.32)",  desc:"Give and receive likes and comments to boost engagement." }
   ];
 
   var activeGroups = groupDefs.filter(function(g){ return m[g.key] === "Yes"; });
@@ -1376,7 +1396,6 @@ document.addEventListener("click", function(){
 
 /* ── KICK OFF ── */
 loadDashboard();
-loadIssues();
 </script>
 <nav id="mobileBottomNav">
   <div class="bn-inner">
@@ -1387,11 +1406,11 @@ loadIssues();
   <path d="M10 9l5 3-5 3V9z"/>
 </svg></a>
 
-    <a href="videotasks.html" data-page="videotasks.html" title="Video Task">
+    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
       <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
     </a>
 
-    <a href="playlisttasks.html" data-page="playlisttasks.html" title="Playlist Task">
+    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="9"></circle>
   <polyline points="12 7 12 12 16 14"></polyline>

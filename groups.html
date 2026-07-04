@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 
 #mobileBottomNav{
@@ -111,6 +112,13 @@ body::before{
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
+.leave-link{
+    background:none; border:none; padding:0; margin-top:10px;
+    font-size:12px; font-weight:600; color:#f87171; cursor:pointer;
+    text-decoration:underline; text-underline-offset:2px;
+}
+.leave-link:hover{ color:#fca5a5; }
+.leave-link:disabled{ cursor:not-allowed; opacity:0.6; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -223,12 +231,13 @@ body::before{
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
-              <div class="text-sm font-semibold">4.2k Members</div>
+              <div class="text-sm font-semibold" id="count-subscribers">— Members</div>
               <div class="text-xs text-muted mt-1">Highly Active</div>
             </div>
             <button class="join-btn" id="btn-subscribers" data-group="subscribers">Join Group</button>
           </div>
           <div id="reason-subscribers" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <button class="leave-link hidden" id="leave-subscribers" data-group="subscribers">Leave Group</button>
         </div>
 
         <!-- GROUP: VIDEO BOOST -->
@@ -249,12 +258,13 @@ body::before{
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
-              <div class="text-sm font-semibold">3.8k Members</div>
+              <div class="text-sm font-semibold" id="count-video">— Members</div>
               <div class="text-xs text-muted mt-1">Fast Growing</div>
             </div>
             <button class="join-btn" id="btn-video" data-group="video">Join Group</button>
           </div>
           <div id="reason-video" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <button class="leave-link hidden" id="leave-video" data-group="video">Leave Group</button>
         </div>
 
         <!-- GROUP: WATCH TIME -->
@@ -276,12 +286,13 @@ body::before{
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
-              <div class="text-sm font-semibold">2.9k Members</div>
+              <div class="text-sm font-semibold" id="count-watchtime">— Members</div>
               <div class="text-xs text-muted mt-1">Daily Tasks</div>
             </div>
             <button class="join-btn" id="btn-watchtime" data-group="watchtime">Join Group</button>
           </div>
           <div id="reason-watchtime" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <button class="leave-link hidden" id="leave-watchtime" data-group="watchtime">Leave Group</button>
         </div>
 
         <!-- GROUP: ENGAGEMENT -->
@@ -302,12 +313,13 @@ body::before{
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
-              <div class="text-sm font-semibold">5.1k Members</div>
+              <div class="text-sm font-semibold" id="count-engagement">— Members</div>
               <div class="text-xs text-muted mt-1">Community Support</div>
             </div>
             <button class="join-btn" id="btn-engagement" data-group="engagement">Join Group</button>
           </div>
           <div id="reason-engagement" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <button class="leave-link hidden" id="leave-engagement" data-group="engagement">Leave Group</button>
         </div>
 
         <!-- GROUP: AD WATCHING — COMING SOON -->
@@ -412,9 +424,16 @@ document.getElementById("dropdownUserCode").innerText = "ID #" + (savedUserCode 
 /* =========================================================
    GROUPS BACKEND WIRING
 ========================================================= */
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxcu84hTVPOWpfM7dtOYBwGomRtorrlgSIWwhCPYtkOTmQz1TA6sU_eqjNdgiu3RyQE/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyZMZ0uLqt99oITRNHijQvzeA5RG7UQlnRBcXGp5dldk6V2F20TGY7hA8OOa_-7Kn7_/exec";
 
 const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement"];
+
+const GROUP_LABELS = {
+  subscribers: "Subscribers Group",
+  video: "Video Boost Group",
+  watchtime: "Watch Time Group",
+  engagement: "Engagement Group"
+};
 
 async function callBackend(action, data) {
   const res = await fetch(WEBAPP_URL, {
@@ -423,6 +442,12 @@ async function callBackend(action, data) {
     body: JSON.stringify({ action, ...data })
   });
   return res.json();
+}
+
+function formatMemberCount(n) {
+  if (typeof n !== "number") return "— Members";
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k Members";
+  return n + (n === 1 ? " Member" : " Members");
 }
 
 function setButtonState(btn, state, reason, groupKey) {
@@ -452,6 +477,26 @@ function setButtonState(btn, state, reason, groupKey) {
       reasonEl.textContent = "⚠ " + (reason || "Requirements not met.");
       reasonEl.classList.remove("hidden");
     }
+  }
+}
+
+function setLeaveButtonState(groupKey, groupData) {
+  const leaveBtn = document.getElementById("leave-" + groupKey);
+  if (!leaveBtn) return;
+
+  if (!groupData.joined) {
+    leaveBtn.classList.add("hidden");
+    return;
+  }
+
+  leaveBtn.classList.remove("hidden");
+  leaveBtn.disabled = false;
+
+  if (groupData.removalRequested) {
+    leaveBtn.textContent = "Leave requested — finishing pending work (" + groupData.pendingCount + " left)";
+    leaveBtn.disabled = true;
+  } else {
+    leaveBtn.textContent = "Leave Group";
   }
 }
 
@@ -487,16 +532,22 @@ async function loadGroupsStatus() {
 
     GROUP_KEYS.forEach(key => {
       const btn = document.getElementById("btn-" + key);
-      if (!btn) return;
       const g = res.data.groups[key];
-      if (!g) return;
+      if (btn && g) {
+        if (g.joined) {
+          setButtonState(btn, "joined", null, key);
+        } else if (g.eligible) {
+          setButtonState(btn, "eligible", null, key);
+        } else {
+          setButtonState(btn, "ineligible", g.reason, key);
+        }
+      }
 
-      if (g.joined) {
-        setButtonState(btn, "joined", null, key);
-      } else if (g.eligible) {
-        setButtonState(btn, "eligible", null, key);
-      } else {
-        setButtonState(btn, "ineligible", g.reason, key);
+      if (g) setLeaveButtonState(key, g);
+
+      const countEl = document.getElementById("count-" + key);
+      if (countEl && res.data.counts) {
+        countEl.textContent = formatMemberCount(res.data.counts[key]);
       }
     });
 
@@ -520,14 +571,79 @@ async function handleJoinClick(e) {
     const res = await callBackend("joinGroup", { usercode: savedUserCode, group: groupKey });
     if (res.success) {
       setButtonState(btn, "joined", null, groupKey);
+      loadGroupsStatus(); // refresh leave button + member counts
     } else {
-      alert(res.message || "Could not join group.");
+      Swal.fire({
+        icon: "error",
+        title: "Couldn't join group",
+        text: res.message || "Could not join group."
+      });
       btn.disabled = false;
       btn.textContent = originalText;
     }
   } catch (err) {
     console.error("[groups] Join failed:", err);
-    alert("Something went wrong. Please try again.");
+    Swal.fire({
+      icon: "error",
+      title: "Something went wrong",
+      text: "Please try again."
+    });
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+async function handleLeaveClick(e) {
+  const btn = e.currentTarget;
+  const groupKey = btn.dataset.group;
+  if (!groupKey || btn.disabled) return;
+
+  const groupLabel = GROUP_LABELS[groupKey] || "this group";
+
+  const confirmResult = await Swal.fire({
+    icon: "warning",
+    title: "Leave " + groupLabel + "?",
+    text: "If you have pending work in this group, you'll need to finish it before you're fully removed.",
+    showCancelButton: true,
+    confirmButtonText: "Yes, leave group",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#dc2626"
+  });
+
+  if (!confirmResult.isConfirmed) return;
+
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Processing…";
+
+  try {
+    const res = await callBackend("removeFromGroup", { usercode: savedUserCode, group: groupKey });
+
+    if (!res.success) {
+      Swal.fire({ icon: "error", title: "Couldn't leave group", text: res.message || "Please try again." });
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+
+    if (res.data.status === "pending") {
+      Swal.fire({
+        icon: "info",
+        title: "Pending work remaining",
+        text: res.data.message
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "You've left " + groupLabel,
+        text: "You can rejoin any time you're eligible."
+      });
+    }
+
+    await loadGroupsStatus();
+  } catch (err) {
+    console.error("[groups] Leave failed:", err);
+    Swal.fire({ icon: "error", title: "Something went wrong", text: "Please try again." });
     btn.disabled = false;
     btn.textContent = originalText;
   }
@@ -535,6 +651,10 @@ async function handleJoinClick(e) {
 
 document.querySelectorAll(".join-btn[data-group]").forEach(btn => {
   btn.addEventListener("click", handleJoinClick);
+});
+
+document.querySelectorAll(".leave-link[data-group]").forEach(btn => {
+  btn.addEventListener("click", handleLeaveClick);
 });
 
 loadGroupsStatus();
@@ -548,11 +668,11 @@ loadGroupsStatus();
   <path d="M10 9l5 3-5 3V9z"/>
 </svg></a>
 
-    <a href="videotasks.html" data-page="videotasks.html" title="Video Task">
+    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
       <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
     </a>
 
-    <a href="playlisttasks.html" data-page="playlisttasks.html" title="Playlist Task">
+    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="9"></circle>
   <polyline points="12 7 12 12 16 14"></polyline>

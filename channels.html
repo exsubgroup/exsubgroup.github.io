@@ -240,6 +240,16 @@ body::before{
   transition:0.25s ease; width:100%;
 }
 .btn-delete:hover{ background:#ef4444; }
+.btn-change{
+  background:#0f1118;
+  color:#f59e0b;
+  border:1px solid #f59e0b;
+  padding:11px 16px; border-radius:12px;
+  font-weight:600; font-size:13px;
+  cursor:pointer; transition:0.25s ease;
+  width:100%;
+}
+.btn-change:hover{ background:#f59e0b; color:#0a0b10; }
 
 /* BADGE */
 .type-badge{
@@ -574,6 +584,102 @@ body::before{
 
 #notifDropdown{ transition:all 0.2s ease; }
 
+/* SETTINGS TAB — TOGGLE SWITCH */
+.toggle-row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px;
+  background:#0f1118;
+  border:1px solid #1f2330;
+  border-radius:16px;
+  padding:16px 18px;
+}
+.switch{ position:relative; display:inline-block; width:48px; height:28px; flex-shrink:0; }
+.switch input{ opacity:0; width:0; height:0; }
+.switch-slider{
+  position:absolute; cursor:pointer; inset:0;
+  background:#2a2e3a; border-radius:999px; transition:0.25s ease;
+}
+.switch-slider::before{
+  content:''; position:absolute; height:22px; width:22px;
+  left:3px; bottom:3px; background:white; border-radius:50%;
+  transition:0.25s ease;
+}
+.switch input:checked + .switch-slider{ background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%); }
+.switch input:checked + .switch-slider::before{ transform:translateX(20px); }
+
+/* INTEREST CHIPS */
+.interest-chip{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(139,92,246,0.12);
+  border:1px solid rgba(139,92,246,0.3);
+  color:#a78bfa;
+  font-weight:600; font-size:12px;
+  padding:8px 12px; border-radius:20px;
+}
+.interest-chip button{
+  background:none; border:none; color:#f87171;
+  cursor:pointer; font-size:13px; line-height:1;
+  padding:0;
+}
+.interest-chip button:hover{ color:#ef4444; }
+
+/* COUNTRY GRID */
+.country-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:8px;
+  max-height:320px;
+  overflow-y:auto;
+  padding-right:4px;
+}
+.country-opt{
+  display:flex; align-items:center; gap:8px;
+  background:#0a0b10;
+  border:1px solid #1f2330;
+  border-radius:10px;
+  padding:9px 10px;
+  cursor:pointer;
+  font-size:12.5px;
+  font-weight:600;
+  color:#8a8f9e;
+  transition:0.2s ease;
+}
+.country-opt:hover{ border-color:#8b5cf6; color:white; }
+.country-opt.selected{
+  border-color:#8b5cf6;
+  background:rgba(139,92,246,0.15);
+  color:#a78bfa;
+}
+.country-opt .flag{ font-size:16px; }
+
+/* REGION QUICK MAP */
+.region-map-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;
+}
+.region-card{
+  background:#0a0b10;
+  border:2px solid #1f2330;
+  border-radius:14px;
+  padding:14px 12px;
+  cursor:pointer;
+  text-align:center;
+  transition:0.2s ease;
+}
+.region-card:hover{ border-color:#8b5cf6; }
+.region-card.active{ border-color:#8b5cf6; background:rgba(139,92,246,0.15); }
+.region-card .region-emoji{ font-size:24px; display:block; margin-bottom:6px; }
+.region-card .region-name{ font-size:12px; font-weight:700; color:white; }
+.region-card .region-count{ font-size:10px; color:#8a8f9e; margin-top:2px; }
+
+/* PLAYLIST TAB LOADING */
+.playlist-loading{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:16px; padding:60px 20px;
+}
+.playlist-loading .loader-ring{ width:44px; height:44px; }
+
 @media(max-width:768px){
   .channel-card{ flex-direction:column; }
   .channel-left{ flex-direction:column; }
@@ -678,6 +784,7 @@ body::before{
     <button class="section-tab" id="tabVideos" onclick="switchTab('videos')">🎬 Promotional Videos</button>
     <button class="section-tab" id="tabPlaylist" onclick="switchTab('playlist')">📃 Promotional Playlist</button>
     <button class="section-tab" id="tabWorking" onclick="switchTab('working')">⚙️ Working Channel</button>
+    <button class="section-tab" id="tabSettings" onclick="switchTab('settings')">🛠️ Settings</button>
   </div>
 
   <!-- ===== PROMO SECTION ===== -->
@@ -706,7 +813,7 @@ body::before{
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
         <div>
           <h2 class="text-2xl font-bold">🎬 Promotional Channel Videos</h2>
-          <p class="text-muted text-sm mt-1">Only videos ≥ 2 minutes are tracked. Minimum 5 videos required to be marked ready.</p>
+          <p class="text-muted text-sm mt-1">All videos are tracked — including Shorts. Minimum 5 videos required to be marked ready.</p>
         </div>
         <div class="flex items-center gap-3 flex-wrap">
           <button onclick="syncVideos()" class="bg-[#0f1118] border border-purple-500 text-purple-400 hover:bg-purple-600 hover:text-white transition px-4 py-2.5 rounded-xl font-semibold text-sm">
@@ -875,6 +982,84 @@ body::before{
     </div>
   </div>
 
+  <!-- ===== SETTINGS SECTION ===== -->
+  <div id="sectionSettings" class="hidden">
+
+    <!-- INTERESTS CARD -->
+    <div class="card rounded-3xl p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold">🎯 Channel Interests</h2>
+          <p class="text-muted text-sm mt-1">Pick the categories you want subscriber/watch-time tasks matched against. These are the interests other members will see when we build tasks for your promotional &amp; working channels.</p>
+        </div>
+      </div>
+
+      <div class="toggle-row mb-5">
+        <div>
+          <div class="font-semibold text-sm">No Preference — Match Any Category</div>
+          <div class="text-muted text-xs mt-1">Turn this on to subscribe to &amp; get watch time from channels of any interest, regardless of category.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="noInterestToggle" onchange="onToggleNoInterest()">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+      <div id="interestsPickerWrap">
+        <div class="search-wrap mb-4">
+          <input type="text" id="interestSearchInput" class="search-bar" placeholder="Search a category to add…" oninput="filterInterestGrid()">
+        </div>
+        <div class="channel-type-grid" id="interestAddGrid" style="grid-template-columns:repeat(3,1fr);max-height:220px;overflow-y:auto;"></div>
+
+        <div class="mt-6">
+          <div class="text-xs uppercase tracking-wide text-muted font-semibold mb-3">Your Selected Interests</div>
+          <div id="selectedInterestsWrap" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COUNTRIES CARD -->
+    <div class="card rounded-3xl p-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold">🌍 Subscriber Countries</h2>
+          <p class="text-muted text-sm mt-1">Choose which countries your subscribers/viewers should come from for matching purposes.</p>
+        </div>
+      </div>
+
+      <div class="toggle-row mb-5">
+        <div>
+          <div class="font-semibold text-sm">Global — Accept Any Country</div>
+          <div class="text-muted text-xs mt-1">Turn this on to match with members from anywhere in the world.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="globalCountryToggle" onchange="onToggleGlobalCountry()">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+      <div id="countryPickerWrap">
+        <!-- REGION QUICK MAP -->
+        <div class="text-xs uppercase tracking-wide text-muted font-semibold mb-3">Quick Select by Region</div>
+        <div id="regionMapGrid" class="region-map-grid mb-6"></div>
+
+        <div class="search-wrap mb-4">
+          <input type="text" id="countrySearchInput" class="search-bar" placeholder="Search a country…" oninput="renderCountryGrid()">
+        </div>
+        <div class="country-grid" id="countryGrid"></div>
+
+        <div class="mt-6">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs uppercase tracking-wide text-muted font-semibold">Selected Countries (<span id="selectedCountryCount">0</span>)</div>
+            <button onclick="saveCountrySelection()" class="bg-purple-600 hover:bg-purple-500 transition px-4 py-2 rounded-xl font-semibold text-xs">💾 Save Selection</button>
+          </div>
+          <div id="selectedCountriesWrap" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
 </main>
 
@@ -882,7 +1067,7 @@ body::before{
 /* =========================================================
    CONFIG
 ========================================================= */
-const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbwwPxcrrK-KSsPQQPTmrsLGU62k9d8Vf7GvUYXFHxJ_Kdj2iRGqsZZHhWowNjQeWzkQ7w/exec";
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxyWaLI5KD9O-imw_i_pD3htxWW-MlPsvE2eXX8Le2jGiMZ85t7R5zlYEF0h9bSY7mddw/exec";
 
 /* =========================================================
    SESSION — load directly from what login already saved.
@@ -920,45 +1105,217 @@ let playlistTotalSeconds = 0;
 const PLAYLIST_MIN_SECONDS = 30 * 60;
 const PLAYLIST_MAX_SECONDS = 35 * 60;
 
+// Settings state
+let myInterests   = [];     // array of interest ids/names currently selected
+let noInterest    = false;  // "match any category" toggle
+let myCountries   = [];     // array of country codes currently selected
+let globalCountry = false;  // "accept any country" toggle
+let settingsLoaded = false;
+
 /* =========================================================
    CHANNEL TYPES
 ========================================================= */
 const CHANNEL_TYPES = [
-  { id:'gaming',    emoji:'🎮', label:'Gaming' },
-  { id:'tech',      emoji:'💻', label:'Tech' },
-  { id:'education', emoji:'📚', label:'Education' },
-  { id:'music',     emoji:'🎵', label:'Music' },
-  { id:'vlogs',     emoji:'🎥', label:'Vlogs' },
-  { id:'sports',    emoji:'⚽', label:'Sports' },
-  { id:'comedy',    emoji:'😂', label:'Comedy' },
-  { id:'news',      emoji:'📰', label:'News' },
-  { id:'other',     emoji:'🌐', label:'Other' },
+  // Official YouTube upload categories
+  { id:'film_animation',        emoji:'🎬', label:'Film & Animation' },
+  { id:'autos_vehicles',        emoji:'🚗', label:'Autos & Vehicles' },
+  { id:'music',                 emoji:'🎵', label:'Music' },
+  { id:'pets_animals',          emoji:'🐾', label:'Pets & Animals' },
+  { id:'sports',                emoji:'⚽', label:'Sports' },
+  { id:'travel_events',         emoji:'✈️', label:'Travel & Events' },
+  { id:'gaming',                emoji:'🎮', label:'Gaming' },
+  { id:'people_blogs',          emoji:'🙋', label:'People & Blogs' },
+  { id:'comedy',                emoji:'😂', label:'Comedy' },
+  { id:'entertainment',         emoji:'🎭', label:'Entertainment' },
+  { id:'news_politics',         emoji:'📰', label:'News & Politics' },
+  { id:'howto_style',           emoji:'💄', label:'How-to & Style' },
+  { id:'education',             emoji:'📚', label:'Education' },
+  { id:'science_tech',          emoji:'🔬', label:'Science & Technology' },
+  { id:'nonprofits_activism',   emoji:'❤️', label:'Nonprofits & Activism' },
+  // Extended / niche types
+  { id:'vlogging',              emoji:'🎥', label:'Vlogging' },
+  { id:'fashion',                emoji:'👗', label:'Fashion' },
+  { id:'beauty',                 emoji:'💅', label:'Beauty' },
+  { id:'food_cooking',           emoji:'🍳', label:'Food & Cooking' },
+  { id:'health_fitness',         emoji:'💪', label:'Health & Fitness' },
+  { id:'motivation',             emoji:'🔥', label:'Motivation' },
+  { id:'finance',                emoji:'💰', label:'Finance' },
+  { id:'business',               emoji:'📈', label:'Business' },
+  { id:'product_reviews',        emoji:'⭐', label:'Product Reviews' },
+  { id:'unboxing',               emoji:'📦', label:'Unboxing' },
+  { id:'diy_crafts',             emoji:'✂️', label:'DIY & Crafts' },
+  { id:'home_decor',             emoji:'🏠', label:'Home Decor' },
+  { id:'parenting',              emoji:'👶', label:'Parenting' },
+  { id:'education_kids',         emoji:'🧒', label:'Education Kids' },
+  { id:'language_learning',      emoji:'🗣️', label:'Language Learning' },
+  { id:'history',                emoji:'🏛️', label:'History' },
+  { id:'science_experiments',    emoji:'🧪', label:'Science Experiments' },
+  { id:'tech_reviews',           emoji:'📱', label:'Technology Reviews' },
+  { id:'programming',            emoji:'💻', label:'Programming' },
+  { id:'ai_automation',          emoji:'🤖', label:'AI & Automation' },
+  { id:'travel_vlogs',           emoji:'🧳', label:'Travel Vlogs' },
+  { id:'adventure',              emoji:'🏔️', label:'Adventure' },
+  { id:'luxury_lifestyle',       emoji:'💎', label:'Luxury Lifestyle' },
+  { id:'minimalism',             emoji:'🍃', label:'Minimalism' },
+  { id:'podcasts',               emoji:'🎙️', label:'Podcasts' },
+  { id:'reaction',               emoji:'😮', label:'Reaction Videos' },
+  { id:'challenges',             emoji:'🏆', label:'Challenges' },
+  { id:'pranks',                 emoji:'🤪', label:'Pranks' },
+  { id:'asmr',                   emoji:'🎧', label:'ASMR' },
+  { id:'meditation',             emoji:'🧘', label:'Meditation' },
+  { id:'music_covers',           emoji:'🎤', label:'Music Covers' },
+  { id:'dance',                  emoji:'💃', label:'Dance' },
+  { id:'film_reviews',           emoji:'🎞️', label:'Film Reviews' },
+  { id:'book_reviews',           emoji:'📖', label:'Book Reviews' },
+  { id:'documentary',            emoji:'📽️', label:'Documentary Style' },
+  { id:'spirituality',           emoji:'🕊️', label:'Spirituality' },
+  { id:'motorsports',            emoji:'🏁', label:'Motorsports' },
+  { id:'wildlife',               emoji:'🦁', label:'Wildlife' },
+  { id:'charity',                emoji:'🤲', label:'Charity' },
+  { id:'islamic',                emoji:'🕌', label:'Islamic' },
+  { id:'discovery',              emoji:'🔎', label:'Discovery Videos' },
+  { id:'informative',            emoji:'ℹ️', label:'Informative Videos' },
+  { id:'shocking',                emoji:'😱', label:'Shocking Videos' },
+  { id:'shocking_informative',    emoji:'😲', label:'Shocking & Informative Videos' },
+  { id:'other',                   emoji:'🌐', label:'Other (type your own)' },
 ];
+
+/* =========================================================
+   COUNTRIES DATA
+   [code, name, continent] — flag emoji derived from ISO code
+========================================================= */
+const REGIONS = [
+  { id:'africa',      emoji:'🌍', label:'Africa' },
+  { id:'asia',        emoji:'🌏', label:'Asia' },
+  { id:'europe',      emoji:'🌍', label:'Europe' },
+  { id:'north_america', emoji:'🌎', label:'North America' },
+  { id:'south_america', emoji:'🌎', label:'South America' },
+  { id:'oceania',     emoji:'🌏', label:'Oceania' },
+  { id:'middle_east', emoji:'🌍', label:'Middle East' },
+];
+
+const COUNTRIES = [
+  ['US','United States','north_america'],['CA','Canada','north_america'],['MX','Mexico','north_america'],
+  ['GT','Guatemala','north_america'],['CU','Cuba','north_america'],['DO','Dominican Republic','north_america'],
+  ['HN','Honduras','north_america'],['JM','Jamaica','north_america'],['PA','Panama','north_america'],
+  ['CR','Costa Rica','north_america'],['NI','Nicaragua','north_america'],['SV','El Salvador','north_america'],
+  ['BZ','Belize','north_america'],['TT','Trinidad and Tobago','north_america'],['BS','Bahamas','north_america'],
+  ['BR','Brazil','south_america'],['AR','Argentina','south_america'],['CO','Colombia','south_america'],
+  ['PE','Peru','south_america'],['VE','Venezuela','south_america'],['CL','Chile','south_america'],
+  ['EC','Ecuador','south_america'],['BO','Bolivia','south_america'],['PY','Paraguay','south_america'],
+  ['UY','Uruguay','south_america'],['GY','Guyana','south_america'],['SR','Suriname','south_america'],
+  ['GB','United Kingdom','europe'],['DE','Germany','europe'],['FR','France','europe'],['IT','Italy','europe'],
+  ['ES','Spain','europe'],['PT','Portugal','europe'],['NL','Netherlands','europe'],['BE','Belgium','europe'],
+  ['CH','Switzerland','europe'],['AT','Austria','europe'],['SE','Sweden','europe'],['NO','Norway','europe'],
+  ['DK','Denmark','europe'],['FI','Finland','europe'],['IE','Ireland','europe'],['PL','Poland','europe'],
+  ['CZ','Czech Republic','europe'],['SK','Slovakia','europe'],['HU','Hungary','europe'],['RO','Romania','europe'],
+  ['BG','Bulgaria','europe'],['GR','Greece','europe'],['UA','Ukraine','europe'],['RU','Russia','europe'],
+  ['HR','Croatia','europe'],['RS','Serbia','europe'],['SI','Slovenia','europe'],['LT','Lithuania','europe'],
+  ['LV','Latvia','europe'],['EE','Estonia','europe'],['IS','Iceland','europe'],['LU','Luxembourg','europe'],
+  ['MT','Malta','europe'],['CY','Cyprus','europe'],['AL','Albania','europe'],['MK','North Macedonia','europe'],
+  ['BA','Bosnia and Herzegovina','europe'],['MD','Moldova','europe'],['BY','Belarus','europe'],
+  ['CN','China','asia'],['IN','India','asia'],['JP','Japan','asia'],['KR','South Korea','asia'],
+  ['ID','Indonesia','asia'],['PK','Pakistan','asia'],['BD','Bangladesh','asia'],['PH','Philippines','asia'],
+  ['VN','Vietnam','asia'],['TH','Thailand','asia'],['MY','Malaysia','asia'],['SG','Singapore','asia'],
+  ['NP','Nepal','asia'],['LK','Sri Lanka','asia'],['MM','Myanmar','asia'],['KH','Cambodia','asia'],
+  ['LA','Laos','asia'],['MN','Mongolia','asia'],['KZ','Kazakhstan','asia'],['UZ','Uzbekistan','asia'],
+  ['AF','Afghanistan','asia'],['TW','Taiwan','asia'],['HK','Hong Kong','asia'],['BT','Bhutan','asia'],
+  ['MV','Maldives','asia'],['BN','Brunei','asia'],['TL','Timor-Leste','asia'],['KG','Kyrgyzstan','asia'],
+  ['TJ','Tajikistan','asia'],['TM','Turkmenistan','asia'],
+  ['NG','Nigeria','africa'],['EG','Egypt','africa'],['ZA','South Africa','africa'],['KE','Kenya','africa'],
+  ['ET','Ethiopia','africa'],['GH','Ghana','africa'],['TZ','Tanzania','africa'],['UG','Uganda','africa'],
+  ['DZ','Algeria','africa'],['MA','Morocco','africa'],['TN','Tunisia','africa'],['SD','Sudan','africa'],
+  ['LY','Libya','africa'],['CM','Cameroon','africa'],['CI',"Cote d'Ivoire",'africa'],['SN','Senegal','africa'],
+  ['ML','Mali','africa'],['ZW','Zimbabwe','africa'],['ZM','Zambia','africa'],['MZ','Mozambique','africa'],
+  ['RW','Rwanda','africa'],['SO','Somalia','africa'],['BF','Burkina Faso','africa'],['NE','Niger','africa'],
+  ['MW','Malawi','africa'],['AO','Angola','africa'],['MG','Madagascar','africa'],['BJ','Benin','africa'],
+  ['TG','Togo','africa'],['SL','Sierra Leone','africa'],['LR','Liberia','africa'],['GM','Gambia','africa'],
+  ['GN','Guinea','africa'],['NA','Namibia','africa'],['BW','Botswana','africa'],['LS','Lesotho','africa'],
+  ['SZ','Eswatini','africa'],['GA','Gabon','africa'],['CG','Congo','africa'],['CD','DR Congo','africa'],
+  ['SA','Saudi Arabia','middle_east'],['AE','United Arab Emirates','middle_east'],['IL','Israel','middle_east'],
+  ['TR','Turkey','middle_east'],['IQ','Iraq','middle_east'],['IR','Iran','middle_east'],['JO','Jordan','middle_east'],
+  ['LB','Lebanon','middle_east'],['KW','Kuwait','middle_east'],['QA','Qatar','middle_east'],['OM','Oman','middle_east'],
+  ['BH','Bahrain','middle_east'],['YE','Yemen','middle_east'],['SY','Syria','middle_east'],['PS','Palestine','middle_east'],
+  ['AU','Australia','oceania'],['NZ','New Zealand','oceania'],['FJ','Fiji','oceania'],['PG','Papua New Guinea','oceania'],
+  ['SB','Solomon Islands','oceania'],['WS','Samoa','oceania'],['TO','Tonga','oceania'],['VU','Vanuatu','oceania'],
+];
+
+function flagEmoji(code) {
+  if (!code || code.length !== 2) return '🏳️';
+  return String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0)));
+}
+
+/* =========================================================
+   FORMAT HELPERS — dates & durations
+========================================================= */
+/** Turns raw sheet timestamps (ISO strings like 2026-04-06T19:43:00.000Z,
+ * or already-formatted dd/MM/yyyy HH:mm strings) into a clean, readable
+ * local date/time for display. Falls back to the raw value if it can't parse. */
+function formatNiceDate(raw) {
+  if (!raw || raw === '-' ) return '-';
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return raw; // already a plain string like "not update yet"
+  return d.toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' })
+    + ' · ' + d.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+}
+
+/** Builds a duration label straight from VideoDurationSeconds.
+ * Under 60 seconds -> "45s". 60 seconds or more -> "M:SS". */
+function formatSecondsDuration(seconds) {
+  const s = Math.max(0, Math.floor(Number(seconds) || 0));
+  if (s < 60) return s + 's';
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  return m + ':' + String(rem).padStart(2, '0');
+}
 
 /* =========================================================
    TAB SWITCH
 ========================================================= */
 function switchTab(tab) {
   currentTab = tab;
-  ['promo','videos','playlist','working'].forEach(t => {
+  ['promo','videos','playlist','working','settings'].forEach(t => {
     document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
     document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
   });
   if (tab === 'videos') renderVideoPage();
   if (tab === 'playlist') renderPlaylistTab();
+  if (tab === 'settings') renderSettingsTab();
 }
 
 /* =========================================================
    TYPE GRID HTML
 ========================================================= */
-function typeGridHTML(selectedId = '') {
-  return `<div class="channel-type-grid" id="typeGrid">` +
-    CHANNEL_TYPES.map(t =>
-      `<div class="channel-type-opt${t.id === selectedId ? ' selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}">
-        <span class="emoji">${t.emoji}</span>${t.label}
-      </div>`
-    ).join('') +
-    `</div><input type="hidden" id="selectedChannelType" value="${selectedId}">`;
+/**
+ * Renders a searchable channel-type picker. `selectedValue` can be
+ * either a known type id (e.g. "gaming") or a free-text custom
+ * value previously saved via the "Other" option — either way it's
+ * highlighted/pre-filled correctly.
+ */
+function typeSelectorHTML(selectedValue = '') {
+  const isKnown  = CHANNEL_TYPES.some(t => t.id === selectedValue);
+  const isCustom = selectedValue && !isKnown;
+  const activeId = isKnown ? selectedValue : (isCustom ? 'other' : '');
+  const customVal = isCustom ? selectedValue : '';
+
+  return `
+    <div class="search-wrap" style="margin-top:6px;">
+      <input type="text" id="typeSearchInput" class="search-bar" placeholder="Search channel type…" oninput="filterTypeGrid()" autocomplete="off">
+    </div>
+    <div class="channel-type-grid" id="typeGrid" style="max-height:230px;overflow-y:auto;grid-template-columns:repeat(3,1fr);margin-top:10px;">
+      ${CHANNEL_TYPES.map(t =>
+        `<div class="channel-type-opt${t.id === activeId ? ' selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}" data-label="${t.label.toLowerCase()}">
+          <span class="emoji">${t.emoji}</span>${t.label}
+        </div>`
+      ).join('')}
+    </div>
+    <input type="hidden" id="selectedChannelType" value="${activeId}">
+    <div id="customTypeWrap" style="margin-top:10px;${activeId === 'other' ? '' : 'display:none;'}">
+      <label class="swal-label">Type your channel category</label>
+      <input type="text" id="customTypeInput" class="swal-input" placeholder="e.g. Vintage Cars, Anime Reviews…" value="${customVal.replace(/"/g,'&quot;')}">
+      <p style="font-size:11px;color:#8a8f9e;margin-top:6px;">Can't find your category? Type it here — our team reviews custom types and may add them officially.</p>
+    </div>
+  `;
 }
 
 function selectType(id) {
@@ -967,6 +1324,27 @@ function selectType(id) {
   });
   const hidden = document.getElementById('selectedChannelType');
   if (hidden) hidden.value = id;
+  const customWrap = document.getElementById('customTypeWrap');
+  if (customWrap) customWrap.style.display = id === 'other' ? 'block' : 'none';
+}
+
+function filterTypeGrid() {
+  const q = (document.getElementById('typeSearchInput')?.value || '').toLowerCase().trim();
+  document.querySelectorAll('#typeGrid .channel-type-opt').forEach(el => {
+    el.style.display = (!q || el.dataset.label.includes(q)) ? '' : 'none';
+  });
+}
+
+/** Reads the final channel type value out of the selector — either
+ * the chosen type's id, or the free-text "Other" value the member typed. */
+function getSelectedChannelTypeValue() {
+  const sel = document.getElementById('selectedChannelType');
+  if (!sel) return '';
+  if (sel.value === 'other') {
+    const custom = document.getElementById('customTypeInput');
+    return custom ? custom.value.trim() : '';
+  }
+  return sel.value;
 }
 
 /* =========================================================
@@ -1126,7 +1504,7 @@ function channelCardHTML(ch, type) {
 
   const subsLabel = type === 'working' ? 'Total Subscriptions'  : 'Total Subscribers';
   const subsVal   = type === 'working' ? (ch.TotalSubscription||ch.TotalSubscribers||0) : (ch.TotalSubscribers||0);
-  const lastUpdated = type === 'working' ? (ch.SheetUpdate||ch.LastTimeFetch||'-') : (ch.LastUpdated||'-');
+  const lastUpdated = formatNiceDate(type === 'working' ? (ch.SheetUpdate||ch.LastTimeFetch||'-') : (ch.LastUpdated||'-'));
 
   // Issue box only shows when there's an actual reported issue (not blank / "No")
   const issueText = (ch.Issue || '').trim();
@@ -1146,7 +1524,7 @@ function channelCardHTML(ch, type) {
 
   const editFn   = `openEditModal('${type}','${ch.ChannelId}')`;
   const ytFn     = type === 'promo' ? `updateChannelYT('${ch.ChannelId}')` : `updateWorkingChannelYT('${ch.ChannelId}')`;
-  const deleteFn = `deleteChannel('${type}','${ch.ChannelId}')`;
+  const changeFn = `openChangeChannelModal('${type}','${ch.ChannelId}')`;
 
   return `<div class="channel-card">
     <div class="channel-left">
@@ -1171,7 +1549,7 @@ function channelCardHTML(ch, type) {
     <div class="channel-right">
       <button onclick="${editFn}" class="btn-edit">✏️ Edit Channel</button>
       <button onclick="${ytFn}" class="btn-update-yt">🔄 Sync from YouTube</button>
-      <button onclick="${deleteFn}" class="btn-delete">🗑️ Delete</button>
+      <button onclick="${changeFn}" class="btn-change">🔁 Change Channel</button>
     </div>
   </div>`;
 }
@@ -1264,15 +1642,20 @@ function goPage(p) {
   document.getElementById('sectionVideos').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
+function isShortVideo(seconds) {
+  return Number(seconds) > 0 && Number(seconds) <= 180;
+}
+
 function videoCardHTML(v, idx) {
   const thumb    = v.VideoThumbnail || 'https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb';
   const title    = v.VideoTitle || 'Untitled Video';
-  const duration = v.VideoDurationText || '—';
+  const duration = formatSecondsDuration(v.VideoDurationSeconds);
   const url      = v.VideoUrl || '#';
   const status   = (v.VideoStatus||'active').toLowerCase();
   const statusCls = status === 'deleted' ? 'status-deleted' : 'status-active';
   const statusLbl = status === 'deleted' ? '🗑 Deleted' : '✅ Active';
   const videoId   = v.VideoUrl ? v.VideoUrl.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','') : '';
+  const shortBadge = isShortVideo(v.VideoDurationSeconds) ? `<span class="video-status-badge" style="background:rgba(236,72,153,0.12);color:#f472b6;border:1px solid rgba(236,72,153,0.3);">🩳 Short</span>` : '';
 
   return `<div class="video-card" style="animation-delay:${(idx%VIDEOS_PER_PAGE)*0.04}s">
     <a href="${url}" target="_blank" class="video-thumb-wrap">
@@ -1283,6 +1666,7 @@ function videoCardHTML(v, idx) {
       <div class="video-title" title="${title}">${title}</div>
       <div class="video-meta">
         <span class="video-status-badge ${statusCls}">${statusLbl}</span>
+        ${shortBadge}
         <span style="color:#8a8f9e;font-size:10px;">${v.CreatedDate||''}</span>
       </div>
     </div>
@@ -1305,7 +1689,7 @@ function openAddVideosModal() {
     title:'🎬 Add Promotional Videos',
     html:`<div style="text-align:left">
       <p style="color:#8a8f9e;font-size:13px;margin-bottom:12px;">
-        Fetches all videos ≥ 2 minutes from your promotional channel and adds them automatically.
+        Fetches all videos from your promotional channel — including Shorts — and adds them automatically.
       </p>
       <div style="background:#0a0b10;border:1px solid #1f2330;border-radius:12px;padding:14px;font-size:13px;color:#a78bfa;">
         📌 Channel ID: <strong style="color:white">${promoChannelId}</strong>
@@ -1330,8 +1714,13 @@ function openAddVideosModal() {
     }
   }).then(result => {
     if (result.isConfirmed) {
-      Swal.fire({ icon:'success', title:'Videos Added!', text: result.value.message || 'Videos fetched successfully.', timer:2000, showConfirmButton:false });
-      setTimeout(() => location.reload(), 2100);
+      Swal.fire({ 
+  icon:'success', 
+  title:'Videos Added!', 
+  text: (result.value.message || '') + ' Issues cleared.', 
+  timer:2000, 
+  showConfirmButton:false 
+      });
     }
   });
 }
@@ -1443,6 +1832,18 @@ async function renderPlaylistTab() {
 
   if (!promoChannelId) return;
 
+  // Show a loading state while we fetch + calculate playlist data
+  const section = document.getElementById('sectionPlaylist');
+  let loadingEl = document.getElementById('playlistLoadingState');
+  if (!loadingEl) {
+    loadingEl = document.createElement('div');
+    loadingEl.id = 'playlistLoadingState';
+    loadingEl.className = 'card rounded-3xl playlist-loading';
+    loadingEl.innerHTML = `<div class="loader-ring"></div><p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your playlist…</p>`;
+    section.insertBefore(loadingEl, section.firstChild);
+  }
+  loadingEl.classList.remove('hidden');
+
   try {
     const r = await fetch(ChannelCRUDScript
       + `?action=getMyPlaylist`
@@ -1451,6 +1852,7 @@ async function renderPlaylistTab() {
     );
     const d = await r.json();
     if (d.status !== 'success') {
+      loadingEl.classList.add('hidden');
       Swal.fire({ icon:'error', title:'Error', text:d.message || 'Unable to load playlist data.' });
       return;
     }
@@ -1480,7 +1882,9 @@ async function renderPlaylistTab() {
     }
 
     renderPlaylistVideoGrid();
+    loadingEl.classList.add('hidden');
   } catch (err) {
+    loadingEl.classList.add('hidden');
     Swal.fire({ icon:'error', title:'Error', text:'Unable to load playlist: ' + err.message });
   }
 }
@@ -1543,10 +1947,11 @@ function renderPlaylistVideoGrid() {
 function playlistVideoCardHTML(v, idx, isLocked) {
   const thumb    = v.VideoThumbnail || 'https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb';
   const title    = v.VideoTitle || 'Untitled Video';
-  const duration = v.VideoDurationText || '—';
-  const url      = v.VideoUrl || '#';
   const seconds  = Number(v.VideoDurationSeconds) || 0;
+  const duration = formatSecondsDuration(seconds);
+  const url      = v.VideoUrl || '#';
   const inPlaylist = playlistSelectedUrls.has(url);
+  const shortBadge = isShortVideo(seconds) ? `<span class="video-status-badge" style="background:rgba(236,72,153,0.12);color:#f472b6;border:1px solid rgba(236,72,153,0.3);">🩳 Short</span>` : '';
 
   const actionHTML = isLocked
     ? `<span class="video-status-badge ${inPlaylist ? 'status-active' : 'status-deleted'}" style="width:100%;text-align:center;padding:8px;">${inPlaylist ? '✅ In Playlist' : '—'}</span>`
@@ -1563,6 +1968,7 @@ function playlistVideoCardHTML(v, idx, isLocked) {
       <div class="video-title" title="${title}">${title}</div>
       <div class="video-meta">
         ${inPlaylist ? `<span class="video-status-badge status-active">✅ Selected</span>` : ''}
+        ${shortBadge}
       </div>
     </div>
     <div class="video-actions">${actionHTML}</div>
@@ -1683,6 +2089,221 @@ async function deletePlaylistFlow() {
 }
 
 /* =========================================================
+   SETTINGS TAB — INTERESTS + COUNTRIES
+========================================================= */
+async function renderSettingsTab() {
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=getMySettings`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      Swal.fire({ icon:'error', title:'Error', text:d.message || 'Unable to load settings.' });
+      return;
+    }
+    myInterests   = Array.isArray(d.interests) ? d.interests : [];
+    noInterest    = !!d.noInterest;
+    myCountries   = Array.isArray(d.countries) ? d.countries : [];
+    globalCountry = !!d.globalCountry;
+    settingsLoaded = true;
+
+    document.getElementById('noInterestToggle').checked = noInterest;
+    document.getElementById('globalCountryToggle').checked = globalCountry;
+    document.getElementById('interestsPickerWrap').style.display = noInterest ? 'none' : '';
+    document.getElementById('countryPickerWrap').style.display = globalCountry ? 'none' : '';
+
+    renderInterestAddGrid();
+    renderSelectedInterests();
+    renderRegionMap();
+    renderCountryGrid();
+    renderSelectedCountries();
+  } catch (err) {
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to load settings: ' + err.message });
+  }
+}
+
+/* ---------- INTERESTS ---------- */
+function renderInterestAddGrid() {
+  const grid = document.getElementById('interestAddGrid');
+  grid.innerHTML = CHANNEL_TYPES.filter(t => t.id !== 'other').map(t => {
+    const selected = myInterests.includes(t.id);
+    return `<div class="channel-type-opt${selected ? ' selected' : ''}" data-label="${t.label.toLowerCase()}" onclick="toggleInterest('${t.id}')">
+      <span class="emoji">${t.emoji}</span>${t.label}
+    </div>`;
+  }).join('');
+}
+
+function filterInterestGrid() {
+  const q = document.getElementById('interestSearchInput').value.toLowerCase().trim();
+  document.querySelectorAll('#interestAddGrid .channel-type-opt').forEach(el => {
+    el.style.display = (!q || el.dataset.label.includes(q)) ? '' : 'none';
+  });
+}
+
+async function toggleInterest(id) {
+  const isSelected = myInterests.includes(id);
+  try {
+    const action = isSelected ? 'deleteInterest' : 'addInterest';
+    const r = await fetch(ChannelCRUDScript
+      + `?action=${action}`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&interestName=${encodeURIComponent(id)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    myInterests = isSelected ? myInterests.filter(x => x !== id) : [...myInterests, id];
+    renderInterestAddGrid();
+    renderSelectedInterests();
+  } catch (e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to update interest' }); }
+}
+
+function renderSelectedInterests() {
+  const wrap = document.getElementById('selectedInterestsWrap');
+  if (myInterests.length === 0) {
+    wrap.innerHTML = `<span class="text-muted text-sm">No interests selected yet — pick some categories above.</span>`;
+    return;
+  }
+  wrap.innerHTML = myInterests.map(id => {
+    const t = CHANNEL_TYPES.find(c => c.id === id) || { emoji:'🌐', label:id };
+    return `<span class="interest-chip">${t.emoji} ${t.label} <button onclick="toggleInterest('${id}')" title="Remove">✕</button></span>`;
+  }).join('');
+}
+
+async function onToggleNoInterest() {
+  const enabled = document.getElementById('noInterestToggle').checked;
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setNoInterest`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&enabled=${enabled ? 'yes' : 'no'}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      document.getElementById('noInterestToggle').checked = !enabled;
+      Swal.fire({ icon:'error', title:'Failed', text:d.message });
+      return;
+    }
+    noInterest = enabled;
+    if (enabled) myInterests = [];
+    document.getElementById('interestsPickerWrap').style.display = enabled ? 'none' : '';
+    renderInterestAddGrid();
+    renderSelectedInterests();
+  } catch (e) {
+    document.getElementById('noInterestToggle').checked = !enabled;
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to update preference' });
+  }
+}
+
+/* ---------- COUNTRIES ---------- */
+function renderRegionMap() {
+  const grid = document.getElementById('regionMapGrid');
+  grid.innerHTML = REGIONS.map(r => {
+    const countInRegion = COUNTRIES.filter(c => c[2] === r.id).length;
+    const selInRegion = COUNTRIES.filter(c => c[2] === r.id && myCountries.includes(c[0])).length;
+    const active = selInRegion === countInRegion && countInRegion > 0;
+    return `<div class="region-card${active ? ' active' : ''}" onclick="toggleRegion('${r.id}')">
+      <span class="region-emoji">${r.emoji}</span>
+      <div class="region-name">${r.label}</div>
+      <div class="region-count">${selInRegion}/${countInRegion} selected</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleRegion(regionId) {
+  const regionCodes = COUNTRIES.filter(c => c[2] === regionId).map(c => c[0]);
+  const allSelected = regionCodes.every(code => myCountries.includes(code));
+  if (allSelected) {
+    myCountries = myCountries.filter(code => !regionCodes.includes(code));
+  } else {
+    regionCodes.forEach(code => { if (!myCountries.includes(code)) myCountries.push(code); });
+  }
+  renderRegionMap();
+  renderCountryGrid();
+  renderSelectedCountries();
+}
+
+function renderCountryGrid() {
+  const grid = document.getElementById('countryGrid');
+  const q = (document.getElementById('countrySearchInput')?.value || '').toLowerCase().trim();
+  const list = q ? COUNTRIES.filter(c => c[1].toLowerCase().includes(q)) : COUNTRIES;
+  grid.innerHTML = list.map(c => {
+    const selected = myCountries.includes(c[0]);
+    return `<div class="country-opt${selected ? ' selected' : ''}" onclick="toggleCountry('${c[0]}')">
+      <span class="flag">${flagEmoji(c[0])}</span> ${c[1]}
+    </div>`;
+  }).join('');
+}
+
+function toggleCountry(code) {
+  if (myCountries.includes(code)) {
+    myCountries = myCountries.filter(c => c !== code);
+  } else {
+    myCountries.push(code);
+  }
+  renderCountryGrid();
+  renderRegionMap();
+  renderSelectedCountries();
+}
+
+function renderSelectedCountries() {
+  const wrap = document.getElementById('selectedCountriesWrap');
+  document.getElementById('selectedCountryCount').innerText = myCountries.length;
+  if (myCountries.length === 0) {
+    wrap.innerHTML = `<span class="text-muted text-sm">No countries selected yet.</span>`;
+    return;
+  }
+  wrap.innerHTML = myCountries.map(code => {
+    const c = COUNTRIES.find(x => x[0] === code);
+    const name = c ? c[1] : code;
+    return `<span class="interest-chip">${flagEmoji(code)} ${name} <button onclick="toggleCountry('${code}')" title="Remove">✕</button></span>`;
+  }).join('');
+}
+
+async function onToggleGlobalCountry() {
+  const enabled = document.getElementById('globalCountryToggle').checked;
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setGlobalCountries`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&enabled=${enabled ? 'yes' : 'no'}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      document.getElementById('globalCountryToggle').checked = !enabled;
+      Swal.fire({ icon:'error', title:'Failed', text:d.message });
+      return;
+    }
+    globalCountry = enabled;
+    if (enabled) myCountries = [];
+    document.getElementById('countryPickerWrap').style.display = enabled ? 'none' : '';
+    renderRegionMap(); renderCountryGrid(); renderSelectedCountries();
+  } catch (e) {
+    document.getElementById('globalCountryToggle').checked = !enabled;
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to update preference' });
+  }
+}
+
+async function saveCountrySelection() {
+  try {
+    Swal.fire({ title:'Saving…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setCountries`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&countries=${encodeURIComponent(myCountries.join(','))}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Saved!', timer:1200, showConfirmButton:false });
+  } catch (e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to save countries' }); }
+}
+
+/* =========================================================
    ADD CHANNEL MODAL
 ========================================================= */
 function openAddModal(type) {
@@ -1695,16 +2316,17 @@ function openAddModal(type) {
     html:`<div style="text-align:left">
       <label class="swal-label">YouTube Channel Link</label>
       <input id="sw_channelLink" class="swal-input" placeholder="https://youtube.com/@yourchannel">
-      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeGridHTML()}`}
+      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeSelectorHTML()}`}
     </div>`,
     confirmButtonText: isWorking ? 'Add Working Channel' : 'Add Promotional Channel',
     showCancelButton:true,
     cancelButtonText:'Cancel',
     preConfirm: async () => {
       const channelLink = document.getElementById('sw_channelLink').value.trim();
-      const channelType = isWorking ? '' : document.getElementById('selectedChannelType').value;
+      const channelType = isWorking ? '' : getSelectedChannelTypeValue();
+      const isCustomType = !isWorking && document.getElementById('selectedChannelType')?.value === 'other';
       if (!channelLink) { Swal.showValidationMessage('Please enter a channel link'); return false; }
-      if (!isWorking && !channelType) { Swal.showValidationMessage('Please select a channel type'); return false; }
+      if (!isWorking && !channelType) { Swal.showValidationMessage('Please select or type a channel type'); return false; }
       try {
         Swal.showLoading();
         const actionParam = isWorking ? 'addWorkingChannel' : 'addChannel';
@@ -1714,6 +2336,7 @@ function openAddModal(type) {
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelLink=${encodeURIComponent(channelLink)}`
           + (isWorking ? '' : `&channelType=${encodeURIComponent(channelType)}`)
+          + (isCustomType ? `&isCustomType=yes` : '')
         );
         const d = await r.json();
         if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
@@ -1722,12 +2345,17 @@ function openAddModal(type) {
     }
   }).then(result => {
     if (result.isConfirmed) {
-      Swal.fire({ icon:'success', title:'Channel Added!', timer:1500, showConfirmButton:false });
-      setTimeout(() => location.reload(), 1600);
+      Swal.fire({ 
+        icon:'success', 
+        title:'Success!', 
+        text: isWorking ? 'Working Channel added. Relevant issues cleared.' : 'Promotional Channel added. Relevant issues cleared.',
+        timer:1800, 
+        showConfirmButton:false 
+      });
+      setTimeout(() => location.reload(), 1900);
     }
   });
 }
-
 /* =========================================================
    EDIT CHANNEL MODAL
 ========================================================= */
@@ -1747,20 +2375,17 @@ async function openEditModal(type, channelId) {
     if (d.status === 'success') ch = d.channel;
   } catch(e) {}
 
-  const currType = ch ? (ch.ChannelType||'').toLowerCase() : '';
-  const currLink = ch ? (ch.ChannelLink||'') : '';
+  const currType = ch ? (ch.ChannelType||'') : '';
   const currName = ch ? (ch.ChannelName||'') : '';
 
   Swal.fire({
     title:'✏️ Edit Channel', width:620,
     html:`<div style="text-align:left">
-      <label class="swal-label">Channel Name (manual override)</label>
-      <input id="sw_editName" class="swal-input" placeholder="Leave blank to keep current" value="${currName}">
-      <label class="swal-label">Channel Link</label>
-      <input id="sw_editLink" class="swal-input" placeholder="https://youtube.com/@yourchannel" value="${currLink}">
-      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeGridHTML(currType)}`}
+      <label class="swal-label">Channel Name (from YouTube — not editable)</label>
+      <input id="sw_editName" class="swal-input" value="${currName}" disabled style="opacity:0.55;cursor:not-allowed;">
+      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeSelectorHTML(currType)}`}
       <div style="margin-top:18px;padding:12px;background:#0a0b10;border-radius:12px;border:1px solid #1f2330;font-size:12px;color:#8a8f9e;">
-        💡 Use <strong style="color:#a78bfa">Save Changes</strong> to update your edits, or <strong style="color:#a78bfa">Sync YouTube</strong> to re-fetch live data.
+        💡 The channel name always reflects your real YouTube name. Use <strong style="color:#a78bfa">Save Changes</strong> to update the type shown here, or <strong style="color:#a78bfa">Sync YouTube</strong> to re-fetch live data (name, subscribers, image, etc). To switch to an entirely different channel, use <strong style="color:#f59e0b">🔁 Change Channel</strong> on the card instead.
       </div>
     </div>`,
     showConfirmButton:true, showDenyButton:true, showCancelButton:true,
@@ -1768,9 +2393,8 @@ async function openEditModal(type, channelId) {
     denyButtonText:'🔄 Sync YouTube',
     cancelButtonText:'Cancel',
     preConfirm: async () => {
-      const name  = document.getElementById('sw_editName').value.trim();
-      const link  = document.getElementById('sw_editLink').value.trim();
-      const ctype = isWorking ? '' : document.getElementById('selectedChannelType').value;
+      const ctype = isWorking ? '' : getSelectedChannelTypeValue();
+      const isCustomType = !isWorking && document.getElementById('selectedChannelType')?.value === 'other';
       try {
         Swal.showLoading();
         const action = isWorking ? 'editWorkingChannel' : 'editChannel';
@@ -1779,9 +2403,8 @@ async function openEditModal(type, channelId) {
           + `&username=${encodeURIComponent(savedUsername)}`
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelId=${encodeURIComponent(channelId)}`
-          + `&channelName=${encodeURIComponent(name)}`
-          + `&channelLink=${encodeURIComponent(link)}`
           + (isWorking ? '' : `&channelType=${encodeURIComponent(ctype)}`)
+          + (isCustomType ? `&isCustomType=yes` : '')
         );
         const d = await r.json();
         if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
@@ -1803,6 +2426,21 @@ async function openEditModal(type, channelId) {
           + `&channelId=${encodeURIComponent(channelId)}`
         );
         const d = await r.json();
+        if (d.status === 'deleted') {
+          Swal.fire({
+            icon:'error',
+            title:'Channel Deleted on YouTube!',
+            text: d.message,
+            confirmButtonText:'🔁 Change Channel Now',
+            confirmButtonColor:'#f59e0b',
+            showCancelButton:true,
+            cancelButtonText:'Later'
+          }).then(res => {
+            if (res.isConfirmed) openChangeChannelModal(isWorking ? 'working' : 'promo', channelId);
+            else location.reload();
+          });
+          return;
+        }
         if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Sync Failed', text:d.message }); return; }
         Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
         setTimeout(() => location.reload(), 1500);
@@ -1813,6 +2451,9 @@ async function openEditModal(type, channelId) {
 
 /* =========================================================
    QUICK SYNC FROM CARD
+   If YouTube reports the channel no longer exists, the backend
+   returns status:"deleted" — surface a clear alert and offer to
+   jump straight into the Change Channel flow.
 ========================================================= */
 async function updateChannelYT(channelId) {
   Swal.fire({ title:'Syncing from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
@@ -1824,6 +2465,21 @@ async function updateChannelYT(channelId) {
       + `&channelId=${encodeURIComponent(channelId)}`
     );
     const d = await r.json();
+    if (d.status === 'deleted') {
+      Swal.fire({
+        icon:'error',
+        title:'Channel Deleted on YouTube!',
+        text: d.message,
+        confirmButtonText:'🔁 Change Channel Now',
+        confirmButtonColor:'#f59e0b',
+        showCancelButton:true,
+        cancelButtonText:'Later'
+      }).then(res => {
+        if (res.isConfirmed) openChangeChannelModal('promo', channelId);
+        else location.reload();
+      });
+      return;
+    }
     if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
     Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
     setTimeout(() => location.reload(), 1500);
@@ -1840,6 +2496,21 @@ async function updateWorkingChannelYT(channelId) {
       + `&channelId=${encodeURIComponent(channelId)}`
     );
     const d = await r.json();
+    if (d.status === 'deleted') {
+      Swal.fire({
+        icon:'error',
+        title:'Working Channel Deleted on YouTube!',
+        text: d.message,
+        confirmButtonText:'🔁 Change Channel Now',
+        confirmButtonColor:'#f59e0b',
+        showCancelButton:true,
+        cancelButtonText:'Later'
+      }).then(res => {
+        if (res.isConfirmed) openChangeChannelModal('working', channelId);
+        else location.reload();
+      });
+      return;
+    }
     if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
     Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
     setTimeout(() => location.reload(), 1500);
@@ -1847,39 +2518,58 @@ async function updateWorkingChannelYT(channelId) {
 }
 
 /* =========================================================
-   DELETE CHANNEL
-   For the promo channel, the backend now also cascades and
-   removes every video row AND any playlist data tied to that
-   channel — so the confirmation copy mentions this.
+   CHANGE CHANNEL
+   Replaces the delete flow. For the promo channel this cascades
+   and removes every old video row plus any playlist data (the
+   backend handles this and auto-imports videos from the new
+   channel). For the working channel, changing disrupts ongoing
+   subscribers-exchange work — the member is warned up front.
 ========================================================= */
-async function deleteChannel(type, channelId) {
-  const isPromo = type !== 'working';
-  const confirm = await Swal.fire({
-    icon:'warning',
-    title: isPromo ? 'Delete Promotional Channel?' : 'Delete Working Channel?',
-    text: isPromo
-      ? 'This cannot be undone. All videos and any playlist linked to this channel will also be permanently deleted.'
-      : 'This cannot be undone.',
+function openChangeChannelModal(type, channelId) {
+  const isWorking = type === 'working';
+  const title = isWorking ? '🔁 Change Working Channel' : '🔁 Change Promotional Channel';
+  const warningHTML = isWorking
+    ? `<div style="margin-top:14px;padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:12px;color:#f87171;">
+        ⚠️ <strong>Important:</strong> Changing your working channel will disrupt your ongoing subscribers-exchange work. Progress tied to your old working channel may be lost and some of that work may need to be redone.
+      </div>`
+    : `<div style="margin-top:14px;padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:12px;color:#f87171;">
+        ⚠️ <strong>Important:</strong> Changing your promotional channel permanently deletes all videos and any playlist linked to your current channel. Videos from the new channel are imported automatically.
+      </div>`;
+
+  Swal.fire({
+    title, width:600,
+    html:`<div style="text-align:left">
+      <label class="swal-label">New YouTube Channel Link</label>
+      <input id="sw_newChannelLink" class="swal-input" placeholder="https://youtube.com/@newchannel">
+      ${warningHTML}
+    </div>`,
+    confirmButtonText:'🔁 Change Channel',
+    confirmButtonColor:'#f59e0b',
     showCancelButton:true,
-    confirmButtonColor:'#dc2626',
-    confirmButtonText:'Yes, Delete',
-    cancelButtonText:'Cancel'
+    cancelButtonText:'Cancel',
+    preConfirm: async () => {
+      const link = document.getElementById('sw_newChannelLink').value.trim();
+      if (!link) { Swal.showValidationMessage('Please enter the new channel link'); return false; }
+      try {
+        Swal.showLoading();
+        const action = isWorking ? 'changeWorkingChannel' : 'changeChannel';
+        const r = await fetch(ChannelCRUDScript
+          + `?action=${action}`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelLink=${encodeURIComponent(link)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        return d;
+      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      Swal.fire({ icon:'success', title:'Channel Changed!', text: result.value.message || '', timer:2600, showConfirmButton:false });
+      setTimeout(() => location.reload(), 2700);
+    }
   });
-  if (!confirm.isConfirmed) return;
-  try {
-    const action = type === 'working' ? 'deleteWorkingChannel' : 'deleteChannel';
-    Swal.fire({ title:'Deleting…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    const r = await fetch(ChannelCRUDScript
-      + `?action=${action}`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&channelId=${encodeURIComponent(channelId)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Deleted!', text: d.message || '', timer:1500, showConfirmButton:false });
-    setTimeout(() => location.reload(), 1600);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to delete' }); }
 }
 
 /* =========================================================
@@ -1911,11 +2601,11 @@ loadChannels();
   <path d="M10 9l5 3-5 3V9z"/>
 </svg></a>
 
-    <a href="videotasks.html" data-page="videotasks.html" title="Video Task">
+    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
       <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
     </a>
 
-    <a href="playlisttasks.html" data-page="playlisttasks.html" title="Playlist Task">
+    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="9"></circle>
   <polyline points="12 7 12 12 16 14"></polyline>
