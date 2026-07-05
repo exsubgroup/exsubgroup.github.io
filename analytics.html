@@ -9,6 +9,65 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 
+.nav-item{
+    position:relative;
+    list-style:none;
+}
+
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 18px;
+    color:#333;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.mega-dropdown{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:900px;
+    display:none;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 10px 35px rgba(0,0,0,.15);
+    padding:25px;
+    grid-template-columns:repeat(5,1fr);
+    gap:25px;
+    z-index:9999;
+}
+
+.mega-dropdown.show{
+    display:grid;
+}
+
+.mega-column h4{
+    margin-bottom:15px;
+    font-size:16px;
+    color:#6a5cff;
+    border-bottom:2px solid #f0f0f0;
+    padding-bottom:8px;
+}
+
+.mega-column a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#444;
+    padding:10px 12px;
+    border-radius:10px;
+    margin-bottom:6px;
+    transition:.2s;
+}
+
+.mega-column a:hover{
+    background:#f5f7ff;
+    color:#6a5cff;
+    transform:translateX(5px);
+}
 
 #mobileBottomNav{
   display:none;
@@ -288,6 +347,38 @@ body::before{
 .delay-3{ animation-delay:.24s; }
 .delay-4{ animation-delay:.32s; }
 .delay-5{ animation-delay:.40s; }
+
+/* ── SIMPLE TASKS DROPDOWN ── */
+.task-dropdown-wrap{ position:relative; }
+.task-dropdown{
+  display:none;
+  position:absolute;
+  top:calc(100% + 12px);
+  left:50%;
+  transform:translateX(-50%);
+  min-width:210px;
+  background:#12141c;
+  border:1px solid #232938;
+  border-radius:14px;
+  padding:8px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.45);
+  z-index:9999;
+}
+.task-dropdown.show{ display:block; }
+.task-dropdown a{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 12px;
+  border-radius:10px;
+  color:#d5d8e2;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:500;
+  transition:.2s;
+}
+.task-dropdown a:hover{ background:#1a1d27; color:#c4b5fd; }
+.mobile-task-link{ padding-left:14px; font-size:13px; color:#c9ccd6 !important; }
 </style>
 </head>
 <body>
@@ -308,7 +399,20 @@ body::before{
       <a id="lnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
       <a id="lnkChannels"  href="channels.html"       class="text-white hover:text-purple-300 transition">Channels</a>
       <a id="lnkGroups"    href="groups.html"         class="text-white hover:text-purple-300 transition">Groups</a>
-            <a href="subscriberstask.html" class="text-white hover:text-purple-300 transition">Tasks</a>
+
+      <div class="task-dropdown-wrap">
+        <a href="#" onclick="toggleTasksMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
+          Tasks
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </a>
+        <div id="tasksDropdown" class="task-dropdown">
+          <a href="subscriberstask.html">📺 Subscriber Tasks</a>
+          <a href="videotask.html">🎬 Video Tasks</a>
+          <a href="playlisttask.html">⏱ Playlist Tasks</a>
+          <a href="likeandcommentstasks.html">💬 Like &amp; Comment Tasks</a>
+        </div>
+      </div>
+
       <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
       <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
       <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
@@ -362,6 +466,15 @@ body::before{
       <a id="mLnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
       <a id="mLnkChannels"  href="channels.html"       class="text-white">Channels</a>
       <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
+
+      <div class="flex flex-col gap-2">
+        <span class="text-white font-semibold">Tasks</span>
+        <a href="subscriberstask.html" class="mobile-task-link">📺 Subscriber Tasks</a>
+        <a href="videotask.html" class="mobile-task-link">🎬 Video Tasks</a>
+        <a href="playlisttask.html" class="mobile-task-link">⏱ Playlist Tasks</a>
+        <a href="likeandcommentstasks.html" class="mobile-task-link">💬 Like &amp; Comment Tasks</a>
+      </div>
+
       <a id="mLnkHowTo"     href="howtowork.html"      class="text-white">How To Work</a>
       <a id="mLnkExtension" href="exsubextension.html" class="text-white">Exsub Extension</a>
       <a id="mLnkSupport"   href="support.html"        class="text-white">Contact &amp; Support</a>
@@ -1299,26 +1412,6 @@ function renderDashboard(data) {
 
   hide("loadingState"); show("dashContent");
 }
-/* ══════════════════ GOOGLE APPS SCRIPT — updated field mapping ══════════════════
-   The Apps Script must return these renamed/new fields:
-
-   subsPerformance:
-     totalUnsubscribeByYou       ← col[3] TotalUnsubscribByYou  (was totalUnsubscribeChannels)
-
-   videoPerformance:
-     totalYourVideoWatchingRejects     ← col[4] TotalYourVideoWatchingRejects  (NEW)
-     totalVideoWatchingRejectsOfOthers ← col[5] TotalVideoWatchingRejectsOfOthers (NEW)
-
-   engagementPerformance:
-     totalCommentLikeDeletedByYou    ← col[3] TotalComtLikeDeletedByYou  (was single "totalCommentLikeDelete")
-     totalCommentLikeDeleteByOthers  ← col[4] TotalComtLikeDeleteByOthers (NEW)
-     pendingCommentLikeToOthers      ← col[5] PendingComtLiketoOthers     (was col[4])
-     pendingCommentLikeFromOthers    ← col[6] PendingComtLikeFromOthers   (was col[5])
-
-   playlistPerformance:
-     totalPlaylistWatchingCheatingByYou    ← col[4] TotalPlaylistWatchingCheatingByYou    (NEW)
-     totalPlaylistWatchingCheatingByOthers ← col[5] TotalPlaylistWatchingCheatingByOthers (NEW)
-══════════════════════════════════════════════════════════════════════════════════ */
 
 /* ══════════════════ CHART HELPERS ══════════════════ */
 function setRing(id, pct, circ) {
@@ -1430,6 +1523,23 @@ loadDashboard();
     if (a.getAttribute("data-page") === current) a.classList.add("active");
   });
 })();
+</script>
+
+
+<script>
+function toggleTasksMenu(e){
+    e.preventDefault();
+
+    const menu=document.getElementById("tasksDropdown");
+
+    menu.classList.toggle("show");
+
+    document.addEventListener("click",function(event){
+        if(!event.target.closest(".task-dropdown-wrap")){
+            menu.classList.remove("show");
+        }
+    },{once:true});
+}
 </script>
 </body>
 </html>

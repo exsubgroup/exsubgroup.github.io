@@ -366,6 +366,38 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 .issue-pill:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.6); }
 .issue-pill.selected { background: rgba(239,68,68,0.25); border-color: #ef4444; color: #fca5a5; }
 
+.pref-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(124,58,237,0.3);
+    background: rgba(124,58,237,0.06);
+    color: #c4b5fd;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+.pref-pill:hover { background: rgba(124,58,237,0.18); border-color: rgba(124,58,237,0.6); }
+.pref-pill.selected { background: rgba(124,58,237,0.28); border-color: #7c3aed; color: #ede9fe; }
+.pref-pill:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.match-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(124,58,237,0.12);
+    border: 1px solid rgba(124,58,237,0.3);
+    color: #c4b5fd;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 .copy-handle-btn {
     display: inline-flex;
     align-items: center;
@@ -470,6 +502,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                     </div>
                     <div class="py-2">
                         <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+                        <button onclick="openPreferencesModal()" class="w-full text-left block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">🎯 Match Preferences</button>
                         <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
                         <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
                     </div>
@@ -659,6 +692,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                     class="btn-teal px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm no-underline">
                     🎥 View Proofs
                 </a>
+                <button id="prefsBtn" onclick="openPreferencesModal()"
+                    class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    🎯 Match Preferences
+                </button>
                 <button id="createBtn" onclick="openCreateModal()"
                     class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
@@ -756,6 +793,32 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     </div>
 </footer>
 
+<!-- MATCH PREFERENCES MODAL -->
+<div id="prefsModal" class="modal-bg" onclick="if(event.target===this)closePreferencesModal()">
+    <div class="modal-box max-w-[560px]">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">🎯 Match Preferences</h2>
+            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+        <p class="text-muted text-sm mb-5 leading-relaxed">
+            Tell us what kind of subscribers you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-white">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get 20 tasks even if your preferences are rare.
+        </p>
+
+        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-purple-400">(0/5)</span></label>
+        <div id="prefInterestPills" class="flex flex-wrap gap-2 mb-5"></div>
+
+        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-purple-400">(0/5)</span></label>
+        <div id="prefCountryPills" class="flex flex-wrap gap-2 mb-5"></div>
+
+        <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
+
+        <div class="flex gap-3">
+            <button onclick="closePreferencesModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doSavePrefsBtn" onclick="doSavePreferences()" class="btn-purple flex-1 py-3 rounded-2xl text-sm font-semibold">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
 <!-- CREATE TASKS MODAL -->
 <div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
     <div class="modal-box">
@@ -766,6 +829,11 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         <p class="text-muted text-sm mb-5 leading-relaxed">
             The system will find up to <strong class="text-white">20 members</strong> you haven't worked with yet and create <strong class="text-white">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
         </p>
+        <div class="instructions-box mb-5">
+            <p class="text-xs text-purple-200 leading-relaxed">
+                🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first. Set your preferences beforehand for better-targeted matches — the rest of the slots are filled with random untouched members as usual.
+            </p>
+        </div>
         <div class="bg-[#1a1d27] border border-[#232632] rounded-2xl p-4 mb-5 space-y-3 text-sm">
             <div class="flex justify-between items-center">
                 <span class="text-muted">Your Pending (Not Started) Tasks</span>
@@ -879,7 +947,7 @@ document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCod
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZNDVXNvIrDt-35344Q9vs6scP9T75qt9uD-TNEeJICbiTO-Lvv48FLPCYasP7pTnrMg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0GcrwtGqDF1bSBNCMDvRH1VUkP6TyM8CaqvYHGPnsy3oe2M_yXqHB6SvGkA8vJ0R2hQ/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -900,6 +968,14 @@ let channelNameCache   = {};
 let channelHandleCache = {};
 let channelImageCache  = {};
 let channelIdCache     = {};
+
+/* ── MATCHING FEATURE — STATE ──────────────────────────────── */
+let myPreferences     = { interests: [], countries: [] }; // saved on server
+let selectedInterests  = []; // being edited in the modal (not yet saved)
+let selectedCountries  = [];
+let interestOptions    = [];
+let countryOptions     = [];
+const MAX_PREF_EACH    = 5;
 
 /* ────────────────────────────────────────
    BOOT
@@ -927,6 +1003,14 @@ async function init() {
         if (data.channelHandles) channelHandleCache = data.channelHandles;
         if (data.channelImages)  channelImageCache  = data.channelImages;
         if (data.channelIds)     channelIdCache     = data.channelIds;
+        if (data.preferences) {
+            myPreferences = {
+                interests: data.preferences.interests || [],
+                countries: data.preferences.countries || []
+            };
+        }
+
+        loadPreferenceOptions(); // fire-and-forget, populates the modal lazily
 
         renderMember();
         checkBlock();
@@ -1376,6 +1460,19 @@ function pairedBadge(t) {
     }
 }
 
+/**
+ * matchBadge: shows why this task was paired with you, based on your
+ * saved Match Preferences overlapping the target's actual interests/
+ * countries. Purely informational — computed server-side.
+ */
+function matchBadge(t) {
+    const interests = t.MatchedInterests || [];
+    const countries = t.MatchedCountries || [];
+    if (interests.length === 0 && countries.length === 0) return '';
+    const parts = [...interests, ...countries].join(', ');
+    return `<span class="match-badge" title="Matched your preferences">🎯 Matched: ${parts}</span>`;
+}
+
 function getChannelKey(t) {
     return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
 }
@@ -1554,6 +1651,7 @@ function taskCard(t) {
             <code class="text-xs text-muted font-mono bg-[#1a1d27] px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
             ${pairedBadge(t)}
+            ${matchBadge(t)}
             ${issueRow}
             ${pinnedBadge}
         </div>
@@ -1778,6 +1876,120 @@ function openDetail(taskId) {
 
 function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('open');
+}
+
+/* ────────────────────────────────────────
+   MATCH PREFERENCES MODAL
+──────────────────────────────────────── */
+async function loadPreferenceOptions() {
+    if (interestOptions.length && countryOptions.length) return; // already loaded
+    try {
+        const res  = await fetch(`${SCRIPT_URL}?action=getPreferenceOptions`);
+        const data = await res.json();
+        if (data.success) {
+            interestOptions = data.interests || [];
+            countryOptions  = data.countries || [];
+        }
+    } catch (e) {
+        // silent — modal will just show nothing to pick until retried on open
+    }
+}
+
+function openPreferencesModal() {
+    // Copy saved prefs into the "being edited" arrays
+    selectedInterests = [...myPreferences.interests];
+    selectedCountries = [...myPreferences.countries];
+
+    document.getElementById('prefsResultBox').classList.add('hidden');
+    renderPrefPills();
+    document.getElementById('prefsModal').classList.add('open');
+
+    // In case options weren't ready when the page first loaded, try again
+    if (!interestOptions.length || !countryOptions.length) {
+        loadPreferenceOptions().then(renderPrefPills);
+    }
+}
+
+function closePreferencesModal() {
+    document.getElementById('prefsModal').classList.remove('open');
+}
+
+function renderPrefPills() {
+    const interestBox = document.getElementById('prefInterestPills');
+    const countryBox  = document.getElementById('prefCountryPills');
+
+    interestBox.innerHTML = interestOptions.map(opt => {
+        const isSel  = selectedInterests.includes(opt);
+        const atCap  = !isSel && selectedInterests.length >= MAX_PREF_EACH;
+        const escaped = opt.replace(/'/g, "\\'");
+        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''}
+            onclick="togglePrefPill('interest','${escaped}')">${isSel ? '✓ ' : ''}${opt}</button>`;
+    }).join('');
+
+    countryBox.innerHTML = countryOptions.map(opt => {
+        const isSel  = selectedCountries.includes(opt);
+        const atCap  = !isSel && selectedCountries.length >= MAX_PREF_EACH;
+        const escaped = opt.replace(/'/g, "\\'");
+        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''}
+            onclick="togglePrefPill('country','${escaped}')">${isSel ? '✓ ' : ''}${opt}</button>`;
+    }).join('');
+
+    document.getElementById('prefInterestCount').textContent = `(${selectedInterests.length}/${MAX_PREF_EACH})`;
+    document.getElementById('prefCountryCount').textContent  = `(${selectedCountries.length}/${MAX_PREF_EACH})`;
+}
+
+function togglePrefPill(kind, value) {
+    const arr = kind === 'interest' ? selectedInterests : selectedCountries;
+
+    const idx = arr.indexOf(value);
+    if (idx !== -1) {
+        arr.splice(idx, 1);
+    } else {
+        if (arr.length >= MAX_PREF_EACH) {
+            showToast(`You can pick up to ${MAX_PREF_EACH} ${kind === 'interest' ? 'interests' : 'countries'}.`, true);
+            return;
+        }
+        arr.push(value);
+    }
+    renderPrefPills();
+}
+
+async function doSavePreferences() {
+    const btn = document.getElementById('doSavePrefsBtn');
+    btn.textContent = 'Saving…';
+    btn.disabled    = true;
+
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'savePreferences',
+                userCode: USER_CODE,
+                interests: selectedInterests,
+                countries: selectedCountries
+            })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('prefsResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            myPreferences = { interests: data.interests || [], countries: data.countries || [] };
+            box.textContent = '✅ Preferences saved! New tasks will now prioritize matching members.';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            showToast('Match preferences saved!');
+            setTimeout(closePreferencesModal, 1400);
+        } else {
+            box.textContent = data.message || 'Could not save preferences.';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.textContent = 'Save Preferences';
+    btn.disabled    = false;
 }
 
 /* ────────────────────────────────────────
