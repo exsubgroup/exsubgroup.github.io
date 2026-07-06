@@ -8,7 +8,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+.extension-card {
+  background: linear-gradient(135deg, #1a1f2e, #12141c);
+  border: 2px solid;
+  transition: all 0.4s;
+}
+.extension-ready { border-color: #4ade80; box-shadow: 0 0 25px rgba(74, 222, 128, 0.3); }
+.extension-not-ready { border-color: #f87171; }
 
+.tab-btn {
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  color: white;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+}
 .nav-item{
     position:relative;
     list-style:none;
@@ -566,6 +585,24 @@ body::before{
       </div>
     </div>
 
+  <!-- Extension Status -->
+  <div id="extensionStatus" class="extension-card rounded-3xl p-6 mb-8 flex items-center gap-6 extension-not-ready">
+    <div class="w-16 h-16 flex-shrink-0 rounded-2xl flex items-center justify-center text-4xl" id="extIcon">🔌</div>
+    <div class="flex-1">
+      <div class="flex items-center gap-3">
+        <h3 class="text-2xl font-bold" id="extTitle">Extension Setup</h3>
+        <span id="extBadge" class="px-4 py-1 rounded-full text-sm font-bold"></span>
+      </div>
+      <p id="extDesc" class="text-gray-400 mt-1"></p>
+    </div>
+    <a id="extCTA" href="exsubextension.html" 
+       class="px-8 py-3 rounded-2xl font-semibold text-sm bg-white text-black hover:bg-gray-200 transition">
+      Setup Extension
+    </a>
+  </div>
+
+ 
+
     <!-- ── YOUR ISSUES (full list, PC-optimized) ── -->
     <div id="allIssuesSection" class="hidden fade-in delay-1">
       <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
@@ -628,422 +665,22 @@ body::before{
           style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
       </div>
 
-      <!-- ════════════════════════════════════════
-           👥 SUBSCRIBERS PERFORMANCE
-           Sheet columns:
-           [0]UserCode [1]TotalSubscribersGet [2]TotalSubscribeChannels
-           [3]TotalUnsubscribByYou [4]PendingSubscribeToOthers
-           [5]PendingSubscribeFromOthers [6]TotalUnsubscribeByOthers
-           [7]LimitReached [8]SubscribersLimit [9]LasttimeWork
-      ════════════════════════════════════════ -->
-      <div id="subsSection" class="hidden fade-in delay-2 mb-8">
 
-        <!-- Banner image -->
-        <div class="section-banner">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl7lSObBQ-QxR7hZCr7aX_vj2hscJOGAGJrzs0Z22uRPk8jQzZu1zcPO7F&s=10" alt="Subscribers">
-          <div class="section-banner-overlay">
-            <div class="section-icon" style="background:rgba(124,58,237,0.4);">👥</div>
-            <div>
-              <div class="section-title">Subscribers Group</div>
-              <div class="section-sub">Subscription exchange performance and health metrics</div>
-            </div>
-            <div style="margin-left:auto;flex-shrink:0;">
-              <div id="subsLastWork" class="lw-badge" style="background:rgba(124,58,237,0.18);color:#c4b5fd;border:1px solid rgba(124,58,237,0.3);">
-                <span class="lw-dot" style="background:#7c3aed;"></span>
-                <span id="subsLastWorkTxt">No activity yet</span>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Stats: 4 top cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Subscribers Got</div>
-            <div id="subsTotal" class="text-3xl font-black text-purple-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">total earned</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Channels Subscribed</div>
-            <div id="subsDone" class="text-3xl font-black text-green-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">tasks completed</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Unsubscribed By You</div>
-            <div id="subsUnsubByYou" class="text-3xl font-black text-orange-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">you unsubscribed</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending (You → Others)</div>
-            <div id="subsPendOut" class="text-3xl font-black text-yellow-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">awaiting approval</div>
-          </div>
-        </div>
+ <!-- Group Analytics Tabs -->
+   <!-- Group Analytics Tabs -->
+     <!-- Group Analytics Tabs -->
+<!-- Group Analytics Tabs -->
+  <div id="groupsTabSection" class="mb-10">
+    <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-2 mb-6" id="groupTabs"></div>
+    <div id="tabContent" class="space-y-8"></div>
+  </div>
 
-        <div class="grid md:grid-cols-2 gap-5">
-          <!-- Health ring -->
-          <div class="card p-6">
-            <div class="text-sm font-bold mb-4">Subscriber Health</div>
-            <div class="flex items-center gap-6 flex-wrap">
-              <div class="ring-wrap">
-                <svg width="110" height="110" viewBox="0 0 110 110">
-                  <circle cx="55" cy="55" r="44" fill="none" stroke="#1a1d28" stroke-width="12"/>
-                  <circle id="subsRingGained" cx="55" cy="55" r="44" fill="none"
-                    stroke="#7c3aed" stroke-width="12"
-                    stroke-dasharray="276.5" stroke-dashoffset="276.5"
-                    stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
-                </svg>
-                <div class="ring-center">
-                  <div id="subsRingPct" class="text-lg font-black">0%</div>
-                  <div class="text-xs text-gray-500">net gain</div>
-                </div>
-              </div>
-              <div class="flex-1 flex flex-col gap-3 min-w-0">
-                <div>
-                  <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Gained</span><span id="subsLegGained" class="text-purple-400 font-bold">0</span></div>
-                  <div class="prog-track"><div id="subsProgGained" class="prog-fill" style="background:#7c3aed;width:0%"></div></div>
-                </div>
-                <div>
-                  <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Lost (Unsub by Others)</span><span id="subsLegLost" class="text-red-400 font-bold">0</span></div>
-                  <div class="prog-track"><div id="subsProgLost" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
-                </div>
-                <div>
-                  <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Pending Incoming</span><span id="subsLegPendIn" class="text-yellow-400 font-bold">0</span></div>
-                  <div class="prog-track"><div id="subsProgPendIn" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
+  
 
-          <!-- Limit usage -->
-          <div class="card p-6">
-            <div class="text-sm font-bold mb-4">Subscriber Limit Usage</div>
-            <div class="flex items-end gap-4 mb-4">
-              <div id="subsLimitUsed" class="text-4xl font-black text-purple-400">0</div>
-              <div class="text-gray-500 text-sm pb-1">/ <span id="subsLimitMax">0</span> limit</div>
-            </div>
-            <div class="prog-track" style="height:12px;border-radius:8px;margin-bottom:12px;">
-              <div id="subsLimitBar" class="prog-fill" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);width:0%;height:12px;border-radius:8px;"></div>
-            </div>
-            <div id="subsLimitMsg" class="text-xs text-gray-500 mb-5"></div>
-            <div class="grid grid-cols-2 gap-3">
-              <div style="background:#13161f;border:1px solid #1e2130;border-radius:10px;padding:10px;">
-                <div class="text-xs text-gray-500 mb-1">Unsub'd By Others</div>
-                <div id="subsUnsubByOthers" class="text-xl font-black text-red-400">0</div>
-              </div>
-              <div style="background:#13161f;border:1px solid #1e2130;border-radius:10px;padding:10px;">
-                <div class="text-xs text-gray-500 mb-1">Pending From Others</div>
-                <div id="subsPendIn" class="text-xl font-black text-blue-400">0</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- ════════════════════════════════════════
-           🎬 VIDEO PERFORMANCE
-           Sheet columns:
-           [0]UserCode [1]TotalVideoWatched
-           [2]TotalVideoWatchedPendingFromOthers
-           [3]TotalVideoWatchedPendingByOthers
-           [4]TotalYourVideoWatchingRejects
-           [5]TotalVideoWatchingRejectsOfOthers
-           [6]LasttimeWork
-      ════════════════════════════════════════ -->
-      <div id="videoSection" class="hidden fade-in delay-3 mb-8">
+    
 
-        <!-- Banner image -->
-        <div class="section-banner">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1H8hTVFDUrdgtRMw251AIl7HWqPKqDsJumDQ16LFFxA&s" alt="Video Watch">
-          <div class="section-banner-overlay">
-            <div class="section-icon" style="background:rgba(239,68,68,0.35);">🎬</div>
-            <div>
-              <div class="section-title">Video Watch Group</div>
-              <div class="section-sub">Video watching tasks, completion rate and rejection tracking</div>
-            </div>
-            <div style="margin-left:auto;flex-shrink:0;">
-              <div id="videoLastWork" class="lw-badge" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);">
-                <span class="lw-dot" style="background:#ef4444;"></span>
-                <span id="videoLastWorkTxt">No activity yet</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats: 5 cards (watched, pend in, pend out, your rejects, others rejects) -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-5">
-          <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Videos Watched</div>
-            <div id="videoWatched" class="text-3xl font-black text-red-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">completed</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending From Others</div>
-            <div id="videoPendIn" class="text-3xl font-black text-yellow-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">you need to watch</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending By Others</div>
-            <div id="videoPendOut" class="text-3xl font-black text-blue-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">others watching yours</div>
-          </div>
-          <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Your Rejects</div>
-            <div id="videoYourRejects" class="text-3xl font-black text-red-500">0</div>
-            <div class="text-xs text-gray-500 mt-1">you rejected</div>
-          </div>
-          <div class="stat-card" style="border-color:rgba(249,115,22,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Others' Rejects</div>
-            <div id="videoOthersRejects" class="text-3xl font-black text-orange-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">they rejected yours</div>
-          </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-5">
-          <div class="card p-6">
-            <div class="text-sm font-bold mb-4">Video Task Breakdown</div>
-            <div class="bar-chart w-full mb-3" id="videoBarChart"></div>
-            <div class="flex flex-wrap gap-3 text-xs mt-2">
-              <div class="flex items-center gap-1"><div style="width:10px;height:10px;border-radius:3px;background:#ef4444;"></div><span class="text-gray-400">Watched</span></div>
-              <div class="flex items-center gap-1"><div style="width:10px;height:10px;border-radius:3px;background:#fbbf24;"></div><span class="text-gray-400">Pend. In</span></div>
-              <div class="flex items-center gap-1"><div style="width:10px;height:10px;border-radius:3px;background:#38bdf8;"></div><span class="text-gray-400">Pend. Out</span></div>
-              <div class="flex items-center gap-1"><div style="width:10px;height:10px;border-radius:3px;background:#dc2626;"></div><span class="text-gray-400">Your Rejects</span></div>
-              <div class="flex items-center gap-1"><div style="width:10px;height:10px;border-radius:3px;background:#f97316;"></div><span class="text-gray-400">Others' Rejects</span></div>
-            </div>
-          </div>
-          <div class="card p-6">
-            <div class="text-sm font-bold mb-4">Completion Rate</div>
-            <div class="flex items-center gap-6">
-              <div class="ring-wrap">
-                <svg width="110" height="110" viewBox="0 0 110 110">
-                  <circle cx="55" cy="55" r="44" fill="none" stroke="#1a1d28" stroke-width="12"/>
-                  <circle id="videoRing" cx="55" cy="55" r="44" fill="none"
-                    stroke="#ef4444" stroke-width="12"
-                    stroke-dasharray="276.5" stroke-dashoffset="276.5"
-                    stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
-                </svg>
-                <div class="ring-center">
-                  <div id="videoRingPct" class="text-lg font-black">0%</div>
-                  <div class="text-xs text-gray-500">success</div>
-                </div>
-              </div>
-              <div class="flex-1 text-sm text-gray-400 leading-relaxed">
-                Out of all video tasks,
-                <span id="videoSuccessDesc" class="text-white font-bold"></span> were completed successfully.
-                <div class="mt-3 text-xs text-gray-500">Both your rejects and others' rejects reduce your rate.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ════════════════════════════════════════
-           💬 ENGAGEMENT (LIKE & COMMENT)
-           Sheet columns:
-           [0]UserCode [1]TotalComtLikeDone [2]TotalComtLikeGet
-           [3]TotalComtLikeDeletedByYou [4]TotalComtLikeDeleteByOthers
-           [5]PendingComtLiketoOthers [6]PendingComtLikeFromOthers
-           [7]LasttimeWork
-      ════════════════════════════════════════ -->
-      <div id="engageSection" class="hidden fade-in delay-4 mb-8">
-
-        <!-- Banner image -->
-        <div class="section-banner">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB00m6KlbT6azO_8kQSVDyosY82sbdJnJhzDhJOPkpQg&s=10" alt="Like and Comment">
-          <div class="section-banner-overlay">
-            <div class="section-icon" style="background:rgba(34,197,94,0.3);">💬</div>
-            <div>
-              <div class="section-title">Like &amp; Comment Group</div>
-              <div class="section-sub">Engagement tasks, likes given, comments posted and retention</div>
-            </div>
-            <div style="margin-left:auto;flex-shrink:0;">
-              <div id="engageLastWork" class="lw-badge" style="background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.25);">
-                <span class="lw-dot" style="background:#22c55e;"></span>
-                <span id="engageLastWorkTxt">No activity yet</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats: 3×2 grid = 6 cards -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
-          <div class="stat-card" style="border-color:rgba(34,197,94,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Total Likes/Comments Got</div>
-            <div id="engageTotal" class="text-3xl font-black text-green-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">engagements earned</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Tasks Done By You</div>
-            <div id="engageDone" class="text-3xl font-black text-purple-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">likes / comments given</div>
-          </div>
-          <div class="stat-card" style="border-color:rgba(249,115,22,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Deleted By You</div>
-            <div id="engageDeletedByYou" class="text-3xl font-black text-orange-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">you removed</div>
-          </div>
-          <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Deleted By Others</div>
-            <div id="engageDeletedByOthers" class="text-3xl font-black text-red-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">they removed yours</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending You → Others</div>
-            <div id="engagePendOut" class="text-3xl font-black text-yellow-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">to complete</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending Others → You</div>
-            <div id="engagePendIn" class="text-3xl font-black text-blue-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">incoming</div>
-          </div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-5">
-          <div class="card p-6">
-            <div class="text-sm font-bold mb-5">Engagement Health Score</div>
-            <div class="flex flex-col gap-4">
-              <div>
-                <div class="flex justify-between mb-2 text-xs"><span class="text-gray-400">Engagements Earned</span><span id="engProgGainedLbl" class="text-green-400 font-bold">0</span></div>
-                <div class="prog-track"><div id="engProgGained" class="prog-fill" style="background:linear-gradient(90deg,#22c55e,#86efac);width:0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-2 text-xs"><span class="text-gray-400">Deleted By You</span><span id="engProgDelByYouLbl" class="text-orange-400 font-bold">0</span></div>
-                <div class="prog-track"><div id="engProgDelByYou" class="prog-fill" style="background:#f97316;width:0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-2 text-xs"><span class="text-gray-400">Deleted By Others</span><span id="engProgDelByOthersLbl" class="text-red-400 font-bold">0</span></div>
-                <div class="prog-track"><div id="engProgDelByOthers" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-2 text-xs"><span class="text-gray-400">Pending Outgoing</span><span id="engProgOutLbl" class="text-yellow-400 font-bold">0</span></div>
-                <div class="prog-track"><div id="engProgOut" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between mb-2 text-xs"><span class="text-gray-400">Pending Incoming</span><span id="engProgInLbl" class="text-blue-400 font-bold">0</span></div>
-                <div class="prog-track"><div id="engProgIn" class="prog-fill" style="background:#38bdf8;width:0%"></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="card p-6">
-            <div class="text-sm font-bold mb-4">Net Engagement</div>
-            <div class="flex items-end gap-2 mb-1">
-              <div id="engNetValue" class="text-5xl font-black text-green-400">0</div>
-              <div class="text-gray-500 text-sm pb-2">net score</div>
-            </div>
-            <div class="text-xs text-gray-500 mb-5">Earned minus all deletions</div>
-            <div style="position:relative;display:flex;justify-content:center;align-items:center;">
-              <svg width="130" height="130" viewBox="0 0 130 130">
-                <circle cx="65" cy="65" r="52" fill="none" stroke="#1a1d28" stroke-width="14"/>
-                <circle id="engRing" cx="65" cy="65" r="52" fill="none"
-                  stroke="#22c55e" stroke-width="14"
-                  stroke-dasharray="326.7" stroke-dashoffset="326.7"
-                  stroke-linecap="round"
-                  style="transition:stroke-dashoffset 1.2s ease;transform:rotate(-90deg);transform-origin:65px 65px"/>
-              </svg>
-              <div style="position:absolute;text-align:center;pointer-events:none;">
-                <div id="engRingPct" class="text-xl font-black">0%</div>
-                <div class="text-xs text-gray-500">retention</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ════════════════════════════════════════
-           ⏱ WATCHTIME / PLAYLIST
-           Sheet columns:
-           [0]UserCode [1]TotalPlaylistWatched
-           [2]TotalPlaylistWatchedPendingtoOthers
-           [3]TotalPlaylistWatchedPendingFromOthers
-           [4]TotalPlaylistWatchingCheatingByYou
-           [5]TotalPlaylistWatchingCheatingByOthers
-           [6]LasttimeWork
-      ════════════════════════════════════════ -->
-      <div id="watchtimeSection" class="hidden fade-in delay-5 mb-8">
-
-        <!-- Banner image -->
-        <div class="section-banner">
-          <img src="https://img.magnific.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?semt=ais_hybrid&w=740&q=80" alt="Watch Time">
-          <div class="section-banner-overlay">
-            <div class="section-icon" style="background:rgba(251,191,36,0.3);">⏱</div>
-            <div>
-              <div class="section-title">Watch Time Group</div>
-              <div class="section-sub">Playlist watching tasks, watchtime contributions and cheating flags</div>
-            </div>
-            <div style="margin-left:auto;flex-shrink:0;">
-              <div id="playlistLastWork" class="lw-badge" style="background:rgba(251,191,36,0.12);color:#fde68a;border:1px solid rgba(251,191,36,0.25);">
-                <span class="lw-dot" style="background:#fbbf24;"></span>
-                <span id="playlistLastWorkTxt">No activity yet</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stats: 5 cards (watched, pend out, pend in, cheat by you, cheat by others) -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-5">
-          <div class="stat-card" style="border-color:rgba(251,191,36,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Playlists Watched</div>
-            <div id="playlistWatched" class="text-3xl font-black text-yellow-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">completed</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending You → Others</div>
-            <div id="playlistPendOut" class="text-3xl font-black text-blue-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">you need to watch</div>
-          </div>
-          <div class="stat-card">
-            <div class="text-xs text-gray-500 mb-2">Pending Others → You</div>
-            <div id="playlistPendIn" class="text-3xl font-black text-purple-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">others watching yours</div>
-          </div>
-          <div class="stat-card" style="border-color:rgba(239,68,68,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Cheating By You</div>
-            <div id="playlistCheatByYou" class="text-3xl font-black text-red-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">flagged on your side</div>
-          </div>
-          <div class="stat-card" style="border-color:rgba(249,115,22,0.2);">
-            <div class="text-xs text-gray-500 mb-2">Cheating By Others</div>
-            <div id="playlistCheatByOthers" class="text-3xl font-black text-orange-400">0</div>
-            <div class="text-xs text-gray-500 mt-1">they cheated yours</div>
-          </div>
-        </div>
-
-        <!-- Cheating warning -->
-        <div id="playlistCheatWarning" class="hidden cheat-box mb-5">
-          <span style="font-size:22px;flex-shrink:0;">⚠️</span>
-          <div>
-            <div class="font-bold text-red-400 text-sm mb-1">Cheating Detected on Your Account</div>
-            <div class="text-red-300 text-sm leading-relaxed">You have been flagged for cheating in playlist watching. Repeated violations may result in account suspension. Please ensure you watch playlists fully and honestly.</div>
-          </div>
-        </div>
-
-        <div class="card p-6">
-          <div class="text-sm font-bold mb-5">Playlist Task Breakdown</div>
-          <div class="flex flex-col gap-4">
-            <div>
-              <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Playlists Watched</span><span id="playlistProgWatchedLbl" class="text-yellow-400 font-bold">0</span></div>
-              <div class="prog-track"><div id="playlistProgWatched" class="prog-fill" style="background:#fbbf24;width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Pending Outgoing (you to watch)</span><span id="playlistProgOutLbl" class="text-blue-400 font-bold">0</span></div>
-              <div class="prog-track"><div id="playlistProgOut" class="prog-fill" style="background:#38bdf8;width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Pending Incoming (others watching yours)</span><span id="playlistProgInLbl" class="text-purple-400 font-bold">0</span></div>
-              <div class="prog-track"><div id="playlistProgIn" class="prog-fill" style="background:#a78bfa;width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Cheating By You</span><span id="playlistProgCheatByYouLbl" class="text-red-400 font-bold">0</span></div>
-              <div class="prog-track"><div id="playlistProgCheatByYou" class="prog-fill" style="background:#ef4444;width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between mb-1 text-xs"><span class="text-gray-400">Cheating By Others</span><span id="playlistProgCheatByOthersLbl" class="text-orange-400 font-bold">0</span></div>
-              <div class="prog-track"><div id="playlistProgCheatByOthers" class="prog-fill" style="background:#f97316;width:0%"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </div><!-- /activeContent -->
 
@@ -1058,7 +695,7 @@ body::before{
 'use strict';
 
 /* ── CONFIG ── */
-var API = "https://script.google.com/macros/s/AKfycbw0f9hZ70_oC_Ip6yiatl0b1ntOpwQj5cqtg6LbmE_jHCW03LRkKsMUjBVngQwzW8o7sg/exec";
+var API = "https://script.google.com/macros/s/AKfycbyVCwph1wPUdOi4SKWCCJbqqFscxNyYY2DgOe5NVmvNdreehX2m-Md3yTJumK0FMj-5XA/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
@@ -1180,6 +817,260 @@ function toggleIssueDesc(idx) {
   btn.textContent = isClamped ? "Read more ▾" : "Read less ▴";
 }
 
+
+/* ══════════════════ TAB COMPONENT RENDERERS ══════════════════ */
+
+function renderSubscribersTab(sp) {
+  return `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Subscribers Gained</div>
+            <div id="subsTotal" class="text-2xl font-black mt-1 text-purple-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Channels You Subbed</div>
+            <div id="subsDone" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">You Unsubscribed</div>
+            <div id="subsUnsubByYou" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending Actions Out</div>
+            <div id="subsPendOut" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Unsubbed By Others</div>
+            <div id="subsUnsubByOthers" class="text-2xl font-black mt-1 text-red-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending Requests In</div>
+            <div id="subsPendIn" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          </div>
+        </div>
+        <div class="metric-card p-6 rounded-2xl">
+          <h4 class="font-bold text-sm mb-4 tracking-wide text-gray-300 uppercase">Proportional Status Metrics</h4>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Gained</span><span id="subsLegGained" class="font-bold text-purple-400">0</span></div>
+              <div class="progress-bg"><div id="subsProgGained" class="progress-bar bg-purple-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Lost By Drops</span><span id="subsLegLost" class="font-bold text-red-400">0</span></div>
+              <div class="progress-bg"><div id="subsProgLost" class="progress-bar bg-red-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Inbound</span><span id="subsLegPendIn" class="font-bold text-sky-400">0</span></div>
+              <div class="progress-bg"><div id="subsProgPendIn" class="progress-bar bg-sky-500" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="metric-card p-6 rounded-2xl flex flex-col items-center justify-center text-center relative min-h-[260px]">
+          <div class="chart-container"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="subsRingGained" class="prog stroke-purple-500" cx="50" cy="50" r="44" style="stroke-dasharray:276.46; stroke-dashoffset:276.46;"/></svg><div id="subsRingPct" class="chart-center font-black text-2xl text-white">0%</div></div>
+          <div class="mt-4 font-bold text-sm text-gray-200">Retention Effectiveness</div>
+          <p class="text-xs text-gray-400 mt-1 max-w-[200px] leading-relaxed">Percentage of valid non-dropped subscriptions out of overall interactions.</p>
+        </div>
+        <div class="metric-card p-5 rounded-2xl border border-purple-500/10">
+          <div class="flex justify-between text-xs text-gray-400 mb-2"><span>Earning Threshold Limit</span><span class="font-bold text-gray-200"><span id="subsLimitUsed">0</span> / <span id="subsLimitMax">0</span></span></div>
+          <div class="progress-bg h-2 mb-2"><div id="subsLimitBar" class="progress-bar bg-gradient-to-r from-purple-500 to-indigo-500" style="width:0%"></div></div>
+          <div id="subsLimitMsg" class="text-[11px] text-gray-400 leading-normal">0% of your subscriber limit used.</div>
+          <div class="border-t border-gray-800/60 mt-3 pt-3 flex items-center justify-between"><span id="subsLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-purple-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderVideoTab(vp) {
+  return `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Total Watched</div>
+            <div id="videoWatched" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending From Others</div>
+            <div id="videoPendIn" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending By You</div>
+            <div id="videoPendOut" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Your Rejections</div>
+            <div id="videoYourRejects" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl col-span-2 sm:col-span-1">
+            <div class="text-xs text-gray-400">Others Rejections</div>
+            <div id="videoOthersRejects" class="text-2xl font-black mt-1 text-orange-500">0</div>
+          </div>
+        </div>
+        <div class="metric-card p-6 rounded-2xl">
+          <h4 class="font-bold text-sm mb-6 tracking-wide text-gray-300 uppercase">Task Volume Weights</h4>
+          <div class="flex items-end justify-between px-4 h-24" id="videoBarChart"></div>
+          <div class="flex justify-between text-[10px] text-gray-500 mt-3 px-1"><span>Watched</span><span>Pend In</span><span>Pend Out</span><span>Your Rej</span><span>Oth Rej</span></div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="metric-card p-6 rounded-2xl flex flex-col items-center justify-center text-center relative min-h-[260px]">
+          <div class="chart-container"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="videoRing" class="prog stroke-sky-400" cx="50" cy="50" r="44" style="stroke-dasharray:276.46; stroke-dashoffset:276.46;"/></svg><div id="videoRingPct" class="chart-center font-black text-2xl text-white">0%</div></div>
+          <div class="mt-4 font-bold text-sm text-gray-200">Success Factor</div>
+          <div id="videoSuccessDesc" class="text-xs text-sky-400 font-semibold mt-0.5">0 videos</div>
+        </div>
+        <div class="metric-card p-5 rounded-2xl border border-sky-500/10 flex flex-col justify-between">
+          <div class="text-xs text-gray-400 leading-normal">Watch tasks increase video visibility parameters organically across networks.</div>
+          <div class="border-t border-gray-800/60 mt-4 pt-3 flex items-center justify-between"><span id="videoLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-sky-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPlaylistTab(pp) {
+  return `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Playlists Completed</div>
+            <div id="playlistWatched" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending Outbound</div>
+            <div id="playlistPendOut" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending Inbound</div>
+            <div id="playlistPendIn" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Cheating Stripped (You)</div>
+            <div id="playlistCheatByYou" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl col-span-2 sm:col-span-1">
+            <div class="text-xs text-gray-400">Cheating Flagged (Others)</div>
+            <div id="playlistCheatByOthers" class="text-2xl font-black mt-1 text-orange-400">0</div>
+          </div>
+        </div>
+        <div class="metric-card p-6 rounded-2xl">
+          <h4 class="font-bold text-sm mb-4 tracking-wide text-gray-300 uppercase">Distribution Ratios</h4>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Completed Watchlists</span><span id="playlistProgWatchedLbl" class="font-bold text-amber-400">0</span></div>
+              <div class="progress-bg"><div id="playlistProgWatched" class="progress-bar bg-amber-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Validation</span><span id="playlistProgOutLbl" class="font-bold text-emerald-400">0</span></div>
+              <div class="progress-bg"><div id="playlistProgOut" class="progress-bar bg-emerald-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Awaiting Inbound Performance</span><span id="playlistProgInLbl" class="font-bold text-sky-400">0</span></div>
+              <div class="progress-bg"><div id="playlistProgIn" class="progress-bar bg-sky-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Cheating Disqualifications By You</span><span id="playlistProgCheatByYouLbl" class="font-bold text-rose-500">0</span></div>
+              <div class="progress-bg"><div id="playlistProgCheatByYou" class="progress-bar bg-rose-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Cheating Disqualifications By Others</span><span id="playlistProgCheatByOthersLbl" class="font-bold text-orange-500">0</span></div>
+              <div class="progress-bg"><div id="playlistProgCheatByOthers" class="progress-bar bg-orange-500" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div id="playlistCheatWarning" class="metric-card p-5 rounded-2xl border border-rose-500/20 bg-rose-950/10 hidden">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">⚠️</span>
+            <div>
+              <h5 class="text-xs font-bold text-rose-400 uppercase tracking-wider">Integrity Alert</h5>
+              <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">System logs detect skipped entries in past assignments. Continual discrepancies can flag user profile for permanent platform exclusion.</p>
+            </div>
+          </div>
+        </div>
+        <div class="metric-card p-5 rounded-2xl border border-amber-500/10 flex flex-col justify-between">
+          <div class="text-xs text-gray-400 leading-normal">High volume watch-time tasks help clear algorithms requirements for monetization channels faster.</div>
+          <div class="border-t border-gray-800/60 mt-4 pt-3 flex items-center justify-between"><span id="playlistLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-amber-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderEngagementTab(ep) {
+  return `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Interactions Received</div>
+            <div id="engageTotal" class="text-2xl font-black mt-1 text-teal-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Interactions Given</div>
+            <div id="engageDone" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Removed By You</div>
+            <div id="engageDeletedByYou" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Removed By Others</div>
+            <div id="engageDeletedByOthers" class="text-2xl font-black mt-1 text-red-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending Outbound</div>
+            <div id="engagePendOut" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          </div>
+          <div class="stat-box p-4 rounded-xl">
+            <div class="text-xs text-gray-400">Pending Inbound</div>
+            <div id="engagePendIn" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          </div>
+        </div>
+        <div class="metric-card p-6 rounded-2xl">
+          <h4 class="font-bold text-sm mb-4 tracking-wide text-gray-300 uppercase">Interaction Balance</h4>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Gained Items</span><span id="engProgGainedLbl" class="font-bold text-teal-400">0</span></div>
+              <div class="progress-bg"><div id="engProgGained" class="progress-bar bg-teal-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Revoked Actions (You)</span><span id="engProgDelByYouLbl" class="font-bold text-rose-500">0</span></div>
+              <div class="progress-bg"><div id="engProgDelByYou" class="progress-bar bg-rose-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Revoked Actions (Others)</span><span id="engProgDelByOthersLbl" class="font-bold text-red-500">0</span></div>
+              <div class="progress-bg"><div id="engProgDelByOthers" class="progress-bar bg-red-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Outbound Allocation</span><span id="engProgOutLbl" class="font-bold text-amber-400">0</span></div>
+              <div class="progress-bg"><div id="engProgOut" class="progress-bar bg-amber-500" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Inbound Intake</span><span id="engProgInLbl" class="font-bold text-sky-400">0</span></div>
+              <div class="progress-bg"><div id="engProgIn" class="progress-bar bg-sky-500" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="metric-card p-6 rounded-2xl flex flex-col items-center justify-center text-center relative min-h-[260px]">
+          <div class="chart-container"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="engRing" class="prog stroke-teal-400" cx="50" cy="50" r="44" style="stroke-dasharray:276.46; stroke-dashoffset:276.46;"/></svg><div id="engRingPct" class="chart-center font-black text-2xl text-white">0%</div></div>
+          <div class="mt-4 font-bold text-sm text-gray-200">Net Survival Rate</div>
+          <div class="text-xs text-teal-400 font-semibold mt-0.5"><span id="engNetValue">0</span> active links</div>
+        </div>
+        <div class="metric-card p-5 rounded-2xl border border-teal-500/10 flex flex-col justify-between">
+          <div class="text-xs text-gray-400 leading-normal">Organic feedback loop metrics (likes and comments combined) optimize community indexing visibility.</div>
+          <div class="border-t border-gray-800/60 mt-4 pt-3 flex items-center justify-between"><span id="engageLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-teal-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        </div>
+      </div>
+    </div>`;
+}  
+
+/* ══════════════════ RENDER ══════════════════ */
 /* ══════════════════ RENDER ══════════════════ */
 function renderDashboard(data) {
   var m  = data.member               || {};
@@ -1187,7 +1078,8 @@ function renderDashboard(data) {
   var vp = data.videoPerformance     || {};
   var ep = data.engagementPerformance|| {};
   var pp = data.playlistPerformance  || {};
-
+  
+  renderExtensionStatus(m.extensionReady);
   renderIssues(data.issues || []);
 
   if (m.status) localStorage.setItem("status", m.status);
@@ -1209,21 +1101,23 @@ function renderDashboard(data) {
   setText("infoChannels", data.promotionalAccountsCount || 0);
 
   var statusEl = document.getElementById("infoStatus");
-  statusEl.textContent = m.status || "—";
-  statusEl.className = "font-bold text-sm";
-  var sl = (m.status || "").toLowerCase();
-  if (sl === "active")  statusEl.classList.add("status-active");
-  if (sl === "blocked") statusEl.classList.add("status-blocked");
-  if (sl === "pending") statusEl.classList.add("status-pending");
+  if (statusEl) {
+    statusEl.textContent = m.status || "—";
+    statusEl.className = "font-bold text-sm";
+    var sl = (m.status || "").toLowerCase();
+    if (sl === "active")  statusEl.classList.add("status-active");
+    if (sl === "blocked") statusEl.classList.add("status-blocked");
+    if (sl === "pending") statusEl.classList.add("status-pending");
+  }
   show("memberInfoRow");
 
-    /* ── BLOCKED ── */
+  /* ── BLOCKED ── */
   if (isBlocked) {
     show("blockedBanner"); hide("memberInfoRow");
     if (m.blockedReason && m.blockedReason.trim()) {
       setText("blockedReasonText", m.blockedReason.trim());
       var rb = document.getElementById("blockedReasonBox");
-      rb.classList.remove("hidden"); rb.style.display = "flex";
+      if (rb) { rb.classList.remove("hidden"); rb.style.display = "flex"; }
     }
     ["lnkDashboard","lnkChannels","lnkGroups","lnkHowTo","lnkExtension",
      "mLnkDashboard","mLnkChannels","mLnkGroups","mLnkHowTo","mLnkExtension","ddProfile"]
@@ -1231,12 +1125,12 @@ function renderDashboard(data) {
       var el = document.getElementById(id);
       if (el){ el.classList.add("nav-disabled"); el.removeAttribute("href"); }
     });
-    document.getElementById("activeContent").style.display = "none";
+    var ac = document.getElementById("activeContent");
+    if (ac) ac.style.display = "none";
     hide("loadingState"); show("dashContent");
     return;
   }
 
-  /* ── INCOMPLETE ── */
   /* ── GROUPS (task cards) ── */
   var groupDefs = [
     { key:"inSubscribersWork",    label:"Subscribers Group",    emoji:"👥", color:"#b3a1f5", bg:"rgba(139,124,246,0.13)", border:"rgba(139,124,246,0.32)", desc:"Exchange subscriptions with other members and grow your channel." },
@@ -1248,33 +1142,43 @@ function renderDashboard(data) {
   var activeGroups = groupDefs.filter(function(g){ return m[g.key] === "Yes"; });
 
   if (activeGroups.length > 0) {
-    document.getElementById("groupTaskCards").innerHTML = activeGroups.map(function(g){
-      return '<div class="group-task-card" style="background:' + g.bg + ';border-color:' + g.border + ';">'
-        + '<div class="flex items-center gap-4 flex-1 min-w-0">'
-        +   '<div style="width:52px;height:52px;border-radius:14px;background:' + g.bg + ';border:1px solid ' + g.border + ';display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">' + g.emoji + '</div>'
-        +   '<div class="min-w-0">'
-        +     '<div class="font-bold text-base" style="color:' + g.color + ';">' + g.label + '</div>'
-        +     '<div class="text-xs text-gray-400 mt-0.5 leading-relaxed">' + g.desc + '</div>'
-        +   '</div>'
-        + '</div>'
-        + '<a href="subscriberstask.html" class="start-task-btn" style="background:' + g.bg + ';border:1px solid ' + g.border + ';color:' + g.color + ';">▶ Start Task</a>'
-        + '</div>';
-    }).join("");
+    var cardsEl = document.getElementById("groupTaskCards");
+    if (cardsEl) {
+      cardsEl.innerHTML = activeGroups.map(function(g){
+        return '<div class="group-task-card" style="background:' + g.bg + ';border-color:' + g.border + ';">'
+          + '<div class="flex items-center gap-4 flex-1 min-w-0">'
+          +   '<div style="width:52px;height:52px;border-radius:14px;background:' + g.bg + ';border:1px solid ' + g.border + ';display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">' + g.emoji + '</div>'
+          +   '<div class="min-w-0">'
+          +     '<div class="font-bold text-base" style="color:' + g.color + ';">' + g.label + '</div>'
+          +     '<div class="text-xs text-gray-400 mt-0.5 leading-relaxed">' + g.desc + '</div>'
+          +   '</div>'
+          + '</div>'
+          + '<a href="subscriberstask.html" class="start-task-btn" style="background:' + g.bg + ';border:1px solid ' + g.border + ';color:' + g.color + ';">▶ Start Task</a>'
+          + '</div>';
+      }).join("");
+    }
     show("groupsSection");
   } else {
     show("noGroupsMsg");
   }
 
-  /* ── SUBSCRIBERS ── */
-  if (m.inSubscribersWork === "Yes") {
+  // Generate the responsive functional tabs now that global structures are ready
+  renderGroupTabs(m, sp, vp, ep, pp); 
+
+  hide("loadingState"); 
+  show("dashContent");
+}
+
+// Global updater function passed safely to individual tabs
+function initTabStats(type, sp, vp, ep, pp) {
+  if (type === "subs") {
     var gained      = +(sp.totalSubscribersGet        || 0);
     var lostByOth   = +(sp.totalUnsubscribeByOthers   || 0);
     var pendIn      = +(sp.pendingSubscribeFromOthers  || 0);
     var unsubByYou  = +(sp.totalUnsubscribeByYou       || 0);
     var total       = Math.max(gained + lostByOth + pendIn, 1);
     var netPct      = Math.round((gained / total) * 100);
-    var limitPct    = sp.subscribersLimit > 0
-      ? Math.min(Math.round((gained / sp.subscribersLimit) * 100), 100) : 0;
+    var limitPct    = sp.subscribersLimit > 0 ? Math.min(Math.round((gained / sp.subscribersLimit) * 100), 100) : 0;
 
     setText("subsTotal",         fmt(gained));
     setText("subsDone",          fmt(sp.totalSubscribeChannels));
@@ -1289,9 +1193,7 @@ function renderDashboard(data) {
     setText("subsLegGained",     fmt(gained));
     setText("subsLegLost",       fmt(lostByOth));
     setText("subsLegPendIn",     fmt(pendIn));
-    setText("subsLimitMsg",      sp.limitReached === "Yes"
-      ? "⚠️ Subscriber limit reached — you cannot earn more until it's raised."
-      : limitPct + "% of your subscriber limit used.");
+    setText("subsLimitMsg",      sp.limitReached === "Yes" ? "⚠️ Subscriber limit reached — you cannot earn more until it's raised." : limitPct + "% of your subscriber limit used.");
 
     after(200, function(){
       setRing("subsRingGained", netPct, 276.5);
@@ -1300,11 +1202,9 @@ function renderDashboard(data) {
       setProg("subsProgPendIn", Math.round((pendIn    / total) * 100));
       setProg("subsLimitBar",   limitPct);
     });
-    show("subsSection");
   }
-
-  /* ── VIDEO ── */
-  if (m.inVideoTaskWork === "Yes") {
+  
+  if (type === "video") {
     var vw         = +(vp.totalVideoWatched                       || 0);
     var vpf        = +(vp.totalVideoWatchedPendingFromOthers      || 0);
     var vpb        = +(vp.totalVideoWatchedPendingByOthers        || 0);
@@ -1330,17 +1230,17 @@ function renderDashboard(data) {
       { val:vOthRej,  color:"#f97316" }
     ];
     var maxBar = Math.max.apply(null, bars.map(function(b){ return b.val; })) || 1;
-    document.getElementById("videoBarChart").innerHTML = bars.map(function(b){
-      var h = Math.max(Math.round((b.val / maxBar) * 76), 4);
-      return '<div class="bar" style="height:' + h + 'px;background:' + b.color + ';" data-val="' + b.val + '"></div>';
-    }).join("");
-
+    var chartEl = document.getElementById("videoBarChart");
+    if (chartEl) {
+      chartEl.innerHTML = bars.map(function(b){
+        var h = Math.max(Math.round((b.val / maxBar) * 76), 4);
+        return '<div class="bar" style="height:' + h + 'px;background:' + b.color + ';" data-val="' + b.val + '"></div>';
+      }).join("");
+    }
     after(200, function(){ setRing("videoRing", vSucc, 276.5); });
-    show("videoSection");
   }
 
-  /* ── ENGAGEMENT ── */
-  if (m.inLikeAndCommentWork === "Yes") {
+  if (type === "engage") {
     var edone      = +(ep.totalCommentLikeDone          || 0);
     var eg         = +(ep.totalCommentLikeGet           || 0);
     var edByYou    = +(ep.totalCommentLikeDeletedByYou  || 0);
@@ -1374,11 +1274,9 @@ function renderDashboard(data) {
       setProg("engProgIn",          Math.round((epi      / etot) * 100));
       setRing("engRing", eret, 326.7);
     });
-    show("engageSection");
   }
 
-  /* ── PLAYLIST / WATCHTIME ── */
-  if (m.inWatchtimeWork === "Yes") {
+  if (type === "playlist") {
     var pw         = +(pp.totalPlaylistWatched                        || 0);
     var ppo        = +(pp.totalPlaylistWatchedPendingToOthers         || 0);
     var ppi        = +(pp.totalPlaylistWatchedPendingFromOthers       || 0);
@@ -1407,12 +1305,8 @@ function renderDashboard(data) {
       setProg("playlistProgCheatByYou",     Math.round((pCheatYou / ptot) * 100));
       setProg("playlistProgCheatByOthers",  Math.round((pCheatOth / ptot) * 100));
     });
-    show("watchtimeSection");
   }
-
-  hide("loadingState"); show("dashContent");
 }
-
 /* ══════════════════ CHART HELPERS ══════════════════ */
 function setRing(id, pct, circ) {
   var el = document.getElementById(id);
@@ -1539,6 +1433,98 @@ function toggleTasksMenu(e){
             menu.classList.remove("show");
         }
     },{once:true});
+}
+
+// ================== EXTENSION STATUS ==================
+function renderExtensionStatus(isReady) {
+  const card = document.getElementById('extensionStatus');
+  const icon = document.getElementById('extIcon');
+  const title = document.getElementById('extTitle');
+  const badge = document.getElementById('extBadge');
+  const desc = document.getElementById('extDesc');
+  const cta = document.getElementById('extCTA');
+
+  if (isReady === "Yes") {
+    card.classList.add('extension-ready');
+    card.classList.remove('extension-not-ready');
+    icon.textContent = '✅';
+    title.textContent = 'Extension Ready';
+    badge.textContent = 'ACTIVE';
+    badge.className = 'px-4 py-1 rounded-full text-sm font-bold bg-emerald-500/20 text-emerald-400';
+    desc.textContent = 'You are ready to earn using the Exsub Browser Extension.';
+    cta.style.display = 'none';
+  } else {
+    card.classList.remove('extension-ready');
+    card.classList.add('extension-not-ready');
+    icon.textContent = '🔌';
+    title.textContent = 'Extension Not Setup';
+    badge.textContent = 'PENDING';
+    badge.className = 'px-4 py-1 rounded-full text-sm font-bold bg-amber-500/20 text-amber-400';
+    desc.textContent = 'Setup the extension to start earning automatically.';
+    cta.style.display = 'block';
+  }
+}
+
+// ================== GROUP TABS ==================
+
+  // ================== GROUP TABS WITH FULL ANALYTICS ==================
+// ================== GROUP TABS WITH FULL ANALYTICS ==================
+function renderGroupTabs(m, sp, vp, ep, pp) {
+  const configs = [
+    { 
+      key: "inSubscribersWork", 
+      id: "subs",
+      label: "Subscribers", 
+      emoji: "👥", 
+      render: () => renderSubscribersTab(sp)
+    },
+    { 
+      key: "inVideoTaskWork", 
+      id: "video",
+      label: "Video Watch", 
+      emoji: "🎬", 
+      render: () => renderVideoTab(vp)
+    },
+    { 
+      key: "inWatchtimeWork", 
+      id: "playlist",
+      label: "Playlist", 
+      emoji: "⏱", 
+      render: () => renderPlaylistTab(pp)
+    },
+    { 
+      key: "inLikeAndCommentWork", 
+      id: "engage",
+      label: "Engagement", 
+      emoji: "💬", 
+      render: () => renderEngagementTab(ep)
+    }
+  ];
+
+  const activeGroups = configs.filter(g => m[g.key] === "Yes");
+  if (activeGroups.length === 0) return;
+
+  const tabsContainer = document.getElementById('groupTabs');
+  if (!tabsContainer) return;
+  tabsContainer.innerHTML = '';
+
+  activeGroups.forEach((group, i) => {
+    const btn = document.createElement('button');
+    btn.className = `tab-btn flex items-center gap-2 ${i === 0 ? 'active' : ''}`;
+    btn.innerHTML = `${group.emoji} ${group.label}`;
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tabContent').innerHTML = group.render();
+      initTabStats(group.id, sp, vp, ep, pp);
+    };
+    tabsContainer.appendChild(btn);
+  });
+
+  // Load first active tab element into view and run metric calculations safely
+  document.getElementById('tabContent').innerHTML = activeGroups[0].render();
+  initTabStats(activeGroups[0].id, sp, vp, ep, pp);
+  show("groupsTabSection");
 }
 </script>
 </body>
