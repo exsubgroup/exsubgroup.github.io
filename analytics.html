@@ -416,7 +416,19 @@ body::before{
 
     <div class="hidden md:flex items-center gap-8 text-[13px]">
       <a id="lnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
-      <a id="lnkChannels"  href="channels.html"       class="text-white hover:text-purple-300 transition">Channels</a>
+     <div class="task-dropdown-wrap">
+  <a id="lnkChannels" href="#" onclick="toggleChannelsMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
+    Channels
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </a>
+  <div id="channelsDropdown" class="task-dropdown">
+    <a href="channels.html?view=promotional">📢 Promotional Channel</a>
+    <a href="channels.html?view=longvideos">🎬 Long Videos</a>
+    <a href="channels.html?view=shortvideos">⚡ Short Videos</a>
+    <a href="channels.html?view=playlist">⏱ Playlist</a>
+    <a href="channels.html?view=working">✅ Working Channel</a>
+  </div>
+</div>
       <a id="lnkGroups"    href="groups.html"         class="text-white hover:text-purple-300 transition">Groups</a>
 
       <div class="task-dropdown-wrap">
@@ -483,7 +495,14 @@ body::before{
     class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
     <div class="flex flex-col gap-4 text-sm">
       <a id="mLnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
-      <a id="mLnkChannels"  href="channels.html"       class="text-white">Channels</a>
+      <div class="flex flex-col gap-2">
+  <span class="text-white font-semibold">Channels</span>
+  <a href="channels.html?view=promotional" class="mobile-task-link">📢 Promotional Channel</a>
+  <a href="channels.html?view=longvideos" class="mobile-task-link">🎬 Long Videos</a>
+  <a href="channels.html?view=shortvideos" class="mobile-task-link">⚡ Short Videos</a>
+  <a href="channels.html?view=playlist" class="mobile-task-link">⏱ Playlist</a>
+  <a href="channels.html?view=working" class="mobile-task-link">✅ Working Channel</a>
+</div>
       <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
 
       <div class="flex flex-col gap-2">
@@ -692,6 +711,18 @@ body::before{
 
 <!-- ══════════════════ JAVASCRIPT ══════════════════ -->
 <script>
+
+function toggleChannelsMenu(e){
+    e.preventDefault();
+    const menu=document.getElementById("channelsDropdown");
+    menu.classList.toggle("show");
+    document.addEventListener("click",function(event){
+        if(!event.target.closest(".task-dropdown-wrap")){
+            menu.classList.remove("show");
+        }
+    },{once:true});
+}
+
 'use strict';
 
 /* ── CONFIG ── */

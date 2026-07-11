@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Channel Videos — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+:root {
+    --bg: #050508;
+    --card: #12141c;
+    --border: #1e212c;
+    --purple: #7c3aed;
+    --muted: #8a8f9e;
+}
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: white; overflow-x: hidden; }
+body::before {
+    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at bottom, rgba(124,58,237,0.08) 0%, transparent 50%);
+    z-index: 0; pointer-events: none;
+}
+.gradient-text {
+    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.glass-nav {
+    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); color: white;
+}
+.card { background: linear-gradient(180deg, #151821 0%, #101219 100%); border: 1px solid var(--border); box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset; }
+.video-card { background: linear-gradient(180deg, #151821 0%, #101219 100%); border: 1px solid var(--border); transition: 0.25s ease; }
+.video-card:hover { transform: translateY(-3px); border-color: rgba(124,58,237,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.35); }
+.text-muted { color: var(--muted); }
+.btn-purple { background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; transition: 0.25s; cursor: pointer; }
+.btn-purple:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); transition: 0.25s; cursor: pointer; }
+.btn-outline:hover:not(:disabled) { border-color: var(--purple); color: white; }
+.btn-red { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; border: none; transition: 0.25s; cursor: pointer; }
+.btn-red:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 500; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.skeleton { background: linear-gradient(90deg, #1a1d27 25%, #21253a 50%, #1a1d27 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px; }
+@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+#toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: linear-gradient(180deg, #8b5cf6, #7c3aed); color: white; padding: 13px 22px;
+    border-radius: 14px; font-size: 13px; font-weight: 500; transform: translateY(80px); opacity: 0;
+    transition: 0.3s; pointer-events: none; max-width: 320px;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: linear-gradient(180deg, #ef4444, #b91c1c); }
+#pageLoader {
+    position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease;
+}
+#pageLoader.hidden { opacity: 0; pointer-events: none; }
+#pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(124,58,237,0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.thumb-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px 14px 0 0; overflow: hidden; background: #1a1d27; }
+.thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.duration-chip { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+.sync-box { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2); border-radius: 18px; }
+.spin-icon { animation: spin 0.8s linear infinite; }
+.swal2-popup { background: #151821 !important; border: 1px solid #1e212c !important; color: white !important; border-radius: 24px !important; font-family: 'Inter', sans-serif !important; }
+.swal2-title { color: white !important; } .swal2-html-container { color: #8a8f9e !important; }
+.swal2-confirm { background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%) !important; border-radius: 14px !important; font-weight: 600 !important; }
+.swal2-cancel { background: transparent !important; border: 1px solid #1e212c !important; color: #8a8f9e !important; border-radius: 14px !important; }
+#mobileBottomNav { display:none; position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:999;
+  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%); border: 1px solid rgba(255,255,255,0.06);
+  color: white; border-radius:999px; padding:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); }
+#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
+#mobileBottomNav a{ width:52px; height:52px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#fff; text-decoration:none; }
+#mobileBottomNav a svg{ width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+#mobileBottomNav a.active{ background:#fff; color:#0f1118; } #mobileBottomNav a.active svg{ stroke:#0f1118; }
+@media (max-width: 767px){ #mobileBottomNav{ display:block; } body{ padding-bottom: 90px; } }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div id="pageLoader">
+    <div class="spin"></div>
+    <p style="color: var(--muted); font-size: 14px;">Loading your channel videos…</p>
+</div>
+
+<div id="toast"></div>
+
+<!-- NAVBAR -->
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
+        <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
+        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+            <img src="images/logo.svg" class="w-7 h-7 hidden md:block" onerror="this.style.display='none'">
+            <span class="font-semibold text-[17px]">Exsub Group</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-[13px]">
+            <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
+            <a href="channels.html" class="text-white hover:text-purple-300 transition">Channels</a>
+            <a href="channelvideos.html" class="text-purple-300 font-semibold">My Videos</a>
+            <a href="videotask.html" class="text-white hover:text-purple-300 transition">Tasks</a>
+            <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
+            <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="relative">
+                <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
+                    <img id="navAvatar" src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+                    <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
+                </button>
+                <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
+                    <div class="p-4 border-b border-[#232632]">
+                        <div class="flex items-center gap-3">
+                            <img id="dropAvatar" src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+                            <div>
+                                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
+                                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-2">
+                        <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
+                        <a href="channels.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Channel</a>
+                        <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
+                        <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
+        <div class="flex flex-col gap-4 text-sm">
+            <a href="analytics.html" class="text-white">Dashboard</a>
+            <a href="channels.html" class="text-white">Channels</a>
+            <a href="channelvideos.html" class="text-purple-300 font-semibold">My Videos</a>
+            <a href="videotask.html" class="text-white">Tasks</a>
+            <a href="howtowork.html" class="text-white">How To Work</a>
+            <a href="support.html" class="text-white">Contact &amp; Support</a>
+            <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<div class="max-w-[1200px] mx-auto px-4 pt-28 pb-12 relative z-10">
+
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
+            🎬 Promotional Channel Videos
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black gradient-text">My Channel Videos</h1>
+        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
+            Pull long-form uploads straight from your YouTube channel. Shorts are detected and filtered out
+            automatically, so only proper videos ever get matched for watch-exchange tasks.
+        </p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-6">
+
+    <!-- SIDEBAR -->
+    <aside class="w-full lg:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
+        <div class="card rounded-3xl p-5">
+            <div class="flex items-center gap-4">
+                <img id="sideAvatar" src="https://i.pravatar.cc/100" class="w-14 h-14 rounded-2xl border-2 border-purple-500 object-cover flex-shrink-0">
+                <div class="min-w-0">
+                    <h2 id="sideName" class="font-semibold text-base truncate">—</h2>
+                    <p id="sideCode" class="text-muted text-sm">—</p>
+                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium">Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Channel</h2>
+            <div id="channelBox" class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-[#1a1d27] flex-shrink-0"></div>
+                <div class="min-w-0">
+                    <p id="chanName" class="text-sm font-semibold truncate">—</p>
+                    <p id="chanHandle" class="text-xs text-muted truncate">—</p>
+                </div>
+            </div>
+            <a id="chanLinkBtn" href="#" class="hidden mt-3 btn-outline w-full py-2 rounded-xl text-xs font-medium text-center block no-underline">Open Channel →</a>
+        </div>
+
+        <div class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-4">Video Stats</h2>
+            <div class="space-y-3 text-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-muted">Long-Form Videos</span>
+                    <span id="st-total" class="font-bold text-purple-400">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-muted">Ready</span>
+                    <span id="st-ready" class="font-bold text-green-400">—</span>
+                </div>
+                <div class="border-t border-[#232632] pt-3 flex items-center justify-between">
+                    <span class="text-muted">Last Synced</span>
+                    <span id="st-lastsync" class="font-bold text-xs">—</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="flex-1 min-w-0">
+
+        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-800/60" style="background:linear-gradient(180deg,#1c0a0a,#120606);">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
+                <div>
+                    <h3 class="font-semibold text-red-300 mb-1">Account Restricted</h3>
+                    <p id="blockedMsg" class="text-red-400/80 text-sm leading-relaxed">Your account cannot sync channel videos right now.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="noChannelBanner" class="hidden mb-6 rounded-3xl p-5 border border-yellow-700/50" style="background:linear-gradient(180deg,#1c1608,#120d04);">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-yellow-500/20 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                <div>
+                    <h3 class="font-semibold text-yellow-300 mb-1">No Channel Registered</h3>
+                    <p class="text-yellow-400/80 text-sm leading-relaxed">Add your YouTube channel on the <a href="channels.html" class="underline">Channels</a> page before syncing videos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SYNC PANEL -->
+        <div class="sync-box p-5 mb-7">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-semibold text-sm text-purple-200 mb-1">🔄 Sync From YouTube</h3>
+                    <p class="text-xs text-muted leading-relaxed max-w-[520px]">
+                        Fetches your latest uploads and keeps only long-form videos. A video is treated as a
+                        <strong class="text-white">Short</strong> (and skipped) if either: its duration is
+                        180 seconds or less, <em>or</em> YouTube itself serves it as a Short.
+                    </p>
+                </div>
+                <button id="syncBtn" onclick="doSyncVideos()" class="btn-purple px-6 py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 flex-shrink-0">
+                    <svg id="syncIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"></path>
+                    </svg>
+                    Sync Now
+                </button>
+            </div>
+            <div id="syncResultBox" class="hidden mt-4 rounded-2xl p-4 text-sm"></div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <h2 class="text-xl font-bold">Long-Form Videos</h2>
+            <input id="searchInput" type="text" placeholder="Search your videos…" oninput="applyFilter()"
+                class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[46px] outline-none w-full sm:w-[240px] text-sm focus:border-purple-500 transition">
+        </div>
+
+        <!-- VIDEO GRID -->
+        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="skeleton h-[260px]"></div>
+            <div class="skeleton h-[260px]"></div>
+            <div class="skeleton h-[260px]"></div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">🎬</div>
+            <h3 class="text-xl font-semibold mb-2">No Long-Form Videos Yet</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                Click <strong class="text-white">Sync Now</strong> above to pull your channel's uploads.<br>
+                Shorts are filtered out automatically — only long-form videos will appear here.
+            </p>
+            <button onclick="doSyncVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">🔄 Sync Now</button>
+        </div>
+
+    </main>
+    </div>
+</div>
+
+<footer class="relative z-10 border-t border-[#1e212c]">
+    <div class="max-w-[1400px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <img src="images/logo.svg" class="w-6 h-6" onerror="this.style.display='none'">
+                <span class="font-semibold">Exsub Group</span>
+            </div>
+            <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
+        </div>
+        <div class="flex gap-6 text-sm text-muted">
+            <a href="#" class="hover:text-white transition">Privacy</a>
+            <a href="#" class="hover:text-white transition">Terms</a>
+            <a href="support.html" class="hover:text-white transition">Support</a>
+        </div>
+    </div>
+</footer>
+
+<nav id="mobileBottomNav">
+  <div class="bn-inner">
+    <a href="subscriberstask.html" title="Subscribers Task">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/><path d="M10 9l5 3-5 3V9z"/></svg>
+    </a>
+    <a href="channelvideos.html" class="active" title="My Videos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+    </a>
+    <a href="videotask.html" title="Video Task">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 16 14"></polyline></svg>
+    </a>
+  </div>
+</nav>
+
+<script>
+/* AUTH */
+function logoutUser() { localStorage.clear(); window.location.href = "signin.html"; }
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
+if (!savedUsername || !savedPassword) window.location.href = "signin.html";
+
+document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
+document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
+document.addEventListener("click", () => {
+    document.getElementById("mobileMenu").classList.add("hidden");
+    document.getElementById("profileDropdown").classList.add("hidden");
+});
+document.getElementById("navUserName").textContent      = savedUsername || "Member";
+document.getElementById("dropdownUserName").textContent = savedUsername || "Member";
+document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCode || "0000");
+</script>
+
+<script>
+/* ────────────────────────────────────────
+   CONFIG — replace with your Channel Videos Web App URL
+   (deploy channelvideos_google_script.gs as its own Web App)
+──────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbFK7Shu_ELv2j5f-9NsTn1y0AN8FoTvun21oNhbGqPyjfO0AEuuvwx3pisclrEEO_/exec';
+const USER_CODE  = savedUserCode;
+
+let member       = null;
+let channel      = null;
+let allVideos    = [];
+let filtered     = [];
+let isBlocked    = false;
+
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    try {
+        const res  = await fetch(`${SCRIPT_URL}?action=getMemberChannelVideos&userCode=${USER_CODE}`);
+        const data = await res.json();
+        hideLoader();
+
+        if (!data.success) {
+            showToast(data.message || 'Error loading data', true);
+            clearGrid();
+            return;
+        }
+
+        member  = data.member;
+        channel = data.channel;
+        allVideos = data.videos || [];
+
+        renderMember();
+        renderChannel();
+        checkBlock();
+        calcStats();
+        applyFilter();
+    } catch (e) {
+        hideLoader();
+        clearGrid();
+        showToast('Could not connect to server.', true);
+    }
+}
+
+function hideLoader() {
+    const loader = document.getElementById('pageLoader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.style.display = 'none', 400);
+}
+
+function renderMember() {
+    if (!member) return;
+    const pic  = member.ProfilePicture || 'https://i.pravatar.cc/100';
+    const name = member.UserName || savedUsername || '—';
+    const code = member.UserCode || savedUserCode || '—';
+
+    document.getElementById('navAvatar').src               = pic;
+    document.getElementById('navUserName').textContent     = name;
+    document.getElementById('dropAvatar').src               = pic;
+    document.getElementById('dropdownUserName').textContent = name;
+    document.getElementById('dropdownUserCode').textContent = `ID #${code}`;
+    document.getElementById('sideAvatar').src               = pic;
+    document.getElementById('sideName').textContent         = name;
+    document.getElementById('sideCode').textContent         = `ID #${code}`;
+
+    const st   = member.Status || 'Active';
+    const stEl = document.getElementById('sideStatus');
+    stEl.textContent = st;
+    if      (st === 'Active')    stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium';
+    else if (st === 'Suspended') stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-400 font-medium';
+    else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 font-medium';
+}
+
+function renderChannel() {
+    const noChanBanner = document.getElementById('noChannelBanner');
+    if (!channel) {
+        noChanBanner.classList.remove('hidden');
+        document.getElementById('syncBtn').disabled = true;
+        document.getElementById('syncBtn').classList.add('opacity-40', 'cursor-not-allowed');
+        return;
+    }
+    document.getElementById('chanName').textContent   = channel.ChannelName || 'Unnamed Channel';
+    document.getElementById('chanHandle').textContent = channel.ChannelHandle || '';
+    const box = document.getElementById('channelBox');
+    if (channel.ChannelImage) {
+        box.querySelector('div').outerHTML = `<img src="${channel.ChannelImage}" class="w-11 h-11 rounded-full object-cover flex-shrink-0" onerror="this.style.display='none'">`;
+    }
+    if (channel.ChannelLink) {
+        const btn = document.getElementById('chanLinkBtn');
+        btn.href = channel.ChannelLink;
+        btn.classList.remove('hidden');
+    }
+}
+
+function checkBlock() {
+    if (!member) return;
+    const suspended = member.ViolationFlag === 'Suspended';
+    if (suspended) {
+        isBlocked = true;
+        document.getElementById('blockedBanner').classList.remove('hidden');
+        document.getElementById('blockedMsg').textContent =
+            `Your account is suspended until ${member.SuspendedUntil || 'further notice'}.`;
+        const btn = document.getElementById('syncBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-40', 'cursor-not-allowed');
+    }
+}
+
+function calcStats() {
+    document.getElementById('st-total').textContent = allVideos.length;
+    document.getElementById('st-ready').textContent = allVideos.filter(v => v.VideoStatus === 'Ready').length;
+    document.getElementById('st-lastsync').textContent = channel && channel.LastTimeVideoUpdated
+        ? fmtDate(channel.LastTimeVideoUpdated) : 'Never';
+}
+
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+           ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+
+function clearGrid() {
+    document.getElementById('videoGrid').innerHTML = '';
+    document.getElementById('emptyState').classList.remove('hidden');
+}
+
+/* SEARCH + RENDER */
+function applyFilter() {
+    const q = (document.getElementById('searchInput').value || '').toLowerCase();
+    filtered = allVideos.filter(v => !q || (v.VideoTitle || '').toLowerCase().includes(q));
+    renderGrid();
+}
+
+function renderGrid() {
+    const grid  = document.getElementById('videoGrid');
+    const empty = document.getElementById('emptyState');
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+    grid.innerHTML = filtered.map(videoCard).join('');
+}
+
+const STATUS_CFG = {
+    'Ready':  { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Ready'  },
+    'Active': { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Active' },
+};
+
+function videoCard(v) {
+    const sc = STATUS_CFG[v.VideoStatus] || { bg: 'bg-gray-500/15', text: 'text-gray-400', dot: 'bg-gray-400', label: v.VideoStatus || '—' };
+    const safeUrl = (v.VideoUrl || '').replace(/'/g, "\\'");
+    return `
+    <div class="video-card rounded-3xl overflow-hidden">
+        <div class="thumb-wrap">
+            ${v.VideoThumbnail
+                ? `<img src="${v.VideoThumbnail}" alt="" onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-full flex items-center justify-center text-3xl&quot;>🎬</div>'">`
+                : `<div class="w-full h-full flex items-center justify-center text-3xl">🎬</div>`}
+            <span class="duration-chip">${v.VideoDurationText || (v.VideoMinutes + ' min')}</span>
+        </div>
+        <div class="p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
+            </div>
+            <h3 class="text-sm font-semibold leading-snug mb-3" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.VideoTitle || 'Untitled Video'}</h3>
+            <div class="flex gap-2">
+                <a href="${v.VideoUrl}" target="_blank" rel="noopener"
+                    class="btn-outline flex-1 py-2 rounded-xl text-xs font-medium text-center no-underline">▶ Watch</a>
+                <button onclick="confirmDeleteVideo('${safeUrl}')"
+                    class="btn-red px-3 py-2 rounded-xl text-xs font-medium">🗑</button>
+            </div>
+        </div>
+    </div>`;
+}
+
+/* SYNC */
+async function doSyncVideos() {
+    if (isBlocked) { showToast('Your account is restricted.', true); return; }
+
+    const btn  = document.getElementById('syncBtn');
+    const icon = document.getElementById('syncIcon');
+    btn.disabled = true;
+    icon.classList.add('spin-icon');
+    btn.querySelector('svg').nextSibling ? null : null;
+    const originalLabel = btn.innerHTML;
+    btn.innerHTML = `<svg class="spin-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10" opacity="0.25"></circle><path d="M12 2a10 10 0 019.9 8.7"></path></svg> Syncing…`;
+
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'syncChannelVideos', userCode: USER_CODE })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('syncResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            box.textContent = `✅ ${data.message} (Scanned: ${data.totalScanned}, Added: ${data.addedCount}, Updated: ${data.updatedCount})`;
+            box.className   = 'mt-4 rounded-2xl p-4 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            allVideos = data.videos || allVideos;
+            calcStats();
+            applyFilter();
+            showToast(`Synced! ${data.shortsSkippedCount} Short(s) filtered out.`);
+        } else {
+            box.textContent = data.message || 'Sync failed.';
+            box.className   = 'mt-4 rounded-2xl p-4 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+        }
+    } catch (e) {
+        showToast('Connection error while syncing.', true);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = originalLabel;
+}
+
+/* DELETE */
+function confirmDeleteVideo(videoUrl) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Remove this video?',
+        text: 'It will no longer be used for watch-exchange matching.',
+        showCancelButton: true,
+        confirmButtonText: 'Remove',
+        cancelButtonText: 'Cancel',
+        background: '#151821',
+        color: '#fff'
+    }).then(result => {
+        if (result.isConfirmed) doDeleteVideo(videoUrl);
+    });
+}
+
+async function doDeleteVideo(videoUrl) {
+    try {
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'deleteVideo', userCode: USER_CODE, videoUrl })
+        });
+        const data = await res.json();
+        if (data.success) {
+            allVideos = allVideos.filter(v => v.VideoUrl !== videoUrl);
+            calcStats();
+            applyFilter();
+            showToast('Video removed.');
+        } else {
+            showToast(data.message || 'Could not remove video.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+}
+</script>
+
+</body>
+</html>
