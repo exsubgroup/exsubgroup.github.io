@@ -11,57 +11,23 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
 <style>
 
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; }
-}
+/* ══════════════════════════════════════════════════════════════
+   VIDEO TASKS — LIGHT THEME (matches Analytics page)
+   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
+   ══════════════════════════════════════════════════════════════ */
 
 :root {
-    --bg: #050508;
-    --card: #12141c;
-    --card2: #161922;
-    --border: #1e212c;
-    --purple: #7c3aed;
-    --purple2: #8b5cf6;
-    --muted: #8a8f9e;
+    --bg: #F5F4EB;
+    --ink: #211F1F;
+    --mint: #ACD1C0;
+    --sand: #DBD4B7;
+    --muted: #6b7280;
+    --border: #211F1F;
 }
 
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,115 +35,104 @@ html { scroll-behavior: smooth; }
 
 body {
     background: var(--bg);
-    color: white;
+    color: var(--ink);
     overflow-x: hidden;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background:
-        radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at bottom, rgba(124,58,237,0.08) 0%, transparent 50%);
-    z-index: 0;
-    pointer-events: none;
-}
+body::before { content: none; }
 
 .gradient-text {
-    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.glass-nav {
-    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.06);
-    color: white;
+    color: #211F1F;
+    -webkit-text-fill-color: #211F1F;
 }
 
 .card {
-    background: linear-gradient(180deg, #151821 0%, #101219 100%);
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
 }
 
 .task-card {
-    background: linear-gradient(180deg, #151821 0%, #101219 100%);
-    border: 1px solid var(--border);
-    transition: 0.3s ease;
+    background: #ffffff;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.2s ease;
 }
 .task-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(124,58,237,0.5);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #211F1F;
 }
 
 /* Cheating task card — red highlight + pinned look */
 .task-card.cheating-card {
-    border-color: rgba(239,68,68,0.45);
-    background: linear-gradient(180deg, #1c0e0e 0%, #110808 100%);
+    border-color: #dc2626;
+    background: #fff5f5;
 }
 .task-card.cheating-card:hover {
-    border-color: rgba(239,68,68,0.75);
-    box-shadow: 0 20px 40px rgba(239,68,68,0.12);
+    box-shadow: 6px 6px 0px 0px #dc2626;
 }
 
 .text-muted { color: var(--muted); }
 
 .btn-purple {
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
-    border: none;
-    transition: 0.25s;
+    background: #211F1F;
+    color: #ffffff;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
 }
-.btn-purple:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
-.btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
+.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
 
 .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    transition: 0.25s;
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    color: #211F1F;
+    border-radius: 14px;
+    transition: 0.15s;
     cursor: pointer;
 }
-.btn-outline:hover:not(:disabled) { border-color: var(--purple); color: white; }
+.btn-outline:hover:not(:disabled) { background: var(--sand); }
 .btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .btn-teal {
-    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
-    color: white;
-    border: none;
-    transition: 0.25s;
+    background: var(--mint);
+    color: #211F1F;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
 }
-.btn-teal:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
 
 .btn-red {
-    background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+    background: #ef4444;
     color: white;
-    border: none;
-    transition: 0.25s;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
 }
-.btn-red:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
 
 .filter-tab {
-    background: #161922;
-    border: 1px solid #232632;
-    transition: 0.25s;
-    color: var(--muted);
+    background: #ffffff;
+    border: 2px solid #211F1F;
+    transition: 0.2s;
+    color: var(--ink);
     cursor: pointer;
     white-space: nowrap;
 }
-.filter-tab:hover { border-color: var(--purple); color: white; }
+.filter-tab:hover { background: var(--sand); }
 .filter-tab.active {
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-    border-color: transparent;
+    background: #211F1F;
+    border-color: #211F1F;
     color: white;
 }
 .filter-tab:disabled {
@@ -185,14 +140,10 @@ body::before {
     cursor: not-allowed;
     transform: none;
 }
-.filter-tab:disabled:hover {
-    border-color: #232632;
-    color: var(--muted);
-}
+.filter-tab:disabled:hover { background: #ffffff; }
 .filter-tab.active:disabled {
     opacity: 1;
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-    border-color: transparent;
+    background: #211F1F;
     color: white;
 }
 
@@ -203,7 +154,8 @@ body::before {
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 999px;
-    font-weight: 500;
+    font-weight: 700;
+    border: 1px solid rgba(33,31,31,0.15);
 }
 
 .dot {
@@ -214,30 +166,30 @@ body::before {
 }
 
 .instructions-box {
-    background: rgba(124,58,237,0.08);
-    border: 1px solid rgba(124,58,237,0.2);
+    background: var(--mint);
+    border: 2px solid #211F1F;
     border-radius: 14px;
     padding: 10px 14px;
 }
 
 .issue-box {
-    background: rgba(239,68,68,0.06);
-    border: 1px solid rgba(239,68,68,0.18);
+    background: #fee2e2;
+    border: 2px solid rgba(220,38,38,0.4);
     border-radius: 14px;
     padding: 10px 14px;
 }
 
 .punishment-box {
-    background: rgba(239,68,68,0.12);
-    border: 1px solid rgba(239,68,68,0.4);
+    background: #fee2e2;
+    border: 2px solid #dc2626;
     border-radius: 14px;
     padding: 10px 14px;
 }
 
 .modal-bg {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(6px);
+    background: rgba(33,31,31,0.55);
+    backdrop-filter: blur(4px);
     z-index: 200;
     display: flex;
     align-items: center;
@@ -250,13 +202,14 @@ body::before {
 .modal-bg.open { opacity: 1; visibility: visible; }
 
 .modal-box {
-    background: linear-gradient(180deg, #151821 0%, #101219 100%);
-    border: 1px solid var(--border);
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
     border-radius: 24px;
+    box-shadow: 6px 6px 0px 0px #211F1F;
     padding: 28px;
     width: 100%;
     max-width: 500px;
-    transform: scale(0.95);
+    transform: scale(0.96);
     transition: 0.25s;
     max-height: 90vh;
     overflow-y: auto;
@@ -264,7 +217,7 @@ body::before {
 .modal-bg.open .modal-box { transform: scale(1); }
 
 .skeleton {
-    background: linear-gradient(90deg, #1a1d27 25%, #21253a 50%, #1a1d27 75%);
+    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: 24px;
@@ -274,44 +227,31 @@ body::before {
 #toast {
     position: fixed; bottom: 24px; right: 24px;
     z-index: 999;
-    background: linear-gradient(180deg, #8b5cf6, #7c3aed);
+    background: #211F1F;
     color: white;
     padding: 13px 22px;
     border-radius: 14px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     transform: translateY(80px);
     opacity: 0;
     transition: 0.3s;
     pointer-events: none;
     max-width: 320px;
+    border: 2px solid #211F1F;
 }
 #toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: linear-gradient(180deg, #ef4444, #b91c1c); }
+#toast.error { background: #b91c1c; }
 
-#pageLoader {
-    position: fixed; inset: 0;
-    background: var(--bg);
-    z-index: 300;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    transition: opacity 0.4s ease;
+.spinner{
+  width:40px; height:40px; border-radius:50%;
+  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
+  animation:spin 0.7s linear infinite;
 }
-#pageLoader.hidden { opacity: 0; pointer-events: none; }
-#pageLoader .spin {
-    width: 44px; height: 44px;
-    border: 3px solid rgba(124,58,237,0.2);
-    border-top-color: #8b5cf6;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin{ to{ transform:rotate(360deg); } }
 
-input, textarea { color: white; }
-input::placeholder, textarea::placeholder { color: #7d8395; }
+input, textarea { color: #211F1F; }
+input::placeholder, textarea::placeholder { color: #8a8578; }
 
 .step-item {
     display: flex;
@@ -325,9 +265,9 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: rgba(124,58,237,0.25);
-    border: 1px solid rgba(124,58,237,0.5);
-    color: #a78bfa;
+    background: var(--mint);
+    border: 1px solid #211F1F;
+    color: #211F1F;
     font-size: 10px;
     font-weight: 700;
     display: flex;
@@ -344,7 +284,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 10px;
     padding: 2px 8px;
     border-radius: 999px;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .issue-pill {
@@ -354,15 +294,15 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 11px;
     padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(239,68,68,0.3);
-    background: rgba(239,68,68,0.06);
-    color: #f87171;
+    border: 1px solid rgba(220,38,38,0.4);
+    background: #fee2e2;
+    color: #b91c1c;
     cursor: pointer;
     transition: 0.2s;
     white-space: nowrap;
 }
-.issue-pill:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.6); }
-.issue-pill.selected { background: rgba(239,68,68,0.25); border-color: #ef4444; color: #fca5a5; }
+.issue-pill:hover { background: #fecaca; }
+.issue-pill.selected { background: #dc2626; border-color: #dc2626; color: #fff; }
 
 .pref-pill {
     display: inline-flex;
@@ -371,15 +311,15 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 11px;
     padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(124,58,237,0.3);
-    background: rgba(124,58,237,0.06);
-    color: #c4b5fd;
+    border: 1px solid rgba(33,31,31,0.3);
+    background: #ffffff;
+    color: #211F1F;
     cursor: pointer;
     transition: 0.2s;
     white-space: nowrap;
 }
-.pref-pill:hover { background: rgba(124,58,237,0.18); border-color: rgba(124,58,237,0.6); }
-.pref-pill.selected { background: rgba(124,58,237,0.28); border-color: #7c3aed; color: #ede9fe; }
+.pref-pill:hover { background: var(--sand); }
+.pref-pill.selected { background: #211F1F; border-color: #211F1F; color: #fff; }
 .pref-pill:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .match-badge {
@@ -389,10 +329,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 10.5px;
     padding: 3px 9px;
     border-radius: 999px;
-    background: rgba(124,58,237,0.12);
-    border: 1px solid rgba(124,58,237,0.3);
-    color: #c4b5fd;
-    font-weight: 500;
+    background: var(--mint);
+    border: 1px solid #211F1F;
+    color: #211F1F;
+    font-weight: 600;
     white-space: nowrap;
 }
 
@@ -403,10 +343,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 10.5px;
     padding: 3px 9px;
     border-radius: 999px;
-    background: rgba(20,184,166,0.12);
-    border: 1px solid rgba(20,184,166,0.3);
-    color: #5eead4;
-    font-weight: 500;
+    background: var(--sand);
+    border: 1px solid #211F1F;
+    color: #211F1F;
+    font-weight: 600;
     white-space: nowrap;
 }
 
@@ -416,14 +356,14 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     justify-content: center;
     width: 22px; height: 22px;
     border-radius: 6px;
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.25);
+    background: var(--mint);
+    border: 1px solid #211F1F;
     cursor: pointer;
     transition: 0.2s;
     flex-shrink: 0;
     vertical-align: middle;
 }
-.copy-handle-btn:hover { background: rgba(124,58,237,0.35); }
+.copy-handle-btn:hover { background: var(--sand); }
 .copy-handle-btn svg { width: 11px; height: 11px; }
 
 .video-thumb-wrap {
@@ -433,30 +373,31 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     aspect-ratio: 16/9;
     border-radius: 14px;
     overflow: hidden;
-    background: #1a1d27;
+    background: #e8e5d8;
+    border: 2px solid #211F1F;
     flex-shrink: 0;
 }
 .video-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
 .video-thumb-wrap .play-badge {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.25);
+    background: rgba(33,31,31,0.15);
 }
 .video-thumb-wrap .play-badge svg { width: 34px; height: 34px; }
 .duration-chip {
     position: absolute;
     bottom: 6px; right: 6px;
-    background: rgba(0,0,0,0.8);
+    background: #211F1F;
     color: white;
     font-size: 10.5px;
-    font-weight: 600;
+    font-weight: 700;
     padding: 2px 7px;
     border-radius: 6px;
 }
 
 .settings-input {
-    background: #1a1d27;
-    border: 1px solid #232632;
+    background: #ffffff;
+    border: 2px solid #211F1F;
     border-radius: 12px;
     padding: 10px 12px;
     font-size: 13px;
@@ -464,235 +405,103 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     outline: none;
     transition: 0.2s;
 }
-.settings-input:focus { border-color: var(--purple); }
+.settings-input:focus { box-shadow: 3px 3px 0px 0px #211F1F; }
 
-/* SweetAlert2 dark theme overrides */
+/* SweetAlert2 light theme overrides */
 .swal2-popup {
-    background: #151821 !important;
-    border: 1px solid #1e212c !important;
-    color: white !important;
+    background: #F5F4EB !important;
+    border: 2px solid #211F1F !important;
+    color: #211F1F !important;
     border-radius: 24px !important;
     font-family: 'Inter', sans-serif !important;
+    box-shadow: 6px 6px 0px 0px #211F1F !important;
 }
-.swal2-title { color: white !important; font-family: 'Inter', sans-serif !important; }
-.swal2-html-container { color: #8a8f9e !important; font-family: 'Inter', sans-serif !important; }
+.swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
+.swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
 .swal2-confirm {
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%) !important;
+    background: #211F1F !important;
     border-radius: 14px !important;
     font-family: 'Inter', sans-serif !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
 .swal2-cancel {
     background: transparent !important;
-    border: 1px solid #1e212c !important;
-    color: #8a8f9e !important;
+    border: 2px solid #211F1F !important;
+    color: #211F1F !important;
     border-radius: 14px !important;
     font-family: 'Inter', sans-serif !important;
 }
 .swal2-deny {
-    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%) !important;
+    background: var(--mint) !important;
+    color: #211F1F !important;
     border-radius: 14px !important;
     font-family: 'Inter', sans-serif !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
+
+/* status colors on light cards */
+.status-notwork  { background:#fef3c7; color:#92400e; }
+.status-pending   { background:#ffedd5; color:#9a3412; }
+.status-watched    { background:#dcfce7; color:#166534; }
+.status-cheating   { background:#fee2e2; color:#991b1b; }
+.status-rejected   { background:#e5e7eb; color:#374151; }
 </style>
 <base target="_blank">
 </head>
 <body>
 
-<!-- FULL-PAGE LOADER -->
-<div id="pageLoader">
-    <div class="spin"></div>
-    <p style="color: var(--muted); font-size: 14px;">Loading your tasks…</p>
-</div>
-
 <!-- TOAST -->
 <div id="toast"></div>
 
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-    <button id="mobileMenuBtn"
-      class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a id="lnkDashboard" href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-
-      <!-- CHANNELS DROPDOWN -->
-      <div class="task-dropdown-wrap">
-        <a id="lnkChannels" href="#" onclick="toggleChannelsMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Channels
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="channelsDropdown" class="task-dropdown">
-          <a href="channels.html?view=promotional">📢 Promotional Channel</a>
-          <a href="channels.html?view=longvideos">🎬 Long Videos</a>
-          <a href="channels.html?view=shortvideos">⚡ Short Videos</a>
-          <a href="channels.html?view=playlist">⏱ Playlist</a>
-          <a href="channels.html?view=working">✅ Working Channel</a>
-        </div>
-      </div>
-
-      <a id="lnkGroups" href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
-
-      <!-- TASKS DROPDOWN -->
-      <div class="task-dropdown-wrap">
-        <a href="#" onclick="toggleTasksMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Tasks
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="tasksDropdown" class="task-dropdown">
-          <a href="subscriberstask.html">📺 Subscriber Tasks</a>
-          <a href="videotask.html">🎬 Video Tasks</a>
-          <a href="playlisttask.html">⏱ Playlist Tasks</a>
-          <a href="likeandcommentstasks.html">💬 Like &amp; Comment Tasks</a>
-        </div>
-      </div>
-
-      <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn"
-          class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown"
-          class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
-      </div>
-
-      <div class="relative">
-        <button id="profileBtn"
-          class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown"
-          class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p  id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-2">
-            <a id="ddProfile" href="profile.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-            <a href="support.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-            <button onclick="logoutUser()"
-              class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu"
-    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a id="mLnkDashboard" href="analytics.html" class="text-white">Dashboard</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Channels</span>
-        <a href="channels.html?view=promotional" class="mobile-task-link">📢 Promotional Channel</a>
-        <a href="channels.html?view=longvideos" class="mobile-task-link">🎬 Long Videos</a>
-        <a href="channels.html?view=shortvideos" class="mobile-task-link">⚡ Short Videos</a>
-        <a href="channels.html?view=playlist" class="mobile-task-link">⏱ Playlist</a>
-        <a href="channels.html?view=working" class="mobile-task-link">✅ Working Channel</a>
-      </div>
-
-      <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Tasks</span>
-        <a href="subscriberstask.html" class="mobile-task-link">📺 Subscriber Tasks</a>
-        <a href="videotask.html" class="mobile-task-link">🎬 Video Tasks</a>
-        <a href="playlisttask.html" class="mobile-task-link">⏱ Playlist Tasks</a>
-        <a href="likeandcommentstasks.html" class="mobile-task-link">💬 Like &amp; Comment Tasks</a>
-      </div>
-
-      <a id="mLnkHowTo"     href="howtowork.html"      class="text-white">How To Work</a>
-      <a id="mLnkExtension" href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a id="mLnkSupport"   href="support.html"        class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
-
-<!-- ══════════════════ MOBILE BOTTOM NAV ══════════════════ -->
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-    <a href="subscriberstask.html" data-page="subscriberstask.html" title="Subscribers Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-        <path d="M10 9l5 3-5 3V9z"/>
-      </svg>
-    </a>
-    <a href="videotask.html" data-page="videotask.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-    <a href="playlisttask.html" data-page="playlisttask.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"></circle>
-        <polyline points="12 7 12 12 16 14"></polyline>
-      </svg>
-    </a>
-    <a href="likeandcommentstasks.html" data-page="likeandcommentstasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-  </div>
-</nav>
-
+<!-- NAVBAR -->
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
 
 <!-- MAIN -->
-<div class="max-w-[1200px] mx-auto px-4 pt-28 pb-12 relative z-10">
+ <main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
 
-    <!-- PAGE HEADER -->
-    <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-            🎬 Video Watch-Time Exchange
+  <!-- LOADING -->
+  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
+    <div class="spinner"></div>
+    <div class="text-gray-500 text-sm">Loading your video tasks…</div>
+  </div>
+
+  <!-- ERROR -->
+  <div id="errorState" class="hidden text-center py-32">
+    <div class="text-5xl mb-4">⚠️</div>
+    <div class="text-xl font-bold mb-2">Could not load data</div>
+    <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
+    <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashContent" class="hidden">
+
+    <!-- ── HEADER ── -->
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-icon">🎬</span>
+          <span class="nb-card-title">Video Watch-Time Exchange</span>
         </div>
-        <h1 class="text-4xl md:text-5xl font-black gradient-text">Video Watch Tasks</h1>
-        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
-            Watch a matched member's video for the required time and they'll watch yours back.
-            Videos are paired by similar length so the exchange stays fair for everyone.
-        </p>
+        <a href="subscribersproof.html" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">🎥</span>
+          <span class="nb-card-title">View Proofs</span>
+        </a>
+      </div>
+      <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Video Watch Tasks</h1>
+      <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 max-w-[700px] leading-6">
+          Watch a matched member's video for the required time and they'll watch yours back.
+          Videos are paired by similar length so the exchange stays fair for everyone.
+      </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
 
     <!-- SIDEBAR -->
-    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
-
-        <!-- PROFILE CARD -->
-        <div class="card rounded-3xl p-5">
-            <div class="flex items-center gap-4">
-                <img id="sideAvatar" src="https://i.pravatar.cc/100"
-                    class="w-14 h-14 rounded-2xl border-2 border-purple-500 object-cover flex-shrink-0">
-                <div class="min-w-0">
-                    <h2 id="sideName" class="font-semibold text-base truncate">—</h2>
-                    <p id="sideCode" class="text-muted text-sm">—</p>
-                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium">Active</span>
-                </div>
-            </div>
-        </div>
+    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
 
         <!-- TASK STATS -->
         <div class="card rounded-3xl p-5">
@@ -715,28 +524,28 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                     <span id="st-cheating" class="font-bold">—</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Rejected</span>
                     <span id="st-rejected" class="font-bold">—</span>
                 </div>
-                <div class="border-t border-[#232632] pt-3 flex items-center justify-between">
+                <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
                     <span class="text-muted">Total Tasks</span>
-                    <span id="st-total" class="font-bold text-purple-400">—</span>
+                    <span id="st-total" class="font-bold text-[#211F1F]">—</span>
                 </div>
             </div>
 
-            <div class="mt-4 pt-4 border-t border-[#232632] space-y-2.5 text-sm">
+            <div class="mt-4 pt-4 border-t-2 border-[#211F1F]/10 space-y-2.5 text-sm">
                 <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Watch Back</span>
-                    <span id="st-awaiting" class="font-bold text-blue-400">—</span>
+                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
-                    <span id="st-both" class="font-bold text-teal-400">—</span>
+                    <span id="st-both" class="font-bold text-teal-600">—</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                    <span id="st-theirpending" class="font-bold text-orange-400">—</span>
+                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
                 </div>
             </div>
         </div>
@@ -745,7 +554,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         <div id="settingsCard" class="card rounded-3xl p-5">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="font-semibold text-base">Watch Settings</h2>
-                <button onclick="openSettingsModal()" class="text-xs text-purple-300 hover:text-purple-200 underline">Edit</button>
+                <button onclick="openSettingsModal()" class="text-xs text-[#211F1F] hover:opacity-70 underline font-semibold">Edit</button>
             </div>
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
@@ -762,12 +571,12 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 </div>
                 <div class="flex justify-between">
                     <span class="text-muted">Pairs Per Run</span>
-                    <span id="set-maxpairs" class="font-bold text-purple-400">—</span>
+                    <span id="set-maxpairs" class="font-bold text-[#211F1F]">—</span>
                 </div>
             </div>
             <p class="text-xs text-muted mt-3 leading-relaxed">
                 📎 Submit your watch proof via the
-                <a href="exsubextension.html" class="text-purple-300 underline hover:text-purple-200">Exsub Extension</a>.
+                <a href="exsubextension.html" class="text-[#211F1F] underline font-semibold">Exsub Extension</a>.
             </p>
         </div>
 
@@ -777,25 +586,25 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <main class="flex-1 min-w-0">
 
         <!-- BLOCKED BANNER -->
-        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-800/60" style="background:linear-gradient(180deg,#1c0a0a,#120606);">
+        <div id="blockedBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626;">
             <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
+                <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
                 <div>
-                    <h3 class="font-semibold text-red-300 mb-1">Group Access Restricted</h3>
-                    <p id="blockedMsg" class="text-red-400/80 text-sm leading-relaxed">Your account has been restricted from the Video Group.</p>
+                    <h3 class="font-semibold text-red-700 mb-1">Group Access Restricted</h3>
+                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Video Group.</p>
                 </div>
             </div>
         </div>
 
         <!-- CHEATING WARNING BANNER -->
-        <div id="cheatBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-600/50" style="background:linear-gradient(180deg,#200a0a,#140606);">
+        <div id="cheatBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626; background:#fff5f5;">
             <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
                 <div class="flex-1">
-                    <h3 class="font-semibold text-red-300 mb-1">You Have Flagged Video Task(s)!</h3>
-                    <p class="text-red-400/80 text-sm leading-relaxed mb-3">
-                        You have <strong id="cheatCount" class="text-red-300">0</strong> task(s) flagged as Cheating (insufficient or invalid watch proof).
-                        You <strong class="text-white">must re-watch and resubmit proof</strong> before you can do any other work.
+                    <h3 class="font-semibold text-red-700 mb-1">You Have Flagged Video Task(s)!</h3>
+                    <p class="text-red-600/80 text-sm leading-relaxed mb-3">
+                        You have <strong id="cheatCount" class="text-red-700">0</strong> task(s) flagged as Cheating (insufficient or invalid watch proof).
+                        You <strong class="text-[#211F1F]">must re-watch and resubmit proof</strong> before you can do any other work.
                         These tasks are pinned at the top.
                     </p>
                     <div class="flex gap-3 flex-wrap">
@@ -815,13 +624,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 <p class="text-muted mt-1 text-sm">Track your video watch exchange tasks below</p>
             </div>
             <div class="flex flex-col sm:flex-row gap-3">
-                <input id="searchInput" type="text" placeholder="Search Task ID or Member…"
-                    oninput="applyFilter()"
-                    class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[48px] outline-none w-full sm:w-[210px] text-sm focus:border-purple-500 transition">
-                <a href="subscribersproof.html"
-                    class="btn-teal px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm no-underline">
-                    🎥 View Proofs
-                </a>
+             
                 <button id="prefsBtn" onclick="openPreferencesModal()"
                     class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
                     🎯 Match Preferences
@@ -838,16 +641,16 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         </div>
 
         <!-- HOW IT WORKS BANNER -->
-        <div class="card rounded-3xl p-5 mb-6 border border-purple-500/15">
-            <h3 class="font-semibold text-sm text-purple-300 mb-3">📋 How Video Tasks Work</h3>
+        <div class="card rounded-3xl p-5 mb-6">
+            <h3 class="font-semibold text-sm text-[#211F1F] mb-3">📋 How Video Tasks Work</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="step-item">
                     <div class="step-num">1</div>
-                    <div>Open the assigned video and <strong class="text-white">watch it fully</strong> — proof is tracked automatically by the Exsub Extension</div>
+                    <div>Open the assigned video and <strong class="text-[#211F1F]">watch it fully</strong> — proof is tracked automatically by the Exsub Extension</div>
                 </div>
                 <div class="step-item">
                     <div class="step-num">2</div>
-                    <div>Watch for at least the <strong class="text-white">required minutes</strong> shown on the task card, without skipping</div>
+                    <div>Watch for at least the <strong class="text-[#211F1F]">required minutes</strong> shown on the task card, without skipping</div>
                 </div>
                 <div class="step-item">
                     <div class="step-num">3</div>
@@ -889,7 +692,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
             <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
             <p class="text-muted text-sm mb-7 leading-relaxed">
                 You don't have any video tasks here yet.<br>
-                Click <strong class="text-white">Create Tasks</strong> to generate new watch-exchange tasks and start growing!
+                Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new watch-exchange tasks and start growing!
             </p>
             <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
         </div>
@@ -902,42 +705,30 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         </div>
 
     </main>
-</div>
-</div>
-
-<!-- FOOTER -->
-<footer class="relative z-10 border-t border-[#1e212c]">
-    <div class="max-w-[1400px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2">
-                <img src="images/logo.svg" class="w-6 h-6" onerror="this.style.display='none'">
-                <span class="font-semibold">Exsub Group</span>
-            </div>
-            <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
-        </div>
-        <div class="flex gap-6 text-sm text-muted">
-            <a href="#" class="hover:text-white transition">Privacy</a>
-            <a href="#" class="hover:text-white transition">Terms</a>
-            <a href="support.html" class="hover:text-white transition">Support</a>
-        </div>
     </div>
-</footer>
+
+  </div><!-- /dashContent -->
+
+</div>
+</main>
+
+
 
 <!-- MATCH PREFERENCES MODAL -->
 <div id="prefsModal" class="modal-bg" onclick="if(event.target===this)closePreferencesModal()">
     <div class="modal-box max-w-[560px]">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">🎯 Match Preferences</h2>
-            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            Tell us what kind of members you're looking for. These preferences are shared across all task groups (Subscribers, Video, Playlist, Engagement). When you create video tasks, members whose channel interests or audience countries overlap with what you pick here are prioritized first (up to <strong class="text-white">5 of each</strong>). This is a soft boost, not a hard filter.
+            Tell us what kind of members you're looking for. These preferences are shared across all task groups (Subscribers, Video, Playlist, Engagement). When you create video tasks, members whose channel interests or audience countries overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter.
         </p>
 
-        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-purple-400">(0/5)</span></label>
+        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-[#211F1F] font-semibold">(0/5)</span></label>
         <div id="prefInterestPills" class="flex flex-wrap gap-2 mb-5"></div>
 
-        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-purple-400">(0/5)</span></label>
+        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-[#211F1F] font-semibold">(0/5)</span></label>
         <div id="prefCountryPills" class="flex flex-wrap gap-2 mb-5"></div>
 
         <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
@@ -954,7 +745,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">⚙️ Watch Settings</h2>
-            <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
             Control which videos you get matched with. Shorter gaps mean fairer, more even trades — but fewer possible matches.
@@ -993,19 +784,19 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Create Video Tasks</h2>
-            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            The system will find members whose video length is close to yours (within your <strong class="text-white">Allowed Gap</strong>) and create <strong class="text-white">paired tasks</strong> automatically — one for you to watch their video, one for them to watch yours. Tasks are only generated when your pending count is below 5.
+            The system will find members whose video length is close to yours (within your <strong class="text-[#211F1F]">Allowed Gap</strong>) and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to watch their video, one for them to watch yours. Tasks are only generated when your pending count is below 5.
         </p>
         <div class="instructions-box mb-5">
-            <p class="text-xs text-purple-200 leading-relaxed">
+            <p class="text-xs text-[#211F1F] leading-relaxed">
                 🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first, then filled by closest video-length match. Adjust your
-                <button onclick="closeCreateModal();openSettingsModal()" class="underline text-purple-300 hover:text-purple-100">Watch Settings</button>
+                <button onclick="closeCreateModal();openSettingsModal()" class="underline font-semibold">Watch Settings</button>
                 to control video length range and gap tolerance.
             </p>
         </div>
-        <div class="bg-[#1a1d27] border border-[#232632] rounded-2xl p-4 mb-5 space-y-3 text-sm">
+        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4 mb-5 space-y-3 text-sm">
             <div class="flex justify-between items-center">
                 <span class="text-muted">Your Pending (Not Started) Tasks</span>
                 <span id="modalPendingCount" class="font-bold text-lg">—</span>
@@ -1028,7 +819,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <div class="modal-box max-w-[540px]">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Task Detail</h2>
-            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
         <div id="detailBody" class="space-y-4"></div>
     </div>
@@ -1038,8 +829,8 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-lg font-bold text-red-300">⚠ Report Issue</h2>
-            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white transition text-lg">✕</button>
+            <h2 class="text-lg font-bold text-red-700">⚠ Report Issue</h2>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
 
         <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
@@ -1056,10 +847,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 
         <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
         <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
-            class="w-full bg-[#1a1d27] border border-[#232632] rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
+            class="w-full bg-white border-2 border-[#211F1F] rounded-2xl px-4 py-3 text-sm outline-none transition resize-none mb-4"></textarea>
 
         <input type="hidden" id="issueTaskId">
-        <div id="issuePillSelected" class="text-xs text-red-400 mb-3 min-h-[16px]"></div>
+        <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
 
         <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
 
@@ -1069,7 +860,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         </div>
     </div>
 </div>
-
+</main>
 <!-- SCRIPTS -->
 <script>
 /* ────────────────────────────────────────
@@ -1088,37 +879,13 @@ if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
 
-/* ────────────────────────────────────────
-   NAVBAR MENUS
-──────────────────────────────────────── */
-document.getElementById("mobileMenuBtn").addEventListener("click", e => {
-    e.stopPropagation();
-    document.getElementById("mobileMenu").classList.toggle("hidden");
-});
-document.getElementById("profileBtn").addEventListener("click", e => {
-    e.stopPropagation();
-    document.getElementById("profileDropdown").classList.toggle("hidden");
-});
-document.getElementById("notifBtn").addEventListener("click", e => {
-    e.stopPropagation();
-    document.getElementById("notifDropdown").classList.toggle("hidden");
-});
-document.addEventListener("click", () => {
-    document.getElementById("mobileMenu").classList.add("hidden");
-    document.getElementById("profileDropdown").classList.add("hidden");
-    document.getElementById("notifDropdown").classList.add("hidden");
-});
-
-document.getElementById("navUserName").textContent      = savedUsername || "Member";
-document.getElementById("dropdownUserName").textContent = savedUsername || "Member";
-document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCode || "0000");
 </script>
 
 <script>
 /* ────────────────────────────────────────
    CONFIG — replace with your Video Tasks Web App URL
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwMKoaPZedKo44GASvOumbx4vkoYCsi41CyP3fqKzNpnspj3alKW_tichxcuSRV09I0jQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE55T3fmnT7YuKJNPubvWubMH58B07iRySmdFQUWmp27VAIBgcQ4r8BEJp0Xq23a2NDg/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -1147,20 +914,37 @@ const MAX_PREF_EACH   = 5;
 const DEFAULT_SETTINGS = { MinVideoMinutes: 2, MaxVideoMinutes: 20, AllowedGapMinutes: 3, MaxPairsPerRun: 10 };
 
 /* ────────────────────────────────────────
+   DOM SHOW/HIDE HELPERS (loading → content gate)
+──────────────────────────────────────── */
+function show(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('hidden');
+}
+function hide(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('hidden');
+}
+
+/* ────────────────────────────────────────
    BOOT
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+    show('loadingState');
+    hide('errorState');
+    hide('dashContent');
+
     try {
         const res  = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
         const data = await res.json();
 
-        hideLoader();
-
         if (!data.success) {
-            showToast(data.message || 'Error loading data', true);
-            clearSkeletons();
+            hide('loadingState');
+            show('errorState');
+            document.getElementById('errorMsg').textContent = data.message || 'Error loading data';
             return;
         }
 
@@ -1178,57 +962,38 @@ async function init() {
 
         loadPreferenceOptions();
 
-        renderMember();
+       
         checkBlock();
         checkCheating();
         calcStats();
         renderSettingsCard();
         enforceTaskPriorityTabs();
-        applyFilter();
-
-        if (allTasks.length === 0) {
-  console.warn("No tasks found for user", USER_CODE);
-  // Optionally show a more helpful message
-}
+applyFilter();
+        hide('loadingState');
+        show('dashContent');
 
     } catch (e) {
-        hideLoader();
-        clearSkeletons();
-        showToast('Could not connect to server.', true);
+        hide('loadingState');
+        show('errorState');
+
+        // Extract the line info from the stack trace if available
+        let errorLocation = 'Unknown location';
+        if (e.stack) {
+            const stackLines = e.stack.split('\n');
+            // The second line usually contains the immediate location of the error
+            errorLocation = stackLines[1] ? stackLines[1].trim() : stackLines[0].trim();
+        } else if (e.lineNumber) {
+            errorLocation = `Line ${e.lineNumber}`;
+        }
+
+        // Display both the error reason and where it happened in the UI
+        document.getElementById('errorMsg').textContent = `Error: ${e.message} (${errorLocation})`;
+        
+        // Keep this in the console for easy clicking during debugging
+        console.error("Initialization failed details:", e);
     }
 }
 
-function hideLoader() {
-    const loader = document.getElementById('pageLoader');
-    loader.classList.add('hidden');
-    setTimeout(() => loader.style.display = 'none', 400);
-}
-
-/* ────────────────────────────────────────
-   RENDER MEMBER
-──────────────────────────────────────── */
-function renderMember() {
-    if (!member) return;
-    const pic  = member.ProfilePicture || 'https://i.pravatar.cc/100';
-    const name = member.UserName  || savedUsername || '—';
-    const code = member.UserCode  || savedUserCode || '—';
-
-    document.getElementById('navAvatar').src               = pic;
-    document.getElementById('navUserName').textContent     = name;
-    document.getElementById('dropAvatar').src               = pic;
-    document.getElementById('dropdownUserName').textContent = name;
-    document.getElementById('dropdownUserCode').textContent = `ID #${code}`;
-    document.getElementById('sideAvatar').src               = pic;
-    document.getElementById('sideName').textContent         = name;
-    document.getElementById('sideCode').textContent         = `ID #${code}`;
-
-    const st   = member.Status || 'Active';
-    const stEl = document.getElementById('sideStatus');
-    stEl.textContent = st;
-    if      (st === 'Active')    stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium';
-    else if (st === 'Suspended') stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-400 font-medium';
-    else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 font-medium';
-}
 
 /* ────────────────────────────────────────
    BLOCK CHECK
@@ -1354,42 +1119,21 @@ function setTab(tab, btn) {
     applyFilter();
 }
 
+// 🟩 ADD THIS MISSING FUNCTION HERE:
 function applyFilter() {
-    enforceTaskPriorityTabs();
-    const q = (document.getElementById('searchInput').value || '').toLowerCase();
-
-    let base = allTasks.filter(t => {
-        if (t.UserCode !== USER_CODE) return false;
-
-        const tabMatch =
-            activeTab === 'All'        ? true :
-            activeTab === 'NotWorkYet' ? t.Status === 'NotWorkYet' :
-            activeTab === 'Pending'    ? t.Status === 'Pending' :
-            activeTab === 'Watched'    ? t.Status === 'Watched' :
-            activeTab === 'Cheating'   ? t.Status === 'Cheating' :
-            activeTab === 'Rejected'   ? t.Status === 'Rejected' :
-            true;
-
-        const searchMatch = !q ||
-            (t.TaskID              || '').toLowerCase().includes(q) ||
-            (t.TargetUserCode      || '').toLowerCase().includes(q) ||
-            (t.VideoTitle          || '').toLowerCase().includes(q) ||
-            (t.TargetChannelName   || '').toLowerCase().includes(q) ||
-            (t.TargetChannelHandle || '').toLowerCase().includes(q);
-
-        return tabMatch && searchMatch;
-    });
-
-    base.sort((a, b) => {
-        const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2, 'Watched': 3, 'Rejected': 4 };
-        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
-    });
-
-    filtered    = base;
-    currentPage = 1;
+    // 1. Get only the tasks belonging to the signed-in user
+    let myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+    
+    // 2. Filter by the active tab category (e.g., Pending, Watched, etc.)
+    if (activeTab && activeTab !== 'All') {
+        filtered = myTasks.filter(t => t.Status === activeTab);
+    } else {
+        filtered = myTasks;
+    }
+    
+    // 3. Send the filtered list to the UI renderer
     renderList();
 }
-
 /* ────────────────────────────────────────
    RENDER LIST
 ──────────────────────────────────────── */
@@ -1438,21 +1182,21 @@ function clearSkeletons() {
    HELPERS
 ──────────────────────────────────────── */
 const STATUS_CFG = {
-    'NotWorkYet': { bg: 'bg-yellow-500/15', text: 'text-yellow-400', dot: 'bg-yellow-400', label: 'Not Started' },
-    'Pending':    { bg: 'bg-orange-500/15', text: 'text-orange-400', dot: 'bg-orange-400', label: 'Pending'     },
-    'Watched':    { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Watched'     },
-    'Cheating':   { bg: 'bg-red-500/15',    text: 'text-red-400',    dot: 'bg-red-400',    label: 'Cheating'    },
-    'Rejected':   { bg: 'bg-gray-500/15',   text: 'text-gray-400',   dot: 'bg-gray-400',   label: 'Rejected'    },
+    'NotWorkYet': { bg: 'status-notwork', text: '', dot: 'bg-yellow-400', label: 'Not Started' },
+    'Pending':    { bg: 'status-pending', text: '', dot: 'bg-orange-400', label: 'Pending'     },
+    'Watched':    { bg: 'status-watched', text: '', dot: 'bg-green-400',  label: 'Watched'     },
+    'Cheating':   { bg: 'status-cheating', text: '', dot: 'bg-red-400',    label: 'Cheating'    },
+    'Rejected':   { bg: 'status-rejected', text: '', dot: 'bg-gray-400',   label: 'Rejected'    },
 };
 
 function pairedBadge(t) {
     if (t.Status !== 'Watched') return '';
     if (t.PairedStatus === 'Watched') {
-        return `<span class="paired-badge bg-teal-500/15 text-teal-400">✓ They Watched Back</span>`;
+        return `<span class="paired-badge status-watched">✓ They Watched Back</span>`;
     } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
-        return `<span class="paired-badge bg-orange-500/15 text-orange-400">⏳ Their Watch: Pending</span>`;
+        return `<span class="paired-badge status-pending">⏳ Their Watch: Pending</span>`;
     } else {
-        return `<span class="paired-badge bg-blue-500/15 text-blue-400">⏳ Awaiting Their Watch</span>`;
+        return `<span class="paired-badge" style="background:#dbeafe;color:#1e40af;">⏳ Awaiting Their Watch</span>`;
     }
 }
 
@@ -1530,7 +1274,7 @@ async function copyVideoTitle(taskId) {
    TASK CARD
 ──────────────────────────────────────── */
 function taskCard(t) {
-    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', dot: 'bg-gray-400', label: t.Status };
+    const sc = STATUS_CFG[t.Status] || { bg: 'status-rejected', text: '', dot: 'bg-gray-400', label: t.Status };
 
     const isCheating = t.Status === 'Cheating';
     const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isBlocked && !hasCheating;
@@ -1538,7 +1282,7 @@ function taskCard(t) {
     const videoUrl   = t.VideoUrl || '#';
     const videoTitle = t.VideoTitle || 'Video';
     const thumb      = t.VideoThumbnail || '';
-    // FIXED: Show seconds when video is < 60 seconds, otherwise show minutes
+    // Show seconds when video is < 60 seconds, otherwise show minutes
     let displayDuration = '—';
     let durationUnit = 'min';
     if (t.VideoSeconds !== undefined && t.VideoSeconds !== null && t.VideoSeconds !== '') {
@@ -1563,14 +1307,14 @@ function taskCard(t) {
 
     const issueText = t.Issue || '';
     const issueRow = issueText
-        ? `<span class="text-xs text-red-400 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ Reported</span>`
+        ? `<span class="text-xs text-red-700 bg-red-100 px-2.5 py-1 rounded-lg font-semibold">⚠ Reported</span>`
         : '';
 
     const punishmentBlock = isCheating ? `
         <div class="punishment-box mt-3">
-            <p class="text-xs text-red-300 font-semibold mb-1">🚫 Action Required — Re-Watch &amp; Resubmit</p>
-            <p class="text-xs text-red-400/80 leading-relaxed">
-                Your watch proof for this video was flagged as insufficient or invalid. You <strong class="text-red-300">must re-watch the full video</strong> using the Exsub Extension and resubmit proof to resolve this task.
+            <p class="text-xs text-red-700 font-semibold mb-1">🚫 Action Required — Re-Watch &amp; Resubmit</p>
+            <p class="text-xs text-red-700/80 leading-relaxed">
+                Your watch proof for this video was flagged as insufficient or invalid. You <strong class="text-red-800">must re-watch the full video</strong> using the Exsub Extension and resubmit proof to resolve this task.
                 Until resolved, all other actions are locked.
             </p>
             <div class="flex gap-2 mt-3 flex-wrap">
@@ -1600,17 +1344,16 @@ function taskCard(t) {
     const issueSection = !isCheating ? `
         <div class="issue-box mt-3">
             <div class="flex items-center justify-between">
-                <span class="text-xs text-red-400/80 font-medium">⚠ Report Issue with this task</span>
+                <span class="text-xs text-red-700 font-medium">⚠ Report Issue with this task</span>
                 <button onclick="openIssueModal('${t.TaskID}')"
-                    class="text-xs text-red-400 hover:text-red-300 underline transition">
+                    class="text-xs text-red-700 hover:opacity-70 underline transition font-semibold">
                     ${issueText ? 'Update Issue' : 'Report'}
                 </button>
             </div>
-            ${issueText ? `<p class="text-xs text-red-400/70 mt-1">Current: ${issueText}</p>` : ''}
+            ${issueText ? `<p class="text-xs text-red-700/70 mt-1">Current: ${issueText}</p>` : ''}
         </div>` : '';
 
     let actionButtons = '';
-    // FIXED: Added Open Channel button for all action states
     const channelLink = t.TargetChannelLink || t.channelLink || '';
     const openChannelBtn = channelLink 
         ? `<a href="${channelLink}" target="_blank" rel="noopener"
@@ -1624,7 +1367,7 @@ function taskCard(t) {
 
     if (isCheating) {
         actionButtons = `
-            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-400">
+            <div class="px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center flex-1 xl:flex-none bg-red-100 border-2 border-red-300 text-red-700">
                 🔒 Actions Locked
             </div>`;
     } else if (canMark) {
@@ -1660,13 +1403,13 @@ function taskCard(t) {
     }
 
     const pinnedBadge = isCheating
-        ? `<span class="text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
+        ? `<span class="text-xs bg-red-100 text-red-700 border border-red-300 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
         : '';
 
     return `
     <div class="task-card ${isCheating ? 'cheating-card' : ''} rounded-3xl p-5">
         <div class="flex flex-wrap items-center gap-2 mb-4">
-            <code class="text-xs text-muted font-mono bg-[#1a1d27] px-2.5 py-1 rounded-lg">${t.TaskID}</code>
+            <code class="text-xs text-muted font-mono bg-[#F5F4EB] border border-[#211F1F]/20 px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
             ${pairedBadge(t)}
             ${matchBadge(t)}
@@ -1679,7 +1422,7 @@ function taskCard(t) {
             <!-- LEFT: video info -->
             <div class="flex-1 min-w-0">
                 <div class="instructions-box mb-3">
-                    <p class="text-xs text-purple-300 font-semibold mb-2">🎬 ${isCheating ? 'Re-watch this video:' : 'Watch this video:'}</p>
+                    <p class="text-xs text-[#211F1F] font-semibold mb-2">🎬 ${isCheating ? 'Re-watch this video:' : 'Watch this video:'}</p>
                     <div class="flex items-start gap-3">
                         <div class="video-thumb-wrap">
                             ${thumb
@@ -1688,12 +1431,12 @@ function taskCard(t) {
                             <span class="duration-chip">${reqMinutes} ${reqUnit}</span>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <div class="text-sm font-semibold text-white truncate">${videoTitle}</div>
+                            <div class="text-sm font-semibold text-[#211F1F] truncate">${videoTitle}</div>
                             <div class="flex items-center gap-2 mt-1">
                                 ${chanImage ? `<img src="${chanImage}" class="w-5 h-5 rounded-full object-cover" onerror="this.style.display='none'">` : ''}
-                                <span class="text-xs text-purple-300">${chanName || '—'}</span>
+                                <span class="text-xs text-[#211F1F]/70">${chanName || '—'}</span>
                             </div>
-                            ${chanHandle ? `<div class="text-xs text-purple-400 font-mono mt-0.5">${chanHandle}</div>` : ''}
+                            ${chanHandle ? `<div class="text-xs text-[#211F1F]/60 font-mono mt-0.5">${chanHandle}</div>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1702,11 +1445,11 @@ function taskCard(t) {
                 ${issueSection}
 
                 <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
-                    <span>Member: <span class="text-white/70">${t.TargetUserCode || '—'}</span></span>
-                    <span>Created: <span class="text-white/70">${fmtDate(t.CreatedDate)}</span></span>
-                    ${t.WorkedDate    ? `<span>Worked: <span class="text-white/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
-                    ${t.CheckedDate   ? `<span>Checked: <span class="text-white/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
-                    ${t.WatchedMinutes ? `<span>Watched: <span class="text-white/70">${t.WatchedMinutes} min</span></span>` : ''}
+                    <span>Member: <span class="text-[#211F1F]/70">${t.TargetUserCode || '—'}</span></span>
+                    <span>Created: <span class="text-[#211F1F]/70">${fmtDate(t.CreatedDate)}</span></span>
+                    ${t.WorkedDate    ? `<span>Worked: <span class="text-[#211F1F]/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
+                    ${t.CheckedDate   ? `<span>Checked: <span class="text-[#211F1F]/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
+                    ${t.WatchedMinutes ? `<span>Watched: <span class="text-[#211F1F]/70">${t.WatchedMinutes} min</span></span>` : ''}
                 </div>
             </div>
 
@@ -1766,9 +1509,9 @@ async function doMarkWatched(taskId, btnEl) {
                 icon: 'warning',
                 title: 'Proof Not Found',
                 text: 'Please watch the full video first using the Exsub Extension. Your task is not complete yet.',
-                background: '#12141c',
-                color: '#fff',
-                confirmButtonColor: '#7c3aed',
+                background: '#F5F4EB',
+                color: '#211F1F',
+                confirmButtonColor: '#211F1F',
                 confirmButtonText: 'Got it'
             });
             btnEl.disabled = false;
@@ -1778,9 +1521,9 @@ async function doMarkWatched(taskId, btnEl) {
                 icon: 'info',
                 title: 'Not Enough Watch Time Yet',
                 text: data.message || 'Keep watching — you have not reached the required minutes yet.',
-                background: '#12141c',
-                color: '#fff',
-                confirmButtonColor: '#7c3aed',
+                background: '#F5F4EB',
+                color: '#211F1F',
+                confirmButtonColor: '#211F1F',
                 confirmButtonText: 'OK'
             });
             btnEl.disabled = false;
@@ -1846,20 +1589,20 @@ function openDetail(taskId) {
     const t = allTasks.find(x => x.TaskID === taskId);
     if (!t) return;
 
-    const sc = STATUS_CFG[t.Status] || { text: 'text-gray-400', label: t.Status };
+    const sc = STATUS_CFG[t.Status] || { text: '', label: t.Status };
 
     let partnerLabel = '—';
     let partnerClass = 'text-muted';
     if (t.Status === 'Watched') {
         if (t.PairedStatus === 'Watched') {
             partnerLabel = 'Watched Back ✓';
-            partnerClass = 'text-teal-400';
+            partnerClass = 'text-teal-600';
         } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
             partnerLabel = 'Pending (Not Yet Watched)';
-            partnerClass = 'text-orange-400';
+            partnerClass = 'text-orange-600';
         } else {
             partnerLabel = 'Not Yet Watched';
-            partnerClass = 'text-blue-400';
+            partnerClass = 'text-blue-600';
         }
     } else {
         partnerLabel = 'Awaiting Your Action';
@@ -1869,55 +1612,55 @@ function openDetail(taskId) {
 
     document.getElementById('detailBody').innerHTML = `
         <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Task ID</div>
-                <div class="font-mono font-semibold text-purple-400">${t.TaskID}</div>
+                <div class="font-mono font-semibold text-[#211F1F]">${t.TaskID}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Your Status</div>
                 <div class="font-semibold ${sc.text}">${sc.label}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">You (Worker)</div>
                 <div class="font-semibold">${t.UserCode || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Target Member</div>
-                <div class="font-semibold text-purple-300">${t.TargetUserCode || '—'}</div>
+                <div class="font-semibold text-[#211F1F]">${t.TargetUserCode || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4 col-span-2">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4 col-span-2">
                 <div class="text-muted text-xs mb-1">Channel</div>
                 <div class="font-semibold">${t.TargetChannelName || '—'}</div>
-                ${t.TargetChannelLink ? `<a href="${t.TargetChannelLink}" target="_blank" rel="noopener" class="text-purple-300 text-xs underline hover:text-purple-200">Open Channel →</a>` : '<span class="text-muted text-xs">No channel link available</span>'}
+                ${t.TargetChannelLink ? `<a href="${t.TargetChannelLink}" target="_blank" rel="noopener" class="text-[#211F1F] text-xs underline font-semibold">Open Channel →</a>` : '<span class="text-muted text-xs">No channel link available</span>'}
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4 col-span-2">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4 col-span-2">
                 <div class="text-muted text-xs mb-1">Video</div>
                 <div class="font-semibold">${t.VideoTitle || '—'}</div>
                 <div class="font-mono text-xs text-muted mt-0.5">${t.VideoID || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Required Minutes</div>
                 <div class="font-semibold">${(t.VideoMinutes !== undefined && t.VideoMinutes !== null && t.VideoMinutes !== '') ? t.VideoMinutes + ' min' : '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Watched Minutes</div>
                 <div class="font-semibold">${t.WatchedMinutes || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Matched Gap</div>
                 <div class="font-semibold">${t.MatchedGapMinutes !== undefined ? t.MatchedGapMinutes + ' min' : '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Match Type</div>
                 <div class="font-semibold">${t.MatchType || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Partner Watch Status</div>
                 <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Issue</div>
-                <div class="${issueText ? 'text-red-400' : 'text-muted'} text-xs">${issueText || 'None'}</div>
+                <div class="${issueText ? 'text-red-600' : 'text-muted'} text-xs">${issueText || 'None'}</div>
             </div>
         </div>
 
@@ -1949,7 +1692,7 @@ function openDetail(taskId) {
             ⚠ Report / Update Issue
         </button>
 
-        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#232632]">
+        <div class="text-xs text-muted space-y-1.5 pt-4 border-t-2 border-[#211F1F]/10">
             <div>Created: ${fmtDate(t.CreatedDate)}</div>
             ${t.WorkedDate  ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>`  : ''}
             ${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}
@@ -2056,12 +1799,12 @@ async function doSavePreferences() {
         if (data.success) {
             myPreferences = { interests: data.interests || [], countries: data.countries || [] };
             box.textContent = '✅ Preferences saved! New tasks will now prioritize matching members.';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-100 border-2 border-green-400 text-green-700';
             showToast('Match preferences saved!');
             setTimeout(closePreferencesModal, 1400);
         } else {
             box.textContent = data.message || 'Could not save preferences.';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -2099,7 +1842,7 @@ async function doSaveSettings() {
     if (min >= max) {
         box.classList.remove('hidden');
         box.textContent = 'Min video length must be less than max video length.';
-        box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+        box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
         return;
     }
 
@@ -2127,12 +1870,12 @@ async function doSaveSettings() {
             mySettings = data.settings;
             renderSettingsCard();
             box.textContent = '✅ Watch settings saved!';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-100 border-2 border-green-400 text-green-700';
             showToast('Watch settings saved!');
             setTimeout(closeSettingsModal, 1200);
         } else {
             box.textContent = data.message || 'Could not save settings.';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -2155,7 +1898,7 @@ function openCreateModal() {
     const canCreate = pending < 5;
     const canEl = document.getElementById('modalCanCreate');
     canEl.textContent = canCreate ? 'Yes — tasks will be created' : 'No — complete your pending tasks first';
-    canEl.className   = `font-semibold ${canCreate ? 'text-green-400' : 'text-red-400'}`;
+    canEl.className   = `font-semibold ${canCreate ? 'text-green-600' : 'text-red-600'}`;
 
     const btn = document.getElementById('doCreateBtn');
     btn.disabled = !canCreate;
@@ -2186,7 +1929,7 @@ async function doCreateTasks() {
 
         if (data.success) {
             box.textContent = `✅ ${data.created} new task(s) created! (${data.pairs} paired tasks created for other members too)`;
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-100 border-2 border-green-400 text-green-700';
             if (data.newTasks?.length) {
                 allTasks = [...allTasks, ...data.newTasks];
                 calcStats();
@@ -2197,11 +1940,11 @@ async function doCreateTasks() {
         } else {
             // Check for specific channel video empty error message context
             if (data.message && (data.message.includes('no ready videos') || data.message.includes('at least one video'))) {
-                box.innerHTML = `❌ <strong>Channel Setup Error:</strong> You have no ready videos on your channel. You must add at least one video first under the <a href="channels.html" class="text-purple-300 font-bold underline hover:text-purple-200">Channels</a> tab before generating matching pairs.`;
+                box.innerHTML = `❌ <strong>Channel Setup Error:</strong> You have no ready videos on your channel. You must add at least one video first under the <a href="channels.html" class="text-[#211F1F] font-bold underline">Channels</a> tab before generating matching pairs.`;
             } else {
                 box.textContent = data.message || 'Could not create tasks.';
             }
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -2290,14 +2033,14 @@ async function doSubmitIssue() {
 
         if (data.success) {
             box.textContent = `✅ Issue reported: "${issueTitle}"`;
-            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-100 border-2 border-green-400 text-green-700';
             task.Issue = data.issue || (issueTitle + (issueDescription ? ` — ${issueDescription}` : ''));
             showToast('Issue reported successfully.');
             applyFilter();
             setTimeout(closeIssueModal, 1600);
         } else {
             box.textContent = data.message || 'Could not submit issue.';
-            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-red-100 border-2 border-red-400 text-red-700';
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -2308,39 +2051,5 @@ async function doSubmitIssue() {
 }
 </script>
 
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotask.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
-
-<script>
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
-  });
-})();
-</script>
 </body>
 </html>
