@@ -9,20 +9,67 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-:root{--bg:#050508;--card:#12141c;--border:#1e212c;--purple:#7c3aed}
+:root{--bg:#F7F6EE;--card:#12141c;}
 *{font-family:Inter,sans-serif}
 body{background:var(--bg);color:white;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at top,rgba(124,58,237,.18),transparent 35%),radial-gradient(circle at bottom,rgba(124,58,237,.12),transparent 40%);pointer-events:none}
-.glass-nav{background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
-.card{background:linear-gradient(180deg,#151821 0%,#101219 100%);border:1px solid var(--border)}
-.input{width:100%;padding:13px 15px;border-radius:14px;background:#0f1117;border:1px solid #1e212c;color:white;outline:none;transition:.2s}
-.input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
-.btn-purple{background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);box-shadow:0 0 25px rgba(124,58,237,.35)}
+.glass-nav{background-image:linear-gradient(180deg,#211F1E 0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
+.card{
+  
+  
+ box-shadow: 4px 4px 0px 0px #211F1F;
+ border: 2px solid #211F1F;
+    border-radius: 20px;
+background: #ffffff;
+    padding: 0px 0.8rem;
+    height: auto;
+}
+.input{width:100%;padding:13px 15px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+ border: 2px solid #211F1F;
+    border-radius: 20px;
+background: #f9fafa;
+    height: auto;
+  outline:none;transition:.2s;
+color: black;}
+.input:focus{
+ box-shadow: 4px 4px 0px 0px #111111;
+
+}
+.btn-purple{
+
+ box-shadow: 4px 4px 0px 0px #211F1F;
+ border: 2px solid #211F1F;
+    border-radius: 20px;
+background: #ACD1C0;
+    padding: 0px 0.8rem;
+    height: auto;
+
+}
 .btn-purple:hover{transform:translateY(-1px)}
-.text-muted{color:#8a8f9e}
-.password-box{position:relative}
-.eye-btn{position:absolute;right:15px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;color:#8a8f9e;user-select:none}
-.rounded-popup{border-radius:15px}
+.text-muted{color:#070707}
+.password-box {
+  position: relative;
+  width: 100%;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 16px;
+  top: calc(50% - 2px); /* Offsets downward layout alignment to visually center with flat shadow */
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  z-index: 10;
+  transition: transform 0.15s ease-in-out;
+}
+
+/* Subtle feedback when interacting with the toggle icon */
+.eye-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+}.rounded-popup{border-radius:15px}
 </style>
 </head>
 <body>
@@ -66,7 +113,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
     <div class="text-center mb-8">
       <img src="images/logo.svg" class="w-14 h-14 mx-auto mb-5">
-      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight">Welcome Back</h1>
+      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight" style="color: #211F1F;">Welcome Back</h1>
       <p class="text-muted text-[14px] mt-3 max-w-[340px] mx-auto leading-relaxed">
         Login to your EXSUB Group account and continue growing your YouTube channel.
       </p>
@@ -77,28 +124,39 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
         <!-- Username -->
         <div>
-          <label class="text-[13px] text-gray-300 block mb-2">Username</label>
+          <label class="text-[13px] block mb-2" style="color: #211F1F;">Username</label>
           <input type="text" id="username" placeholder="Enter your username" class="input" maxlength="15" required>
-          <p class="text-[11px] text-muted mt-2">Username must be between 5 and 15 characters without spaces.</p>
+          <p class="text-[11px] text-muted mt-2">Username must be between 5 and 10 characters without spaces.</p>
         </div>
 
-        <!-- Password -->
-        <div>
-          <label class="text-[13px] text-gray-300 block mb-2">Password</label>
-          <div class="password-box">
-            <input type="password" id="password" placeholder="Enter your password" class="input pr-12" maxlength="15" required>
-            <span id="togglePassword" class="eye-btn">👁️</span>
-          </div>
-          <p class="text-[11px] text-muted mt-2">Password must be between 5 and 15 characters without spaces.</p>
-        </div>
+<!-- Password -->
+<div>
+  <label class="text-[13px] block mb-2" style="color: #211F1F;">Password</label>
+  <div class="relative">
+    <input type="password" id="password" maxlength="15" placeholder="Enter password" class="input pr-12" required>
+    <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-black transition">
+      <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+      </svg>
+      <svg id="eyeClose" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="hidden">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.223 6.223A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.132 5.411"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"/>
+      </svg>
+    </button>
+  </div>
+  <p class="text-[11px] text-muted mt-2">Must be 5–15 characters and cannot contain spaces.</p>
+</div>
 
         <!-- Remember -->
         <div class="flex items-center justify-between text-[13px]">
           <label class="flex items-center gap-2 text-muted">
-            <input type="checkbox" id="rememberMe" class="accent-purple-600">
+            <input type="checkbox" id="rememberMe" style="background: #211F1F;">
             Remember Me
           </label>
-          <a href="#" class="text-[#8b5cf6] hover:text-[#a78bfa] transition">Forgot Password?</a>
+          <a href="#" class="text-[#8b5cf6] hover:text-[#a78bfa] transition" style="color: #8a8044;">Forgot Password?</a>
         </div>
 
         <!-- Button -->
@@ -111,7 +169,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
       <div class="text-center mt-6">
         <p class="text-[13px] text-muted">
           Don't have an account?
-          <a href="signup.html" class="text-[#8b5cf6] hover:text-[#a78bfa] transition">Create Account</a>
+          <a href="signup.html" class="text-[#8b5cf6] hover:text-[#a78bfa] transition" style="color: #211F1F; text-decoration-line: underline;">Create Account</a>
         </p>
       </div>
     </div>
@@ -129,20 +187,26 @@ document.getElementById("menuBtn").addEventListener("click", () => {
 });
 
 /* ===== PASSWORD TOGGLE ===== */
+/* ===== PASSWORD TOGGLE ===== */
 const togglePassword = document.getElementById("togglePassword");
-const passwordInput  = document.getElementById("password");
+const eyeOpen  = document.getElementById("eyeOpen");
+const eyeClose = document.getElementById("eyeClose");
+/* ===== PASSWORD TOGGLE FUNCTIONALITY ===== */
 togglePassword.addEventListener("click", () => {
   if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    togglePassword.innerHTML = "🙈";
+    passwordInput.type = "text"; 
+    eyeOpen.classList.add("hidden"); 
+    eyeClose.classList.remove("hidden");
   } else {
-    passwordInput.type = "password";
-    togglePassword.innerHTML = "👁️";
+    passwordInput.type = "password"; 
+    eyeOpen.classList.remove("hidden"); 
+    eyeClose.classList.add("hidden");
   }
 });
-
 /* ===== INPUTS ===== */
+/* ===== INPUTS & ELEMENTS DEFINITION ===== */
 const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password"); // <-- Added this missing definition
 const loginForm     = document.getElementById("loginForm");
 const loginBtn      = document.getElementById("loginBtn");
 
@@ -260,8 +324,8 @@ loginForm.addEventListener("submit", async e => {
 
   const err = (title, text) => Swal.fire({
     icon: "error", title, text,
-    background: "#12141c", color: "#fff",
-    confirmButtonColor: "#7c3aed",
+    background: "#211F1F", color: "#fff",
+    confirmButtonColor: "#ACD1C0",
     customClass: { popup: "rounded-popup" }
   });
 
@@ -297,8 +361,8 @@ loginForm.addEventListener("submit", async e => {
         icon: "success",
         title: "Login Successful",
         text: "Welcome back to EXSUB Group",
-        background: "#12141c", color: "#fff",
-        confirmButtonColor: "#7c3aed",
+        background: "#211F1F", color: "#fff",
+        confirmButtonColor: "#ACD1C0",
         customClass: { popup: "rounded-popup" }
       }).then(() => {
         window.location.href = "analytics.html";

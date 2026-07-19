@@ -10,1059 +10,73 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="promochannel.css">
 
-<style>
-
-
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
-}
-
-
-:root{
-  --bg:#050508;
-  --card:#12141c;
-  --card2:#101219;
-  --border:#1e212c;
-  --purple:#7c3aed;
-  --purple2:#8b5cf6;
-  --text-muted:#8a8f9e;
-}
-*{ font-family:'Inter',sans-serif; }
-body{ background:var(--bg); color:white; overflow-x:hidden; }
-
-body::before{
-  content:'';
-  position:fixed;
-  top:-50%; left:-50%;
-  width:200%; height:200%;
-  background:
-    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
-    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
-  z-index:0; pointer-events:none;
-}
-
-/* LOADING OVERLAY */
-#loadingOverlay{
-  position:fixed; inset:0; z-index:9999;
-  background:rgba(5,5,8,0.97);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:24px;
-  transition:opacity 0.4s ease;
-}
-#loadingOverlay.hide{ opacity:0; pointer-events:none; }
-.loader-ring{
-  width:64px; height:64px;
-  border:3px solid #1e212c;
-  border-top-color:#8b5cf6;
-  border-radius:50%;
-  animation:spin 0.8s linear infinite;
-}
-@keyframes spin{ to{ transform:rotate(360deg); } }
-.loader-dots{ display:flex; gap:6px; }
-.loader-dots span{
-  width:8px; height:8px; border-radius:50%;
-  background:#8b5cf6;
-  animation:bounce 1.2s ease-in-out infinite;
-}
-.loader-dots span:nth-child(2){ animation-delay:0.2s; }
-.loader-dots span:nth-child(3){ animation-delay:0.4s; }
-@keyframes bounce{
-  0%,80%,100%{ transform:translateY(0); opacity:0.4; }
-  40%{ transform:translateY(-10px); opacity:1; }
-}
-
-.glass-nav{
-  background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.06);
-}
-.card{
-  background:linear-gradient(180deg,#151821 0%,#101219 100%);
-  border:1px solid var(--border);
-}
-.text-muted{ color:var(--text-muted); }
-.gradient-text{
-  background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* SECTION TABS */
-.section-tab{
-  padding:10px 22px;
-  border-radius:12px;
-  font-weight:600;
-  font-size:13px;
-  cursor:pointer;
-  border:1px solid transparent;
-  transition:0.25s ease;
-  white-space:nowrap;
-}
-.section-tab.active{
-  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
-  border-color:#8b5cf6;
-  color:white;
-}
-.section-tab:not(.active){
-  background:#0f1118;
-  border-color:#1f2330;
-  color:#8a8f9e;
-}
-.section-tab:not(.active):hover{ border-color:#8b5cf6; color:white; }
-
-/* CHANNEL CARD */
-.channel-card{
-  background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
-  border:1px solid #242938;
-  border-radius:24px;
-  padding:22px;
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-  transition:0.3s ease;
-  position:relative;
-  overflow:hidden;
-  animation:fadeUp 0.4s ease both;
-}
-@keyframes fadeUp{
-  from{ opacity:0; transform:translateY(16px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-.channel-card:hover{
-  transform:translateY(-3px);
-  border-color:rgba(124,58,237,0.5);
-  box-shadow:0 10px 35px rgba(0,0,0,0.35);
-}
-.channel-card::before{
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0;
-  height:2px;
-  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.6),transparent);
-  opacity:0;
-  transition:0.3s;
-}
-.channel-card:hover::before{ opacity:1; }
-.channel-left{ display:flex; gap:18px; align-items:flex-start; }
-.channel-image{
-  width:88px; height:88px;
-  border-radius:22px;
-  object-fit:cover;
-  border:2px solid rgba(124,58,237,0.35);
-  flex-shrink:0;
-}
-.channel-name{ font-size:20px; font-weight:700; margin-bottom:4px; }
-.channel-handle{ color:#9ca3af; font-size:13px; margin-bottom:14px; }
-.channel-info-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-}
-.channel-info-box{
-  background:#0f1118;
-  border:1px solid #1f2330;
-  border-radius:12px;
-  padding:10px 12px;
-}
-.channel-info-box span{
-  display:block; color:#8a8f9e;
-  font-size:10px; margin-bottom:4px;
-  text-transform:uppercase; letter-spacing:0.05em;
-}
-.channel-info-box strong{ font-size:13px; color:white; }
-.channel-right{
-  display:flex; flex-direction:column;
-  gap:10px; min-width:160px;
-}
-.btn-edit{
-  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
-  color:white; border:none;
-  padding:11px 16px; border-radius:12px;
-  font-weight:600; font-size:13px;
-  cursor:pointer; transition:0.25s ease;
-  width:100%;
-}
-.btn-edit:hover{ transform:translateY(-2px); box-shadow:0 6px 20px rgba(124,58,237,0.4); }
-.btn-update-yt{
-  background:#0f1118;
-  color:#8b5cf6;
-  border:1px solid #8b5cf6;
-  padding:11px 16px; border-radius:12px;
-  font-weight:600; font-size:13px;
-  cursor:pointer; transition:0.25s ease;
-  width:100%;
-}
-.btn-update-yt:hover{ background:#8b5cf6; color:white; }
-.btn-delete{
-  background:#dc2626; color:white;
-  border:none; padding:11px 16px;
-  border-radius:12px; font-weight:600;
-  font-size:13px; cursor:pointer;
-  transition:0.25s ease; width:100%;
-}
-.btn-delete:hover{ background:#ef4444; }
-.btn-change{
-  background:#0f1118;
-  color:#f59e0b;
-  border:1px solid #f59e0b;
-  padding:11px 16px; border-radius:12px;
-  font-weight:600; font-size:13px;
-  cursor:pointer; transition:0.25s ease;
-  width:100%;
-}
-.btn-change:hover{ background:#f59e0b; color:#0a0b10; }
-
-/* BADGE */
-.type-badge{
-  display:inline-flex; align-items:center;
-  gap:5px; font-size:11px; font-weight:600;
-  padding:4px 10px; border-radius:20px;
-  margin-bottom:8px;
-}
-.type-promo{ background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
-.type-working{ background:rgba(34,197,94,0.12); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
-
-/* SWAL OVERRIDES */
-.swal2-popup{
-  background:#12141c !important;
-  border:1px solid #1e212c !important;
-  border-radius:24px !important;
-  color:white !important;
-}
-.swal2-title{ color:white !important; }
-.swal2-html-container{ color:#c0c4d0 !important; }
-.swal-input{
-  width:100%;
-  background:#0a0b10;
-  border:1px solid #252936;
-  border-radius:12px;
-  padding:12px 14px;
-  color:white;
-  font-size:14px;
-  outline:none;
-  transition:border-color 0.2s;
-  box-sizing:border-box;
-  margin-top:6px;
-}
-.swal-input:focus{ border-color:#8b5cf6; }
-.swal-label{
-  display:block;
-  font-size:11px;
-  font-weight:600;
-  color:#8a8f9e;
-  text-transform:uppercase;
-  letter-spacing:0.05em;
-  margin-bottom:4px;
-  text-align:left;
-  margin-top:14px;
-}
-.swal-select{
-  width:100%;
-  background:#0a0b10;
-  border:1px solid #252936;
-  border-radius:12px;
-  padding:12px 14px;
-  color:white;
-  font-size:14px;
-  outline:none;
-  transition:border-color 0.2s;
-  box-sizing:border-box;
-  appearance:none;
-  cursor:pointer;
-}
-.swal-select:focus{ border-color:#8b5cf6; }
-.swal-select option{ background:#12141c; }
-.swal2-confirm{
-  background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%) !important;
-  border:none !important;
-  border-radius:12px !important;
-  padding:12px 28px !important;
-  font-weight:600 !important;
-}
-.swal2-cancel{
-  background:#1a1d27 !important;
-  border:1px solid #252936 !important;
-  border-radius:12px !important;
-  padding:12px 28px !important;
-  color:white !important;
-  font-weight:600 !important;
-}
-.swal2-deny{
-  background:transparent !important;
-  border:1px solid #8b5cf6 !important;
-  border-radius:12px !important;
-  padding:12px 28px !important;
-  color:#a78bfa !important;
-  font-weight:600 !important;
-}
-
-/* CHANNEL TYPE GRID */
-.channel-type-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:6px;
-}
-.channel-type-opt{
-  background:#0a0b10;
-  border:2px solid #1f2330;
-  border-radius:12px;
-  padding:10px 8px;
-  cursor:pointer;
-  text-align:center;
-  transition:0.2s ease;
-  font-size:12px;
-  font-weight:600;
-  color:#8a8f9e;
-}
-.channel-type-opt:hover{ border-color:#8b5cf6; color:white; }
-.channel-type-opt.selected{
-  border-color:#8b5cf6;
-  background:rgba(139,92,246,0.15);
-  color:#a78bfa;
-}
-.channel-type-opt .emoji{ font-size:20px; display:block; margin-bottom:4px; }
-
-/* EMPTY STATE */
-.empty-state{
-  text-align:center; padding:60px 20px;
-  animation:fadeUp 0.5s ease;
-}
-.empty-icon{
-  width:72px; height:72px;
-  border-radius:22px;
-  background:rgba(139,92,246,0.1);
-  border:1px solid rgba(139,92,246,0.2);
-  display:inline-flex; align-items:center;
-  justify-content:center;
-  font-size:30px; margin-bottom:20px;
-}
-
-/* LIMIT BADGE */
-.limit-badge{
-  display:inline-flex; align-items:center;
-  gap:6px; font-size:12px; font-weight:600;
-  padding:5px 12px; border-radius:20px;
-}
-.limit-full{ background:rgba(239,68,68,0.1); color:#f87171; border:1px solid rgba(239,68,68,0.25); }
-.limit-ok{ background:rgba(34,197,94,0.1); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
-
-/* VIDEO CARD */
-.video-card{
-  background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
-  border:1px solid #242938;
-  border-radius:20px;
-  overflow:hidden;
-  transition:0.3s ease;
-  animation:fadeUp 0.4s ease both;
-  display:flex;
-  flex-direction:column;
-}
-.video-card:hover{
-  transform:translateY(-3px);
-  border-color:rgba(124,58,237,0.5);
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
-}
-.video-thumb-wrap{
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  overflow:hidden;
-  background:#0a0b10;
-}
-.video-thumb-wrap img{
-  width:100%; height:100%;
-  object-fit:cover;
-  transition:transform 0.3s ease;
-}
-.video-card:hover .video-thumb-wrap img{ transform:scale(1.04); }
-.video-duration{
-  position:absolute;
-  bottom:8px; right:8px;
-  background:rgba(0,0,0,0.85);
-  color:white;
-  font-size:11px; font-weight:700;
-  padding:2px 7px; border-radius:6px;
-}
-.video-info{ padding:14px; flex:1; display:flex; flex-direction:column; gap:8px; }
-.video-title{
-  font-size:13px; font-weight:600;
-  color:white;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  line-height:1.5;
-}
-.video-meta{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:auto; }
-.video-status-badge{
-  font-size:10px; font-weight:700;
-  padding:3px 8px; border-radius:20px;
-}
-.status-active{ background:rgba(34,197,94,0.12); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
-.status-deleted{ background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
-.video-actions{ display:flex; gap:6px; padding:0 14px 14px; }
-.btn-video-fix{
-  flex:1;
-  background:#0f1118;
-  color:#f59e0b;
-  border:1px solid #f59e0b;
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:12px; font-weight:600;
-  cursor:pointer; transition:0.2s ease;
-}
-.btn-video-fix:hover{ background:#f59e0b; color:#0a0b10; }
-.btn-video-del{
-  flex:1;
-  background:#dc2626;
-  color:white;
-  border:none;
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:12px; font-weight:600;
-  cursor:pointer; transition:0.2s ease;
-}
-.btn-video-del:hover{ background:#ef4444; }
-
-/* PLAYLIST VIDEO CARD VARIANTS */
-.btn-video-add{
-  flex:1;
-  background:#0f1118;
-  color:#4ade80;
-  border:1px solid #4ade80;
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:12px; font-weight:600;
-  cursor:pointer; transition:0.2s ease;
-}
-.btn-video-add:hover{ background:#22c55e; color:#0a0b10; }
-.btn-video-add:disabled{ opacity:0.35; cursor:not-allowed; }
-.btn-video-remove{
-  flex:1;
-  background:#dc2626;
-  color:white;
-  border:none;
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:12px; font-weight:600;
-  cursor:pointer; transition:0.2s ease;
-}
-.btn-video-remove:hover{ background:#ef4444; }
-.video-card.in-playlist{ border-color:rgba(74,222,128,0.5); }
-.video-card.in-playlist::after{
-  content:'✓ In Playlist';
-  position:absolute;
-}
-
-/* PLAYLIST PROGRESS */
-.playlist-progress-wrap{
-  background:#0f1118;
-  border:1px solid #1f2330;
-  border-radius:16px;
-  padding:18px;
-}
-.playlist-progress-bar-track{
-  width:100%; height:10px;
-  background:#1a1d27;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:10px;
-  position:relative;
-}
-.playlist-progress-bar-fill{
-  height:100%;
-  border-radius:20px;
-  transition:width 0.4s ease, background 0.3s ease;
-}
-.playlist-zone-marker{
-  position:absolute;
-  top:0; bottom:0;
-  width:2px;
-  background:rgba(255,255,255,0.4);
-}
-
-/* PLAYLIST STATUS CARD */
-.playlist-status-card{
-  background:linear-gradient(180deg,#171a24 0%,#11141d 100%);
-  border:1px solid #242938;
-  border-radius:24px;
-  padding:24px;
-}
-.playlist-name-pill{
-  display:inline-flex; align-items:center; gap:8px;
-  background:rgba(139,92,246,0.12);
-  border:1px solid rgba(139,92,246,0.3);
-  color:#a78bfa;
-  font-weight:700; font-size:15px;
-  padding:8px 16px; border-radius:14px;
-}
-.copy-btn{
-  background:#1a1d27; border:1px solid #252936;
-  color:#8a8f9e; border-radius:8px;
-  padding:4px 8px; font-size:11px; cursor:pointer;
-  transition:0.2s ease;
-}
-.copy-btn:hover{ border-color:#8b5cf6; color:white; }
-
-/* PAGINATION */
-.pagination{ display:flex; gap:6px; align-items:center; justify-content:center; }
-.page-btn{
-  width:36px; height:36px;
-  background:#0f1118;
-  border:1px solid #1f2330;
-  border-radius:10px;
-  color:#8a8f9e;
-  font-size:13px; font-weight:600;
-  cursor:pointer; transition:0.2s ease;
-  display:flex; align-items:center; justify-content:center;
-}
-.page-btn:hover{ border-color:#8b5cf6; color:white; }
-.page-btn.active{ background:#8b5cf6; border-color:#8b5cf6; color:white; }
-.page-btn:disabled{ opacity:0.4; cursor:not-allowed; }
-
-/* SEARCH BAR */
-.search-bar{
-  width:100%;
-  background:#0a0b10;
-  border:1px solid #252936;
-  border-radius:14px;
-  padding:12px 16px 12px 44px;
-  color:white;
-  font-size:14px;
-  outline:none;
-  transition:border-color 0.2s;
-}
-.search-bar:focus{ border-color:#8b5cf6; }
-.search-wrap{ position:relative; }
-.search-wrap::before{
-  content:'🔍';
-  position:absolute;
-  left:14px; top:50%;
-  transform:translateY(-50%);
-  font-size:15px;
-}
-
-#notifDropdown{ transition:all 0.2s ease; }
-
-/* SETTINGS TAB — TOGGLE SWITCH */
-.toggle-row{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px;
-  background:#0f1118;
-  border:1px solid #1f2330;
-  border-radius:16px;
-  padding:16px 18px;
-}
-.switch{ position:relative; display:inline-block; width:48px; height:28px; flex-shrink:0; }
-.switch input{ opacity:0; width:0; height:0; }
-.switch-slider{
-  position:absolute; cursor:pointer; inset:0;
-  background:#2a2e3a; border-radius:999px; transition:0.25s ease;
-}
-.switch-slider::before{
-  content:''; position:absolute; height:22px; width:22px;
-  left:3px; bottom:3px; background:white; border-radius:50%;
-  transition:0.25s ease;
-}
-.switch input:checked + .switch-slider{ background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%); }
-.switch input:checked + .switch-slider::before{ transform:translateX(20px); }
-
-/* INTEREST CHIPS */
-.interest-chip{
-  display:inline-flex; align-items:center; gap:8px;
-  background:rgba(139,92,246,0.12);
-  border:1px solid rgba(139,92,246,0.3);
-  color:#a78bfa;
-  font-weight:600; font-size:12px;
-  padding:8px 12px; border-radius:20px;
-}
-.interest-chip button{
-  background:none; border:none; color:#f87171;
-  cursor:pointer; font-size:13px; line-height:1;
-  padding:0;
-}
-.interest-chip button:hover{ color:#ef4444; }
-
-/* COUNTRY GRID */
-.country-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:8px;
-  max-height:320px;
-  overflow-y:auto;
-  padding-right:4px;
-}
-.country-opt{
-  display:flex; align-items:center; gap:8px;
-  background:#0a0b10;
-  border:1px solid #1f2330;
-  border-radius:10px;
-  padding:9px 10px;
-  cursor:pointer;
-  font-size:12.5px;
-  font-weight:600;
-  color:#8a8f9e;
-  transition:0.2s ease;
-}
-.country-opt:hover{ border-color:#8b5cf6; color:white; }
-.country-opt.selected{
-  border-color:#8b5cf6;
-  background:rgba(139,92,246,0.15);
-  color:#a78bfa;
-}
-.country-opt .flag{ font-size:16px; }
-
-/* REGION QUICK MAP */
-.region-map-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:10px;
-}
-.region-card{
-  background:#0a0b10;
-  border:2px solid #1f2330;
-  border-radius:14px;
-  padding:14px 12px;
-  cursor:pointer;
-  text-align:center;
-  transition:0.2s ease;
-}
-.region-card:hover{ border-color:#8b5cf6; }
-.region-card.active{ border-color:#8b5cf6; background:rgba(139,92,246,0.15); }
-.region-card .region-emoji{ font-size:24px; display:block; margin-bottom:6px; }
-.region-card .region-name{ font-size:12px; font-weight:700; color:white; }
-.region-card .region-count{ font-size:10px; color:#8a8f9e; margin-top:2px; }
-
-/* PLAYLIST TAB LOADING */
-.playlist-loading{
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:16px; padding:60px 20px;
-}
-.playlist-loading .loader-ring{ width:44px; height:44px; }
-
-@media(max-width:768px){
-  .channel-card{ flex-direction:column; }
-  .channel-left{ flex-direction:column; }
-  .channel-info-grid{ grid-template-columns:1fr; }
-  .channel-right{ width:100%; min-width:100%; }
-  .channel-type-grid{ grid-template-columns:repeat(2,1fr); }
-  .section-tab{ padding:8px 14px; font-size:12px; }
-}
-</style>
 </head>
 <body>
 
 <!-- LOADING OVERLAY -->
 <div id="loadingOverlay">
   <div class="loader-ring"></div>
-  <p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your channels…</p>
+  <p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your channel…</p>
   <div class="loader-dots">
     <span></span><span></span><span></span>
   </div>
 </div>
 
-<!-- NAVBAR -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-      <a href="channels.html" class="text-purple-300 font-semibold">Channels</a>
-      <a href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
-       <a href="subscriberstask.html" class="text-white hover:text-purple-300 transition">Tasks</a>
-      <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
-      </div>
-      <div class="relative">
-        <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-2">
-            <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-            <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-            <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a href="analytics.html" class="text-white">Dashboard</a>
-      <a href="channels.html" class="text-purple-300 font-semibold">Channels</a>
-      <a href="groups.html" class="text-white">Groups</a>
-      <a href="howtowork.html" class="text-white">How To Work</a>
-      <a href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a href="support.html" class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
 
 <!-- MAIN -->
-<main class="relative z-10 pt-32 pb-20 px-4">
+<main class="page-content relative z-10 pb-20 px-4">
+
+<main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- HEADER -->
-  <div class="text-center mb-12">
-    <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-      📺 Channel Center
-    </div>
-    <h1 class="text-4xl md:text-5xl font-black gradient-text mb-5">Manage Your Channels</h1>
-    <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7 ">
-      Set up your promotional channel, manage its videos, and add your working account. Each member gets 1 promo channel and 1 working channel.
-    </p>
-  </div>
+    <div class="flex flex-col">
 
-  <!-- SECTION TABS -->
-  <div class="flex items-center gap-3 mb-8 overflow-x-auto pb-2">
-    <button class="section-tab active" id="tabPromo" onclick="switchTab('promo')">📢 Promotional Channel</button>
-    <button class="section-tab" id="tabVideos" onclick="switchTab('videos')">🎬 Promotional Videos</button>
-    <button class="section-tab" id="tabPlaylist" onclick="switchTab('playlist')">📃 Promotional Playlist</button>
-    <button class="section-tab" id="tabWorking" onclick="switchTab('working')">⚙️ Working Channel</button>
-    <button class="section-tab" id="tabSettings" onclick="switchTab('settings')">🛠️ Settings</button>
-  </div>
+      <!-- ── HEADER ── -->
+      <div class="nb-dashboard-header">
+        <div class="nb-badge-container">
+          <!-- Page Context Badge -->
+          <div class="nb-status-card nb-status-static">
+            <span class="nb-card-title">Your Channel</span>
+          </div>
+        </div>
 
-  <!-- ===== PROMO SECTION ===== -->
-  <div id="sectionPromo">
-    <div class="card rounded-3xl p-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-7">
-        <div>
-          <h2 class="text-2xl font-bold">Promotional Channel</h2>
-          <p class="text-muted text-sm mt-1">The channel that will receive subscriptions and views from the community</p>
-        </div>
-        <div class="flex items-center gap-3 flex-wrap">
-          <div id="promoLimitBadge" class="limit-badge limit-ok">● Slot available</div>
-          <button id="btnAddPromo" onclick="openAddModal('promo')"
-            class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
-            + Add Channel
-          </button>
-        </div>
-      </div>
-      <div id="promoContainer" class="space-y-5"></div>
-    </div>
-  </div>
-
-  <!-- ===== VIDEOS SECTION ===== -->
-  <div id="sectionVideos" class="hidden">
-    <div class="card rounded-3xl p-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
-        <div>
-          <h2 class="text-2xl font-bold">🎬 Promotional Channel Videos</h2>
-          <p class="text-muted text-sm mt-1">All videos are tracked — including Shorts. Minimum 5 videos required to be marked ready.</p>
-        </div>
-        <div class="flex items-center gap-3 flex-wrap">
-          <button onclick="syncVideos()" class="bg-[#0f1118] border border-purple-500 text-purple-400 hover:bg-purple-600 hover:text-white transition px-4 py-2.5 rounded-xl font-semibold text-sm">
-            🔄 Sync All Videos
-          </button>
-          <button onclick="fixVideos()" class="bg-[#0f1118] border border-amber-500 text-amber-400 hover:bg-amber-600 hover:text-white transition px-4 py-2.5 rounded-xl font-semibold text-sm">
-            🛠️ Fix Deleted Videos
-          </button>
-          <button id="btnAddVideos" onclick="openAddVideosModal()"
-            class="bg-purple-600 hover:bg-purple-500 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
-            + Add Videos
-          </button>
+        <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Your Promotional Channel</h1>
+        <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">
+          Manage your promotional channel and don't forget to sync when you make changes on YouTube
         </div>
       </div>
 
-      <!-- VIDEOS NOT READY BANNER -->
-      <div id="videosNotReadyBanner" class="hidden mb-6 px-4 py-3 rounded-2xl text-sm font-semibold" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
-        ⚠️ Videos are not added yet. You need to add videos to start work in our group.
-      </div>
-
-      <!-- VIDEO STATS BAR -->
-      <div id="videoStatsBar" class="hidden grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="channel-info-box"><span>Total Videos</span><strong id="statTotal">0</strong></div>
-        <div class="channel-info-box"><span>Active Videos</span><strong id="statActive">0</strong></div>
-        <div class="channel-info-box"><span>Deleted Videos</span><strong id="statDeleted">0</strong></div>
-        <div class="channel-info-box"><span>Videos Ready</span><strong id="statReady">—</strong></div>
-      </div>
-
-      <!-- SEARCH -->
-      <div class="search-wrap mb-6">
-        <input id="videoSearch" class="search-bar" type="text" placeholder="Search videos by title…" oninput="filterVideos()">
-      </div>
-
-      <!-- VIDEO GRID -->
-      <div id="videoContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
-
-      <!-- PAGINATION -->
-      <div id="videoPagination" class="pagination mt-8 hidden"></div>
-    </div>
-  </div>
-
-  <!-- ===== PLAYLIST SECTION ===== -->
-  <div id="sectionPlaylist" class="hidden">
-    <div class="card rounded-3xl p-6 mb-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-2">
-        <div>
-          <h2 class="text-2xl font-bold">📃 Promotional Channel Playlist</h2>
-          <p class="text-muted text-sm mt-1">Build a playlist from your promotional videos. Total duration must be between 30 and 35 minutes.</p>
-        </div>
-      </div>
     </div>
 
-    <!-- No promo channel at all -->
-    <div id="playlistNoChannel" class="hidden card rounded-3xl p-6">
-      <div class="empty-state">
-        <div class="empty-icon">📢</div>
-        <h2 class="text-xl font-bold mb-2">Add a Promotional Channel First</h2>
-        <p class="text-muted text-sm">You need a promotional channel with videos before you can build a playlist.</p>
-      </div>
-    </div>
-
-    <!-- STAGE 1: building selection (no playlist row yet) -->
-    <div id="playlistStageBuild" class="hidden card rounded-3xl p-6 mb-6">
-      <div class="playlist-progress-wrap mb-2">
-        <div class="flex items-center justify-between flex-wrap gap-2">
+    <!-- ===== PROMO SECTION ===== -->
+    <div id="sectionPromo" class="promochannel-section mt-6">
+      <div class="promochannel-panel">
+        <div class="promochannel-panel-head">
           <div>
-            <div class="text-sm font-semibold text-white">Selected Duration</div>
-            <div class="text-muted text-xs mt-0.5">Target: 30:00 – 35:00 minutes</div>
+            <h2 class="promochannel-panel-title">Promotional Channel</h2>
+            <p class="promochannel-panel-subtitle">The channel that will receive subscriptions and views from the community</p>
           </div>
-          <div id="playlistDurationLabel" class="text-lg font-black text-white">0:00</div>
-        </div>
-        <div class="playlist-progress-bar-track">
-          <div id="playlistProgressFill" class="playlist-progress-bar-fill" style="width:0%;background:#8b5cf6;"></div>
-          <div class="playlist-zone-marker" style="left:85.7%;" title="30 min"></div>
-        </div>
-        <div id="playlistHintText" class="text-xs text-muted mt-3">Select promotional videos below until your total falls between 30 and 35 minutes.</div>
-      </div>
-      <div class="flex justify-end">
-        <button id="btnCreatePlaylist" onclick="createPlaylistRow()" disabled
-          class="bg-purple-600 hover:bg-purple-500 transition px-6 py-3 rounded-xl font-semibold text-sm opacity-40 cursor-not-allowed">
-          ✅ Create Playlist
-        </button>
-      </div>
-    </div>
-
-    <!-- STAGE 2: playlist row exists, not yet confirmed on YouTube -->
-    <div id="playlistStagePending" class="hidden playlist-status-card mb-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div>
-          <div class="text-xs uppercase tracking-wide text-muted font-semibold mb-2">Step 2 — Create this exact playlist on YouTube</div>
-          <div class="flex items-center gap-3 flex-wrap">
-            <span class="playlist-name-pill">📃 <span id="pendingPlaylistName">—</span></span>
-            <button class="copy-btn" onclick="copyPlaylistName()">📋 Copy Name</button>
+          <div class="promochannel-panel-controls">
+            <div id="promoLimitBadge" class="promochannel-badge promochannel-badge--ok"><span class="promochannel-badge-dot"></span>Slot Available</div>
+            <button id="btnAddPromo" class="btn-retro btn-charcoal" onclick="openAddModal()">+ Add Channel</button>
           </div>
-          <p class="text-muted text-sm mt-3 max-w-[560px]">
-            Go to your YouTube Studio and create a new playlist using <strong class="text-white">exactly</strong> this name (case-insensitive is fine, but spelling must match), then add the same videos listed below. Once done, click "Set Playlist for Group" so we can verify it.
-          </p>
         </div>
-        <div class="flex flex-col gap-3 min-w-[200px]">
-          <button onclick="setPlaylistForGroup()" class="bg-green-700 hover:bg-green-600 transition px-5 py-3 rounded-xl font-semibold text-sm">
-            ✅ Set Playlist for Group
-          </button>
-          <button onclick="deletePlaylistFlow()" class="bg-[#0f1118] border border-red-500 text-red-400 hover:bg-red-600 hover:text-white transition px-5 py-3 rounded-xl font-semibold text-sm">
-            🗑️ Start Over
-          </button>
-        </div>
-      </div>
-      <div class="playlist-progress-wrap mt-5">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="text-sm font-semibold text-white">Selected Duration (editable until confirmed)</div>
-          <div id="playlistDurationLabel2" class="text-lg font-black text-white">0:00</div>
-        </div>
-        <div class="playlist-progress-bar-track">
-          <div id="playlistProgressFill2" class="playlist-progress-bar-fill" style="width:0%;background:#8b5cf6;"></div>
-        </div>
+        <div id="promoContainer" class="promochannel-list"></div>
       </div>
     </div>
 
-    <!-- STAGE 3: confirmed and ready -->
-    <div id="playlistStageReady" class="hidden playlist-status-card mb-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div>
-          <div class="inline-flex items-center gap-2 text-xs uppercase tracking-wide font-bold mb-2" style="color:#4ade80;">✅ Playlist Ready for Group</div>
-          <div class="flex items-center gap-3 flex-wrap">
-            <span class="playlist-name-pill">📃 <span id="readyPlaylistName">—</span></span>
-          </div>
-          <p class="text-muted text-sm mt-3">Total duration: <strong id="readyPlaylistDuration" class="text-white">—</strong></p>
-        </div>
-        <div>
-          <button onclick="deletePlaylistFlow()" class="bg-[#0f1118] border border-red-500 text-red-400 hover:bg-red-600 hover:text-white transition px-5 py-3 rounded-xl font-semibold text-sm">
-            🗑️ Reset Playlist
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIDEO SOURCE LIST for playlist selection -->
-    <div id="playlistVideoSection" class="hidden card rounded-3xl p-6">
-      <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
-        <h3 class="text-lg font-bold">Your Promotional Videos</h3>
-        <div class="search-wrap" style="max-width:320px;">
-          <input id="playlistVideoSearch" class="search-bar" type="text" placeholder="Search videos…" oninput="renderPlaylistVideoGrid()">
-        </div>
-      </div>
-      <div id="playlistVideoContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
-    </div>
-  </div>
-
-  <!-- ===== WORKING SECTION ===== -->
-  <div id="sectionWorking" class="hidden">
-    <div class="card rounded-3xl p-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-7">
-        <div>
-          <h2 class="text-2xl font-bold">Working Channel</h2>
-          <p class="text-muted text-sm mt-1">Account used to watch and subscribe to other members' channels</p>
-        </div>
-        <div class="flex items-center gap-3 flex-wrap">
-          <div id="workingLimitBadge" class="limit-badge limit-ok">● Slot available</div>
-          <button id="btnAddWorking" onclick="openAddModal('working')"
-            class="bg-green-700 hover:bg-green-600 transition px-5 py-2.5 rounded-xl font-semibold text-sm">
-            + Add Working Channel
-          </button>
-        </div>
-      </div>
-      <div id="workingContainer" class="space-y-5"></div>
-    </div>
-  </div>
-
-  <!-- ===== SETTINGS SECTION ===== -->
-  <div id="sectionSettings" class="hidden">
-
-    <!-- INTERESTS CARD -->
-    <div class="card rounded-3xl p-6 mb-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
-        <div>
-          <h2 class="text-2xl font-bold">🎯 Channel Interests</h2>
-          <p class="text-muted text-sm mt-1">Pick the categories you want subscriber/watch-time tasks matched against. These are the interests other members will see when we build tasks for your promotional &amp; working channels.</p>
-        </div>
-      </div>
-
-      <div class="toggle-row mb-5">
-        <div>
-          <div class="font-semibold text-sm">No Preference — Match Any Category</div>
-          <div class="text-muted text-xs mt-1">Turn this on to subscribe to &amp; get watch time from channels of any interest, regardless of category.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="noInterestToggle" onchange="onToggleNoInterest()">
-          <span class="switch-slider"></span>
-        </label>
-      </div>
-
-      <div id="interestsPickerWrap">
-        <div class="search-wrap mb-4">
-          <input type="text" id="interestSearchInput" class="search-bar" placeholder="Search a category to add…" oninput="filterInterestGrid()">
-        </div>
-        <div class="channel-type-grid" id="interestAddGrid" style="grid-template-columns:repeat(3,1fr);max-height:220px;overflow-y:auto;"></div>
-
-        <div class="mt-6">
-          <div class="text-xs uppercase tracking-wide text-muted font-semibold mb-3">Your Selected Interests</div>
-          <div id="selectedInterestsWrap" class="flex flex-wrap gap-2"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- COUNTRIES CARD -->
-    <div class="card rounded-3xl p-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
-        <div>
-          <h2 class="text-2xl font-bold">🌍 Subscriber Countries</h2>
-          <p class="text-muted text-sm mt-1">Choose which countries your subscribers/viewers should come from for matching purposes.</p>
-        </div>
-      </div>
-
-      <div class="toggle-row mb-5">
-        <div>
-          <div class="font-semibold text-sm">Global — Accept Any Country</div>
-          <div class="text-muted text-xs mt-1">Turn this on to match with members from anywhere in the world.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="globalCountryToggle" onchange="onToggleGlobalCountry()">
-          <span class="switch-slider"></span>
-        </label>
-      </div>
-
-      <div id="countryPickerWrap">
-        <!-- REGION QUICK MAP -->
-        <div class="text-xs uppercase tracking-wide text-muted font-semibold mb-3">Quick Select by Region</div>
-        <div id="regionMapGrid" class="region-map-grid mb-6"></div>
-
-        <div class="search-wrap mb-4">
-          <input type="text" id="countrySearchInput" class="search-bar" placeholder="Search a country…" oninput="renderCountryGrid()">
-        </div>
-        <div class="country-grid" id="countryGrid"></div>
-
-        <div class="mt-6">
-          <div class="flex items-center justify-between mb-3">
-            <div class="text-xs uppercase tracking-wide text-muted font-semibold">Selected Countries (<span id="selectedCountryCount">0</span>)</div>
-            <button onclick="saveCountrySelection()" class="bg-purple-600 hover:bg-purple-500 transition px-4 py-2 rounded-xl font-semibold text-xs">💾 Save Selection</button>
-          </div>
-          <div id="selectedCountriesWrap" class="flex flex-wrap gap-2"></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</div>
+  </div> <!-- /max-w -->
+</main> <!-- /main -->
 </main>
-
 <script>
 /* =========================================================
    CONFIG
@@ -1071,9 +85,6 @@ const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxyWaLI5KD9O-
 
 /* =========================================================
    SESSION — load directly from what login already saved.
-   No separate status/blocked check here anymore; that is
-   handled once at login / on the dashboard. This page just
-   trusts the saved session and loads channels immediately.
 ========================================================= */
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
@@ -1083,34 +94,10 @@ if (!savedUsername || !savedPassword) {
   window.location.href = "signin.html";
 }
 
-/* Populate navbar straight from localStorage — no extra request needed */
-document.getElementById("navUserName").innerText      = savedUsername || "Member";
-document.getElementById("dropdownUserName").innerText = savedUsername || "Member";
-document.getElementById("dropdownUserCode").innerText = "ID #" + (savedUserCode || "0000");
-
 /* =========================================================
    STATE
 ========================================================= */
-let currentTab      = 'promo';
-let allVideos       = [];       // full list from server
-let filteredVideos  = [];       // after search filter
-let currentPage     = 1;
-const VIDEOS_PER_PAGE = 20;
 let promoChannelId  = null;     // store the promo channel's YouTube channelId
-
-// Playlist state
-let playlistRecord       = null;   // { PlaylistId, PlaylistName, HasPlaylistReady, PlaylistSize } or null
-let playlistSelectedUrls = new Set(); // urls currently in the playlist-videos sheet
-let playlistTotalSeconds = 0;
-const PLAYLIST_MIN_SECONDS = 30 * 60;
-const PLAYLIST_MAX_SECONDS = 35 * 60;
-
-// Settings state
-let myInterests   = [];     // array of interest ids/names currently selected
-let noInterest    = false;  // "match any category" toggle
-let myCountries   = [];     // array of country codes currently selected
-let globalCountry = false;  // "accept any country" toggle
-let settingsLoaded = false;
 
 /* =========================================================
    CHANNEL TYPES
@@ -1181,72 +168,7 @@ const CHANNEL_TYPES = [
 ];
 
 /* =========================================================
-   COUNTRIES DATA
-   [code, name, continent] — flag emoji derived from ISO code
-========================================================= */
-const REGIONS = [
-  { id:'africa',      emoji:'🌍', label:'Africa' },
-  { id:'asia',        emoji:'🌏', label:'Asia' },
-  { id:'europe',      emoji:'🌍', label:'Europe' },
-  { id:'north_america', emoji:'🌎', label:'North America' },
-  { id:'south_america', emoji:'🌎', label:'South America' },
-  { id:'oceania',     emoji:'🌏', label:'Oceania' },
-  { id:'middle_east', emoji:'🌍', label:'Middle East' },
-];
-
-const COUNTRIES = [
-  ['US','United States','north_america'],['CA','Canada','north_america'],['MX','Mexico','north_america'],
-  ['GT','Guatemala','north_america'],['CU','Cuba','north_america'],['DO','Dominican Republic','north_america'],
-  ['HN','Honduras','north_america'],['JM','Jamaica','north_america'],['PA','Panama','north_america'],
-  ['CR','Costa Rica','north_america'],['NI','Nicaragua','north_america'],['SV','El Salvador','north_america'],
-  ['BZ','Belize','north_america'],['TT','Trinidad and Tobago','north_america'],['BS','Bahamas','north_america'],
-  ['BR','Brazil','south_america'],['AR','Argentina','south_america'],['CO','Colombia','south_america'],
-  ['PE','Peru','south_america'],['VE','Venezuela','south_america'],['CL','Chile','south_america'],
-  ['EC','Ecuador','south_america'],['BO','Bolivia','south_america'],['PY','Paraguay','south_america'],
-  ['UY','Uruguay','south_america'],['GY','Guyana','south_america'],['SR','Suriname','south_america'],
-  ['GB','United Kingdom','europe'],['DE','Germany','europe'],['FR','France','europe'],['IT','Italy','europe'],
-  ['ES','Spain','europe'],['PT','Portugal','europe'],['NL','Netherlands','europe'],['BE','Belgium','europe'],
-  ['CH','Switzerland','europe'],['AT','Austria','europe'],['SE','Sweden','europe'],['NO','Norway','europe'],
-  ['DK','Denmark','europe'],['FI','Finland','europe'],['IE','Ireland','europe'],['PL','Poland','europe'],
-  ['CZ','Czech Republic','europe'],['SK','Slovakia','europe'],['HU','Hungary','europe'],['RO','Romania','europe'],
-  ['BG','Bulgaria','europe'],['GR','Greece','europe'],['UA','Ukraine','europe'],['RU','Russia','europe'],
-  ['HR','Croatia','europe'],['RS','Serbia','europe'],['SI','Slovenia','europe'],['LT','Lithuania','europe'],
-  ['LV','Latvia','europe'],['EE','Estonia','europe'],['IS','Iceland','europe'],['LU','Luxembourg','europe'],
-  ['MT','Malta','europe'],['CY','Cyprus','europe'],['AL','Albania','europe'],['MK','North Macedonia','europe'],
-  ['BA','Bosnia and Herzegovina','europe'],['MD','Moldova','europe'],['BY','Belarus','europe'],
-  ['CN','China','asia'],['IN','India','asia'],['JP','Japan','asia'],['KR','South Korea','asia'],
-  ['ID','Indonesia','asia'],['PK','Pakistan','asia'],['BD','Bangladesh','asia'],['PH','Philippines','asia'],
-  ['VN','Vietnam','asia'],['TH','Thailand','asia'],['MY','Malaysia','asia'],['SG','Singapore','asia'],
-  ['NP','Nepal','asia'],['LK','Sri Lanka','asia'],['MM','Myanmar','asia'],['KH','Cambodia','asia'],
-  ['LA','Laos','asia'],['MN','Mongolia','asia'],['KZ','Kazakhstan','asia'],['UZ','Uzbekistan','asia'],
-  ['AF','Afghanistan','asia'],['TW','Taiwan','asia'],['HK','Hong Kong','asia'],['BT','Bhutan','asia'],
-  ['MV','Maldives','asia'],['BN','Brunei','asia'],['TL','Timor-Leste','asia'],['KG','Kyrgyzstan','asia'],
-  ['TJ','Tajikistan','asia'],['TM','Turkmenistan','asia'],
-  ['NG','Nigeria','africa'],['EG','Egypt','africa'],['ZA','South Africa','africa'],['KE','Kenya','africa'],
-  ['ET','Ethiopia','africa'],['GH','Ghana','africa'],['TZ','Tanzania','africa'],['UG','Uganda','africa'],
-  ['DZ','Algeria','africa'],['MA','Morocco','africa'],['TN','Tunisia','africa'],['SD','Sudan','africa'],
-  ['LY','Libya','africa'],['CM','Cameroon','africa'],['CI',"Cote d'Ivoire",'africa'],['SN','Senegal','africa'],
-  ['ML','Mali','africa'],['ZW','Zimbabwe','africa'],['ZM','Zambia','africa'],['MZ','Mozambique','africa'],
-  ['RW','Rwanda','africa'],['SO','Somalia','africa'],['BF','Burkina Faso','africa'],['NE','Niger','africa'],
-  ['MW','Malawi','africa'],['AO','Angola','africa'],['MG','Madagascar','africa'],['BJ','Benin','africa'],
-  ['TG','Togo','africa'],['SL','Sierra Leone','africa'],['LR','Liberia','africa'],['GM','Gambia','africa'],
-  ['GN','Guinea','africa'],['NA','Namibia','africa'],['BW','Botswana','africa'],['LS','Lesotho','africa'],
-  ['SZ','Eswatini','africa'],['GA','Gabon','africa'],['CG','Congo','africa'],['CD','DR Congo','africa'],
-  ['SA','Saudi Arabia','middle_east'],['AE','United Arab Emirates','middle_east'],['IL','Israel','middle_east'],
-  ['TR','Turkey','middle_east'],['IQ','Iraq','middle_east'],['IR','Iran','middle_east'],['JO','Jordan','middle_east'],
-  ['LB','Lebanon','middle_east'],['KW','Kuwait','middle_east'],['QA','Qatar','middle_east'],['OM','Oman','middle_east'],
-  ['BH','Bahrain','middle_east'],['YE','Yemen','middle_east'],['SY','Syria','middle_east'],['PS','Palestine','middle_east'],
-  ['AU','Australia','oceania'],['NZ','New Zealand','oceania'],['FJ','Fiji','oceania'],['PG','Papua New Guinea','oceania'],
-  ['SB','Solomon Islands','oceania'],['WS','Samoa','oceania'],['TO','Tonga','oceania'],['VU','Vanuatu','oceania'],
-];
-
-function flagEmoji(code) {
-  if (!code || code.length !== 2) return '🏳️';
-  return String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0)));
-}
-
-/* =========================================================
-   FORMAT HELPERS — dates & durations
+   FORMAT HELPERS
 ========================================================= */
 /** Turns raw sheet timestamps (ISO strings like 2026-04-06T19:43:00.000Z,
  * or already-formatted dd/MM/yyyy HH:mm strings) into a clean, readable
@@ -1257,30 +179,6 @@ function formatNiceDate(raw) {
   if (isNaN(d.getTime())) return raw; // already a plain string like "not update yet"
   return d.toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' })
     + ' · ' + d.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
-}
-
-/** Builds a duration label straight from VideoDurationSeconds.
- * Under 60 seconds -> "45s". 60 seconds or more -> "M:SS". */
-function formatSecondsDuration(seconds) {
-  const s = Math.max(0, Math.floor(Number(seconds) || 0));
-  if (s < 60) return s + 's';
-  const m = Math.floor(s / 60);
-  const rem = s % 60;
-  return m + ':' + String(rem).padStart(2, '0');
-}
-
-/* =========================================================
-   TAB SWITCH
-========================================================= */
-function switchTab(tab) {
-  currentTab = tab;
-  ['promo','videos','playlist','working','settings'].forEach(t => {
-    document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
-    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
-  });
-  if (tab === 'videos') renderVideoPage();
-  if (tab === 'playlist') renderPlaylistTab();
-  if (tab === 'settings') renderSettingsTab();
 }
 
 /* =========================================================
@@ -1299,28 +197,28 @@ function typeSelectorHTML(selectedValue = '') {
   const customVal = isCustom ? selectedValue : '';
 
   return `
-    <div class="search-wrap" style="margin-top:6px;">
-      <input type="text" id="typeSearchInput" class="search-bar" placeholder="Search channel type…" oninput="filterTypeGrid()" autocomplete="off">
+    <div class="promochannel-type-search-wrap">
+      <input type="text" id="typeSearchInput" class="promochannel-type-search" placeholder="Search channel type…" oninput="filterTypeGrid()" autocomplete="off">
     </div>
-    <div class="channel-type-grid" id="typeGrid" style="max-height:230px;overflow-y:auto;grid-template-columns:repeat(3,1fr);margin-top:10px;">
+    <div class="promochannel-type-grid" id="typeGrid">
       ${CHANNEL_TYPES.map(t =>
-        `<div class="channel-type-opt${t.id === activeId ? ' selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}" data-label="${t.label.toLowerCase()}">
-          <span class="emoji">${t.emoji}</span>${t.label}
+        `<div class="promochannel-type-opt${t.id === activeId ? ' promochannel-type-opt--selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}" data-label="${t.label.toLowerCase()}">
+          <span class="promochannel-type-emoji">${t.emoji}</span>${t.label}
         </div>`
       ).join('')}
     </div>
     <input type="hidden" id="selectedChannelType" value="${activeId}">
-    <div id="customTypeWrap" style="margin-top:10px;${activeId === 'other' ? '' : 'display:none;'}">
-      <label class="swal-label">Type your channel category</label>
-      <input type="text" id="customTypeInput" class="swal-input" placeholder="e.g. Vintage Cars, Anime Reviews…" value="${customVal.replace(/"/g,'&quot;')}">
-      <p style="font-size:11px;color:#8a8f9e;margin-top:6px;">Can't find your category? Type it here — our team reviews custom types and may add them officially.</p>
+    <div id="customTypeWrap" class="promochannel-type-custom-wrap" style="${activeId === 'other' ? '' : 'display:none;'}">
+      <label class="promochannel-field-label">Type your channel category</label>
+      <input type="text" id="customTypeInput" class="promochannel-field-input" placeholder="e.g. Vintage Cars, Anime Reviews…" value="${customVal.replace(/"/g,'&quot;')}">
+      <p class="promochannel-type-hint">Can't find your category? Type it here — our team reviews custom types and may add them officially.</p>
     </div>
   `;
 }
 
 function selectType(id) {
-  document.querySelectorAll('.channel-type-opt').forEach(el => {
-    el.classList.toggle('selected', el.dataset.type === id);
+  document.querySelectorAll('.promochannel-type-opt').forEach(el => {
+    el.classList.toggle('promochannel-type-opt--selected', el.dataset.type === id);
   });
   const hidden = document.getElementById('selectedChannelType');
   if (hidden) hidden.value = id;
@@ -1330,7 +228,7 @@ function selectType(id) {
 
 function filterTypeGrid() {
   const q = (document.getElementById('typeSearchInput')?.value || '').toLowerCase().trim();
-  document.querySelectorAll('#typeGrid .channel-type-opt').forEach(el => {
+  document.querySelectorAll('#typeGrid .promochannel-type-opt').forEach(el => {
     el.style.display = (!q || el.dataset.label.includes(q)) ? '' : 'none';
   });
 }
@@ -1348,87 +246,47 @@ function getSelectedChannelTypeValue() {
 }
 
 /* =========================================================
-   LOAD CHANNELS + VIDEOS
+   LOAD CHANNEL
    Goes straight to ChannelCRUDScript using saved username/
    password — no separate login/status round-trip first.
    validateMember() inside the Apps Script still confirms the
-   credentials are correct before returning any data, so this
-   stays secure; we've just removed the extra blocked-status
-   gate that used to run before this on every page load.
+   credentials are correct before returning any data.
 ========================================================= */
 async function loadChannels() {
   try {
-    // Promo channel(s)
     let promoChannels = [];
-    try {
-      const pr = await fetch(ChannelCRUDScript
-        + `?action=getMyChannel`
-        + `&username=${encodeURIComponent(savedUsername)}`
-        + `&password=${encodeURIComponent(savedPassword)}`
-      );
-      const pd = await pr.json();
+    const pr = await fetch(ChannelCRUDScript
+      + `?action=getMyChannel`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const pd = await pr.json();
 
-      if (pd.status !== 'success') {
-        // Credentials are invalid/expired — only now do we send them back to sign in
-        hideLoading();
-        await Swal.fire({
-          icon: "error",
-          title: "Session Expired",
-          text: pd.message || "Please sign in again.",
-          confirmButtonText: "Go to Sign In"
-        });
-        localStorage.clear();
-        window.location.href = "signin.html";
-        return;
-      }
+    if (pd.status !== 'success') {
+      hideLoading();
+      await Swal.fire({
+        icon: "error",
+        title: "Session Expired",
+        text: pd.message || "Please sign in again.",
+        confirmButtonText: "Go to Sign In"
+      });
+      localStorage.clear();
+      window.location.href = "signin.html";
+      return;
+    }
 
-      promoChannels = Array.isArray(pd.channels) ? pd.channels : [];
-    } catch(pe) { promoChannels = []; }
-
-    // Working channel(s)
-    let workingChannels = [];
-    try {
-      const wr = await fetch(ChannelCRUDScript
-        + `?action=getMyWorkingChannel`
-        + `&username=${encodeURIComponent(savedUsername)}`
-        + `&password=${encodeURIComponent(savedPassword)}`
-      );
-      const wd = await wr.json();
-      workingChannels = (wd.status === 'success' && Array.isArray(wd.channels)) ? wd.channels : [];
-    } catch(we) { workingChannels = []; }
-
-    // Store promoChannelId for video operations
+    // Extract promo channels safely
+    promoChannels = Array.isArray(pd.channels) ? pd.channels : [];
     if (promoChannels.length > 0) promoChannelId = promoChannels[0].ChannelId;
 
     renderPromo(promoChannels);
-    renderWorking(workingChannels);
-
-    // Videos for the promo channel
-    if (promoChannelId) {
-      try {
-        const vr = await fetch(ChannelCRUDScript
-          + `?action=getVideos`
-          + `&username=${encodeURIComponent(savedUsername)}`
-          + `&password=${encodeURIComponent(savedPassword)}`
-          + `&channelId=${encodeURIComponent(promoChannelId)}`
-        );
-        const vd = await vr.json();
-        const videos = (vd.status === 'success' && Array.isArray(vd.videos)) ? vd.videos : [];
-        setVideos(videos);
-      } catch(ve) {
-        setVideos([]);
-      }
-    } else {
-      setVideos([]);
-    }
-
     hideLoading();
+
   } catch(err) {
     hideLoading();
-    Swal.fire({ icon:"error", title:"Error", text:"Unable to load channels: " + err.message });
+    Swal.fire({ icon:"error", title:"Error", text:"Unable to load promotional data: " + err.message });
   }
 }
-
 function hideLoading() {
   const overlay = document.getElementById('loadingOverlay');
   overlay.classList.add('hide');
@@ -1444,898 +302,131 @@ function renderPromo(channels) {
   const btn       = document.getElementById('btnAddPromo');
 
   if (channels.length >= 1) {
-    badge.className = 'limit-badge limit-full';
-    badge.innerHTML = '● 1/1 Slot used';
+    badge.className = 'promochannel-badge promochannel-badge--full';
+    badge.innerHTML = '<span class="promochannel-badge-dot"></span>1/1 Slot Used';
     btn.disabled = true;
-    btn.classList.add('opacity-40','cursor-not-allowed');
+    btn.classList.add('promochannel-btn-add--disabled');
     btn.onclick = null;
   } else {
-    badge.className = 'limit-badge limit-ok';
-    badge.innerHTML = '● Slot available';
+    badge.className = 'promochannel-badge promochannel-badge--ok';
+    badge.innerHTML = '<span class="promochannel-badge-dot"></span>Slot Available';
   }
 
   container.innerHTML = channels.length === 0
     ? emptyState('📢','No Promotional Channel','Add your channel to start receiving community support')
-    : channels.map(ch => channelCardHTML(ch, 'promo')).join('');
-}
-
-/* =========================================================
-   RENDER WORKING
-========================================================= */
-function renderWorking(channels) {
-  const container = document.getElementById('workingContainer');
-  const badge     = document.getElementById('workingLimitBadge');
-  const btn       = document.getElementById('btnAddWorking');
-
-  if (channels.length >= 1) {
-    badge.className = 'limit-badge limit-full';
-    badge.innerHTML = '● 1/1 Slot used';
-    btn.disabled = true;
-    btn.classList.add('opacity-40','cursor-not-allowed');
-    btn.onclick = null;
-  } else {
-    badge.className = 'limit-badge limit-ok';
-    badge.innerHTML = '● Slot available';
-  }
-
-  container.innerHTML = channels.length === 0
-    ? emptyState('⚙️','No Working Channel','Add your working account to participate in the exchange')
-    : channels.map(ch => channelCardHTML(ch, 'working')).join('');
+    : channels.map(ch => channelCardHTML(ch)).join('');
 }
 
 /* =========================================================
    CHANNEL CARD HTML
 ========================================================= */
 function emptyState(icon, title, desc) {
-  return `<div class="empty-state">
-    <div class="empty-icon">${icon}</div>
-    <h2 class="text-xl font-bold mb-2">${title}</h2>
-    <p class="text-muted text-sm">${desc}</p>
+  return `<div class="promochannel-empty">
+    <div class="promochannel-empty-icon">${icon}</div>
+    <h2 class="promochannel-empty-title">${title}</h2>
+    <p class="promochannel-empty-desc">${desc}</p>
   </div>`;
 }
 
-function channelCardHTML(ch, type) {
+function channelCardHTML(ch) {
   const image    = ch.ChannelImage && ch.ChannelImage.trim()
     ? ch.ChannelImage
     : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
   const typeObj  = CHANNEL_TYPES.find(t => t.id === (ch.ChannelType||'').toLowerCase()) || { emoji:'🌐', label: ch.ChannelType||'-' };
-  const badgeCls = type === 'promo' ? 'type-promo' : 'type-working';
-  const badgeLbl = type === 'promo' ? '📢 Promotional' : '⚙️ Working';
-
-  const subsLabel = type === 'working' ? 'Total Subscriptions'  : 'Total Subscribers';
-  const subsVal   = type === 'working' ? (ch.TotalSubscription||ch.TotalSubscribers||0) : (ch.TotalSubscribers||0);
-  const lastUpdated = formatNiceDate(type === 'working' ? (ch.SheetUpdate||ch.LastTimeFetch||'-') : (ch.LastUpdated||'-'));
+  const lastUpdated = formatNiceDate(ch.LastUpdated||'-');
+  const isLive   = String(ch.VideosReady||'').toLowerCase() === 'yes';
 
   // Issue box only shows when there's an actual reported issue (not blank / "No")
   const issueText = (ch.Issue || '').trim();
   const hasIssue  = issueText && issueText.toLowerCase() !== 'no';
   const issueBoxHTML = hasIssue
-    ? `<div class="channel-info-box" style="border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.08);">
-         <span style="color:#f87171;">⚠️ Issue</span><strong style="color:#f87171;">${issueText}</strong>
+    ? `<div class="promochannel-notice promochannel-notice--danger">
+         <span class="promochannel-notice-label">⚠️ Issue</span>
+         <strong class="promochannel-notice-text">${issueText}</strong>
        </div>`
     : '';
 
-  // For the promo channel, surface a clear "videos not added yet" notice when not ready
-  const videosNotReadyHTML = (type === 'promo' && String(ch.VideosReady||'').toLowerCase() !== 'yes')
-    ? `<div class="mt-4 px-3 py-2.5 rounded-xl text-xs font-semibold" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
+  // Surface a clear "videos not added yet" notice when not ready
+  const videosNotReadyHTML = !isLive
+    ? `<div class="promochannel-notice promochannel-notice--warning">
          ⚠️ Videos are not added yet. You need to add videos to start work in our group.
        </div>`
     : '';
 
-  const editFn   = `openEditModal('${type}','${ch.ChannelId}')`;
-  const ytFn     = type === 'promo' ? `updateChannelYT('${ch.ChannelId}')` : `updateWorkingChannelYT('${ch.ChannelId}')`;
-  const changeFn = `openChangeChannelModal('${type}','${ch.ChannelId}')`;
+  const editFn   = `openEditModal('${ch.ChannelId}')`;
+  const ytFn     = `updateChannelYT('${ch.ChannelId}')`;
+  const changeFn = `openChangeChannelModal('${ch.ChannelId}')`;
 
-  return `<div class="channel-card">
-    <div class="channel-left">
-      <img src="${image}" class="channel-image" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
-      <div class="w-full">
-        <div class="type-badge ${badgeCls}">${badgeLbl}</div>
-        <h2 class="channel-name">${ch.ChannelName||'Unknown Channel'}</h2>
-        <div class="channel-handle">${ch.ChannelHandle||'channel'}</div>
-        <div class="channel-info-grid">
-          ${type === 'promo' ? `<div class="channel-info-box"><span>Channel Type</span><strong>${typeObj.emoji} ${typeObj.label}</strong></div>` : ''}
-          <div class="channel-info-box"><span>${subsLabel}</span><strong>${subsVal}</strong></div>
-          <div class="channel-info-box"><span>Last Updated</span><strong>${lastUpdated}</strong></div>
-          ${issueBoxHTML}
+  return `<div class="promochannel-card">
+    <div class="promochannel-card-media">
+      <div class="promochannel-avatar-ring${isLive ? ' promochannel-avatar-ring--live' : ''}">
+        <img src="${image}" class="promochannel-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
+      </div>
+    </div>
+    <div class="promochannel-card-body">
+     
+      <h2 class="promochannel-name">${ch.ChannelName||'Unknown Channel'}</h2>
+      <div class="promochannel-handle">${ch.ChannelHandle||'channel'}</div>
+
+      <div class="promochannel-stats">
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Channel Type</span>
+          <strong class="promochannel-stat-value">${typeObj.emoji} ${typeObj.label}</strong>
         </div>
-        ${videosNotReadyHTML}
-        <a href="${ch.ChannelLink||'#'}" target="_blank"
-          class="inline-flex items-center gap-2 mt-4 text-purple-400 text-sm hover:text-purple-300 transition">
-          Visit Channel →
-        </a>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Subscribers</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono">${ch.TotalSubscribers||0}</strong>
+        </div>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Last Updated</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono">${lastUpdated}</strong>
+        </div>
       </div>
+
+      ${issueBoxHTML}
+      ${videosNotReadyHTML}
+
+      <a href="${ch.ChannelLink||'#'}" target="_blank" class="promochannel-visit-link">
+        Visit Channel <span class="promochannel-visit-arrow">→</span>
+      </a>
     </div>
-    <div class="channel-right">
-      <button onclick="${editFn}" class="btn-edit">✏️ Edit Channel</button>
-      <button onclick="${ytFn}" class="btn-update-yt">🔄 Sync from YouTube</button>
-      <button onclick="${changeFn}" class="btn-change">🔁 Change Channel</button>
+    <div class="promochannel-actions">
+      <button onclick="${editFn}" class="btn-retro btn-charcoal">✏️ Edit Channel</button>
+      <button onclick="${ytFn}" class="btn-retro btn-sand">🔄 Sync from YouTube</button>
+      <button onclick="${changeFn}" class="btn-retro btn-mint">🔁 Change Channel</button>
     </div>
   </div>`;
 }
 
 /* =========================================================
-   VIDEO MANAGEMENT
+   ADD CHANNEL MODAL (Promotional Channel only)
 ========================================================= */
-function setVideos(videos) {
-  allVideos = videos;
-  filteredVideos = [...allVideos];
-  currentPage = 1;
-  updateVideoStats();
-  if (currentTab === 'videos') renderVideoPage();
-  if (currentTab === 'playlist') renderPlaylistVideoGrid();
-}
-
-function updateVideoStats() {
-  const total   = allVideos.length;
-  const deleted = allVideos.filter(v => (v.VideoStatus||'').toLowerCase() === 'deleted').length;
-  const active  = total - deleted;
-  document.getElementById('statTotal').innerText   = total;
-  document.getElementById('statActive').innerText  = active;
-  document.getElementById('statDeleted').innerText = deleted;
-  document.getElementById('statReady').innerText   = active >= 5 ? '✅ Yes' : `❌ No (${active}/5)`;
-  if (total > 0) document.getElementById('videoStatsBar').classList.remove('hidden');
-  else           document.getElementById('videoStatsBar').classList.add('hidden');
-
-  // Banner: tell the member clearly that videos still need to be added
-  const banner = document.getElementById('videosNotReadyBanner');
-  if (active < 5) {
-    banner.innerText = total === 0
-      ? '⚠️ Videos are not added yet. You need to add videos to start work in our group.'
-      : `⚠️ Videos are not ready yet (${active}/5 active). Add more videos to start work in our group.`;
-    banner.classList.remove('hidden');
-  } else {
-    banner.classList.add('hidden');
-  }
-}
-
-function filterVideos() {
-  const q = document.getElementById('videoSearch').value.toLowerCase().trim();
-  filteredVideos = q
-    ? allVideos.filter(v => (v.VideoTitle||'').toLowerCase().includes(q))
-    : [...allVideos];
-  currentPage = 1;
-  renderVideoPage();
-}
-
-function renderVideoPage() {
-  const container  = document.getElementById('videoContainer');
-  const pagination = document.getElementById('videoPagination');
-
-  if (filteredVideos.length === 0) {
-    container.innerHTML = emptyState('🎬','No Videos Found', allVideos.length === 0
-      ? 'Add your promotional channel videos using the button above'
-      : 'No videos match your search');
-    pagination.classList.add('hidden');
-    return;
-  }
-
-  const totalPages = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
-  const start = (currentPage - 1) * VIDEOS_PER_PAGE;
-  const page  = filteredVideos.slice(start, start + VIDEOS_PER_PAGE);
-
-  container.innerHTML = page.map((v, idx) => videoCardHTML(v, start + idx)).join('');
-
-  // Pagination
-  if (totalPages <= 1) {
-    pagination.classList.add('hidden');
-    return;
-  }
-  pagination.classList.remove('hidden');
-  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
-      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
-    } else if (Math.abs(i - currentPage) === 3) {
-      html += `<span class="page-btn" style="cursor:default;opacity:.4">…</span>`;
-    }
-  }
-  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
-  pagination.innerHTML = html;
-}
-
-function goPage(p) {
-  const total = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
-  if (p < 1 || p > total) return;
-  currentPage = p;
-  renderVideoPage();
-  document.getElementById('sectionVideos').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-function isShortVideo(seconds) {
-  return Number(seconds) > 0 && Number(seconds) <= 180;
-}
-
-function videoCardHTML(v, idx) {
-  const thumb    = v.VideoThumbnail || 'https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb';
-  const title    = v.VideoTitle || 'Untitled Video';
-  const duration = formatSecondsDuration(v.VideoDurationSeconds);
-  const url      = v.VideoUrl || '#';
-  const status   = (v.VideoStatus||'active').toLowerCase();
-  const statusCls = status === 'deleted' ? 'status-deleted' : 'status-active';
-  const statusLbl = status === 'deleted' ? '🗑 Deleted' : '✅ Active';
-  const videoId   = v.VideoUrl ? v.VideoUrl.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','') : '';
-  const shortBadge = isShortVideo(v.VideoDurationSeconds) ? `<span class="video-status-badge" style="background:rgba(236,72,153,0.12);color:#f472b6;border:1px solid rgba(236,72,153,0.3);">🩳 Short</span>` : '';
-
-  return `<div class="video-card" style="animation-delay:${(idx%VIDEOS_PER_PAGE)*0.04}s">
-    <a href="${url}" target="_blank" class="video-thumb-wrap">
-      <img src="${thumb}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb'">
-      <span class="video-duration">${duration}</span>
-    </a>
-    <div class="video-info">
-      <div class="video-title" title="${title}">${title}</div>
-      <div class="video-meta">
-        <span class="video-status-badge ${statusCls}">${statusLbl}</span>
-        ${shortBadge}
-        <span style="color:#8a8f9e;font-size:10px;">${v.CreatedDate||''}</span>
-      </div>
-    </div>
-    <div class="video-actions">
-      <button class="btn-video-fix" onclick="fixSingleVideo('${videoId}','${v.VideoUrl}')">🛠️ Fix</button>
-      <button class="btn-video-del" onclick="deleteSingleVideo('${videoId}')">🗑️</button>
-    </div>
-  </div>`;
-}
-
-/* =========================================================
-   ADD VIDEOS
-========================================================= */
-function openAddVideosModal() {
-  if (!promoChannelId) {
-    Swal.fire({ icon:'warning', title:'No Promo Channel', text:'Please add a promotional channel first.' });
-    return;
-  }
+function openAddModal() {
   Swal.fire({
-    title:'🎬 Add Promotional Videos',
-    html:`<div style="text-align:left">
-      <p style="color:#8a8f9e;font-size:13px;margin-bottom:12px;">
-        Fetches all videos from your promotional channel — including Shorts — and adds them automatically.
-      </p>
-      <div style="background:#0a0b10;border:1px solid #1f2330;border-radius:12px;padding:14px;font-size:13px;color:#a78bfa;">
-        📌 Channel ID: <strong style="color:white">${promoChannelId}</strong>
-      </div>
-    </div>`,
-    confirmButtonText:'🚀 Fetch & Add Videos',
-    showCancelButton:true,
-    cancelButtonText:'Cancel',
-    preConfirm: async () => {
-      try {
-        Swal.showLoading();
-        const r = await fetch(ChannelCRUDScript
-          + `?action=addVideos`
-          + `&username=${encodeURIComponent(savedUsername)}`
-          + `&password=${encodeURIComponent(savedPassword)}`
-          + `&channelId=${encodeURIComponent(promoChannelId)}`
-        );
-        const d = await r.json();
-        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
-        return d;
-      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
-    }
-  }).then(result => {
-    if (result.isConfirmed) {
-      Swal.fire({ 
-  icon:'success', 
-  title:'Videos Added!', 
-  text: (result.value.message || '') + ' Issues cleared.', 
-  timer:2000, 
-  showConfirmButton:false 
-      });
-    }
-  });
-}
-
-/* =========================================================
-   SYNC ALL VIDEOS
-========================================================= */
-async function syncVideos() {
-  if (!promoChannelId) { Swal.fire({ icon:'warning', title:'No Promo Channel' }); return; }
-  Swal.fire({ title:'🔄 Syncing Videos…', text:'Fetching latest data from YouTube', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=syncVideos`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&channelId=${encodeURIComponent(promoChannelId)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Sync Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Synced!', text: d.message || 'All videos updated.', timer:1600, showConfirmButton:false });
-    setTimeout(() => location.reload(), 1700);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to sync videos' }); }
-}
-
-/* =========================================================
-   FIX DELETED VIDEOS (bulk)
-========================================================= */
-async function fixVideos() {
-  if (!promoChannelId) { Swal.fire({ icon:'warning', title:'No Promo Channel' }); return; }
-  Swal.fire({ title:'🛠️ Fixing Videos…', text:'Checking YouTube for deleted videos', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=fixVideos`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&channelId=${encodeURIComponent(promoChannelId)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Fix Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Fixed!', text: d.message || 'Deleted videos have been removed.', timer:1800, showConfirmButton:false });
-    setTimeout(() => location.reload(), 1900);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to fix videos' }); }
-}
-
-/* =========================================================
-   FIX SINGLE VIDEO
-========================================================= */
-async function fixSingleVideo(videoId, videoUrl) {
-  if (!videoId && !videoUrl) return;
-  Swal.fire({ title:'🛠️ Checking video…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=fixSingleVideo`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&videoUrl=${encodeURIComponent(videoUrl)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Fix Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Done!', text: d.message || 'Video status updated.', timer:1400, showConfirmButton:false });
-    setTimeout(() => location.reload(), 1500);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to fix video' }); }
-}
-
-/* =========================================================
-   DELETE SINGLE VIDEO
-========================================================= */
-async function deleteSingleVideo(videoId) {
-  const confirm = await Swal.fire({
-    icon:'warning', title:'Remove Video?',
-    text:'This will remove the video from your list.',
-    showCancelButton:true,
-    confirmButtonColor:'#dc2626',
-    confirmButtonText:'Yes, Remove',
-    cancelButtonText:'Cancel'
-  });
-  if (!confirm.isConfirmed) return;
-  Swal.fire({ title:'Removing…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=deleteVideo`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&videoId=${encodeURIComponent(videoId)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Removed!', timer:1200, showConfirmButton:false });
-    setTimeout(() => location.reload(), 1300);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to remove video' }); }
-}
-
-/* =========================================================
-   PLAYLIST TAB — RENDER + LOGIC
-========================================================= */
-function secondsToLabel(totalSeconds) {
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  return m + ':' + String(s).padStart(2, '0');
-}
-
-async function renderPlaylistTab() {
-  // No promo channel at all
-  document.getElementById('playlistNoChannel').classList.toggle('hidden', !!promoChannelId);
-  document.getElementById('playlistStageBuild').classList.add('hidden');
-  document.getElementById('playlistStagePending').classList.add('hidden');
-  document.getElementById('playlistStageReady').classList.add('hidden');
-  document.getElementById('playlistVideoSection').classList.add('hidden');
-
-  if (!promoChannelId) return;
-
-  // Show a loading state while we fetch + calculate playlist data
-  const section = document.getElementById('sectionPlaylist');
-  let loadingEl = document.getElementById('playlistLoadingState');
-  if (!loadingEl) {
-    loadingEl = document.createElement('div');
-    loadingEl.id = 'playlistLoadingState';
-    loadingEl.className = 'card rounded-3xl playlist-loading';
-    loadingEl.innerHTML = `<div class="loader-ring"></div><p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your playlist…</p>`;
-    section.insertBefore(loadingEl, section.firstChild);
-  }
-  loadingEl.classList.remove('hidden');
-
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=getMyPlaylist`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') {
-      loadingEl.classList.add('hidden');
-      Swal.fire({ icon:'error', title:'Error', text:d.message || 'Unable to load playlist data.' });
-      return;
-    }
-
-    playlistRecord       = d.playlist || null;
-    playlistSelectedUrls = new Set(d.selectedVideoUrls || []);
-    playlistTotalSeconds = d.totalSeconds || 0;
-
-    const isReady = playlistRecord && String(playlistRecord.HasPlaylistReady).toLowerCase() === 'yes';
-
-    if (!playlistRecord) {
-      // STAGE 1 — building selection
-      document.getElementById('playlistStageBuild').classList.remove('hidden');
-      document.getElementById('playlistVideoSection').classList.remove('hidden');
-      updatePlaylistProgressUI();
-    } else if (!isReady) {
-      // STAGE 2 — created, pending YouTube confirmation
-      document.getElementById('playlistStagePending').classList.remove('hidden');
-      document.getElementById('playlistVideoSection').classList.remove('hidden');
-      document.getElementById('pendingPlaylistName').innerText = playlistRecord.PlaylistName;
-      updatePlaylistProgressUI();
-    } else {
-      // STAGE 3 — confirmed ready
-      document.getElementById('playlistStageReady').classList.remove('hidden');
-      document.getElementById('readyPlaylistName').innerText = playlistRecord.PlaylistName;
-      document.getElementById('readyPlaylistDuration').innerText = secondsToLabel(playlistRecord.PlaylistSize) + ' min';
-    }
-
-    renderPlaylistVideoGrid();
-    loadingEl.classList.add('hidden');
-  } catch (err) {
-    loadingEl.classList.add('hidden');
-    Swal.fire({ icon:'error', title:'Error', text:'Unable to load playlist: ' + err.message });
-  }
-}
-
-function updatePlaylistProgressUI() {
-  const pct = Math.min(100, (playlistTotalSeconds / PLAYLIST_MAX_SECONDS) * 100);
-  const inRange = playlistTotalSeconds >= PLAYLIST_MIN_SECONDS && playlistTotalSeconds <= PLAYLIST_MAX_SECONDS;
-  const overMax = playlistTotalSeconds > PLAYLIST_MAX_SECONDS;
-  const color = overMax ? '#ef4444' : (inRange ? '#4ade80' : '#8b5cf6');
-
-  ['playlistDurationLabel','playlistDurationLabel2'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerText = secondsToLabel(playlistTotalSeconds);
-  });
-  ['playlistProgressFill','playlistProgressFill2'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.style.width = pct + '%'; el.style.background = color; }
-  });
-
-  const hint = document.getElementById('playlistHintText');
-  if (hint) {
-    if (overMax) {
-      hint.innerHTML = `<span style="color:#f87171;">⚠️ Too long! Remove some videos — must be 35:00 or under.</span>`;
-    } else if (inRange) {
-      hint.innerHTML = `<span style="color:#4ade80;">✅ Perfect! You're within the 30–35 minute range. Click "Create Playlist" below.</span>`;
-    } else {
-      const remaining = PLAYLIST_MIN_SECONDS - playlistTotalSeconds;
-      hint.innerText = `Select more videos. You need at least ${secondsToLabel(remaining)} more to reach 30 minutes.`;
-    }
-  }
-
-  const btn = document.getElementById('btnCreatePlaylist');
-  if (btn) {
-    btn.disabled = !inRange;
-    btn.classList.toggle('opacity-40', !inRange);
-    btn.classList.toggle('cursor-not-allowed', !inRange);
-  }
-}
-
-function renderPlaylistVideoGrid() {
-  const container = document.getElementById('playlistVideoContainer');
-  if (!container) return;
-
-  const isLocked = playlistRecord && String(playlistRecord.HasPlaylistReady).toLowerCase() === 'yes';
-  const q = (document.getElementById('playlistVideoSearch')?.value || '').toLowerCase().trim();
-
-  const activeVideos = allVideos.filter(v => (v.VideoStatus||'').toLowerCase() !== 'deleted');
-  const list = q ? activeVideos.filter(v => (v.VideoTitle||'').toLowerCase().includes(q)) : activeVideos;
-
-  if (list.length === 0) {
-    container.innerHTML = emptyState('🎬','No Videos Found', allVideos.length === 0
-      ? 'Add your promotional channel videos in the Promotional Videos tab first.'
-      : 'No videos match your search.');
-    return;
-  }
-
-  container.innerHTML = list.map((v, idx) => playlistVideoCardHTML(v, idx, isLocked)).join('');
-}
-
-function playlistVideoCardHTML(v, idx, isLocked) {
-  const thumb    = v.VideoThumbnail || 'https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb';
-  const title    = v.VideoTitle || 'Untitled Video';
-  const seconds  = Number(v.VideoDurationSeconds) || 0;
-  const duration = formatSecondsDuration(seconds);
-  const url      = v.VideoUrl || '#';
-  const inPlaylist = playlistSelectedUrls.has(url);
-  const shortBadge = isShortVideo(seconds) ? `<span class="video-status-badge" style="background:rgba(236,72,153,0.12);color:#f472b6;border:1px solid rgba(236,72,153,0.3);">🩳 Short</span>` : '';
-
-  const actionHTML = isLocked
-    ? `<span class="video-status-badge ${inPlaylist ? 'status-active' : 'status-deleted'}" style="width:100%;text-align:center;padding:8px;">${inPlaylist ? '✅ In Playlist' : '—'}</span>`
-    : inPlaylist
-      ? `<button class="btn-video-remove" onclick="removeFromPlaylist('${url}')">➖ Remove</button>`
-      : `<button class="btn-video-add" onclick="addToPlaylist('${url}', ${seconds})">➕ Add</button>`;
-
-  return `<div class="video-card${inPlaylist ? ' in-playlist' : ''}" style="animation-delay:${(idx%24)*0.03}s">
-    <a href="${url}" target="_blank" class="video-thumb-wrap">
-      <img src="${thumb}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/320x180/12141c/8b5cf6?text=No+Thumb'">
-      <span class="video-duration">${duration}</span>
-    </a>
-    <div class="video-info">
-      <div class="video-title" title="${title}">${title}</div>
-      <div class="video-meta">
-        ${inPlaylist ? `<span class="video-status-badge status-active">✅ Selected</span>` : ''}
-        ${shortBadge}
-      </div>
-    </div>
-    <div class="video-actions">${actionHTML}</div>
-  </div>`;
-}
-
-async function addToPlaylist(videoUrl, videoSeconds) {
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=addVideoToPlaylist`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&videoUrl=${encodeURIComponent(videoUrl)}`
-      + `&videoSeconds=${encodeURIComponent(videoSeconds)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    playlistSelectedUrls.add(videoUrl);
-    playlistTotalSeconds = d.totalSeconds;
-    updatePlaylistProgressUI();
-    renderPlaylistVideoGrid();
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to add video' }); }
-}
-
-async function removeFromPlaylist(videoUrl) {
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=removeVideoFromPlaylist`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&videoUrl=${encodeURIComponent(videoUrl)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    playlistSelectedUrls.delete(videoUrl);
-    playlistTotalSeconds = d.totalSeconds;
-    updatePlaylistProgressUI();
-    renderPlaylistVideoGrid();
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to remove video' }); }
-}
-
-async function createPlaylistRow() {
-  if (playlistTotalSeconds < PLAYLIST_MIN_SECONDS || playlistTotalSeconds > PLAYLIST_MAX_SECONDS) return;
-  Swal.fire({ title:'Creating playlist…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=createPlaylistRow`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    Swal.fire({
-      icon:'success',
-      title:'Playlist Created!',
-      html:`Your playlist name is <strong style="color:#a78bfa">${d.playlistName}</strong>.<br><br>Now create a YouTube playlist with this exact name and add these same videos.`,
-      confirmButtonText:'Got it'
-    });
-    renderPlaylistTab();
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to create playlist' }); }
-}
-
-function copyPlaylistName() {
-  if (!playlistRecord) return;
-  navigator.clipboard.writeText(playlistRecord.PlaylistName).then(() => {
-    Swal.fire({ icon:'success', title:'Copied!', timer:1000, showConfirmButton:false });
-  });
-}
-
-async function setPlaylistForGroup() {
-  if (!promoChannelId) return;
-  Swal.fire({
-    title:'🔍 Verifying on YouTube…',
-    text:'Searching your channel for the matching playlist and checking its videos.',
-    allowOutsideClick:false,
-    didOpen:()=>Swal.showLoading()
-  });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=setPlaylistForGroup`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&channelId=${encodeURIComponent(promoChannelId)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') {
-      Swal.fire({ icon:'error', title:'Not Ready Yet', text:d.message });
-      renderPlaylistTab();
-      return;
-    }
-    Swal.fire({ icon:'success', title:'Playlist Confirmed!', text:d.message, timer:2200, showConfirmButton:false });
-    setTimeout(() => renderPlaylistTab(), 2300);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to verify playlist' }); }
-}
-
-async function deletePlaylistFlow() {
-  const confirm = await Swal.fire({
-    icon:'warning', title:'Reset Playlist?',
-    text:'This will remove your playlist setup and selected videos so you can start over.',
-    showCancelButton:true,
-    confirmButtonColor:'#dc2626',
-    confirmButtonText:'Yes, Reset',
-    cancelButtonText:'Cancel'
-  });
-  if (!confirm.isConfirmed) return;
-  Swal.fire({ title:'Resetting…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=deletePlaylist`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Reset!', timer:1200, showConfirmButton:false });
-    setTimeout(() => renderPlaylistTab(), 1300);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to reset playlist' }); }
-}
-
-/* =========================================================
-   SETTINGS TAB — INTERESTS + COUNTRIES
-========================================================= */
-async function renderSettingsTab() {
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=getMySettings`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') {
-      Swal.fire({ icon:'error', title:'Error', text:d.message || 'Unable to load settings.' });
-      return;
-    }
-    myInterests   = Array.isArray(d.interests) ? d.interests : [];
-    noInterest    = !!d.noInterest;
-    myCountries   = Array.isArray(d.countries) ? d.countries : [];
-    globalCountry = !!d.globalCountry;
-    settingsLoaded = true;
-
-    document.getElementById('noInterestToggle').checked = noInterest;
-    document.getElementById('globalCountryToggle').checked = globalCountry;
-    document.getElementById('interestsPickerWrap').style.display = noInterest ? 'none' : '';
-    document.getElementById('countryPickerWrap').style.display = globalCountry ? 'none' : '';
-
-    renderInterestAddGrid();
-    renderSelectedInterests();
-    renderRegionMap();
-    renderCountryGrid();
-    renderSelectedCountries();
-  } catch (err) {
-    Swal.fire({ icon:'error', title:'Error', text:'Unable to load settings: ' + err.message });
-  }
-}
-
-/* ---------- INTERESTS ---------- */
-function renderInterestAddGrid() {
-  const grid = document.getElementById('interestAddGrid');
-  grid.innerHTML = CHANNEL_TYPES.filter(t => t.id !== 'other').map(t => {
-    const selected = myInterests.includes(t.id);
-    return `<div class="channel-type-opt${selected ? ' selected' : ''}" data-label="${t.label.toLowerCase()}" onclick="toggleInterest('${t.id}')">
-      <span class="emoji">${t.emoji}</span>${t.label}
-    </div>`;
-  }).join('');
-}
-
-function filterInterestGrid() {
-  const q = document.getElementById('interestSearchInput').value.toLowerCase().trim();
-  document.querySelectorAll('#interestAddGrid .channel-type-opt').forEach(el => {
-    el.style.display = (!q || el.dataset.label.includes(q)) ? '' : 'none';
-  });
-}
-
-async function toggleInterest(id) {
-  const isSelected = myInterests.includes(id);
-  try {
-    const action = isSelected ? 'deleteInterest' : 'addInterest';
-    const r = await fetch(ChannelCRUDScript
-      + `?action=${action}`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&interestName=${encodeURIComponent(id)}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    myInterests = isSelected ? myInterests.filter(x => x !== id) : [...myInterests, id];
-    renderInterestAddGrid();
-    renderSelectedInterests();
-  } catch (e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to update interest' }); }
-}
-
-function renderSelectedInterests() {
-  const wrap = document.getElementById('selectedInterestsWrap');
-  if (myInterests.length === 0) {
-    wrap.innerHTML = `<span class="text-muted text-sm">No interests selected yet — pick some categories above.</span>`;
-    return;
-  }
-  wrap.innerHTML = myInterests.map(id => {
-    const t = CHANNEL_TYPES.find(c => c.id === id) || { emoji:'🌐', label:id };
-    return `<span class="interest-chip">${t.emoji} ${t.label} <button onclick="toggleInterest('${id}')" title="Remove">✕</button></span>`;
-  }).join('');
-}
-
-async function onToggleNoInterest() {
-  const enabled = document.getElementById('noInterestToggle').checked;
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=setNoInterest`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&enabled=${enabled ? 'yes' : 'no'}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') {
-      document.getElementById('noInterestToggle').checked = !enabled;
-      Swal.fire({ icon:'error', title:'Failed', text:d.message });
-      return;
-    }
-    noInterest = enabled;
-    if (enabled) myInterests = [];
-    document.getElementById('interestsPickerWrap').style.display = enabled ? 'none' : '';
-    renderInterestAddGrid();
-    renderSelectedInterests();
-  } catch (e) {
-    document.getElementById('noInterestToggle').checked = !enabled;
-    Swal.fire({ icon:'error', title:'Error', text:'Unable to update preference' });
-  }
-}
-
-/* ---------- COUNTRIES ---------- */
-function renderRegionMap() {
-  const grid = document.getElementById('regionMapGrid');
-  grid.innerHTML = REGIONS.map(r => {
-    const countInRegion = COUNTRIES.filter(c => c[2] === r.id).length;
-    const selInRegion = COUNTRIES.filter(c => c[2] === r.id && myCountries.includes(c[0])).length;
-    const active = selInRegion === countInRegion && countInRegion > 0;
-    return `<div class="region-card${active ? ' active' : ''}" onclick="toggleRegion('${r.id}')">
-      <span class="region-emoji">${r.emoji}</span>
-      <div class="region-name">${r.label}</div>
-      <div class="region-count">${selInRegion}/${countInRegion} selected</div>
-    </div>`;
-  }).join('');
-}
-
-function toggleRegion(regionId) {
-  const regionCodes = COUNTRIES.filter(c => c[2] === regionId).map(c => c[0]);
-  const allSelected = regionCodes.every(code => myCountries.includes(code));
-  if (allSelected) {
-    myCountries = myCountries.filter(code => !regionCodes.includes(code));
-  } else {
-    regionCodes.forEach(code => { if (!myCountries.includes(code)) myCountries.push(code); });
-  }
-  renderRegionMap();
-  renderCountryGrid();
-  renderSelectedCountries();
-}
-
-function renderCountryGrid() {
-  const grid = document.getElementById('countryGrid');
-  const q = (document.getElementById('countrySearchInput')?.value || '').toLowerCase().trim();
-  const list = q ? COUNTRIES.filter(c => c[1].toLowerCase().includes(q)) : COUNTRIES;
-  grid.innerHTML = list.map(c => {
-    const selected = myCountries.includes(c[0]);
-    return `<div class="country-opt${selected ? ' selected' : ''}" onclick="toggleCountry('${c[0]}')">
-      <span class="flag">${flagEmoji(c[0])}</span> ${c[1]}
-    </div>`;
-  }).join('');
-}
-
-function toggleCountry(code) {
-  if (myCountries.includes(code)) {
-    myCountries = myCountries.filter(c => c !== code);
-  } else {
-    myCountries.push(code);
-  }
-  renderCountryGrid();
-  renderRegionMap();
-  renderSelectedCountries();
-}
-
-function renderSelectedCountries() {
-  const wrap = document.getElementById('selectedCountriesWrap');
-  document.getElementById('selectedCountryCount').innerText = myCountries.length;
-  if (myCountries.length === 0) {
-    wrap.innerHTML = `<span class="text-muted text-sm">No countries selected yet.</span>`;
-    return;
-  }
-  wrap.innerHTML = myCountries.map(code => {
-    const c = COUNTRIES.find(x => x[0] === code);
-    const name = c ? c[1] : code;
-    return `<span class="interest-chip">${flagEmoji(code)} ${name} <button onclick="toggleCountry('${code}')" title="Remove">✕</button></span>`;
-  }).join('');
-}
-
-async function onToggleGlobalCountry() {
-  const enabled = document.getElementById('globalCountryToggle').checked;
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=setGlobalCountries`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&enabled=${enabled ? 'yes' : 'no'}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') {
-      document.getElementById('globalCountryToggle').checked = !enabled;
-      Swal.fire({ icon:'error', title:'Failed', text:d.message });
-      return;
-    }
-    globalCountry = enabled;
-    if (enabled) myCountries = [];
-    document.getElementById('countryPickerWrap').style.display = enabled ? 'none' : '';
-    renderRegionMap(); renderCountryGrid(); renderSelectedCountries();
-  } catch (e) {
-    document.getElementById('globalCountryToggle').checked = !enabled;
-    Swal.fire({ icon:'error', title:'Error', text:'Unable to update preference' });
-  }
-}
-
-async function saveCountrySelection() {
-  try {
-    Swal.fire({ title:'Saving…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-    const r = await fetch(ChannelCRUDScript
-      + `?action=setCountries`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&countries=${encodeURIComponent(myCountries.join(','))}`
-    );
-    const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Saved!', timer:1200, showConfirmButton:false });
-  } catch (e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to save countries' }); }
-}
-
-/* =========================================================
-   ADD CHANNEL MODAL
-========================================================= */
-function openAddModal(type) {
-  const isWorking = type === 'working';
-  const title = isWorking ? '⚙️ Add Working Channel' : '📢 Add Promotional Channel';
-
-  Swal.fire({
-    title,
+    title: '📢 Add Promotional Channel',
     width:600,
     html:`<div style="text-align:left">
-      <label class="swal-label">YouTube Channel Link</label>
-      <input id="sw_channelLink" class="swal-input" placeholder="https://youtube.com/@yourchannel">
-      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeSelectorHTML()}`}
+      <label class="promochannel-field-label">YouTube Channel Link</label>
+      <input id="sw_channelLink" class="promochannel-field-input" placeholder="https://youtube.com/@yourchannel">
+      <label class="promochannel-field-label">Channel Type</label>${typeSelectorHTML()}
     </div>`,
-    confirmButtonText: isWorking ? 'Add Working Channel' : 'Add Promotional Channel',
+    confirmButtonText: 'Add Promotional Channel',
     showCancelButton:true,
     cancelButtonText:'Cancel',
     preConfirm: async () => {
       const channelLink = document.getElementById('sw_channelLink').value.trim();
-      const channelType = isWorking ? '' : getSelectedChannelTypeValue();
-      const isCustomType = !isWorking && document.getElementById('selectedChannelType')?.value === 'other';
+      const channelType = getSelectedChannelTypeValue();
+      const isCustomType = document.getElementById('selectedChannelType')?.value === 'other';
       if (!channelLink) { Swal.showValidationMessage('Please enter a channel link'); return false; }
-      if (!isWorking && !channelType) { Swal.showValidationMessage('Please select or type a channel type'); return false; }
+      if (!channelType) { Swal.showValidationMessage('Please select or type a channel type'); return false; }
       try {
         Swal.showLoading();
-        const actionParam = isWorking ? 'addWorkingChannel' : 'addChannel';
         const r = await fetch(ChannelCRUDScript
-          + `?action=${actionParam}`
+          + `?action=addChannel`
           + `&username=${encodeURIComponent(savedUsername)}`
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelLink=${encodeURIComponent(channelLink)}`
-          + (isWorking ? '' : `&channelType=${encodeURIComponent(channelType)}`)
+          + `&channelType=${encodeURIComponent(channelType)}`
           + (isCustomType ? `&isCustomType=yes` : '')
         );
         const d = await r.json();
@@ -2345,28 +436,26 @@ function openAddModal(type) {
     }
   }).then(result => {
     if (result.isConfirmed) {
-      Swal.fire({ 
-        icon:'success', 
-        title:'Success!', 
-        text: isWorking ? 'Working Channel added. Relevant issues cleared.' : 'Promotional Channel added. Relevant issues cleared.',
-        timer:1800, 
-        showConfirmButton:false 
+      Swal.fire({
+        icon:'success',
+        title:'Success!',
+        text: 'Promotional Channel added. Relevant issues cleared.',
+        timer:1800,
+        showConfirmButton:false
       });
       setTimeout(() => location.reload(), 1900);
     }
   });
 }
-/* =========================================================
-   EDIT CHANNEL MODAL
-========================================================= */
-async function openEditModal(type, channelId) {
-  const isWorking   = type === 'working';
-  const actionParam = isWorking ? 'getWorkingChannel' : 'getChannel';
 
+/* =========================================================
+   EDIT CHANNEL MODAL (Promotional Channel only)
+========================================================= */
+async function openEditModal(channelId) {
   let ch = null;
   try {
     const r = await fetch(ChannelCRUDScript
-      + `?action=${actionParam}`
+      + `?action=getChannel`
       + `&username=${encodeURIComponent(savedUsername)}`
       + `&password=${encodeURIComponent(savedPassword)}`
       + `&channelId=${encodeURIComponent(channelId)}`
@@ -2381,11 +470,11 @@ async function openEditModal(type, channelId) {
   Swal.fire({
     title:'✏️ Edit Channel', width:620,
     html:`<div style="text-align:left">
-      <label class="swal-label">Channel Name (from YouTube — not editable)</label>
-      <input id="sw_editName" class="swal-input" value="${currName}" disabled style="opacity:0.55;cursor:not-allowed;">
-      ${isWorking ? '' : `<label class="swal-label">Channel Type</label>${typeSelectorHTML(currType)}`}
-      <div style="margin-top:18px;padding:12px;background:#0a0b10;border-radius:12px;border:1px solid #1f2330;font-size:12px;color:#8a8f9e;">
-        💡 The channel name always reflects your real YouTube name. Use <strong style="color:#a78bfa">Save Changes</strong> to update the type shown here, or <strong style="color:#a78bfa">Sync YouTube</strong> to re-fetch live data (name, subscribers, image, etc). To switch to an entirely different channel, use <strong style="color:#f59e0b">🔁 Change Channel</strong> on the card instead.
+      <label class="promochannel-field-label">Channel Name (from YouTube — not editable)</label>
+      <input id="sw_editName" class="promochannel-field-input promochannel-field-input--disabled" value="${currName}" disabled>
+      <label class="promochannel-field-label">Channel Type</label>${typeSelectorHTML(currType)}
+      <div class="promochannel-modal-info">
+        💡 The channel name always reflects your real YouTube name. Use <strong>Save Changes</strong> to update the type shown here, or <strong>Sync YouTube</strong> to re-fetch live data (name, subscribers, image, etc). To switch to an entirely different channel, use <strong>🔁 Change Channel</strong> on the card instead.
       </div>
     </div>`,
     showConfirmButton:true, showDenyButton:true, showCancelButton:true,
@@ -2393,17 +482,16 @@ async function openEditModal(type, channelId) {
     denyButtonText:'🔄 Sync YouTube',
     cancelButtonText:'Cancel',
     preConfirm: async () => {
-      const ctype = isWorking ? '' : getSelectedChannelTypeValue();
-      const isCustomType = !isWorking && document.getElementById('selectedChannelType')?.value === 'other';
+      const ctype = getSelectedChannelTypeValue();
+      const isCustomType = document.getElementById('selectedChannelType')?.value === 'other';
       try {
         Swal.showLoading();
-        const action = isWorking ? 'editWorkingChannel' : 'editChannel';
         const r = await fetch(ChannelCRUDScript
-          + `?action=${action}`
+          + `?action=editChannel`
           + `&username=${encodeURIComponent(savedUsername)}`
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelId=${encodeURIComponent(channelId)}`
-          + (isWorking ? '' : `&channelType=${encodeURIComponent(ctype)}`)
+          + `&channelType=${encodeURIComponent(ctype)}`
           + (isCustomType ? `&isCustomType=yes` : '')
         );
         const d = await r.json();
@@ -2416,11 +504,10 @@ async function openEditModal(type, channelId) {
       Swal.fire({ icon:'success', title:'Changes Saved!', timer:1400, showConfirmButton:false });
       setTimeout(() => location.reload(), 1500);
     } else if (result.isDenied) {
-      const syncAction = isWorking ? 'updateWorkingChannel' : 'updateChannel';
       Swal.fire({ title:'Syncing from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
       try {
         const r = await fetch(ChannelCRUDScript
-          + `?action=${syncAction}`
+          + `?action=updateChannel`
           + `&username=${encodeURIComponent(savedUsername)}`
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelId=${encodeURIComponent(channelId)}`
@@ -2436,7 +523,7 @@ async function openEditModal(type, channelId) {
             showCancelButton:true,
             cancelButtonText:'Later'
           }).then(res => {
-            if (res.isConfirmed) openChangeChannelModal(isWorking ? 'working' : 'promo', channelId);
+            if (res.isConfirmed) openChangeChannelModal(channelId);
             else location.reload();
           });
           return;
@@ -2475,38 +562,7 @@ async function updateChannelYT(channelId) {
         showCancelButton:true,
         cancelButtonText:'Later'
       }).then(res => {
-        if (res.isConfirmed) openChangeChannelModal('promo', channelId);
-        else location.reload();
-      });
-      return;
-    }
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Synced!', timer:1400, showConfirmButton:false });
-    setTimeout(() => location.reload(), 1500);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to sync' }); }
-}
-
-async function updateWorkingChannelYT(channelId) {
-  Swal.fire({ title:'Syncing from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
-  try {
-    const r = await fetch(ChannelCRUDScript
-      + `?action=updateWorkingChannel`
-      + `&username=${encodeURIComponent(savedUsername)}`
-      + `&password=${encodeURIComponent(savedPassword)}`
-      + `&channelId=${encodeURIComponent(channelId)}`
-    );
-    const d = await r.json();
-    if (d.status === 'deleted') {
-      Swal.fire({
-        icon:'error',
-        title:'Working Channel Deleted on YouTube!',
-        text: d.message,
-        confirmButtonText:'🔁 Change Channel Now',
-        confirmButtonColor:'#f59e0b',
-        showCancelButton:true,
-        cancelButtonText:'Later'
-      }).then(res => {
-        if (res.isConfirmed) openChangeChannelModal('working', channelId);
+        if (res.isConfirmed) openChangeChannelModal(channelId);
         else location.reload();
       });
       return;
@@ -2518,29 +574,21 @@ async function updateWorkingChannelYT(channelId) {
 }
 
 /* =========================================================
-   CHANGE CHANNEL
-   Replaces the delete flow. For the promo channel this cascades
-   and removes every old video row plus any playlist data (the
-   backend handles this and auto-imports videos from the new
-   channel). For the working channel, changing disrupts ongoing
-   subscribers-exchange work — the member is warned up front.
+   CHANGE PROMOTIONAL CHANNEL
+   Cascades and removes every old video row plus any playlist data
+   (the backend handles this and auto-imports videos from the new
+   channel).
 ========================================================= */
-function openChangeChannelModal(type, channelId) {
-  const isWorking = type === 'working';
-  const title = isWorking ? '🔁 Change Working Channel' : '🔁 Change Promotional Channel';
-  const warningHTML = isWorking
-    ? `<div style="margin-top:14px;padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:12px;color:#f87171;">
-        ⚠️ <strong>Important:</strong> Changing your working channel will disrupt your ongoing subscribers-exchange work. Progress tied to your old working channel may be lost and some of that work may need to be redone.
-      </div>`
-    : `<div style="margin-top:14px;padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:12px;color:#f87171;">
+function openChangeChannelModal(channelId) {
+  const warningHTML = `<div class="promochannel-modal-warning">
         ⚠️ <strong>Important:</strong> Changing your promotional channel permanently deletes all videos and any playlist linked to your current channel. Videos from the new channel are imported automatically.
       </div>`;
 
   Swal.fire({
-    title, width:600,
+    title:'🔁 Change Promotional Channel', width:600,
     html:`<div style="text-align:left">
-      <label class="swal-label">New YouTube Channel Link</label>
-      <input id="sw_newChannelLink" class="swal-input" placeholder="https://youtube.com/@newchannel">
+      <label class="promochannel-field-label">New YouTube Channel Link</label>
+      <input id="sw_newChannelLink" class="promochannel-field-input" placeholder="https://youtube.com/@newchannel">
       ${warningHTML}
     </div>`,
     confirmButtonText:'🔁 Change Channel',
@@ -2552,9 +600,8 @@ function openChangeChannelModal(type, channelId) {
       if (!link) { Swal.showValidationMessage('Please enter the new channel link'); return false; }
       try {
         Swal.showLoading();
-        const action = isWorking ? 'changeWorkingChannel' : 'changeChannel';
         const r = await fetch(ChannelCRUDScript
-          + `?action=${action}`
+          + `?action=changeChannel`
           + `&username=${encodeURIComponent(savedUsername)}`
           + `&password=${encodeURIComponent(savedPassword)}`
           + `&channelLink=${encodeURIComponent(link)}`
@@ -2573,50 +620,20 @@ function openChangeChannelModal(type, channelId) {
 }
 
 /* =========================================================
-   LOGOUT + MENUS
+   LOGOUT
 ========================================================= */
-function logoutUser() { localStorage.clear(); window.location.href = "index.html"; }
+function logoutUser() {
+  if (!confirm("Are you sure you want to logout?")) return;
+  localStorage.clear(); sessionStorage.clear();
+  window.location.replace("signin.html");
+}
 
-document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
-document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
-document.getElementById("notifBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
-document.addEventListener("click", () => {
-  document.getElementById("mobileMenu").classList.add("hidden");
-  document.getElementById("profileDropdown").classList.add("hidden");
-  document.getElementById("notifDropdown").classList.add("hidden");
-});
 
 /* =========================================================
    INIT
 ========================================================= */
 loadChannels();
 </script>
-
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
 
 <script>
 (function(){

@@ -7,522 +7,19 @@
 <link rel="icon" href="images/logo.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-.extension-card {
-  background: linear-gradient(135deg, #1a1f2e, #12141c);
-  border: 2px solid;
-  transition: all 0.4s;
-}
-.extension-ready { border-color: #4ade80; box-shadow: 0 0 25px rgba(74, 222, 128, 0.3); }
-.extension-not-ready { border-color: #f87171; }
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
 
-.tab-btn {
-  padding: 12px 28px;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: all 0.3s;
-  white-space: nowrap;
-}
-.tab-btn.active {
-  background: linear-gradient(90deg, #7c3aed, #a855f7);
-  color: white;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
-}
-.nav-item{
-    position:relative;
-    list-style:none;
-}
-
-.nav-link{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:12px 18px;
-    color:#333;
-    text-decoration:none;
-    font-weight:600;
-}
-
-.mega-dropdown{
-    position:absolute;
-    top:100%;
-    left:0;
-    width:900px;
-    display:none;
-    background:#fff;
-    border-radius:16px;
-    box-shadow:0 10px 35px rgba(0,0,0,.15);
-    padding:25px;
-    grid-template-columns:repeat(5,1fr);
-    gap:25px;
-    z-index:9999;
-}
-
-.mega-dropdown.show{
-    display:grid;
-}
-
-.mega-column h4{
-    margin-bottom:15px;
-    font-size:16px;
-    color:#6a5cff;
-    border-bottom:2px solid #f0f0f0;
-    padding-bottom:8px;
-}
-
-.mega-column a{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    text-decoration:none;
-    color:#444;
-    padding:10px 12px;
-    border-radius:10px;
-    margin-bottom:6px;
-    transition:.2s;
-}
-
-.mega-column a:hover{
-    background:#f5f7ff;
-    color:#6a5cff;
-    transform:translateX(5px);
-}
-
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
-}
-
-
-
-
-:root{ --bg:#050508; --card:#12141c; --border:#232938; --purple:#7c3aed; }
-*{ font-family:'Inter',sans-serif; box-sizing:border-box; }
-body{ background:#050508; color:white; overflow-x:hidden; }
-
-body::before{
-  content:''; position:fixed; top:-50%; left:-50%;
-  width:200%; height:200%;
-  background:
-    radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
-    radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
-  z-index:0; pointer-events:none;
-}
-
-/* ── NAV ── */
-.glass-nav{
-  background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.06);
-}
-.nav-disabled{
-  opacity:.28 !important;
-  pointer-events:none !important;
-  cursor:not-allowed !important;
-  filter:grayscale(1);
-  text-decoration:line-through;
-}
-
-/* ── CARD ── */
-.card{
-  background:linear-gradient(180deg,#171a24,#101219);
-  border:1px solid #232938;
-  border-radius:20px;
-}
-.gradient-text{
-  background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-}
-
-/* ── ALERTS ── */
-.alert-blocked{
-  background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(127,29,29,0.15));
-  border:2px solid rgba(239,68,68,0.7);
-  border-radius:24px; padding:32px;
-  position:relative; overflow:hidden;
-}
-.alert-blocked::before{
-  content:''; position:absolute; inset:0;
-  background:repeating-linear-gradient(-45deg,transparent,transparent 6px,rgba(239,68,68,0.06) 6px,rgba(239,68,68,0.06) 12px);
-}
-.pulse-red{ animation:redpulse 1.8s ease-in-out infinite; }
-@keyframes redpulse{
-  0%,100%{ box-shadow:0 0 0 0 rgba(239,68,68,0.35); }
-  50%    { box-shadow:0 0 0 16px rgba(239,68,68,0); }
-}
-
-/* ── GROUP BADGE ── */
-.group-badge{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:10px 18px; border-radius:14px;
-  font-size:13px; font-weight:700; border:1px solid; transition:.25s;
-}
-.group-badge:hover{ transform:translateY(-2px); }
-
-/* ── STAT CARD ── */
-.stat-card{
-  background:linear-gradient(180deg,#181b27,#101219);
-  border:1px solid #252938; border-radius:16px; padding:20px; transition:.3s;
-}
-.stat-card:hover{ border-color:rgba(124,58,237,0.4); transform:translateY(-2px); }
-
-/* ── SECTION BANNER ── */
-.section-banner{
-  border-radius:20px; overflow:hidden;
-  position:relative; height:130px; margin-bottom:24px;
-  border:1px solid rgba(255,255,255,0.06);
-}
-.section-banner img{
-  width:100%; height:100%; object-fit:cover;
-  filter:brightness(0.28) saturate(1.3);
-}
-.section-banner-overlay{
-  position:absolute; inset:0;
-  display:flex; align-items:center; gap:18px; padding:22px 28px;
-}
-.section-icon{
-  width:52px; height:52px; border-radius:14px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center;
-  font-size:26px; border:1px solid rgba(255,255,255,0.15);
-}
-.section-title{ font-size:20px; font-weight:800; margin:0 0 3px; }
-.section-sub{ font-size:12px; color:rgba(255,255,255,0.55); margin:0; }
-
-/* ── LAST WORK BADGE ── */
-.lw-badge{
-  display:inline-flex; align-items:center; gap:7px;
-  padding:5px 13px; border-radius:999px; font-size:11px; font-weight:600;
-  white-space:nowrap;
-}
-.lw-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; animation:blink 2s ease-in-out infinite; }
-@keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
-
-/* ── PROGRESS BAR ── */
-.prog-track{ background:#1a1d28; border-radius:999px; height:8px; overflow:hidden; }
-.prog-fill{ height:8px; border-radius:999px; transition:width 1.2s cubic-bezier(.4,0,.2,1); }
-
-/* ── RING CHART ── */
-.ring-wrap{ position:relative; display:inline-flex; align-items:center; justify-content:center; }
-.ring-wrap svg{ transform:rotate(-90deg); }
-.ring-center{ position:absolute; text-align:center; pointer-events:none; }
-
-/* ── BAR CHART ── */
-.bar-chart{ display:flex; align-items:flex-end; gap:5px; height:80px; }
-.bar{ flex:1; border-radius:6px 6px 0 0; min-height:4px; cursor:pointer; position:relative; }
-.bar:hover::after{
-  content:attr(data-val);
-  position:absolute; top:-22px; left:50%; transform:translateX(-50%);
-  background:#252938; color:white; font-size:10px; font-weight:700;
-  padding:2px 6px; border-radius:4px; white-space:nowrap; pointer-events:none; z-index:10;
-}
-
-/* ── CHEAT WARNING ── */
-.cheat-box{
-  background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.3);
-  border-radius:14px; padding:14px 18px;
-  display:flex; align-items:flex-start; gap:12px;
-}
-
-/* ── SPINNER ── */
-.spinner{
-  width:40px; height:40px; border-radius:50%;
-  border:3px solid rgba(124,58,237,0.2); border-top-color:#7c3aed;
-  animation:spin 0.7s linear infinite;
-}
-@keyframes spin{ to{ transform:rotate(360deg); } }
-
-/* ── STATUS COLORS ── */
-.status-active  { color:#86efac; }
-.status-blocked { color:#fca5a5; }
-.status-pending { color:#fde68a; }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{ width:5px; }
-::-webkit-scrollbar-track{ background:transparent; }
-::-webkit-scrollbar-thumb{ background:#252938; border-radius:4px; }
-
-/* ── ISSUE CARD (legacy, kept for compatibility) ── */
-.issue-card{
-  border-radius:14px; padding:14px 18px;
-  display:flex; align-items:flex-start; gap:12px;
-  border:1px solid; transition:.25s;
-}
-.issue-open   { background:rgba(239,68,68,0.07);  border-color:rgba(239,68,68,0.28); }
-.issue-pending{ background:rgba(251,191,36,0.07); border-color:rgba(251,191,36,0.28); }
-.issue-resolved{ background:rgba(34,197,94,0.07); border-color:rgba(34,197,94,0.28); }
-.issue-badge{
-  display:inline-flex; align-items:center; padding:2px 10px; border-radius:999px;
-  font-size:10px; font-weight:700; letter-spacing:.4px; white-space:nowrap;
-}
-
-/* ── ISSUES GRID (new, full list, PC-optimized) ── */
-.issues-grid{
-  display:grid; grid-template-columns:1fr; gap:14px;
-}
-@media (min-width:900px){
-  .issues-grid{ grid-template-columns:1fr 1fr; }
-}
-.issue-tile{
-  background:linear-gradient(135deg,rgba(239,68,68,0.09),rgba(15,17,23,0.4)),
-             linear-gradient(180deg,#15171f,#0f1117);
-  border:1px solid rgba(239,68,68,0.22); border-left:4px solid #ef4444;
-  border-radius:14px;
-  padding:18px 20px 16px 18px; transition:.25s; position:relative; overflow:hidden;
-}
-.issue-tile:hover{ border-color:rgba(239,68,68,0.4); border-left-color:#f87171; transform:translateY(-2px); }
-.issue-tile-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; }
-.issue-tile-icon{
-  width:34px; height:34px; border-radius:10px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center; font-size:16px;
-  background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25);
-}
-.issue-tile-title{ font-size:15px; font-weight:800; color:#fff; line-height:1.35; }
-.issue-status-pill{
-  display:inline-flex; align-items:center; gap:5px; padding:3px 11px; border-radius:999px;
-  font-size:10px; font-weight:700; letter-spacing:.5px; white-space:nowrap; text-transform:uppercase;
-  flex-shrink:0;
-}
-.pill-open   { background:rgba(239,68,68,0.16);  color:#fca5a5; }
-.pill-pending{ background:rgba(214,169,79,0.14); color:#e7c374; }
-.pill-resolved{ background:rgba(79,184,168,0.14); color:#7fd6c5; }
-.issue-tile-desc{
-  font-size:12.5px; color:#9aa1b2; line-height:1.65; margin-top:8px;
-}
-.issue-tile-desc.clamped{
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-.issue-read-more{
-  background:none; border:none; padding:0; margin-top:6px;
-  font-size:11.5px; font-weight:700; color:#f87171; cursor:pointer;
-  display:inline-flex; align-items:center; gap:3px;
-}
-.issue-read-more:hover{ color:#fca5a5; text-decoration:underline; }
-.issue-tile-meta{
-  display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; padding-top:12px;
-  border-top:1px solid rgba(239,68,68,0.12); font-size:11px; color:#666d80;
-}
-.issue-tile-reply{
-  margin-top:12px; padding:10px 13px; border-radius:10px;
-  background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.18);
-}
-
-/* ── GROUP TASK CARD ── */
-.group-task-card{
-  border-radius:20px; padding:22px 24px;
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  border:1px solid; transition:.3s; flex-wrap:wrap;
-}
-.group-task-card:hover{ transform:translateY(-2px); }
-.start-task-btn{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:10px 22px; border-radius:12px;
-  font-size:13px; font-weight:700; text-decoration:none;
-  transition:.2s; white-space:nowrap; flex-shrink:0;
-}
-.start-task-btn:hover{ opacity:.85; transform:scale(1.03); }
-
-/* ── FADE IN ── */
-@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:translateY(0); } }
-.fade-in{ animation:fadeUp .5s ease both; }
-.delay-1{ animation-delay:.08s; }
-.delay-2{ animation-delay:.16s; }
-.delay-3{ animation-delay:.24s; }
-.delay-4{ animation-delay:.32s; }
-.delay-5{ animation-delay:.40s; }
-
-/* ── SIMPLE TASKS DROPDOWN ── */
-.task-dropdown-wrap{ position:relative; }
-.task-dropdown{
-  display:none;
-  position:absolute;
-  top:calc(100% + 12px);
-  left:50%;
-  transform:translateX(-50%);
-  min-width:210px;
-  background:#12141c;
-  border:1px solid #232938;
-  border-radius:14px;
-  padding:8px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.45);
-  z-index:9999;
-}
-.task-dropdown.show{ display:block; }
-.task-dropdown a{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  padding:10px 12px;
-  border-radius:10px;
-  color:#d5d8e2;
-  text-decoration:none;
-  font-size:13px;
-  font-weight:500;
-  transition:.2s;
-}
-.task-dropdown a:hover{ background:#1a1d27; color:#c4b5fd; }
-.mobile-task-link{ padding-left:14px; font-size:13px; color:#c9ccd6 !important; }
-</style>
 </head>
 <body>
 
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-    <button id="mobileMenuBtn"
-      class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a id="lnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
-     <div class="task-dropdown-wrap">
-  <a id="lnkChannels" href="#" onclick="toggleChannelsMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-    Channels
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-  </a>
-  <div id="channelsDropdown" class="task-dropdown">
-    <a href="channels.html?view=promotional">📢 Promotional Channel</a>
-    <a href="channels.html?view=longvideos">🎬 Long Videos</a>
-    <a href="channels.html?view=shortvideos">⚡ Short Videos</a>
-    <a href="channels.html?view=playlist">⏱ Playlist</a>
-    <a href="channels.html?view=working">✅ Working Channel</a>
-  </div>
-</div>
-      <a id="lnkGroups"    href="groups.html"         class="text-white hover:text-purple-300 transition">Groups</a>
-
-      <div class="task-dropdown-wrap">
-        <a href="#" onclick="toggleTasksMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Tasks
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="tasksDropdown" class="task-dropdown">
-          <a href="subscriberstask.html">📺 Subscriber Tasks</a>
-          <a href="videotask.html">🎬 Video Tasks</a>
-          <a href="playlisttask.html">⏱ Playlist Tasks</a>
-          <a href="likeandcommentstasks.html">💬 Like &amp; Comment Tasks</a>
-        </div>
-      </div>
-
-      <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn"
-          class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown"
-          class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
-      </div>
-
-      <div class="relative">
-        <button id="profileBtn"
-          class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown"
-          class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p  id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-2">
-            <a id="ddProfile" href="profile.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-            <a href="support.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-            <button onclick="logoutUser()"
-              class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu"
-    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a id="mLnkDashboard" href="analytics.html"      class="text-purple-300 font-semibold">Dashboard</a>
-      <div class="flex flex-col gap-2">
-  <span class="text-white font-semibold">Channels</span>
-  <a href="channels.html?view=promotional" class="mobile-task-link">📢 Promotional Channel</a>
-  <a href="channels.html?view=longvideos" class="mobile-task-link">🎬 Long Videos</a>
-  <a href="channels.html?view=shortvideos" class="mobile-task-link">⚡ Short Videos</a>
-  <a href="channels.html?view=playlist" class="mobile-task-link">⏱ Playlist</a>
-  <a href="channels.html?view=working" class="mobile-task-link">✅ Working Channel</a>
-</div>
-      <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Tasks</span>
-        <a href="subscriberstask.html" class="mobile-task-link">📺 Subscriber Tasks</a>
-        <a href="videotask.html" class="mobile-task-link">🎬 Video Tasks</a>
-        <a href="playlisttask.html" class="mobile-task-link">⏱ Playlist Tasks</a>
-        <a href="likeandcommentstasks.html" class="mobile-task-link">💬 Like &amp; Comment Tasks</a>
-      </div>
-
-      <a id="mLnkHowTo"     href="howtowork.html"      class="text-white">How To Work</a>
-      <a id="mLnkExtension" href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a id="mLnkSupport"   href="support.html"        class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
 
 <!-- ══════════════════ MAIN ══════════════════ -->
-<main class="relative z-10 pt-28 pb-20 px-4">
+
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
   <!-- LOADING -->
@@ -543,93 +40,152 @@ body::before{
 
   <!-- DASHBOARD -->
   <div id="dashContent" class="hidden">
-  <div class="flex flex-col gap-8">
+  <div class="flex flex-col">
 
     <!-- ── HEADER ── -->
-    <div class="fade-in">
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs mb-3">
-        📊 Member Analytics
-      </div>
-      <h1 class="text-4xl font-black gradient-text">Your Dashboard</h1>
-      <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1"></div>
+  <!-- ── HEADER ── --><!-- ── HEADER ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+
+  <!-- Reusable Top Navigation / Header Section -->
+<!-- Reusable Top Navigation / Header Section -->
+<div class="nb-dashboard-header">
+  <div class="nb-badge-container">
+    
+    <!-- Page Context Badge (Now styled completely identical to the others) -->
+    <div class="nb-status-card nb-status-static">
+      <span class="nb-card-title">Member Analytics</span>
+    </div>
+    
+    <!-- Extension Status Block -->
+    <div id="extensionStatus" class="nb-status-card nb-ext-not-ready">
+      <span id="extIcon" class="nb-card-icon">🔌</span>
+      <span id="extTitle" class="nb-card-title">Extension</span>
+      <span id="extBadge" class="nb-pill nb-pill-warning">PENDING</span>
+      <a id="extCTA" href="exsubextension.html" class="nb-card-btn">Setup</a>
     </div>
 
+    <!-- Inline Issues Status Badge -->
+    <a id="inlineIssuesBadge" href="issues.html" class="nb-status-card nb-status-link">
+      <span class="nb-card-icon">⚠️</span>
+      <span class="nb-card-title">Issues</span>
+      <span id="inlineIssuesCount" class="nb-pill nb-pill-danger nb-pill-blink">1</span>
+    </a>
+
+  </div>
+
+  <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Your Dashboard</h1>
+  <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Welcome back, mazhar · Joined 7 Sept 2026</div>
+</div>
+
+<!-- ── HEADER ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+<!-- ── HEADER ROW WITH BADGES ── -->
+
+
     <!-- ── BLOCKED BANNER ── -->
-    <div id="blockedBanner" class="hidden fade-in delay-1">
-      <div class="alert-blocked pulse-red">
-        <div class="relative z-10">
-          <div class="flex flex-wrap items-center gap-4 mb-5">
-            <div style="font-size:56px;line-height:1;filter:drop-shadow(0 0 24px rgba(239,68,68,0.7));flex-shrink:0;">⛔</div>
-            <div>
-              <div class="flex items-center gap-3 flex-wrap mb-1">
-                <span class="text-3xl font-black text-red-400">Account Blocked</span>
-                <span style="background:rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.6);border-radius:8px;padding:3px 12px;font-size:11px;font-weight:800;color:#fca5a5;letter-spacing:.8px;">BLOCKED</span>
-              </div>
-              <div class="text-red-300 font-semibold text-base">Your account has been blocked by the administrator. All group activities are suspended immediately.</div>
-            </div>
-          </div>
-          <div id="blockedReasonBox" class="hidden mb-5 items-start gap-3 rounded-xl p-4"
-            style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);">
-            <span style="font-size:18px;flex-shrink:0;">📋</span>
-            <div>
-              <div class="text-xs font-bold text-red-400 uppercase tracking-wider mb-1">Reason for block</div>
-              <div id="blockedReasonText" class="text-red-200 text-sm leading-relaxed"></div>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:16px;">
-              <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">❌ What's blocked?</div>
-              <div class="text-sm text-red-200 leading-relaxed">All task submissions, channel subscriptions, video watching, and engagement actions are disabled.</div>
-            </div>
-            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:16px;">
-              <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">🚫 Menu Access</div>
-              <div class="text-sm text-red-200 leading-relaxed">Channels, Groups, How To Work, and Extension pages are disabled. Only Support is accessible.</div>
-            </div>
-            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);border-radius:14px;padding:16px;">
-              <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-2">💬 What to do?</div>
-              <div class="text-sm text-red-200 leading-relaxed">Contact the support team to appeal your block or get more information. Provide your User Code.</div>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-3">
-            <a href="support.html"
-              style="display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:13px;font-weight:700;font-size:14px;background:rgba(239,68,68,0.22);border:1px solid rgba(239,68,68,0.5);color:#fca5a5;text-decoration:none;">
-              💬 Contact Support &amp; Appeal
-            </a>
-            <button onclick="logoutUser()"
-              style="display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:13px;font-weight:700;font-size:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#9ca3af;cursor:pointer;">
-              🚪 Logout
-            </button>
-          </div>
+    <div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; font-family: system-ui, -apple-system, sans-serif; border: 2px solid #211F1F; border-radius: 10px; max-width: 100%;">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+        <span style="font-size: 1.75rem; line-height: 1;">⛔</span>
+        <h1 style="font-size: 1.25rem; font-weight: 800; color: #1f2937; margin: 0; letter-spacing: -0.025em;">Account Blocked</h1>
+      </div>
+      <p style="font-size: 0.9rem; color: #4b5563; margin: 0 0 1rem 0; line-height: 1.4;">
+        Your account has been suspended by an administrator. All platform features, task submissions, and channel groups are disabled immediately.
+      </p>
+      <div id="blockedReasonBox" class="hidden" style="background-color: #fee2e2; border-left: 3px solid #ef4444; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+        <span style="font-size: 1rem;">📋</span>
+        <div style="font-size: 0.85rem; color: #7f1d1d; line-height: 1.4;">
+          <strong style="color: #991b1b; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; display: inline-block; margin-right: 0.5rem;">Reason:</strong>
+          <span id="blockedReasonText"></span>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid #EAE9DF;">
+        <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Please provide your User Code when appealing.</span>
+        <div style="display: flex; gap: 0.5rem; width: auto;">
+          <a href="support.html" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #dc2626; color: #ffffff; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-radius: 6px; white-space: nowrap;">Appeal Block</a>
+          <button onclick="logoutUser()" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #d1d5db; color: #4b5563; font-weight: 600; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">Logout</button>
         </div>
       </div>
     </div>
 
-  <!-- Extension Status -->
-  <div id="extensionStatus" class="extension-card rounded-3xl p-6 mb-8 flex items-center gap-6 extension-not-ready">
-    <div class="w-16 h-16 flex-shrink-0 rounded-2xl flex items-center justify-center text-4xl" id="extIcon">🔌</div>
-    <div class="flex-1">
-      <div class="flex items-center gap-3">
-        <h3 class="text-2xl font-bold" id="extTitle">Extension Setup</h3>
-        <span id="extBadge" class="px-4 py-1 rounded-full text-sm font-bold"></span>
-      </div>
-      <p id="extDesc" class="text-gray-400 mt-1"></p>
-    </div>
-    <a id="extCTA" href="exsubextension.html" 
-       class="px-8 py-3 rounded-2xl font-semibold text-sm bg-white text-black hover:bg-gray-200 transition">
-      Setup Extension
-    </a>
+<!-- ── BLOCKED BANNER ── -->
+<div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; font-family: system-ui, -apple-system, sans-serif; border: 2px solid #211F1F; border-radius: 10px; max-width: 100%;">
+  
+  <!-- Main Alert Header -->
+  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+    <span style="font-size: 1.75rem; line-height: 1;">⛔</span>
+    <h1 style="font-size: 1.25rem; font-weight: 800; color: #1f2937; margin: 0; letter-spacing: -0.025em;">
+      Account Blocked
+    </h1>
   </div>
 
- 
+  <p style="font-size: 0.9rem; color: #4b5563; margin: 0 0 1rem 0; line-height: 1.4;">
+    Your account has been suspended by an administrator. All platform features, task submissions, and channel groups are disabled immediately.
+  </p>
+
+  <!-- Dynamic Reason Box (Revealed via JS) -->
+  <div id="blockedReasonBox" class="hidden" style="background-color: #fee2e2; border-left: 3px solid #ef4444; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+    <span style="font-size: 1rem;">📋</span>
+    <div style="font-size: 0.85rem; color: #7f1d1d; line-height: 1.4;">
+      <strong style="color: #991b1b; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; display: inline-block; margin-right: 0.5rem;">Reason:</strong>
+      <span id="blockedReasonText"></span>
+    </div>
+  </div>
+
+  <!-- Footer Info & Actions Combo Layer -->
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid #EAE9DF;">
+    <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">
+      Please provide your User Code when appealing.
+    </span>
+    
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 0.5rem; width: auto;">
+      <a href="support.html" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #dc2626; color: #ffffff; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-radius: 6px; white-space: nowrap;">
+        Appeal Block
+      </a>
+      <button onclick="logoutUser()" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #d1d5db; color: #4b5563; font-weight: 600; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">
+        Logout
+      </button>
+    </div>
+  </div>
+
+</div>
 
     <!-- ── YOUR ISSUES (full list, PC-optimized) ── -->
-    <div id="allIssuesSection" class="hidden fade-in delay-1">
-      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <h2 class="text-lg font-bold flex items-center gap-2"><span>Issues</span></h2>
-        <span id="issuesCountBadge" class="text-xs text-gray-500"></span>
-      </div>
-      <div id="allIssuesList" class="issues-grid"></div>
-    </div>
 
     <!-- ── MEMBER INFO ROW ── -->
     <div id="memberInfoRow" class="hidden fade-in delay-1">
@@ -660,23 +216,8 @@ body::before{
     <!-- ══════════════════ ACTIVE CONTENT ══════════════════ -->
     <div id="activeContent">
 
-      <!-- ── MY GROUPS (task cards) ── -->
-      <div id="groupsSection" class="hidden fade-in delay-2 mb-8">
-        <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
-          <h2 class="text-xl font-bold">My Groups</h2>
-          <a href="groups.html" class="text-xs text-purple-400 hover:text-purple-300 transition font-medium">Join more groups →</a>
-        </div>
-        <div id="groupTaskCards" class="flex flex-col gap-4 mb-4"></div>
-        <div class="card p-4 flex items-center gap-3">
-          <span style="font-size:18px;">💡</span>
-          <span class="text-gray-400 text-sm">Want to join more groups? Go to
-            <a href="groups.html" class="text-purple-400 font-semibold hover:underline">Groups</a>
-            in the menu to apply for additional work groups.</span>
-        </div>
-      </div>
-
       <!-- ── NO GROUPS ── -->
-      <div id="noGroupsMsg" class="hidden fade-in delay-2 card p-8 text-center mb-8">
+      <div id="noGroupsMsg" class="hidden fade-in delay-2 card p-8 text-center mb-10 mt-10">
         <div class="text-5xl mb-4">📭</div>
         <div class="text-xl font-bold mb-2">Not in any group yet</div>
         <div class="text-gray-400 text-sm mb-5">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
@@ -690,7 +231,7 @@ body::before{
    <!-- Group Analytics Tabs -->
      <!-- Group Analytics Tabs -->
 <!-- Group Analytics Tabs -->
-  <div id="groupsTabSection" class="mb-10">
+  <div id="groupsTabSection" class="mb-10; mt-10">
     <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-2 mb-6" id="groupTabs"></div>
     <div id="tabContent" class="space-y-8"></div>
   </div>
@@ -708,20 +249,9 @@ body::before{
 
 </div>
 </main>
-
+</main>
 <!-- ══════════════════ JAVASCRIPT ══════════════════ -->
 <script>
-
-function toggleChannelsMenu(e){
-    e.preventDefault();
-    const menu=document.getElementById("channelsDropdown");
-    menu.classList.toggle("show");
-    document.addEventListener("click",function(event){
-        if(!event.target.closest(".task-dropdown-wrap")){
-            menu.classList.remove("show");
-        }
-    },{once:true});
-}
 
 'use strict';
 
@@ -753,11 +283,28 @@ async function loadDashboard() {
 }
 
 /* ══════════════════ ISSUES ══════════════════ */
+/* ══════════════════ ISSUES ══════════════════ */
 function renderIssues(rawIssues) {
   try {
     var myIssues = (rawIssues || []).filter(function(i){ return i && i.userCode === usercode && i.title; });
 
-    if (myIssues.length === 0) { hide("allIssuesSection"); return; }
+    const container = document.getElementById("allIssuesSection");
+    const countBadge = document.getElementById("issuesCountBadge");
+    const inlineBadge = document.getElementById("inlineIssuesBadge");
+    const inlineCount = document.getElementById("inlineIssuesCount");
+
+    // If no issues exist, hide everything and clean up classes
+    if (myIssues.length === 0) { 
+      hide("allIssuesSection"); 
+      if (inlineBadge) inlineBadge.classList.add("hidden");
+      if (container) { container.classList.remove("blink-alert"); }
+      if (countBadge) { countBadge.classList.remove("badge-blink-alert"); }
+      return; 
+    }
+
+    // Trigger blinking alert indicators because issues are actively present
+    if (container) { container.classList.add("blink-alert"); }
+    if (countBadge) { countBadge.classList.add("badge-blink-alert"); }
 
     /* Group by title — merge duplicates, keep the most recently updated copy, tally count */
     var grouped = {};
@@ -765,65 +312,51 @@ function renderIssues(rawIssues) {
       var key = issue.title.toLowerCase();
       if (!grouped[key]) grouped[key] = { issue: issue, count: 0 };
       grouped[key].count++;
-      /* prefer the entry with the latest updatedDate/createdDate as the display copy */
       var prevDate = grouped[key].issue.updatedDate || grouped[key].issue.createdDate || "";
       var curDate  = issue.updatedDate || issue.createdDate || "";
       if (curDate && (!prevDate || new Date(curDate) >= new Date(prevDate))) {
         grouped[key].issue = issue;
       }
     });
+
     var uniqueIssues = Object.values(grouped).sort(function(a, b){
       var da = new Date(a.issue.updatedDate || a.issue.createdDate || 0).getTime() || 0;
       var db = new Date(b.issue.updatedDate || b.issue.createdDate || 0).getTime() || 0;
       return db - da;
     });
 
+    // NOW update the top inline badge safely after uniqueIssues is defined
+    if (inlineBadge) inlineBadge.classList.remove("hidden");
+    if (inlineCount) inlineCount.innerText = uniqueIssues.length;
+
     var issueTypeIcon = { bug:"🐛", complaint:"📣", request:"📝", warning:"⚠️" };
 
     document.getElementById("allIssuesList").innerHTML = uniqueIssues.map(function(g, idx){
       var i = g.issue;
       var statusKey = i.status;
-      var pillCls = statusKey === "resolved" ? "pill-resolved"
-                  : statusKey === "pending"  ? "pill-pending"
-                  :                            "pill-open";
+      var pillCls = statusKey === "resolved" ? "pill-resolved" : statusKey === "pending" ? "pill-pending" : "pill-open";
       var icon = issueTypeIcon[(i.type || "").toLowerCase()] || "⚠️";
-      var countBadge = g.count > 1
-        ? '<span style="background:rgba(255,255,255,0.06);border-radius:999px;padding:1px 9px;font-size:10px;font-weight:700;color:#8b93a8;">×' + g.count + '</span>'
-        : "";
-      var adminBlock = i.adminReply
-        ? '<div class="issue-tile-reply">'
-          + '<span style="font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.4px;">Admin Reply</span>'
-          + '<div style="font-size:12.5px;color:#c4b5fd;margin-top:3px;line-height:1.5;">' + i.adminReply + '</div>'
-          + '</div>'
-        : "";
+      var countBadgeHtml = g.count > 1 ? '<span style="background:rgba(33,31,31,0.1);border-radius:999px;padding:1px 9px;font-size:10px;font-weight:700;color:#211F1F;">×' + g.count + '</span>' : "";
+      var adminBlock = i.adminReply ? '<div class="issue-tile-reply" style="background-color: #EAE9DF; border-left: 3px solid #211F1F; padding: 0.5rem; margin-top: 0.5rem; border-radius: 4px;"><span style="font-size:10px;font-weight:700;color:#211F1F;text-transform:uppercase;letter-spacing:.4px;">Admin Reply</span><div style="font-size:12.5px;color:#1f2937;margin-top:3px;line-height:1.5;">' + i.adminReply + '</div></div>' : "";
       var metaBits = [];
       if (i.createdDate) metaBits.push('<span>🗓 Reported: ' + fmtDate(i.createdDate) + '</span>');
       if (i.updatedDate) metaBits.push('<span>🔄 Updated: ' + fmtDate(i.updatedDate) + '</span>');
-      var metaBlock = metaBits.length
-        ? '<div class="issue-tile-meta">' + metaBits.join("") + '</div>'
-        : "";
-
-      /* Description: clamp to 2 lines with a Read more / Read less toggle when long enough to matter */
+      var metaBlock = metaBits.length ? '<div class="issue-tile-meta" style="font-size:11px; color:#4b5563; display:flex; gap:1rem; margin-top:0.5rem;">' + metaBits.join("") + '</div>' : "";
       var needsToggle = i.description && i.description.length > 110;
-      var descBlock = i.description
-        ? '<div class="issue-tile-desc' + (needsToggle ? ' clamped' : '') + '" id="issueDesc' + idx + '">' + i.description + '</div>'
-          + (needsToggle
-              ? '<button type="button" class="issue-read-more" id="issueReadBtn' + idx + '" onclick="toggleIssueDesc(' + idx + ')">Read more ▾</button>'
-              : '')
-        : "";
+      var descBlock = i.description ? '<div class="issue-tile-desc' + (needsToggle ? ' clamped' : '') + '" id="issueDesc' + idx + '" style="color:#1f2937; font-size:0.875rem; margin-top:0.25rem;">' + i.description + '</div>' + (needsToggle ? '<button type="button" class="issue-read-more" id="issueReadBtn' + idx + '" onclick="toggleIssueDesc(' + idx + ')" style="font-size:11px; color:#211F1F; font-weight:700; margin-top:2px;">Read more ▾</button>' : '') : "";
 
-      return '<div class="issue-tile">'
-        + '<div class="issue-tile-head">'
-        +   '<div class="flex items-center gap-3 min-w-0">'
+      return '<div class="issue-tile" style="background-color: #ffffff; border: 1px solid #211F1F; padding: 1rem; border-radius: 8px;">'
+        + '<div class="issue-tile-head" style="display:flex; justify-content:between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">'
+        +   '<div class="flex items-center gap-3 min-w-0" style="flex:1;">'
         +     '<div class="issue-tile-icon">' + icon + '</div>'
         +     '<div class="min-w-0">'
         +       '<div class="flex items-center gap-2 flex-wrap">'
-        +         '<span class="issue-tile-title">' + i.title + '</span>' + countBadge
+        +         '<span class="issue-tile-title" style="font-weight:700; color:#211F1F;">' + i.title + '</span>' + countBadgeHtml
         +       '</div>'
-        +       (i.type ? '<div style="font-size:11px;color:#666d80;margin-top:2px;text-transform:capitalize;">' + i.type + '</div>' : '')
+        +       (i.type ? '<div style="font-size:11px;color:#4b5563;margin-top:2px;text-transform:capitalize;">' + i.type + '</div>' : '')
         +     '</div>'
         +   '</div>'
-        +   '<span class="issue-status-pill ' + pillCls + '">' + i.status + '</span>'
+        +   '<span class="issue-status-pill ' + pillCls + '" style="font-weight:700; font-size:11px; text-transform:uppercase;">' + i.status + '</span>'
         + '</div>'
         + descBlock
         + adminBlock
@@ -834,82 +367,86 @@ function renderIssues(rawIssues) {
     setText("issuesCountBadge", uniqueIssues.length + (uniqueIssues.length === 1 ? " issue" : " issues"));
     show("allIssuesSection");
   } catch(e) {
-    /* Issues panel stays hidden on error — non-critical */
     console.warn("Issues render failed:", e);
   }
-}
-
-function toggleIssueDesc(idx) {
-  var desc = document.getElementById("issueDesc" + idx);
-  var btn  = document.getElementById("issueReadBtn" + idx);
-  if (!desc || !btn) return;
-  desc.classList.toggle("clamped");
-  var isClamped = desc.classList.contains("clamped");
-  btn.textContent = isClamped ? "Read more ▾" : "Read less ▴";
 }
 
 
 /* ══════════════════ TAB COMPONENT RENDERERS ══════════════════ */
 
+/* ══════════════════ TAB COMPONENT RENDERERS (THEMED) ══════════════════ */
+
 function renderSubscribersTab(sp) {
   return `
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Subscribers Gained</div>
-            <div id="subsTotal" class="text-2xl font-black mt-1 text-purple-400">0</div>
+        <!-- Stat Grid -->
+        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Subscribers Gained</div>
+            <div id="subsTotal" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Channels You Subbed</div>
-            <div id="subsDone" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Channels You Subbed</div>
+            <div id="subsDone" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">You Unsubscribed</div>
-            <div id="subsUnsubByYou" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">You Unsubscribed</div>
+            <div id="subsUnsubByYou" class="text-3xl font-black mt-1 text-red-600">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending Actions Out</div>
-            <div id="subsPendOut" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Actions Out</div>
+            <div id="subsPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Unsubbed By Others</div>
-            <div id="subsUnsubByOthers" class="text-2xl font-black mt-1 text-red-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Unsubbed By Others</div>
+            <div id="subsUnsubByOthers" class="text-3xl font-black mt-1 text-red-500">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending Requests In</div>
-            <div id="subsPendIn" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Requests In</div>
+            <div id="subsPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
         </div>
-        <div class="metric-card p-6 rounded-2xl">
-          <h4 class="font-bold text-sm mb-4 tracking-wide text-gray-300 uppercase">Proportional Status Metrics</h4>
+        
+        <!-- Progress Volume Bar Module -->
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+          <h4 class="font-black text-xs mb-4 tracking-wider text-[#211F1F] uppercase">Proportional Status Metrics</h4>
           <div class="space-y-4">
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Gained</span><span id="subsLegGained" class="font-bold text-purple-400">0</span></div>
-              <div class="progress-bg"><div id="subsProgGained" class="progress-bar bg-purple-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Gained</span><span id="subsLegGained">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="subsProgGained" class="h-full bg-[#ACD1C0]" style="width:0%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Lost By Drops</span><span id="subsLegLost" class="font-bold text-red-400">0</span></div>
-              <div class="progress-bg"><div id="subsProgLost" class="progress-bar bg-red-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Lost By Drops</span><span id="subsLegLost" class="text-red-600">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="subsProgLost" class="h-full bg-red-400" style="width:0%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Inbound</span><span id="subsLegPendIn" class="font-bold text-sky-400">0</span></div>
-              <div class="progress-bg"><div id="subsProgPendIn" class="progress-bar bg-sky-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Pending Inbound</span><span id="subsLegPendIn" class="text-amber-600">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="subsProgPendIn" class="h-full bg-[#EBE492]" style="width:0%"></div></div>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- Right Column: Ring Chart & Threshold limits -->
       <div class="space-y-6">
-        <div class="metric-card p-6 rounded-2xl flex flex-col items-center justify-center text-center relative min-h-[260px]">
-          <div class="chart-container"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="subsRingGained" class="prog stroke-purple-500" cx="50" cy="50" r="44" style="stroke-dasharray:276.46; stroke-dashoffset:276.46;"/></svg><div id="subsRingPct" class="chart-center font-black text-2xl text-white">0%</div></div>
-          <div class="mt-4 font-bold text-sm text-gray-200">Retention Effectiveness</div>
-          <p class="text-xs text-gray-400 mt-1 max-w-[200px] leading-relaxed">Percentage of valid non-dropped subscriptions out of overall interactions.</p>
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="relative w-32 h-32 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle class="text-[#F5F4EB] stroke-current" stroke-width="10" fill="transparent" cx="50" cy="50" r="40"/>
+              <circle id="subsRingGained" class="text-[#ACD1C0] stroke-current transition-all duration-500" stroke-width="12" stroke-linecap="round" fill="transparent" cx="50" cy="50" r="40" style="stroke-dasharray: 251.2; stroke-dashoffset: 251.2; stroke: #ACD1C0;"/>
+            </svg>
+            <div id="subsRingPct" class="absolute font-black text-2xl text-[#211F1F]">0%</div>
+          </div>
+          <div class="mt-4 font-black text-sm text-[#211F1F]">Retention Effectiveness</div>
+          <p class="text-xs text-gray-600 mt-1 max-w-[200px] leading-relaxed">Percentage of valid non-dropped subscriptions out of overall interactions.</p>
         </div>
-        <div class="metric-card p-5 rounded-2xl border border-purple-500/10">
-          <div class="flex justify-between text-xs text-gray-400 mb-2"><span>Earning Threshold Limit</span><span class="font-bold text-gray-200"><span id="subsLimitUsed">0</span> / <span id="subsLimitMax">0</span></span></div>
-          <div class="progress-bg h-2 mb-2"><div id="subsLimitBar" class="progress-bar bg-gradient-to-r from-purple-500 to-indigo-500" style="width:0%"></div></div>
-          <div id="subsLimitMsg" class="text-[11px] text-gray-400 leading-normal">0% of your subscriber limit used.</div>
-          <div class="border-t border-gray-800/60 mt-3 pt-3 flex items-center justify-between"><span id="subsLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-purple-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        
+        <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-5 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="flex justify-between text-xs font-bold text-[#211F1F] mb-2"><span>Earning Threshold Limit</span><span><span id="subsLimitUsed">0</span> / <span id="subsLimitMax">0</span></span></div>
+          <div class="w-full bg-white border-2 border-[#211F1F] h-3 rounded-full overflow-hidden mb-2"><div id="subsLimitBar" class="h-full bg-[#ACD1C0]" style="width:0%"></div></div>
+          <div id="subsLimitMsg" class="text-[11px] font-semibold text-gray-700 leading-normal">0% of your subscriber limit used.</div>
+          <div class="border-t border-[#211F1F]/20 mt-3 pt-3 flex items-center justify-between"><span id="subsLastWorkTxt" class="text-[11px] font-medium text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-black text-[#211F1F] underline flex items-center gap-1">Open Group ➜</a></div>
         </div>
       </div>
     </div>`;
@@ -917,45 +454,51 @@ function renderSubscribersTab(sp) {
 
 function renderVideoTab(vp) {
   return `
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Total Watched</div>
-            <div id="videoWatched" class="text-2xl font-black mt-1 text-sky-400">0</div>
+        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Total Watched</div>
+            <div id="videoWatched" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending From Others</div>
-            <div id="videoPendIn" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending From Others</div>
+            <div id="videoPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending By You</div>
-            <div id="videoPendOut" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending By You</div>
+            <div id="videoPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Your Rejections</div>
-            <div id="videoYourRejects" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Your Rejections</div>
+            <div id="videoYourRejects" class="text-3xl font-black mt-1 text-red-600">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl col-span-2 sm:col-span-1">
-            <div class="text-xs text-gray-400">Others Rejections</div>
-            <div id="videoOthersRejects" class="text-2xl font-black mt-1 text-orange-500">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl col-span-2 sm:col-span-1">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Others Rejections</div>
+            <div id="videoOthersRejects" class="text-3xl font-black mt-1 text-orange-600">0</div>
           </div>
         </div>
-        <div class="metric-card p-6 rounded-2xl">
-          <h4 class="font-bold text-sm mb-6 tracking-wide text-gray-300 uppercase">Task Volume Weights</h4>
-          <div class="flex items-end justify-between px-4 h-24" id="videoBarChart"></div>
-          <div class="flex justify-between text-[10px] text-gray-500 mt-3 px-1"><span>Watched</span><span>Pend In</span><span>Pend Out</span><span>Your Rej</span><span>Oth Rej</span></div>
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+          <h4 class="font-black text-xs mb-6 tracking-wide text-[#211F1F] uppercase">Task Volume Weights</h4>
+          <div class="flex items-end justify-between px-4 h-24 bg-[#F5F4EB] border-2 border-[#211F1F] rounded-xl pt-4" id="videoBarChart"></div>
+          <div class="flex justify-between text-[10px] font-bold text-gray-600 mt-3 px-1"><span>Watched</span><span>Pend In</span><span>Pend Out</span><span>Your Rej</span><span>Oth Rej</span></div>
         </div>
       </div>
       <div class="space-y-6">
-        <div class="metric-card p-6 rounded-2xl flex flex-col items-center justify-center text-center relative min-h-[260px]">
-          <div class="chart-container"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="videoRing" class="prog stroke-sky-400" cx="50" cy="50" r="44" style="stroke-dasharray:276.46; stroke-dashoffset:276.46;"/></svg><div id="videoRingPct" class="chart-center font-black text-2xl text-white">0%</div></div>
-          <div class="mt-4 font-bold text-sm text-gray-200">Success Factor</div>
-          <div id="videoSuccessDesc" class="text-xs text-sky-400 font-semibold mt-0.5">0 videos</div>
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="relative w-32 h-32 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle class="text-[#F5F4EB] stroke-current" stroke-width="10" fill="transparent" cx="50" cy="50" r="40"/>
+              <circle id="videoRing" class="text-[#ACD1C0] stroke-current transition-all duration-500" stroke-width="12" stroke-linecap="round" fill="transparent" cx="50" cy="50" r="40" style="stroke-dasharray:251.2; stroke-dashoffset:251.2; stroke: #ACD1C0;"/>
+            </svg>
+            <div id="videoRingPct" class="absolute font-black text-2xl text-[#211F1F]">0%</div>
+          </div>
+          <div class="mt-4 font-black text-sm text-[#211F1F]">Success Factor</div>
+          <div id="videoSuccessDesc" class="text-xs font-bold text-gray-600 mt-0.5">0 videos</div>
         </div>
-        <div class="metric-card p-5 rounded-2xl border border-sky-500/10 flex flex-col justify-between">
-          <div class="text-xs text-gray-400 leading-normal">Watch tasks increase video visibility parameters organically across networks.</div>
-          <div class="border-t border-gray-800/60 mt-4 pt-3 flex items-center justify-between"><span id="videoLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-sky-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        <div class="bg-[#ACD1C0] border-2 border-[#211F1F] p-5 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F] flex flex-col justify-between">
+          <div class="text-xs font-bold text-[#211F1F] leading-normal">Watch tasks increase video visibility parameters organically across platforms.</div>
+          <div class="border-t border-[#211F1F]/20 mt-4 pt-3 flex items-center justify-between"><span id="videoLastWorkTxt" class="text-[11px] font-medium text-gray-700">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-black text-[#211F1F] underline flex items-center gap-1">Open Group ➜</a></div>
         </div>
       </div>
     </div>`;
@@ -963,69 +506,61 @@ function renderVideoTab(vp) {
 
 function renderPlaylistTab(pp) {
   return `
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Playlists Completed</div>
-            <div id="playlistWatched" class="text-2xl font-black mt-1 text-amber-400">0</div>
+        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Playlists Completed</div>
+            <div id="playlistWatched" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending Outbound</div>
-            <div id="playlistPendOut" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Outbound</div>
+            <div id="playlistPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending Inbound</div>
-            <div id="playlistPendIn" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Inbound</div>
+            <div id="playlistPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Cheating Stripped (You)</div>
-            <div id="playlistCheatByYou" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Cheating Stripped (You)</div>
+            <div id="playlistCheatByYou" class="text-3xl font-black mt-1 text-red-600">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl col-span-2 sm:col-span-1">
-            <div class="text-xs text-gray-400">Cheating Flagged (Others)</div>
-            <div id="playlistCheatByOthers" class="text-2xl font-black mt-1 text-orange-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl col-span-2 sm:col-span-1">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Cheating Flagged (Others)</div>
+            <div id="playlistCheatByOthers" class="text-3xl font-black mt-1 text-orange-600">0</div>
           </div>
         </div>
-        <div class="metric-card p-6 rounded-2xl">
-          <h4 class="font-bold text-sm mb-4 tracking-wide text-gray-300 uppercase">Distribution Ratios</h4>
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+          <h4 class="font-black text-xs mb-4 tracking-wide text-[#211F1F] uppercase">Distribution Ratios</h4>
           <div class="space-y-4">
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Completed Watchlists</span><span id="playlistProgWatchedLbl" class="font-bold text-amber-400">0</span></div>
-              <div class="progress-bg"><div id="playlistProgWatched" class="progress-bar bg-amber-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Idled Watchlists</span><span id="playlistProgWatchedLbl">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="playlistProgWatched" class="h-full bg-[#ACD1C0]" style="width:0%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Validation</span><span id="playlistProgOutLbl" class="font-bold text-emerald-400">0</span></div>
-              <div class="progress-bg"><div id="playlistProgOut" class="progress-bar bg-emerald-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Pending Validation</span><span id="playlistProgOutLbl">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="playlistProgOut" class="h-full bg-[#EBE492]" style="width:0%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Awaiting Inbound Performance</span><span id="playlistProgInLbl" class="font-bold text-sky-400">0</span></div>
-              <div class="progress-bg"><div id="playlistProgIn" class="progress-bar bg-sky-500" style="width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Cheating Disqualifications By You</span><span id="playlistProgCheatByYouLbl" class="font-bold text-rose-500">0</span></div>
-              <div class="progress-bg"><div id="playlistProgCheatByYou" class="progress-bar bg-rose-500" style="width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Cheating Disqualifications By Others</span><span id="playlistProgCheatByOthersLbl" class="font-bold text-orange-500">0</span></div>
-              <div class="progress-bg"><div id="playlistProgCheatByOthers" class="progress-bar bg-orange-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Awaiting Performance</span><span id="playlistProgInLbl">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="playlistProgIn" class="h-full bg-gray-400" style="width:0%"></div></div>
             </div>
           </div>
         </div>
       </div>
       <div class="space-y-6">
-        <div id="playlistCheatWarning" class="metric-card p-5 rounded-2xl border border-rose-500/20 bg-rose-950/10 hidden">
+        <div id="playlistCheatWarning" class="bg-white border-2 border-red-600 p-5 rounded-2xl shadow-[4px_4px_0px_0px_#dc2626] hidden">
           <div class="flex items-start gap-3">
             <span class="text-xl">⚠️</span>
             <div>
-              <h5 class="text-xs font-bold text-rose-400 uppercase tracking-wider">Integrity Alert</h5>
-              <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">System logs detect skipped entries in past assignments. Continual discrepancies can flag user profile for permanent platform exclusion.</p>
+              <h5 class="text-xs font-black text-red-600 uppercase tracking-wider">Integrity Alert</h5>
+              <p class="text-[11px] text-gray-700 mt-1 leading-relaxed font-medium">System logs detect skipped entries in past assignments. Discrepancies can lead to a suspension block.</p>
             </div>
           </div>
         </div>
-        <div class="metric-card p-5 rounded-2xl border border-amber-500/10 flex flex-col justify-between">
-          <div class="text-xs text-gray-400 leading-normal">High volume watch-time tasks help clear algorithms requirements for monetization channels faster.</div>
-          <div class="border-t border-gray-800/60 mt-4 pt-3 flex items-center justify-between"><span id="playlistLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-amber-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-5 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F] flex flex-col justify-between">
+          <div class="text-xs font-bold text-gray-700 leading-normal">High volume watch-time tasks help clear algorithm requirements for monetization channels faster.</div>
+          <div class="border-t border-[#211F1F]/20 mt-4 pt-3 flex items-center justify-between"><span id="playlistLastWorkTxt" class="text-[11px] font-medium text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-black text-[#211F1F] underline flex items-center gap-1">Open Group ➜</a></div>
         </div>
       </div>
     </div>`;
@@ -1033,74 +568,67 @@ function renderPlaylistTab(pp) {
 
 function renderEngagementTab(ep) {
   return `
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="metric-card p-6 rounded-2xl grid grid-cols-2 sm:grid-cols-3 gap-6">
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Interactions Received</div>
-            <div id="engageTotal" class="text-2xl font-black mt-1 text-teal-400">0</div>
+        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Interactions Received</div>
+            <div id="engageTotal" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Interactions Given</div>
-            <div id="engageDone" class="text-2xl font-black mt-1 text-emerald-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Interactions Given</div>
+            <div id="engageDone" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Removed By You</div>
-            <div id="engageDeletedByYou" class="text-2xl font-black mt-1 text-rose-500">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Removed By You</div>
+            <div id="engageDeletedByYou" class="text-3xl font-black mt-1 text-red-500">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Removed By Others</div>
-            <div id="engageDeletedByOthers" class="text-2xl font-black mt-1 text-red-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Removed By Others</div>
+            <div id="engageDeletedByOthers" class="text-3xl font-black mt-1 text-red-600">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending Outbound</div>
-            <div id="engagePendOut" class="text-2xl font-black mt-1 text-amber-400">0</div>
+          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Outbound</div>
+            <div id="engagePendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
-          <div class="stat-box p-4 rounded-xl">
-            <div class="text-xs text-gray-400">Pending Inbound</div>
-            <div id="engagePendIn" class="text-2xl font-black mt-1 text-sky-400">0</div>
+          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Inbound</div>
+            <div id="engagePendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
         </div>
-        <div class="metric-card p-6 rounded-2xl">
-          <h4 class="font-bold text-sm mb-4 tracking-wide text-gray-300 uppercase">Interaction Balance</h4>
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+          <h4 class="font-black text-xs mb-4 tracking-wide text-[#211F1F] uppercase">Interaction Balance</h4>
           <div class="space-y-4">
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Gained Items</span><span id="engProgGainedLbl" class="font-bold text-teal-400">0</span></div>
-              <div class="progress-bg"><div id="engProgGained" class="progress-bar bg-teal-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Gained Items</span><span id="engProgGainedLbl">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="engProgGained" class="h-full bg-[#ACD1C0]" style="width:0%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Revoked Actions (You)</span><span id="engProgDelByYouLbl" class="font-bold text-rose-500">0</span></div>
-              <div class="progress-bg"><div id="engProgDelByYou" class="progress-bar bg-rose-500" style="width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Revoked Actions (Others)</span><span id="engProgDelByOthersLbl" class="font-bold text-red-500">0</span></div>
-              <div class="progress-bg"><div id="engProgDelByOthers" class="progress-bar bg-red-500" style="width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Outbound Allocation</span><span id="engProgOutLbl" class="font-bold text-amber-400">0</span></div>
-              <div class="progress-bg"><div id="engProgOut" class="progress-bar bg-amber-500" style="width:0%"></div></div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Pending Inbound Intake</span><span id="engProgInLbl" class="font-bold text-sky-400">0</span></div>
-              <div class="progress-bg"><div id="engProgIn" class="progress-bar bg-sky-500" style="width:0%"></div></div>
+              <div class="flex justify-between text-xs font-bold mb-1 text-[#211F1F]"><span>Pending Allocation</span><span id="engProgOutLbl">0</span></div>
+              <div class="w-full bg-[#F5F4EB] border-2 border-[#211F1F] h-4 rounded-full overflow-hidden"><div id="engProgOut" class="h-full bg-[#EBE492]" style="width:0%"></div></div>
             </div>
           </div>
         </div>
       </div>
       <div class="space-y-6">
-        <div class="metric-card p-6 rounded-2xl flex flex-col items-center justify-center text-center relative min-h-[260px]">
-          <div class="chart-container"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="engRing" class="prog stroke-teal-400" cx="50" cy="50" r="44" style="stroke-dasharray:276.46; stroke-dashoffset:276.46;"/></svg><div id="engRingPct" class="chart-center font-black text-2xl text-white">0%</div></div>
-          <div class="mt-4 font-bold text-sm text-gray-200">Net Survival Rate</div>
-          <div class="text-xs text-teal-400 font-semibold mt-0.5"><span id="engNetValue">0</span> active links</div>
+        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
+          <div class="relative w-32 h-32 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle class="text-[#F5F4EB] stroke-current" stroke-width="10" fill="transparent" cx="50" cy="50" r="40"/>
+              <circle id="engRing" class="stroke-current transition-all duration-500" stroke-width="12" stroke-linecap="round" fill="transparent" cx="50" cy="50" r="40" style="stroke-dasharray: 251.2; stroke-dashoffset: 251.2; stroke: #ACD1C0;"/>
+            </svg>
+            <div id="engRingPct" class="absolute font-black text-2xl text-[#211F1F]">0%</div>
+          </div>
+          <div class="mt-4 font-black text-sm text-[#211F1F]">Net Survival Rate</div>
+          <div class="text-xs font-bold text-gray-600 mt-0.5"><span id="engNetValue">0</span> active links</div>
         </div>
-        <div class="metric-card p-5 rounded-2xl border border-teal-500/10 flex flex-col justify-between">
-          <div class="text-xs text-gray-400 leading-normal">Organic feedback loop metrics (likes and comments combined) optimize community indexing visibility.</div>
-          <div class="border-t border-gray-800/60 mt-4 pt-3 flex items-center justify-between"><span id="engageLastWorkTxt" class="text-[11px] text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-semibold text-teal-400 hover:underline flex items-center gap-1">Open Group ➜</a></div>
+        <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-5 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F] flex flex-col justify-between">
+          <div class="text-xs font-bold text-gray-700 leading-normal">Organic loops (likes and comments combined) optimize indexing visibility parameters perfectly.</div>
+          <div class="border-t border-[#211F1F]/20 mt-4 pt-3 flex items-center justify-between"><span id="engageLastWorkTxt" class="text-[11px] font-medium text-gray-500">No activity yet</span><a href="subscriberstask.html" class="text-[11px] font-black text-[#211F1F] underline flex items-center gap-1">Open Group ➜</a></div>
         </div>
       </div>
     </div>`;
-}  
-
+}
 /* ══════════════════ RENDER ══════════════════ */
 /* ══════════════════ RENDER ══════════════════ */
 function renderDashboard(data) {
@@ -1385,62 +913,9 @@ function logoutUser() {
   window.location.replace("signin.html");
 }
 
-/* ══════════════════ MENUS ══════════════════ */
-var mobileMenuBtn   = document.getElementById("mobileMenuBtn");
-var mobileMenu      = document.getElementById("mobileMenu");
-var profileBtn      = document.getElementById("profileBtn");
-var profileDropdown = document.getElementById("profileDropdown");
-var notifBtn        = document.getElementById("notifBtn");
-var notifDropdown   = document.getElementById("notifDropdown");
-
-mobileMenuBtn.addEventListener("click", function(e){
-  e.stopPropagation();
-  profileDropdown.classList.add("hidden"); notifDropdown.classList.add("hidden");
-  mobileMenu.classList.toggle("hidden");
-});
-profileBtn.addEventListener("click", function(e){
-  e.stopPropagation();
-  mobileMenu.classList.add("hidden"); notifDropdown.classList.add("hidden");
-  profileDropdown.classList.toggle("hidden");
-});
-notifBtn.addEventListener("click", function(e){
-  e.stopPropagation();
-  mobileMenu.classList.add("hidden"); profileDropdown.classList.add("hidden");
-  notifDropdown.classList.toggle("hidden");
-});
-document.addEventListener("click", function(){
-  mobileMenu.classList.add("hidden"); profileDropdown.classList.add("hidden"); notifDropdown.classList.add("hidden");
-});
-
 /* ── KICK OFF ── */
 loadDashboard();
 </script>
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
-
 <script>
 (function(){
   const current = window.location.pathname.split("/").pop() || "index.html";
@@ -1452,50 +927,29 @@ loadDashboard();
 
 
 <script>
-function toggleTasksMenu(e){
-    e.preventDefault();
-
-    const menu=document.getElementById("tasksDropdown");
-
-    menu.classList.toggle("show");
-
-    document.addEventListener("click",function(event){
-        if(!event.target.closest(".task-dropdown-wrap")){
-            menu.classList.remove("show");
-        }
-    },{once:true});
-}
-
+// ================== EXTENSION STATUS ==================
 // ================== EXTENSION STATUS ==================
 function renderExtensionStatus(isReady) {
   const card = document.getElementById('extensionStatus');
   const icon = document.getElementById('extIcon');
   const title = document.getElementById('extTitle');
   const badge = document.getElementById('extBadge');
-  const desc = document.getElementById('extDesc');
   const cta = document.getElementById('extCTA');
 
   if (isReady === "Yes") {
-    card.classList.add('extension-ready');
-    card.classList.remove('extension-not-ready');
     icon.textContent = '✅';
-    title.textContent = 'Extension Ready';
+    title.textContent = 'Extension';
     badge.textContent = 'ACTIVE';
-    badge.className = 'px-4 py-1 rounded-full text-sm font-bold bg-emerald-500/20 text-emerald-400';
-    desc.textContent = 'You are ready to earn using the Exsub Browser Extension.';
+    badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300';
     cta.style.display = 'none';
   } else {
-    card.classList.remove('extension-ready');
-    card.classList.add('extension-not-ready');
     icon.textContent = '🔌';
-    title.textContent = 'Extension Not Setup';
+    title.textContent = 'Extension';
     badge.textContent = 'PENDING';
-    badge.className = 'px-4 py-1 rounded-full text-sm font-bold bg-amber-500/20 text-amber-400';
-    desc.textContent = 'Setup the extension to start earning automatically.';
+    badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-300';
     cta.style.display = 'block';
   }
 }
-
 // ================== GROUP TABS ==================
 
   // ================== GROUP TABS WITH FULL ANALYTICS ==================

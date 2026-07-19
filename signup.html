@@ -11,26 +11,114 @@
 <style>
 .rounded-popup{border-radius:15px}
 select{appearance:none;-webkit-appearance:none;-moz-appearance:none}
-:root{--bg:#050508;--card:#12141c;--border:#1e212c;--purple:#7c3aed}
-*{font-family:Inter,sans-serif}
-body{background:var(--bg);color:white;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at top,rgba(124,58,237,.18),transparent 35%),radial-gradient(circle at bottom,rgba(124,58,237,.12),transparent 40%);pointer-events:none}
-.glass-nav{background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
+.glass-nav{backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
 .card{background:linear-gradient(180deg,#151821 0%,#101219 100%);border:1px solid var(--border)}
 .input{width:100%;padding:13px 15px;border-radius:14px;background:#0f1117;border:1px solid #1e212c;color:white;outline:none;transition:.2s}
-.input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
-.btn-purple{background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);box-shadow:0 0 25px rgba(124,58,237,.35)}
+.input:focus{border-color:#ACD1C0;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.btn-purple{background:#ACD1C0; box-shadow: 4px 4px 0px 0px #211F1F;}
 .btn-purple:hover{transform:translateY(-1px)}
 .text-muted{color:#8a8f9e}
 .avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:8px}
-.avatar-option{width:52px;height:52px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;object-fit:cover;background:#1e212c}
-.avatar-option:hover{border-color:#7c3aed;transform:scale(1.08)}
-.avatar-option.selected{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(124,58,237,.25)}
-.avatar-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid #7c3aed;background:#1e212c;flex-shrink:0}
-.upload-label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:#1a1d27;border:1px dashed #3a3f52;color:#8a8f9e;font-size:12px;padding:7px 14px;border-radius:10px;transition:.2s}
-.upload-label:hover{border-color:#7c3aed;color:white}
-.tab-btn{flex:1;padding:8px 0;font-size:13px;border-radius:10px;font-weight:500;transition:.2s;cursor:pointer;color:#8a8f9e;background:transparent;border:none}
-.tab-btn.active{background:#7c3aed;color:white}
+.avatar-option{width:52px;height:52px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;object-fit:cover;background:#ACD1C0}
+.avatar-option:hover{border-color:#ACD1C0;transform:scale(1.08)}
+.avatar-option.selected{border-color:#ACD1C0;box-shadow:0 0 0 3px rgba(124,58,237,.25)}
+.avatar-preview{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #ACD1C0;
+  background:#1e212c;
+  flex-shrink:0}
+
+.upload-label
+{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  cursor:pointer;
+  background:#1a1d27;
+  border:1px dashed #3a3f52;
+   box-shadow: 4px 4px 0px 0px #211F1F;
+  color:#f8f8f8;
+  font-size:12px;
+  padding:7px 14px;
+  border-radius:20px;
+  transition:.2s}
+.upload-label:hover{
+  transition:.2s
+}
+/* ==========================================================================
+   AVATAR TAB BUTTONS (Choose Avatar / Uploaded)
+   ========================================================================== */
+.tab-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: #ffffff; /* Readable text against the dark container background */
+     border-radius: 20px;
+  transition: all 0.15s ease-in-out;
+}
+
+/* Hover state for unselected tab */
+.tab-btn:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Active / Selected Tab State */
+.tab-btn.active {
+    background-color: #ACD1C0;
+    border-radius: 20px;
+  transition: all 0.15s ease-in-out;
+}
+</style>
+
+<style>
+:root{--bg:#F7F6EE;--card:#12141c;}
+*{font-family:Inter,sans-serif}
+body{background:var(--bg);color:white;overflow-x:hidden}
+.glass-nav{background-image:linear-gradient(180deg,#211F1E 0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
+.card{
+  
+  
+ box-shadow: 4px 4px 0px 0px #211F1F;
+ border: 2px solid #211F1F;
+    border-radius: 20px;
+background: #ffffff;
+    padding: 0px 0.8rem;
+    height: auto;
+}
+.input{width:100%;padding:13px 15px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+ border: 2px solid #211F1F;
+    border-radius: 20px;
+background: #f9fafa;
+    height: auto;
+  outline:none;transition:.2s;
+color: black;}
+.input:focus{
+ box-shadow: 4px 4px 0px 0px #111111;
+
+}
+.btn-purple{
+
+ box-shadow: 4px 4px 0px 0px #211F1F;
+ border: 2px solid #211F1F;
+    border-radius: 20px;
+background: #ACD1C0;
+    padding: 0px 0.8rem;
+    height: auto;
+
+}
+.btn-purple:hover{transform:translateY(-1px)}
+.text-muted{color:#070707}
+.password-box{position:relative}
+.eye-btn{position:absolute;right:15px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;color:#0a0a0a;user-select:none}
+.rounded-popup{border-radius:15px}
 </style>
 </head>
 <body>
@@ -73,7 +161,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   <div class="w-full max-w-[470px]">
     <div class="text-center mb-8">
       <img src="images/logo.svg" class="w-14 h-14 mx-auto mb-5">
-      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight">Create Your Account</h1>
+      <h1 class="text-[34px] sm:text-[40px] font-[800] leading-tight" style="color: #211F1F;">Create Your Account</h1>
       <p class="text-muted text-[14px] mt-3 max-w-[350px] mx-auto leading-relaxed">
         Join EXSUB Group and start growing your YouTube channel with real engagement and active creators.
       </p>
@@ -84,11 +172,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
         <!-- PROFILE PICTURE -->
         <div>
-          <label class="text-[13px] text-gray-300 block mb-3">Profile Picture</label>
+          <label class="text-[13px] block mb-3" style="color: #211F1F;">Profile Picture</label>
           <div class="flex items-center gap-4 mb-4">
             <img id="avatarPreview" class="avatar-preview" src="" alt="Avatar">
             <div>
-              <p class="text-[12px] text-gray-300 font-medium mb-2">Selected avatar</p>
+              <p class="text-[12px] font-medium mb-2" style="color: #211F1F;">Selected avatar</p>
               <label class="upload-label" for="customImageInput">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4"/>
@@ -96,10 +184,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
                 Upload Image
               </label>
               <input type="file" id="customImageInput" accept="image/*" class="hidden">
-              <p class="text-[10px] text-muted mt-1">JPG, PNG, WEBP — max 2MB</p>
+              <p class="text-[10px] text-muted mt-4">JPG, PNG, WEBP — max 2MB</p>
             </div>
           </div>
-          <div class="flex gap-1 bg-[#0f1117] p-1 rounded-[12px] mb-3">
+          <div class="flex gap-1 bg-[#0f1117] p-1 rounded-[20px] mb-3">
             <button type="button" class="tab-btn active" id="tabAvatars">Choose Avatar</button>
             <button type="button" class="tab-btn" id="tabUpload">Uploaded</button>
           </div>
@@ -111,14 +199,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
         <!-- Username -->
         <div>
-          <label class="text-[13px] text-gray-300 block mb-2">Username</label>
+          <label class="text-[13px] block mb-2" style="color: #211F1F;">Username</label>
           <input type="text" id="username" maxlength="15" placeholder="Enter username" class="input" required>
 <p class="text-[11px] text-muted mt-2">Must be unique, no spaces, and 5–15 characters.</p>
         </div>
 
         <!-- Password -->
         <div>
-          <label class="text-[13px] text-gray-300 block mb-2">Password</label>
+          <label class="text-[13px] block mb-2"  style="color: #211F1F;">Password</label>
           <div class="relative">
            <input type="password" id="password" maxlength="15" placeholder="Create password" class="input pr-12" required>
             <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition">
@@ -139,7 +227,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
         <!-- Country -->
         <div>
-          <label class="text-[13px] text-gray-300 block mb-2">Country</label>
+          <label class="text-[13px] block mb-2"  style="color: #211F1F;">Country</label>
           <div class="relative">
             <select id="country" class="input pr-12" required>
             <option value="">Select Country</option>
@@ -221,7 +309,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
           </svg>
         </div>
         <div>
-          <h3 class="text-[17px] font-semibold">Need Help Creating Your Account?</h3>
+          <h3 class="text-[17px] font-semibold" style="color: #211F1F;">Need Help Creating Your Account?</h3>
           <p class="text-muted text-[13px] mt-2 leading-relaxed max-w-[420px]">
             If you face any problem while creating your EXSUB account, contact our support team on WhatsApp for quick help.
           </p>
@@ -315,7 +403,7 @@ signupForm.addEventListener("submit", async e => {
   const password = passwordInput.value.trim();
   const country  = document.getElementById("country").value;
 
-  const err = (title,text) => Swal.fire({icon:"error",title,text,background:"#12141c",color:"#fff",confirmButtonColor:"#7c3aed",customClass:{popup:"rounded-popup"}});
+  const err = (title,text) => Swal.fire({icon:"error",title,text,background:"#211F1F",color:"#fff",confirmButtonColor:"#ACD1C0",customClass:{popup:"rounded-popup"}});
 
 if (username.length > 15) return err("Invalid Username","Username cannot be more than 15 characters");
   if (username.includes(" ")) return err("Invalid Username","Username cannot contain spaces");
@@ -334,7 +422,7 @@ if (password.length > 15) return err("Weak Password","Password cannot be more th
     if (data.status === "success") {
       localStorage.setItem("username", data.username);
       localStorage.setItem("usercode", data.usercode);
-      Swal.fire({icon:"success",title:"Account Created",text:"Welcome to EXSUB Group",background:"#12141c",color:"#fff",confirmButtonColor:"#7c3aed",customClass:{popup:"rounded-popup"}})
+      Swal.fire({icon:"success",title:"Account Created",text:"Welcome to EXSUB Group",background:"#211F1F",color:"#fff",confirmButtonColor:"#ACD1C0",customClass:{popup:"rounded-popup"}})
         .then(() => { window.location.href = "Profile.html"; });
     } else {
       err("Signup Failed", data.message);

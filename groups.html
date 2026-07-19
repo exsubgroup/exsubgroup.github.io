@@ -10,97 +10,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+
 <style>
 
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
 
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
-}
-
-
-:root{
-    --bg:#050508;
-    --card:#12141c;
-    --border:#1e212c;
-    --purple:#7c3aed;
-    --purple2:#8b5cf6;
-    --text-muted:#8a8f9e;
-}
-*{ font-family:'Inter',sans-serif; }
-body{ background:var(--bg); color:white; overflow-x:hidden; }
-body::before{
-    content:'';
-    position:fixed;
-    top:-50%; left:-50%;
-    width:200%; height:200%;
-    background:
-        radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),
-        radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
-    z-index:0; pointer-events:none;
-}
-.glass-nav{
-    background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.06);
-    color:white;
-}
-.card{
-    background:linear-gradient(180deg,#151821 0%,#101219 100%);
-    border:1px solid var(--border);
-    box-shadow:0 1px 0 rgba(255,255,255,0.03) inset;
-}
-.card-hover{ transition:0.3s ease; }
-.card-hover:hover{
-    transform:translateY(-4px);
-    border-color:rgba(124,58,237,0.5);
-    box-shadow:0 10px 40px rgba(0,0,0,0.4);
-}
-.text-muted{ color:var(--text-muted); }
 .group-icon{
     width:54px; height:54px; border-radius:18px;
     display:flex; align-items:center; justify-content:center;
     font-size:24px;
-    background:rgba(124,58,237,0.15);
+    background:#ACD1C0;
     border:1px solid rgba(124,58,237,0.25);
 }
 .join-btn{
-    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    background:linear-gradient(180deg,#ACD1C0 0%,#a7cebc 100%);
     color:white; border:none;
     padding:12px 22px; border-radius:14px;
     font-weight:600; transition:0.3s ease;
@@ -114,91 +39,57 @@ body::before{
 }
 .leave-link{
     background:none; border:none; padding:0; margin-top:10px;
-    font-size:12px; font-weight:600; color:#f87171; cursor:pointer;
+    font-size:12px; font-weight:600; color:#922525; cursor:pointer;
     text-decoration:underline; text-underline-offset:2px;
 }
-.leave-link:hover{ color:#fca5a5; }
+.leave-link:hover{ color:#eb4040; }
 .leave-link:disabled{ cursor:not-allowed; opacity:0.6; text-decoration:none; }
 </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-      <a href="channels.html" class="text-white hover:text-purple-300 transition">Channels</a>
-      <a href="groups.html" class="text-purple-300 font-semibold">Groups</a>
-      <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
-      </div>
-      <div class="relative">
-        <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-2">
-            <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-            <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-            <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a href="analytics.html" class="text-white">Dashboard</a>
-      <a href="channels.html" class="text-white">Channels</a>
-      <a href="groups.html" class="text-purple-300 font-semibold">Groups</a>
-      <a href="howtowork.html" class="text-white">How To Work</a>
-      <a href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a href="support.html" class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
+
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<!-- NAVBAR -->
 
 <!-- MAIN -->
-<main class="relative z-10 pt-32 pb-20 px-4">
+
+
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+
   <div class="max-w-[1200px] mx-auto">
 
-    <!-- HEADER -->
-    <div class="text-center mb-12">
-      <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-        🚀 Creator Communities
-      </div>
-      <h1 class="text-4xl md:text-5xl font-black gradient-text">Explore Groups</h1>
-      <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
-        Join creator communities to grow your channel, increase engagement,
-        improve watch time and connect with active members worldwide.
-      </p>
+   <div class="nb-dashboard-header">
+  <div class="nb-badge-container">
+    
+    <!-- Page Context Badge (Now styled completely identical to the others) -->
+    <div class="nb-status-card nb-status-static">
+      <span class="nb-card-title">Creator Communities</span>
     </div>
+  </div>
+
+  <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Explore Groups</h1>
+  <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Join creator communities to grow your channel, increase engagement, improve watch time and connect with active members worldwide.
+
+</div>
+</div>
 
     <!-- GROUPS GRID -->
     <div id="groupsContainer" class="relative">
@@ -236,7 +127,7 @@ body::before{
             </div>
             <button class="join-btn" id="btn-subscribers" data-group="subscribers">Join Group</button>
           </div>
-          <div id="reason-subscribers" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <div id="reason-subscribers" class="hidden mt-3 text-xs leading-5" style="color: rgb(139, 49, 49);"></div>
           <button class="leave-link hidden" id="leave-subscribers" data-group="subscribers">Leave Group</button>
         </div>
 
@@ -263,7 +154,7 @@ body::before{
             </div>
             <button class="join-btn" id="btn-video" data-group="video">Join Group</button>
           </div>
-          <div id="reason-video" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <div id="reason-video" class="hidden mt-3 text-xs leading-5"  style="color: rgb(139, 49, 49);"></div>
           <button class="leave-link hidden" id="leave-video" data-group="video">Leave Group</button>
         </div>
 
@@ -291,7 +182,7 @@ body::before{
             </div>
             <button class="join-btn" id="btn-watchtime" data-group="watchtime">Join Group</button>
           </div>
-          <div id="reason-watchtime" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <div id="reason-watchtime" class="hidden mt-3 text-xs leading-5"  style="color: rgb(139, 49, 49);"></div>
           <button class="leave-link hidden" id="leave-watchtime" data-group="watchtime">Leave Group</button>
         </div>
 
@@ -318,7 +209,7 @@ body::before{
             </div>
             <button class="join-btn" id="btn-engagement" data-group="engagement">Join Group</button>
           </div>
-          <div id="reason-engagement" class="hidden mt-3 text-xs text-amber-400 leading-5"></div>
+          <div id="reason-engagement" class="hidden mt-3 text-xs leading-5"  style="color: rgb(139, 49, 49);"></div>
           <button class="leave-link hidden" id="leave-engagement" data-group="engagement">Leave Group</button>
         </div>
 
@@ -353,30 +244,43 @@ body::before{
             <button class="join-btn opacity-50 cursor-not-allowed" disabled>Notify Me</button>
           </div>
         </div>
+<!-- GROUP: SHORTS VIDEO VIRAL — COMING SOON -->
+<div class="card rounded-3xl p-6 opacity-60 relative overflow-hidden">
+  <div class="absolute top-4 right-4">
+    <div class="bg-blue-500/15 border border-blue-500/30 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold">Coming Soon</div>
+  </div>
+  <div class="flex items-start justify-between gap-4">
+    <div class="group-icon">
+      <!-- Retro Smartphone / Shorts Vector Icon -->
+      <svg style="width:30px;height:30px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+        <polygon points="10 10 15 12 10 14 10 10"></polygon>
+        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+      </svg>
+    </div>
+  </div>
+  <h2 class="text-2xl font-bold mt-6">Shorts Video Viral Group</h2>
+  <p class="text-muted mt-3 leading-7 text-sm">
+    Boost your short-form content engagement and algorithm reach with specialized engagement pools. Coming soon!
+  </p>
+  <div class="flex items-center justify-between mt-8">
+    <div>
+      <div class="text-sm font-semibold text-muted">Coming Soon</div>
+      <div class="text-xs text-muted mt-1">Feature In Development</div>
+    </div>
+    <button class="join-btn opacity-50 cursor-not-allowed" disabled>Notify Me</button>
+  </div>
+</div>
+
+        
+        
 
       </div><!-- /groupsGrid -->
     </div><!-- /groupsContainer -->
 
   </div>
 </main>
-
-<!-- FOOTER -->
-<footer class="relative z-10 border-t border-[#1e212c]">
-  <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2">
-        <img src="images/logo.svg" class="w-6 h-6">
-        <span class="font-semibold">Exsub Group</span>
-      </div>
-      <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
-    </div>
-    <div class="flex gap-6 text-sm text-muted">
-      <a href="#" class="hover:text-white transition">Privacy</a>
-      <a href="#" class="hover:text-white transition">Terms</a>
-      <a href="#" class="hover:text-white transition">Support</a>
-    </div>
-  </div>
-</footer>
+</main>
 
 <script>
 /* =========================================================
@@ -453,33 +357,42 @@ function formatMemberCount(n) {
 function setButtonState(btn, state, reason, groupKey) {
   const reasonEl = groupKey ? document.getElementById("reason-" + groupKey) : null;
 
+  // Reset core styles and utilities
   btn.classList.remove("opacity-50", "cursor-not-allowed");
   btn.disabled = false;
   btn.title = "";
+  btn.style.boxShadow = "4px 4px 0px 0px #211F1F"; 
+  btn.style.border = "2px solid #211F1F";
+  btn.style.borderRadius = "20px";
+  btn.style.color = "#211F1F"; // Default dark text for contrast on bright retro backgrounds
 
   if (state === "joined") {
     btn.textContent = "Already Joined ✓";
-    btn.style.background = "linear-gradient(180deg,#22c55e 0%,#16a34a 100%)";
+    btn.style.background = "#ACD1C0";
     btn.disabled = true;
     if (reasonEl) reasonEl.classList.add("hidden");
+
   } else if (state === "eligible") {
-    btn.textContent = "Join Group";
-    btn.style.background = "linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%)";
+    btn.textContent = "Join Group Now";
+    btn.style.background = "#DBD4B7";
     if (reasonEl) reasonEl.classList.add("hidden");
+
   } else {
-    // ineligible
+    // Ineligible state
     btn.textContent = "Not Eligible";
-    btn.style.background = "#3a3d47";
+    btn.style.background = "#211F1F";
+    btn.style.color = "#FFFFFF"; // Make text white since background is dark charcoal
+    
     btn.classList.add("opacity-50", "cursor-not-allowed");
     btn.disabled = true;
     btn.title = reason || "Requirements not met";
+    
     if (reasonEl) {
       reasonEl.textContent = "⚠ " + (reason || "Requirements not met.");
       reasonEl.classList.remove("hidden");
     }
   }
 }
-
 function setLeaveButtonState(groupKey, groupData) {
   const leaveBtn = document.getElementById("leave-" + groupKey);
   if (!leaveBtn) return;
@@ -659,31 +572,6 @@ document.querySelectorAll(".leave-link[data-group]").forEach(btn => {
 
 loadGroupsStatus();
 </script>
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
 
 <script>
 (function(){
