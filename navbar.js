@@ -50,9 +50,9 @@ const NAVBAR_TEMPLATE = `
         <a href="channels.html">❍ Promotional Channel</a>
         <a href="videos.html">❍ Long Videos</a>
         <a href="shortvideos.html">❍ Short Videos</a>
-        <a href="#">❍ Playlists</a>
-        <a href="#">❍ Working Channel</a>
-            <a href="channels.html?view=working">❍ Settings</a>
+        <a href="playlists.html">❍ Playlists</a>
+        <a href="workingchannel.html">❍ Working Channel</a>
+            <a href="#">❍ Settings</a>
       </div>
     </div>
 

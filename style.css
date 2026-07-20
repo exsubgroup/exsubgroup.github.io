@@ -639,7 +639,7 @@ color: rgb(33 31 31 / var(--tw-text-opacity, 1));
   font-size: 13px;
   color: var(--promochannel-text-muted);
   margin: 4px 0 0;
-  max-width: 46ch;
+  /* max-width: 46ch; */
 }
 
 .promochannel-panel-controls {

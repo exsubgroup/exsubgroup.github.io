@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Working Channel — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="promochannel.css">
+</head>
+<body>
+
+<div id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your working channel…</p>
+  <div class="loader-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
+<main class="page-content relative z-10 pb-20 px-4">
+    <main class="relative z-10 pt-5 pb-20 px-4">
+  <div class="max-w-[1200px] mx-auto">
+    
+    <div class="flex flex-col">
+      <div class="nb-dashboard-header">
+        <div class="nb-badge-container">
+          <div class="nb-status-card nb-status-static">
+            <span class="nb-card-title">Working Account</span>
+          </div>
+        </div>
+
+        <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Your Working Channel</h1>
+        <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">
+          Manage your working channel used to perform subscription, watch time, and engagement tasks for the community
+        </div>
+      </div>
+    </div>
+
+    <div id="sectionWorking" class="promochannel-section mt-6">
+      <div class="promochannel-panel">
+        <div class="promochannel-panel-head">
+          <div>
+            <h2 class="promochannel-panel-title">Working Channel Link</h2>
+            <p class="promochannel-panel-subtitle">The Google account channel you use to execute tasks in the extension</p>
+          </div>
+          <div class="promochannel-panel-controls">
+            <div id="workingLimitBadge" class="promochannel-badge promochannel-badge--ok"><span class="promochannel-badge-dot"></span>Slot Available</div>
+            <button id="btnAddWorking" class="btn-retro btn-charcoal" onclick="openAddModal()">+ Add Working Channel</button>
+          </div>
+        </div>
+        <div id="workingContainer" class="promochannel-list"></div>
+      </div>
+    </div>
+
+  </div> 
+</main>
+</main>
+
+<script>
+/* =========================================================
+   CONFIG
+========================================================= */
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxyWaLI5KD9O-imw_i_pD3htxWW-MlPsvE2eXX8Le2jGiMZ85t7R5zlYEF0h9bSY7mddw/exec";
+
+/* =========================================================
+   SESSION
+========================================================= */
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
+
+if (!savedUsername || !savedPassword) {
+  window.location.href = "signin.html";
+}
+
+/* =========================================================
+   STATE
+========================================================= */
+let workingChannelId = null;
+
+/* =========================================================
+   CHANNEL TYPES
+========================================================= */
+const CHANNEL_TYPES = [
+  { id:'film_animation',        emoji:'🎬', label:'Film & Animation' },
+  { id:'autos_vehicles',        emoji:'🚗', label:'Autos & Vehicles' },
+  { id:'music',                 emoji:'🎵', label:'Music' },
+  { id:'pets_animals',          emoji:'🐾', label:'Pets & Animals' },
+  { id:'sports',                emoji:'⚽', label:'Sports' },
+  { id:'travel_events',         emoji:'✈️', label:'Travel & Events' },
+  { id:'gaming',                emoji:'🎮', label:'Gaming' },
+  { id:'people_blogs',          emoji:'🙋', label:'People & Blogs' },
+  { id:'comedy',                emoji:'😂', label:'Comedy' },
+  { id:'entertainment',         emoji:'🎭', label:'Entertainment' },
+  { id:'news_politics',         emoji:'📰', label:'News & Politics' },
+  { id:'howto_style',           emoji:'💄', label:'How-to & Style' },
+  { id:'education',             emoji:'📚', label:'Education' },
+  { id:'science_tech',          emoji:'🔬', label:'Science & Technology' },
+  { id:'other',                   emoji:'🌐', label:'Other' }
+];
+
+/* =========================================================
+   FORMAT HELPERS
+========================================================= */
+function formatNiceDate(raw) {
+  if (!raw || raw === '-' ) return '-';
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return raw;
+  return d.toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' })
+    + ' · ' + d.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+}
+
+/* =========================================================
+   TYPE GRID HTML
+========================================================= */
+function typeSelectorHTML(selectedValue = '') {
+  const isKnown  = CHANNEL_TYPES.some(t => t.id === selectedValue);
+  const isCustom = selectedValue && !isKnown;
+  const activeId = isKnown ? selectedValue : (isCustom ? 'other' : '');
+  const customVal = isCustom ? selectedValue : '';
+
+  return `
+    <div class="promochannel-type-search-wrap">
+      <input type="text" id="typeSearchInput" class="promochannel-type-search" placeholder="Search channel type…" oninput="filterTypeGrid()" autocomplete="off">
+    </div>
+    <div class="promochannel-type-grid" id="typeGrid">
+      ${CHANNEL_TYPES.map(t =>
+        `<div class="promochannel-type-opt${t.id === activeId ? ' promochannel-type-opt--selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}" data-label="${t.label.toLowerCase()}">
+          <span class="promochannel-type-emoji">${t.emoji}</span>${t.label}
+        </div>`
+      ).join('')}
+    </div>
+    <input type="hidden" id="selectedChannelType" value="${activeId}">
+  `;
+}
+
+function selectType(id) {
+  document.querySelectorAll('.promochannel-type-opt').forEach(el => {
+    el.classList.toggle('promochannel-type-opt--selected', el.dataset.type === id);
+  });
+  const hidden = document.getElementById('selectedChannelType');
+  if (hidden) hidden.value = id;
+}
+
+function filterTypeGrid() {
+  const q = (document.getElementById('typeSearchInput')?.value || '').toLowerCase().trim();
+  document.querySelectorAll('#typeGrid .promochannel-type-opt').forEach(el => {
+    el.style.display = (!q || el.dataset.label.includes(q)) ? '' : 'none';
+  });
+}
+
+function getSelectedChannelTypeValue() {
+  const sel = document.getElementById('selectedChannelType');
+  return sel ? sel.value : '';
+}
+
+/* =========================================================
+   LOAD WORKING CHANNEL DATA
+========================================================= */
+async function loadWorkingChannel() {
+  try {
+    const pr = await fetch(ChannelCRUDScript
+      + `?action=getMyWorkingChannel`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const pd = await pr.json();
+
+    if (pd.status !== 'success') {
+      hideLoading();
+      await Swal.fire({
+        icon: "error",
+        title: "Session Expired",
+        text: pd.message || "Please sign in again.",
+        confirmButtonText: "Go to Sign In"
+      });
+      localStorage.clear();
+      window.location.href = "signin.html";
+      return;
+    }
+
+    const workingChannels = Array.isArray(pd.channels) ? pd.channels : [];
+    if (workingChannels.length > 0) workingChannelId = workingChannels[0].ChannelId;
+
+    renderWorking(workingChannels);
+    hideLoading();
+
+  } catch(err) {
+    hideLoading();
+    Swal.fire({ icon:"error", title:"Error", text:"Unable to load working channel data: " + err.message });
+  }
+}
+
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('hide');
+  setTimeout(() => overlay.style.display = 'none', 500);
+}
+
+/* =========================================================
+   RENDER WORKING
+========================================================= */
+function renderWorking(channels) {
+  const container = document.getElementById('workingContainer');
+  const badge     = document.getElementById('workingLimitBadge');
+  const btn       = document.getElementById('btnAddWorking');
+
+  if (channels.length >= 1) {
+    badge.className = 'promochannel-badge promochannel-badge--full';
+    badge.innerHTML = '<span class="promochannel-badge-dot"></span>1/1 Account Linked';
+    btn.disabled = true;
+    btn.classList.add('promochannel-btn-add--disabled');
+    btn.onclick = null;
+  } else {
+    badge.className = 'promochannel-badge promochannel-badge--ok';
+    badge.innerHTML = '<span class="promochannel-badge-dot"></span>Slot Available';
+  }
+
+  container.innerHTML = channels.length === 0
+    ? emptyState('🛡️','No Working Channel Linked','Add the working channel you use to complete assignments.')
+    : channels.map(ch => workingChannelCardHTML(ch)).join('');
+}
+
+function emptyState(icon, title, desc) {
+  return `<div class="promochannel-empty">
+    <div class="promochannel-empty-icon">${icon}</div>
+    <h2 class="promochannel-empty-title">${title}</h2>
+    <p class="promochannel-empty-desc">${desc}</p>
+  </div>`;
+}
+
+/* =========================================================
+   WORKING CHANNEL CARD HTML
+========================================================= */
+function workingChannelCardHTML(ch) {
+  const image = ch.ChannelImage && ch.ChannelImage.trim() ? ch.ChannelImage : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
+  const typeObj = CHANNEL_TYPES.find(t => t.id === (ch.ChannelType||'').toLowerCase()) || { emoji:'🌐', label: ch.ChannelType||'-' };
+  const lastFetched = formatNiceDate(ch.LastTimeFetch || ch.SheetUpdate || '-');
+  
+  // Checking Privacy/Public Status Rules
+  const isPublic = String(ch.PublicSubscription||'').toLowerCase() === 'yes';
+  const privacyNoticeHTML = !isPublic 
+    ? `<div class="promochannel-notice promochannel-notice--warning">
+         ⚠️ Your YouTube Subscriptions are currently Private. Please set them to Public so the extension can verify your tasks.
+       </div>`
+    : `<div class="promochannel-notice" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
+         ✅ Subscriptions Visibility: Public (Verified)
+       </div>`;
+
+  const issueText = (ch.Issue || '').trim();
+  const hasIssue = issueText && issueText.toLowerCase() !== 'no';
+  const issueBoxHTML = hasIssue
+    ? `<div class="promochannel-notice promochannel-notice--danger">
+         <span class="promochannel-notice-label">⚠️ Issue Detected</span>
+         <strong class="promochannel-notice-text">${issueText}</strong>
+       </div>`
+    : '';
+
+  const ytFn = `syncWorkingYT('${ch.ChannelId}')`;
+  const changeFn = `openChangeWorkingModal('${ch.ChannelId}')`;
+
+  return `<div class="promochannel-card">
+    <div class="promochannel-card-media">
+      <div class="promochannel-avatar-ring promochannel-avatar-ring--live">
+        <img src="${image}" class="promochannel-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png'">
+      </div>
+    </div>
+    <div class="promochannel-card-body">
+     
+      <h2 class="promochannel-name">${ch.ChannelName||'Unknown Working Account'}</h2>
+      <div class="promochannel-handle">${ch.ChannelHandle||'working_handle'}</div>
+
+      <div class="promochannel-stats">
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Category Mix</span>
+          <strong class="promochannel-stat-value">${typeObj.emoji} ${typeObj.label}</strong>
+        </div>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Outbound Subs</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono">${ch.TotalSubscription||0}</strong>
+        </div>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Last Checked</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono">${lastFetched}</strong>
+        </div>
+      </div>
+
+      ${issueBoxHTML}
+      ${privacyNoticeHTML}
+
+      <a href="https://youtube.com/channel/${ch.ChannelId}" target="_blank" class="promochannel-visit-link">
+        View Account Profile <span class="promochannel-visit-arrow">→</span>
+      </a>
+    </div>
+    <div class="promochannel-actions">
+      <button onclick="${ytFn}" class="btn-retro btn-sand">🔄 Re-Verify Account Status</button>
+      <button onclick="${changeFn}" class="btn-retro btn-mint">🔁 Switch Working Account</button>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   ADD MODAL
+========================================================= */
+function openAddModal() {
+  Swal.fire({
+    title: '🛡️ Link Working Channel',
+    width:600,
+    html:`<div style="text-align:left">
+      <label class="promochannel-field-label">Working YouTube Channel Link</label>
+      <input id="sw_channelLink" class="promochannel-field-input" placeholder="https://youtube.com/@yourworkingprofile">
+      <label class="promochannel-field-label">Primary Account Content Focus</label>${typeSelectorHTML()}
+    </div>`,
+    confirmButtonText: 'Link Working Channel',
+    showCancelButton:true,
+    cancelButtonText:'Cancel',
+    preConfirm: async () => {
+      const channelLink = document.getElementById('sw_channelLink').value.trim();
+      const channelType = getSelectedChannelTypeValue();
+      if (!channelLink) { Swal.showValidationMessage('Please enter a channel link'); return false; }
+      try {
+        Swal.showLoading();
+        const r = await fetch(ChannelCRUDScript
+          + `?action=addWorkingChannel`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelLink=${encodeURIComponent(channelLink)}`
+          + `&channelType=${encodeURIComponent(channelType)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        return d;
+      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      Swal.fire({ icon:'success', title:'Connected!', text: 'Working account successfully verified and attached.', timer:1800, showConfirmButton:false });
+      setTimeout(() => location.reload(), 1900);
+    }
+  });
+}
+
+/* =========================================================
+   SYNC FROM CARD
+========================================================= */
+async function syncWorkingYT(channelId) {
+  Swal.fire({ title:'Syncing data from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=updateWorkingChannel`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(channelId)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Verification Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Data Synchronized!', timer:1400, showConfirmButton:false });
+    setTimeout(() => location.reload(), 1500);
+  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to update parameters' }); }
+}
+
+/* =========================================================
+   CHANGE WORKING CHANNEL MODAL
+========================================================= */
+function openChangeWorkingModal(channelId) {
+  Swal.fire({
+    title:'🔁 Change Working Account', width:600,
+    html:`<div style="text-align:left">
+      <label class="promochannel-field-label">New Working YouTube Channel Link</label>
+      <input id="sw_newChannelLink" class="promochannel-field-input" placeholder="https://youtube.com/@alternativetaskprofile">
+      <div class="promochannel-modal-warning" style="margin-top:15px;">
+        ⚠️ <strong>Important:</strong> Changing your working channel requires the new channel to have its subscription settings set to public so task processing records do not get broken.
+      </div>
+    </div>`,
+    confirmButtonText:'🔁 Update Working Channel',
+    confirmButtonColor:'#f59e0b',
+    showCancelButton:true,
+    cancelButtonText:'Cancel',
+    preConfirm: async () => {
+      const link = document.getElementById('sw_newChannelLink').value.trim();
+      if (!link) { Swal.showValidationMessage('Please type the new profile link'); return false; }
+      try {
+        Swal.showLoading();
+        const r = await fetch(ChannelCRUDScript
+          + `?action=changeWorkingChannel`
+          + `&username=${encodeURIComponent(savedUsername)}`
+          + `&password=${encodeURIComponent(savedPassword)}`
+          + `&channelLink=${encodeURIComponent(link)}`
+        );
+        const d = await r.json();
+        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        return d;
+      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      Swal.fire({ icon:'success', title:'Account Switch Complete!', text: result.value.message || '', timer:2200, showConfirmButton:false });
+      setTimeout(() => location.reload(), 2300);
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+loadWorkingChannel();
+</script>
+
+<script>
+(function(){
+  const current = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
+    if (a.getAttribute("data-page") === current) a.classList.add("active");
+  });
+})();
+</script>
+</body>
+</html>

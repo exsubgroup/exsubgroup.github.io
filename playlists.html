@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch Time Playlist — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+<style>
+
+/* ══════════════════════════════════════════════════════════════
+   WATCH TIME PLAYLIST — LIGHT THEME (matches Analytics / Videos)
+   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+    --bg: #F5F4EB;
+    --ink: #211F1F;
+    --mint: #ACD1C0;
+    --sand: #DBD4B7;
+    --muted: #6b7280;
+    --border: #211F1F;
+}
+
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
+body::before { content: none; }
+
+.mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+
+.card {
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+}
+
+.text-muted { color: var(--muted); }
+
+.btn-purple {
+    background: #211F1F; color: #ffffff; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-outline {
+    background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F;
+    border-radius: 14px; transition: 0.15s; cursor: pointer;
+}
+.btn-outline:hover:not(:disabled) { background: var(--sand); }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-teal {
+    background: var(--mint); color: #211F1F; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-teal:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-red {
+    background: #ef4444; color: white; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-red:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.filter-tab {
+    background: #ffffff; border: 2px solid #211F1F; transition: 0.2s;
+    color: var(--ink); cursor: pointer; white-space: nowrap;
+}
+.filter-tab:hover { background: var(--sand); }
+.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
+
+.status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; padding: 3px 10px; border-radius: 999px;
+    font-weight: 700; border: 1px solid rgba(33,31,31,0.15);
+}
+.status-ready    { background:#dcfce7; color:#166534; }
+.status-notready { background:#fef3c7; color:#92400e; }
+.status-deleted  { background:#e5e7eb; color:#374151; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+.spinner{
+  width:40px; height:40px; border-radius:50%;
+  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+#toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: #211F1F; color: white; padding: 13px 22px; border-radius: 14px;
+    font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0;
+    transition: 0.3s; pointer-events: none; max-width: 320px; border: 2px solid #211F1F;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: #b91c1c; }
+
+.skeleton {
+    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+/* ── PROGRESS METER (30–35 min target band) ── */
+.meter-track {
+    position: relative; height: 22px; border-radius: 999px;
+    background: #ffffff; border: 2px solid #211F1F; overflow: hidden;
+}
+.meter-fill { height: 100%; border-radius: 999px 0 0 999px; transition: width 0.5s cubic-bezier(.4,0,.2,1), background 0.3s; }
+.meter-band {
+    position: absolute; top: -2px; bottom: -2px;
+    border-left: 2px dashed rgba(33,31,31,0.55);
+    border-right: 2px dashed rgba(33,31,31,0.55);
+}
+
+/* ── VIDEO PICK CARD ── */
+.pick-card {
+    background: #ffffff; border: 2px solid #211F1F; border-radius: 18px;
+    box-shadow: 4px 4px 0px 0px #211F1F; overflow: hidden; transition: 0.2s ease;
+    cursor: pointer; position: relative;
+}
+.pick-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.pick-card.selected { background: #ACD1C0; }
+.pick-card.locked { cursor: default; }
+.pick-card.locked:hover { transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
+
+.pick-thumb-wrap {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    background: #e8e5d8; border-bottom: 2px solid #211F1F; overflow: hidden;
+}
+.pick-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
+.pick-thumb-wrap .play-badge {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(33,31,31,0.08); font-size: 26px;
+}
+.duration-chip {
+    position: absolute; bottom: 8px; right: 8px; background: #211F1F; color: white;
+    font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
+}
+.pick-check {
+    position: absolute; top: 8px; left: 8px; width: 26px; height: 26px; border-radius: 8px;
+    background: #ffffff; border: 2px solid #211F1F; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; font-weight: 900; color: transparent;
+    transition: 0.15s;
+}
+.pick-card.selected .pick-check { background: #211F1F; color: #ACD1C0; }
+
+/* ── PLAYLIST NAME PLATE ── */
+.name-plate {
+    background: #211F1F; color: #F5F4EB; border-radius: 16px; padding: 16px 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    flex-wrap: wrap;
+}
+.name-plate .plate-name { font-family:'JetBrains Mono',monospace; font-size: 18px; font-weight: 700; letter-spacing: 0.02em; color:#ACD1C0; }
+.copy-btn {
+    background: #ACD1C0; color:#211F1F; border: none; border-radius: 10px;
+    padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;
+}
+.copy-btn:hover { background: #9bc2b1; }
+
+/* ── STEP LIST ── */
+.step-row { display:flex; gap: 12px; align-items:flex-start; }
+.step-num {
+    width: 26px; height: 26px; border-radius: 50%; background:#211F1F; color:#F5F4EB;
+    font-size: 12px; font-weight: 800; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; margin-top:1px;
+}
+
+/* SweetAlert2 light theme overrides */
+.swal2-popup {
+    background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important;
+    border-radius: 24px !important; font-family: 'Inter', sans-serif !important;
+    box-shadow: 6px 6px 0px 0px #211F1F !important;
+}
+.swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
+.swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
+.swal2-confirm { background: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+.swal2-cancel {
+    background: transparent !important; border: 2px solid #211F1F !important; color: #211F1F !important;
+    border-radius: 14px !important;
+}
+.swal2-deny { background: var(--mint) !important; color: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+
+/* ── MOBILE STICKY BOTTOM TRACKER INDICATOR ── */
+.mobile-tracker {
+      position: fixed;
+    bottom: 22px;
+    left: 20px;
+    right: 20px;
+    z-index: 50;
+    background: #ACD1C0;
+    border: 3px solid #211F1F;
+    box-shadow: 0 -4px 20px rgba(33, 31, 31, 0.15);
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px;
+}
+</style>
+</head>
+<body class="pb-24 lg:pb-0">
+
+<div id="toast"></div>
+
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
+    <div class="spinner"></div>
+    <div class="text-gray-500 text-sm">Loading your playlist…</div>
+  </div>
+
+  <div id="errorState" class="hidden text-center py-32">
+    <div class="text-5xl mb-4">⚠️</div>
+    <div class="text-xl font-bold mb-2">Could not load data</div>
+    <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
+    <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
+  </div>
+
+  <div id="dashContent" class="hidden">
+
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-icon">⏱️</span>
+          <span class="nb-card-title">Watch Time Playlist</span>
+        </div>
+        <div id="badgePlaylistStatus" class="nb-status-card">
+          <span id="statusIcon" class="nb-card-icon">🕓</span>
+          <span id="statusLabel" class="nb-card-title">Not Started</span>
+        </div>
+        <a href="channels.html?view=promotional" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">📢</span>
+          <span class="nb-card-title">Channel Settings</span>
+        </a>
+      </div>
+      <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Watch Time Playlist</h1>
+      <div class="text-gray-500 text-sm mt-1 leading-6" style="width: 100%;">
+        Bundle a handful of your promotional videos into one YouTube playlist worth
+        <strong class="text-[#211F1F]">30–35 minutes</strong> of total watch time. Other members
+        will watch the whole playlist to earn you real watchtime toward monetization.
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-6">
+
+    <aside class="w-full lg:w-[300px] xl:w-[320px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
+
+        <div id="noChannelCard" class="hidden card rounded-3xl p-6 text-center">
+            <div class="text-4xl mb-3">📺</div>
+            <h3 class="font-semibold text-base mb-2">No Promotional Channel</h3>
+            <p class="text-muted text-xs mb-4 leading-relaxed">Add a promotional channel first, then come back here to build a watch-time playlist.</p>
+            <a href="channels.html?view=promotional" class="btn-purple px-5 py-2.5 rounded-2xl font-semibold text-xs inline-block">+ Add Channel</a>
+        </div>
+
+        <div id="channelCard" class="hidden card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Channel</h2>
+            <div class="flex items-center gap-3 mb-3">
+                <img id="chanImage" src="" alt="" class="w-11 h-11 rounded-full object-cover border-2 border-[#211F1F]" onerror="this.style.display='none'">
+                <div class="min-w-0">
+                    <div id="chanName" class="font-bold text-sm truncate">—</div>
+                    <div id="chanHandle" class="text-xs text-muted font-mono truncate">—</div>
+                </div>
+            </div>
+            <a id="chanLink" href="#" target="_blank" rel="noopener" class="text-xs text-[#211F1F] underline font-semibold">Open Channel →</a>
+        </div>
+
+        <div id="progressCard" class="hidden card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-1">Total Duration</h2>
+            <div class="flex items-end justify-between mb-3">
+                <span id="totalDurationTxt" class="text-2xl font-black mono">0:00</span>
+                <span class="text-[11px] text-muted font-semibold">Target: 30–35 min</span>
+            </div>
+            <div class="meter-track mb-2">
+                <div id="meterBand" class="meter-band"></div>
+                <div id="meterFill" class="meter-fill" style="width:0%;background:#fbbf24;"></div>
+            </div>
+            <div id="meterHint" class="text-[11px] font-semibold text-amber-700 leading-relaxed">Select videos to reach the 30–35 min target.</div>
+            <div class="border-t-2 border-[#211F1F]/10 mt-4 pt-3 flex items-center justify-between text-sm">
+                <span class="text-muted">Videos selected</span>
+                <span id="selectedCountTxt" class="font-bold">0</span>
+            </div>
+        </div>
+
+        <div id="actionsCard" class="hidden card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Actions</h2>
+            <div class="space-y-2.5">
+                <button id="createPlaylistBtn" onclick="doCreatePlaylist()" class="btn-teal w-full py-2.5 rounded-2xl text-xs font-semibold" disabled>🎬 Create Playlist Name</button>
+                <button id="verifyPlaylistBtn" onclick="doVerifyPlaylist()" class="btn-purple w-full py-2.5 rounded-2xl text-xs font-semibold hidden">✅ Verify &amp; Set For Group</button>
+                <button id="deletePlaylistBtn" onclick="doDeletePlaylist()" class="btn-red w-full py-2.5 rounded-2xl text-xs font-semibold hidden">🗑️ Delete &amp; Start Over</button>
+            </div>
+        </div>
+
+    </aside>
+
+    <main class="flex-1 min-w-0 space-y-6">
+
+        <div id="namePlateWrap" class="hidden">
+          <div class="name-plate">
+            <div>
+              <div class="text-[11px] font-bold uppercase tracking-wider text-[#DBD4B7] mb-1">Your Playlist Name</div>
+              <div id="plateName" class="plate-name">—</div>
+            </div>
+            <button class="copy-btn" onclick="copyPlaylistName()">📋 Copy Name</button>
+          </div>
+          <div class="card rounded-2xl p-5 mt-4 space-y-3">
+            <div class="step-row"><div class="step-num">1</div><div class="text-sm leading-relaxed">On YouTube Studio, create a new playlist and name it <strong class="mono">exactly</strong> as shown above (case-sensitive).</div></div>
+             <div class="step-row"><div class="step-num">2</div><div class="text-sm leading-relaxed">Make sure this playlist must be <strong class="mono" style="color:#4ADE80;">Public</strong> otherwise your playlist work distub.</div></div>
+            <div class="step-row"><div class="step-num">3</div><div class="text-sm leading-relaxed">Add the same videos you selected below into that YouTube playlist, in any order.</div></div>
+            <div class="step-row"><div class="step-num">4</div><div class="text-sm leading-relaxed">Come back here and click <strong>Verify &amp; Set For Group</strong> — we'll pull the real playlist from YouTube and confirm it.</div></div>
+          </div>
+        </div>
+
+        <div id="confirmedBanner" class="hidden card rounded-3xl p-6" style="background:#ACD1C0;">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-3xl">✅</span>
+                <div>
+                    <div class="font-black text-lg">Playlist Confirmed</div>
+                    <div id="confirmedSub" class="text-xs font-semibold text-[#211F1F]/70">This playlist is live for the Watch Time Group.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold">Choose Videos</h2>
+                <p id="pickerSub" class="text-muted mt-1 text-sm">Tap videos from your promotional channel to add or remove them from the playlist.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All</button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Selected" onclick="setTab('Selected',this)">
+                <span class="dot bg-green-500 mr-1" style="display:inline-block;"></span>Selected
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Available" onclick="setTab('Available',this)">Not Selected</button>
+        </div>
+
+        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="skeleton h-[220px]"></div>
+            <div class="skeleton h-[220px]"></div>
+            <div class="skeleton h-[220px]"></div>
+        </div>
+
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">🎞️</div>
+            <h3 class="text-xl font-semibold mb-2">No Videos Available</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                Import videos from your promotional channel first, then come back to build your playlist.
+            </p>
+            <a href="videos.html" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">Go To Long Videos →</a>
+        </div>
+
+    </main>
+    </div>
+
+  </div></div>
+</main>
+</main>
+
+<div id="mobileTrackerWidget" class="mobile-tracker lg:hidden hidden">
+    <div class="flex items-center justify-between gap-3 mb-1.5">
+        <div class="flex items-baseline gap-1.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Duration:</span>
+            <span id="mobileDurationTxt" class="text-lg font-black mono text-[#211F1F]">0:00</span>
+        </div>
+        <div id="mobileHintBadge" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-[#211F1F]">
+            0 mins
+        </div>
+    </div>
+    <div class="meter-track h-3">
+        <div id="mobileMeterBand" class="meter-band"></div>
+        <div id="mobileMeterFill" class="meter-fill" style="width:0%;"></div>
+    </div>
+</div>
+
+<script>
+
+/* ────────────────────────────────────────
+   AUTH
+──────────────────────────────────────── */
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
+}
+
+const USERNAME = localStorage.getItem("username") || "";
+const PASSWORD = localStorage.getItem("password") || "";
+
+if (!USERNAME || !PASSWORD) {
+    window.location.href = "signin.html";
+}
+
+/* ────────────────────────────────────────
+   CONFIG — same backend deployment as channels.html / videos.html
+──────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEloC27rpZKKy05oLm-12XJNLdL7Eaxv0Y6OsbXQSTPJc2PTAoRa1I-T7xEwMIeZByMw/exec';
+
+const MIN_SECONDS = 30 * 60;
+const MAX_SECONDS = 35 * 60;
+
+/* ────────────────────────────────────────
+   STATE
+──────────────────────────────────────── */
+let myChannel      = null;   // { ChannelId, ChannelName, ... }
+let allVideos      = [];     // candidate videos (non-deleted) with computed .Seconds
+let playlist       = null;   // { PlaylistId, PlaylistName, HasPlaylistReady, PlaylistSize }
+let selectedUrls   = new Set();
+let activeTab      = 'All';
+
+/* ────────────────────────────────────────
+   DOM SHOW/HIDE HELPERS
+──────────────────────────────────────── */
+function show(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function hide(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+
+/* ────────────────────────────────────────
+   API HELPER
+──────────────────────────────────────── */
+async function callApi(action, params = {}) {
+    const qs = new URLSearchParams({ action, username: USERNAME, password: PASSWORD, ...params });
+    const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
+    return res.json();
+}
+
+/* ────────────────────────────────────────
+   DURATION HELPERS
+──────────────────────────────────────── */
+function parseVideoSeconds(v) {
+    if (v.VideoDurationSeconds === undefined || v.VideoDurationSeconds === null) return 0;
+    let raw = String(v.VideoDurationSeconds).trim();
+
+    if (raw.includes('T') && raw.includes('Z')) {
+        try {
+            const timePart = raw.split('T')[1].split('.')[0]; // "00:12:34"
+            const parts = timePart.split(':').map(function(n){ return parseInt(n, 10) || 0; });
+            return (parts[0] * 3600) + (parts[1] * 60) + parts[2];
+        } catch (e) { return 0; }
+    }
+    return parseInt(raw.replace(/[^\d]/g, ''), 10) || 0;
+}
+
+function formatSecs(totalSeconds) {
+    const s = Math.max(0, Math.round(totalSeconds || 0));
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return mins + ':' + String(secs).padStart(2, '0');
+}
+
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function escapeAttr(s) {
+    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+}
+
+/* ────────────────────────────────────────
+   BOOT
+──────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    show('loadingState'); hide('errorState'); hide('dashContent'); hide('mobileTrackerWidget');
+
+    try {
+        const chanData = await callApi('getMyChannel');
+        if (chanData.status !== 'success') throw new Error(chanData.message || 'Could not load channel data');
+
+        myChannel = (chanData.channels && chanData.channels[0]) || null;
+
+        if (!myChannel) {
+            show('noChannelCard');
+            hide('channelCard'); hide('progressCard'); hide('actionsCard'); hide('mobileTrackerWidget');
+            allVideos = [];
+            document.getElementById('videoGrid').innerHTML = '';
+            show('emptyState');
+            hide('loadingState'); show('dashContent');
+            return;
+        }
+
+        renderChannelCard();
+        show('channelCard'); show('progressCard'); show('actionsCard');
+        hide('noChannelCard');
+
+        await loadEverything();
+
+        hide('loadingState'); show('dashContent');
+    } catch (e) {
+        hide('loadingState'); show('errorState'); hide('mobileTrackerWidget');
+        document.getElementById('errorMsg').textContent = e.message || 'Network error. Please try again.';
+    }
+}
+
+async function loadEverything() {
+    const [vidData, plData] = await Promise.all([
+        callApi('getMyVideos'),
+        callApi('getMyPlaylist')
+    ]);
+
+    if (vidData.status !== 'success') throw new Error(vidData.message || 'Could not load videos');
+    if (plData.status !== 'success') throw new Error(plData.message || 'Could not load playlist');
+
+    allVideos = (vidData.videos || [])
+        .filter(function(v){ return String(v.VideoStatus || '').toLowerCase() !== 'deleted'; })
+        .map(function(v){ v.Seconds = parseVideoSeconds(v); return v; });
+
+    playlist     = plData.playlist || null;
+    selectedUrls = new Set(plData.selectedVideoUrls || []);
+
+    renderState();
+}
+
+function renderChannelCard() {
+    document.getElementById('chanImage').src        = myChannel.ChannelImage || '';
+    document.getElementById('chanName').textContent = myChannel.ChannelName || '—';
+    document.getElementById('chanHandle').textContent = myChannel.ChannelHandle || '—';
+    document.getElementById('chanLink').href = myChannel.ChannelLink || '#';
+}
+
+/* ────────────────────────────────────────
+   STATE MACHINE
+──────────────────────────────────────── */
+function playlistMode() {
+    if (!playlist) return 'NONE';
+    return String(playlist.HasPlaylistReady).toLowerCase() === 'yes' ? 'CONFIRMED' : 'PENDING';
+}
+
+function renderState() {
+    const mode = playlistMode();
+    const totalSeconds = selectedTotalSeconds();
+    const inBand = totalSeconds >= MIN_SECONDS && totalSeconds <= MAX_SECONDS;
+
+    /* Header status badge */
+    const statusIcon  = document.getElementById('statusIcon');
+    const statusLabel = document.getElementById('statusLabel');
+    const badge       = document.getElementById('badgePlaylistStatus');
+    badge.style.background = '#F5F4EB';
+    if (mode === 'CONFIRMED') {
+        statusIcon.textContent = '✅'; statusLabel.textContent = 'Confirmed';
+        badge.style.background = '#ACD1C0';
+    } else if (mode === 'PENDING') {
+        statusIcon.textContent = '🟡'; statusLabel.textContent = 'Awaiting YouTube Setup';
+    } else {
+        statusIcon.textContent = '🕓'; statusLabel.textContent = 'Not Started';
+    }
+
+    /* Progress meter */
+    document.getElementById('totalDurationTxt').textContent = formatSecs(totalSeconds);
+    document.getElementById('selectedCountTxt').textContent = selectedUrls.size;
+    const pct = Math.min(100, Math.round((totalSeconds / MAX_SECONDS) * 100));
+    const fill = document.getElementById('meterFill');
+    fill.style.width = pct + '%';
+    fill.style.background = inBand ? '#4ade80' : (totalSeconds > MAX_SECONDS ? '#ef4444' : '#fbbf24');
+
+    const bandStartPct = (MIN_SECONDS / MAX_SECONDS) * 100;
+    const band = document.getElementById('meterBand');
+    band.style.left = bandStartPct + '%';
+    band.style.right = '0%';
+
+    const hint = document.getElementById('meterHint');
+    if (mode === 'CONFIRMED') {
+        hint.className = 'text-[11px] font-semibold text-emerald-700 leading-relaxed';
+        hint.textContent = 'Confirmed from your live YouTube playlist.';
+    } else if (inBand) {
+        hint.className = 'text-[11px] font-semibold text-emerald-700 leading-relaxed';
+        hint.textContent = '✅ Within the 30–35 min target — ready to create.';
+    } else if (totalSeconds > MAX_SECONDS) {
+        hint.className = 'text-[11px] font-semibold text-red-600 leading-relaxed';
+        hint.textContent = 'Over 35 min — remove a video to get back in range.';
+    } else {
+        hint.className = 'text-[11px] font-semibold text-amber-700 leading-relaxed';
+        hint.textContent = 'Select videos to reach the 30–35 min target.';
+    }
+
+    /* ── UPDATE MOBILE STICKY TRACKER INDICATOR ── */
+    const mobileTracker = document.getElementById('mobileTrackerWidget');
+    if (mode === 'CONFIRMED' || !myChannel) {
+        mobileTracker.classList.add('hidden');
+    } else {
+        mobileTracker.classList.remove('hidden');
+        document.getElementById('mobileDurationTxt').textContent = formatSecs(totalSeconds);
+        
+        const mobFill = document.getElementById('mobileMeterFill');
+        mobFill.style.width = pct + '%';
+        mobFill.style.background = inBand ? '#4ade80' : (totalSeconds > MAX_SECONDS ? '#ef4444' : '#fbbf24');
+        
+        const mobBand = document.getElementById('mobileMeterBand');
+        mobBand.style.left = bandStartPct + '%';
+        mobBand.style.right = '0%';
+
+        const mobHintBadge = document.getElementById('mobileHintBadge');
+        if (inBand) {
+            mobHintBadge.textContent = 'Target Reached';
+            mobHintBadge.style.background = '#dcfce7';
+            mobHintBadge.style.color = '#166534';
+        } else if (totalSeconds > MAX_SECONDS) {
+            mobHintBadge.textContent = 'Over limit';
+            mobHintBadge.style.background = '#fee2e2';
+            mobHintBadge.style.color = '#991b1b';
+        } else {
+            mobHintBadge.textContent = 'Need ' + Math.max(0, Math.ceil((MIN_SECONDS - totalSeconds)/60)) + ' min more';
+            mobHintBadge.style.background = '#fef3c7';
+            mobHintBadge.style.color = '#92400e';
+        }
+    }
+
+    /* Actions */
+    const createBtn = document.getElementById('createPlaylistBtn');
+    const verifyBtn = document.getElementById('verifyPlaylistBtn');
+    const deleteBtn = document.getElementById('deletePlaylistBtn');
+
+    if (mode === 'NONE') {
+        show('createPlaylistBtn'); hide('verifyPlaylistBtn'); hide('deletePlaylistBtn');
+        createBtn.disabled = !inBand;
+        hide('namePlateWrap'); hide('confirmedBanner');
+    } else if (mode === 'PENDING') {
+        hide('createPlaylistBtn'); show('verifyPlaylistBtn'); show('deletePlaylistBtn');
+        show('namePlateWrap'); hide('confirmedBanner');
+        document.getElementById('plateName').textContent = playlist.PlaylistName || '—';
+    } else {
+        hide('createPlaylistBtn'); hide('verifyPlaylistBtn'); show('deletePlaylistBtn');
+        hide('namePlateWrap'); show('confirmedBanner');
+        document.getElementById('confirmedSub').textContent =
+            'Locked in at ' + formatSecs(playlist.PlaylistSize) + ' of watch time · Name: ' + (playlist.PlaylistName || '—');
+    }
+
+    /* Picker copy + lock */
+    const pickerSub = document.getElementById('pickerSub');
+    if (mode === 'CONFIRMED') {
+        pickerSub.textContent = 'This playlist is confirmed. Delete it to choose different videos.';
+    } else {
+        pickerSub.textContent = 'Tap videos from your promotional channel to add or remove them from the playlist.';
+    }
+
+    renderGrid();
+}
+
+function selectedTotalSeconds() {
+    let total = 0;
+    allVideos.forEach(function(v){
+        if (selectedUrls.has(v.VideoUrl)) total += v.Seconds;
+    });
+    return total;
+}
+
+/* ────────────────────────────────────────
+   FILTER TABS
+──────────────────────────────────────── */
+function setTab(tab, btn) {
+    activeTab = tab;
+    document.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    renderGrid();
+}
+
+/* ────────────────────────────────────────
+   RENDER GRID
+──────────────────────────────────────── */
+function renderGrid() {
+    const grid  = document.getElementById('videoGrid');
+    const empty = document.getElementById('emptyState');
+
+    if (allVideos.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    let list = allVideos;
+    if (activeTab === 'Selected')  list = allVideos.filter(function(v){ return selectedUrls.has(v.VideoUrl); });
+    if (activeTab === 'Available') list = allVideos.filter(function(v){ return !selectedUrls.has(v.VideoUrl); });
+
+    if (list.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-10 text-muted text-sm">Nothing to show in this tab.</div>';
+        return;
+    }
+
+    grid.innerHTML = list.map(pickCard).join('');
+}
+
+function pickCard(v) {
+    const isSelected = selectedUrls.has(v.VideoUrl);
+    const locked = playlistMode() === 'CONFIRMED';
+    const url = escapeAttr(v.VideoUrl);
+
+    return `
+    <div class="pick-card rounded-[18px] ${isSelected ? 'selected' : ''} ${locked ? 'locked' : ''}" ${locked ? '' : `onclick="toggleVideo('${url}')"`}>
+        <div class="pick-thumb-wrap">
+            ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">🎬</div>`}
+            <span class="duration-chip">${formatSecs(v.Seconds)}</span>
+            <div class="pick-check">✓</div>
+        </div>
+        <div class="p-3">
+            <div class="text-sm font-semibold text-[#211F1F] leading-snug mb-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.VideoTitle || 'Untitled video'}</div>
+            <div class="text-[11px] text-muted">Added: ${fmtDate(v.CreatedDate)}</div>
+        </div>
+    </div>`;
+}
+
+/* ────────────────────────────────────────
+   TOGGLE VIDEO SELECTION (WITH LOADING DIALOG)
+──────────────────────────────────────── */
+async function toggleVideo(videoUrl) {
+    if (playlistMode() === 'CONFIRMED') return;
+
+    const v = allVideos.find(function(x){ return x.VideoUrl === videoUrl; });
+    if (!v) return;
+
+    const isSelected = selectedUrls.has(videoUrl);
+
+    // Show loading block state for both select and unselect actions
+    Swal.fire({
+        title: 'Loading, please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        let data;
+        if (isSelected) {
+            data = await callApi('removeVideoFromPlaylist', { videoUrl });
+        } else {
+            data = await callApi('addVideoToPlaylist', { videoUrl, videoSeconds: v.Seconds });
+        }
+
+        Swal.close();
+
+        if (data.status === 'success') {
+            if (isSelected) selectedUrls.delete(videoUrl); else selectedUrls.add(videoUrl);
+            renderState();
+        } else {
+            showToast(data.message || 'Could not update playlist selection.', true);
+        }
+    } catch (e) {
+        Swal.close();
+        showToast('Connection error.', true);
+    }
+}
+
+/* ────────────────────────────────────────
+   CREATE PLAYLIST NAME
+──────────────────────────────────────── */
+async function doCreatePlaylist() {
+    const totalSeconds = selectedTotalSeconds();
+    if (totalSeconds < MIN_SECONDS || totalSeconds > MAX_SECONDS) {
+        showToast('Selected videos must total between 30 and 35 minutes.', true);
+        return;
+    }
+
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Generate your playlist name?',
+        html: 'We\'ll give you a unique playlist name to create on YouTube with your selected videos (' + formatSecs(totalSeconds) + ').',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, generate name',
+        cancelButtonText: 'Cancel',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = document.getElementById('createPlaylistBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Generating…';
+
+    try {
+        const data = await callApi('createPlaylistRow');
+        if (data.status === 'success') {
+            showToast('Playlist name generated: ' + data.playlistName);
+            await loadEverything();
+        } else {
+            showToast(data.message || 'Could not create playlist.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   VERIFY & SET FOR GROUP
+──────────────────────────────────────── */
+async function doVerifyPlaylist() {
+    if (!myChannel) { showToast('No promotional channel found.', true); return; }
+
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Verify your YouTube playlist?',
+        html: 'Make sure you\'ve created a playlist on YouTube named exactly <strong class="mono">' + (playlist ? playlist.PlaylistName : '') + '</strong> with your selected videos before continuing.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, verify now',
+        cancelButtonText: 'Not yet',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = document.getElementById('verifyPlaylistBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Verifying…';
+
+    try {
+        const data = await callApi('setPlaylistForGroup', { channelId: myChannel.ChannelId });
+        if (data.status === 'success') {
+            showToast(data.message || 'Playlist confirmed!');
+            await loadEverything();
+        } else {
+            showToast(data.message || 'Could not verify playlist.', true);
+            await loadEverything();
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   DELETE & START OVER (WITH PAGE RELOAD)
+──────────────────────────────────────── */
+async function doDeletePlaylist() {
+    const mode = playlistMode();
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: 'Delete this playlist?',
+        text: mode === 'CONFIRMED'
+            ? 'This removes your confirmed Watch Time playlist from the group. You will need to build and verify a new one.'
+            : 'This clears your video selection and playlist name so you can start over.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#dc2626'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = document.getElementById('deletePlaylistBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Deleting…';
+
+    try {
+        const data = await callApi('deletePlaylist');
+        if (data.status === 'success') {
+            showToast('Playlist deleted. Start fresh whenever you\'re ready.');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showToast(data.message || 'Could not delete playlist.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   COPY NAME
+──────────────────────────────────────── */
+function copyPlaylistName() {
+    if (!playlist || !playlist.PlaylistName) return;
+    navigator.clipboard.writeText(playlist.PlaylistName).then(function(){
+        showToast('Playlist name copied.');
+    }).catch(function(){
+        showToast('Could not copy — select and copy manually.', true);
+    });
+}
+
+</script>
+
+</body>
+</html>
