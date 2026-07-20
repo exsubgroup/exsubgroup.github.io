@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short Videos — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   SHORT VIDEOS — LIGHT THEME (matches Analytics / Video Tasks)
+   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+    --bg: #F5F4EB;
+    --ink: #211F1F;
+    --mint: #ACD1C0;
+    --sand: #DBD4B7;
+    --muted: #6b7280;
+    --border: #211F1F;
+}
+
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
+
+.card {
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+}
+
+.video-card {
+    background: #ffffff;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.2s ease;
+    overflow: hidden;
+}
+.video-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+
+.video-card.notready-card { border-color: #b45309; background: #fffbeb; }
+.video-card.notready-card:hover { box-shadow: 6px 6px 0px 0px #b45309; }
+
+.video-card.deleted-card { border-color: #9ca3af; background: #f9fafb; opacity: 0.85; }
+.video-card.deleted-card:hover { transform: none; box-shadow: 4px 4px 0px 0px #9ca3af; }
+
+.text-muted { color: var(--muted); }
+
+.btn-purple {
+    background: #211F1F; color: #ffffff; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-outline {
+    background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F;
+    border-radius: 14px; transition: 0.15s; cursor: pointer;
+}
+.btn-outline:hover:not(:disabled) { background: var(--sand); }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-teal {
+    background: var(--mint); color: #211F1F; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-teal:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-amber {
+    background: #fbbf24; color: #211F1F; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-amber:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-amber:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.filter-tab {
+    background: #ffffff; border: 2px solid #211F1F; transition: 0.2s;
+    color: var(--ink); cursor: pointer; white-space: nowrap;
+}
+.filter-tab:hover { background: var(--sand); }
+.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
+
+.status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; padding: 3px 10px; border-radius: 999px;
+    font-weight: 700; border: 1px solid rgba(33,31,31,0.15);
+}
+.status-ready    { background:#dcfce7; color:#166534; }
+.status-notready { background:#fef3c7; color:#92400e; }
+.status-deleted  { background:#e5e7eb; color:#374151; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+.modal-bg {
+    position: fixed; inset: 0; background: rgba(33,31,31,0.55);
+    backdrop-filter: blur(4px); z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s;
+}
+.modal-bg.open { opacity: 1; visibility: visible; }
+
+.modal-box {
+    background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px;
+    box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px;
+    width: 100%; max-width: 460px; transform: scale(0.96); transition: 0.25s;
+    max-height: 90vh; overflow-y: auto;
+}
+.modal-bg.open .modal-box { transform: scale(1); }
+
+.skeleton {
+    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+#toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: #211F1F; color: white; padding: 13px 22px; border-radius: 14px;
+    font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0;
+    transition: 0.3s; pointer-events: none; max-width: 320px; border: 2px solid #211F1F;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: #b91c1c; }
+
+.spinner{
+  width:40px; height:40px; border-radius:50%;
+  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* Modified format wrapper for vertical short videos look */
+.video-thumb-wrap {
+    position: relative; width: 100%; aspect-ratio: 9/16;
+    background: #e8e5d8; border-bottom: 2px solid #211F1F; overflow: hidden;
+}
+.video-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
+.video-thumb-wrap .play-badge {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(33,31,31,0.08); font-size: 30px;
+}
+.duration-chip {
+    position: absolute; bottom: 8px; right: 8px; background: #211F1F; color: white;
+    font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
+}
+
+.toggle-switch {
+    position: relative; width: 46px; height: 26px; border-radius: 999px;
+    background: #e5e7eb; border: 2px solid #211F1F; cursor: pointer; flex-shrink: 0;
+    transition: 0.2s; padding: 0;
+}
+.toggle-switch.on { background: var(--mint); }
+.toggle-switch .knob {
+    position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%;
+    background: #211F1F; transition: 0.2s;
+}
+.toggle-switch.on .knob { transform: translateX(20px); }
+.toggle-switch:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.progress-track { background: #ffffff; border: 2px solid #211F1F; height: 14px; border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; transition: width 0.8s ease; }
+
+.swal2-popup {
+    background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important;
+    border-radius: 24px !important; font-family: 'Inter', sans-serif !important;
+    box-shadow: 6px 6px 0px 0px #211F1F !important;
+}
+.swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
+.swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
+.swal2-confirm { background: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+.swal2-cancel {
+    background: transparent !important; border: 2px solid #211F1F !important; color: #211F1F !important;
+    border-radius: 14px !important;
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- NAVBAR -->
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
+<!-- MAIN -->
+<main class="page-content relative z-10 pb-20 px-4">
+    <main class="relative z-10 pt-5 pb-20 px-4">
+        <div class="max-w-[1200px] mx-auto">
+
+            <!-- LOADING -->
+            <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
+                <div class="spinner"></div>
+                <div class="text-gray-500 text-sm">Loading your Short Videos…</div>
+            </div>
+
+            <!-- ERROR -->
+            <div id="errorState" class="hidden text-center py-32">
+                <div class="text-5xl mb-4">⚠️</div>
+                <div class="text-xl font-bold mb-2">Could not load short videos data</div>
+                <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
+                <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
+            </div>
+
+            <!-- DASHBOARD -->
+            <div id="dashContent" class="hidden">
+
+                <!-- HEADER -->
+                <div class="nb-dashboard-header">
+                <div class="nb-badge-container">
+                    <div class="nb-status-card nb-status-static">
+                    <span class="nb-card-icon">⚡</span>
+                    <span class="nb-card-title">Short Videos</span>
+                    </div>
+                    <div class="nb-status-card">
+                    <span class="nb-card-icon">✅</span>
+                    <span class="nb-card-title">Ready Shorts</span>
+                    <span id="badgeReady" class="nb-pill" style="background:#dcfce7;color:#166534;border-color:#166534;">0</span>
+                    </div>
+                    <div class="nb-status-card">
+                    <span class="nb-card-icon">⏸️</span>
+                    <span class="nb-card-title">Not Ready</span>
+                    <span id="badgeNotReady" class="nb-pill nb-pill-warning">0</span>
+                    </div>
+                </div>
+                <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Short Videos Management</h1>
+                <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: auto;">
+                    Manage your YouTube Shorts configured for target view distributions. Videos categorized under 
+                    <strong class="text-[#211F1F]">Shorts</strong> will be filtered dynamically here.
+                </div>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-6 mt-6">
+
+                <!-- SIDEBAR -->
+                <aside class="w-full lg:w-[280px] xl:w-[300px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
+
+                    <!-- NO CHANNEL CARD -->
+                    <div id="noChannelCard" class="hidden card rounded-3xl p-6 text-center">
+                        <div class="text-4xl mb-3">📺</div>
+                        <h3 class="font-semibold text-base mb-2">No Connected Channel</h3>
+                        <p class="text-muted text-xs mb-4 leading-relaxed">Add your channel first to start pulling in your Shorts.</p>
+                        <a href="channels.html?view=promotional" class="btn-purple px-5 py-2.5 rounded-2xl font-semibold text-xs inline-block">+ Add Channel</a>
+                    </div>
+
+                    <!-- CHANNEL CARD -->
+                    <div id="channelCard" class="hidden card rounded-3xl p-5">
+                        <h2 class="font-semibold text-base mb-3">Active Channel</h2>
+                        <div class="flex items-center gap-3 mb-3">
+                            <img id="chanImage" src="" alt="" class="w-11 h-11 rounded-full object-cover border-2 border-[#211F1F]" onerror="this.style.display='none'">
+                            <div class="min-w-0">
+                                <div id="chanName" class="font-bold text-sm truncate">—</div>
+                                <div id="chanHandle" class="text-xs text-muted font-mono truncate">—</div>
+                            </div>
+                        </div>
+                        <a id="chanLink" href="#" class="text-xs text-[#211F1F] underline font-semibold">Open Channel →</a>
+                    </div>
+
+                    <!-- STATS CARD -->
+                    <div id="statsCard" class="hidden card rounded-3xl p-5">
+                        <h2 class="font-semibold text-base mb-4">Shorts Allocation</h2>
+                        <div class="space-y-3 text-sm mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Ready Shorts</span>
+                                <span id="st-ready" class="font-bold">—</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-2 text-muted"><span class="dot bg-amber-400"></span>Not Ready</span>
+                                <span id="st-notready" class="font-bold">—</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Removed</span>
+                                <span id="st-deleted" class="font-bold">—</span>
+                            </div>
+                            <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
+                                <span class="text-muted">Total Short Videos</span>
+                                <span id="st-total" class="font-bold text-[#211F1F]">—</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-1 flex justify-between text-[11px] font-semibold text-muted">
+                            <span>Shorts Coverage</span>
+                            <span id="st-readypct">0%</span>
+                        </div>
+                        <div class="progress-track mb-1">
+                            <div id="readyBar" class="progress-fill bg-[#ACD1C0]" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- BULK ACTIONS -->
+                    <div id="bulkCard" class="hidden card rounded-3xl p-5">
+                        <h2 class="font-semibold text-base mb-3">Quick Actions</h2>
+                        <div class="space-y-2.5">
+                            <button id="bulkReadyBtn" onclick="bulkSetStatus('Ready')" class="btn-teal w-full py-2.5 rounded-2xl text-xs font-semibold">✅ Enable All Shorts</button>
+                            <button id="bulkNotReadyBtn" onclick="bulkSetStatus('NotReady')" class="btn-amber w-full py-2.5 rounded-2xl text-xs font-semibold">⏸️ Disable All Shorts</button>
+                        </div>
+                        <div class="border-t-2 border-[#211F1F]/10 mt-4 pt-4 space-y-2.5">
+                            <button id="syncBtn" onclick="doSyncVideos()" class="btn-outline w-full py-2.5 rounded-2xl text-xs font-semibold">🔄 Sync Shorts from YT</button>
+                        </div>
+                    </div>
+
+                </aside>
+
+                <!-- CONTENT AREA -->
+                <main class="flex-1 min-w-0">
+
+                    <!-- TOP ACTIONS -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold">My Shorts Library</h2>
+                            <p class="text-muted mt-1 text-sm">Toggle short video components inside the target distribution pools</p>
+                        </div>
+                        <button id="importBtn" onclick="doImportVideos()" class="btn-purple px-5 rounded-2xl font-semibold h-[46px] flex items-center justify-center gap-2 text-sm">
+                            ⬇️ Pull Latest Videos
+                        </button>
+                    </div>
+
+                    <!-- FILTERS -->
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Shorts</button>
+                        <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Ready" onclick="setTab('Ready',this)">
+                            <span class="dot bg-green-400 mr-1"></span>Ready
+                        </button>
+                        <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotReady" onclick="setTab('NotReady',this)">
+                            <span class="dot bg-amber-400 mr-1"></span>Not Ready
+                        </button>
+                        <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Deleted" onclick="setTab('Deleted',this)">
+                            <span class="dot bg-gray-400 mr-1"></span>Removed
+                        </button>
+                    </div>
+
+                    <!-- VIDEO GRID (Customized responsive layouts for 9:16 portrait ratios) -->
+                    <div id="videoGrid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5">
+                        <div class="skeleton aspect-[9/16]"></div>
+                        <div class="skeleton aspect-[9/16]"></div>
+                        <div class="skeleton aspect-[9/16]"></div>
+                        <div class="skeleton aspect-[9/16]"></div>
+                    </div>
+
+                    <!-- EMPTY STATE -->
+                    <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+                        <div class="text-5xl mb-4">⚡</div>
+                        <h3 class="text-xl font-semibold mb-2">No Shorts Discovered</h3>
+                        <p class="text-muted text-sm mb-7 leading-relaxed">
+                            No active videos categorized as **Shorts** were detected on your channel portfolio.<br>
+                            Click below to synchronize directly from YouTube.
+                        </p>
+                        <button onclick="doImportVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">⬇️ Import Channel Videos</button>
+                    </div>
+
+                    <!-- PAGINATION -->
+                    <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+                        <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+                        <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+                        <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
+                    </div>
+
+                </main>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</main>
+
+
+<!-- VIDEO DETAIL MODAL -->
+<div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-bold">Shorts Asset Properties</h2>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+        </div>
+        <div id="detailBody" class="space-y-3"></div>
+    </div>
+</div>
+
+<!-- CODE SCRIPTS INTERNALS -->
+<script>
+
+    
+const USERNAME = localStorage.getItem("username") || "";
+const PASSWORD = localStorage.getItem("password") || "";
+
+if (!USERNAME || !PASSWORD) {
+    window.location.href = "signin.html";
+}
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0ieuQ_cQFFrgYgiyqnxieLF11iX5-SW1ocdczFZBJ-_vmXAcOccpBNrN_Zv6rNtyHqg/exec';
+
+let myChannel   = null;   
+let allVideos   = [];
+let filtered    = [];
+let activeTab   = 'All';
+let currentPage = 1;
+const PER_PAGE  = 16; // Incresed page view size since portrait tiles are narrower
+
+function show(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function hide(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+
+async function callApi(action, params = {}) {
+    const qs = new URLSearchParams({ action, username: USERNAME, password: PASSWORD, ...params });
+    const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
+    return res.json();
+}
+
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    show('loadingState'); hide('errorState'); hide('dashContent');
+    try {
+        const chanData = await callApi('getMyChannel');
+        if (chanData.status !== 'success') throw new Error(chanData.message || 'Could not load channel data');
+
+        myChannel = (chanData.channels && chanData.channels[0]) || null;
+
+        if (!myChannel) {
+            show('noChannelCard');
+            hide('channelCard'); hide('statsCard'); hide('bulkCard');
+            document.getElementById('importBtn').disabled = true;
+            allVideos = [];
+            applyFilter();
+            hide('loadingState'); show('dashContent');
+            return;
+        }
+
+        renderChannelCard();
+        show('channelCard'); show('statsCard'); show('bulkCard');
+        hide('noChannelCard');
+
+        await loadVideos();
+
+        hide('loadingState'); show('dashContent');
+    } catch (e) {
+        hide('loadingState'); show('errorState');
+        document.getElementById('errorMsg').textContent = e.message || 'Network error. Please try again.';
+    }
+}
+
+async function loadVideos() {
+    const data = await callApi('getMyVideos');
+    if (data.status !== 'success') throw new Error(data.message || 'Could not load videos');
+
+    allVideos = data.videos || [];
+    applyFilter();
+}
+
+function renderChannelCard() {
+    document.getElementById('chanImage').src  = myChannel.ChannelImage || '';
+    document.getElementById('chanName').textContent   = myChannel.ChannelName || '—';
+    document.getElementById('chanHandle').textContent = myChannel.ChannelHandle || '—';
+    document.getElementById('chanLink').href = myChannel.ChannelLink || '#';
+}
+
+function statusOf(v) {
+    const s = (v.VideoStatus || 'Ready').toLowerCase();
+    if (s === 'notready') return 'NotReady';
+    if (s === 'deleted')  return 'Deleted';
+    return 'Ready';
+}
+
+function applyFilter() {
+    // FRONT-END SHORTS INVERSION FILTER: Keep ONLY videos explicitly labeled as short
+    let shortsOnly = allVideos.filter(v => {
+        const type = (v.VideoType || 'Long').toLowerCase();
+        return type === 'short'; 
+    });
+
+    // Compute metrics based exclusively on the Short video space array
+    let ready = 0, notReady = 0, deleted = 0;
+    shortsOnly.forEach(v => {
+        const s = statusOf(v);
+        if (s === 'Ready') ready++;
+        else if (s === 'NotReady') notReady++;
+        else deleted++;
+    });
+
+    updateStatsDisplay(ready, notReady, deleted, shortsOnly.length);
+
+    if (activeTab === 'All') {
+        filtered = shortsOnly;
+    } else {
+        filtered = shortsOnly.filter(v => statusOf(v) === activeTab);
+    }
+    
+    renderGrid();
+}
+
+function updateStatsDisplay(ready, notReady, deleted, total) {
+    document.getElementById('st-ready').textContent    = ready;
+    document.getElementById('st-notready').textContent = notReady;
+    document.getElementById('st-deleted').textContent  = deleted;
+    document.getElementById('st-total').textContent    = total;
+
+    document.getElementById('badgeReady').textContent    = ready;
+    document.getElementById('badgeNotReady').textContent = notReady;
+
+    const pct = total > 0 ? Math.round((ready / total) * 100) : 0;
+    document.getElementById('st-readypct').textContent = pct + '%';
+    document.getElementById('readyBar').style.width = pct + '%';
+}
+
+function setTab(tab, btn) {
+    activeTab   = tab;
+    currentPage = 1;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyFilter();
+}
+
+function renderGrid() {
+    const grid  = document.getElementById('videoGrid');
+    const empty = document.getElementById('emptyState');
+    const pages = document.getElementById('paginationBar');
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        pages.classList.add('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    const total = Math.ceil(filtered.length / PER_PAGE);
+    currentPage = Math.min(currentPage, total);
+    const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+    grid.innerHTML = slice.map(videoCard).join('');
+
+    if (filtered.length > PER_PAGE) {
+        pages.classList.remove('hidden');
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${total}`;
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === total;
+    } else {
+        pages.classList.add('hidden');
+    }
+}
+
+function changePage(d) {
+    currentPage += d;
+    renderGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function escapeAttr(s) {
+    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+}
+// Add this helper function at the top of your script block
+function formatDuration(v) {
+    if (!v || v.VideoDurationSeconds === undefined) return '0 sec';
+    
+    // Force conversion to a clean string
+    let raw = String(v.VideoDurationSeconds).trim();
+    let totalSeconds = 0;
+    
+    // 1. If it's a timestamp string from Google Sheets (e.g., "1899-12-29T19:37:48.000Z")
+    if (raw.includes('T') && raw.includes('Z')) {
+        try {
+            let timePart = raw.split('T')[1].split('.')[0]; // Extracts "19:37:48"
+            let parts = timePart.split(':');
+            let seconds = parseInt(parts[2], 10) || 0;
+            
+            // If the time zone shifted the seconds into minutes (e.g. 19:36:48 instead of 19:37:48)
+            // we calculate the difference to find the raw seconds remainder.
+            totalSeconds = seconds; 
+            
+            // Fallback safety check: If it didn't align cleanly, use the last 2 digits before the 'Z'
+            if (isNaN(totalSeconds) || totalSeconds === 0) {
+                totalSeconds = parseInt(timePart.slice(-2), 10) || 0;
+            }
+        } catch(e) {
+            totalSeconds = 0;
+        }
+    } else {
+        // 2. If it's already a clean integer raw number (like 40, 50, 70)
+        totalSeconds = parseInt(raw.replace(/[^\d]/g, ''), 10) || 0;
+    }
+    
+    // 3. Format output exactly as requested (e.g., "40 sec", "1 min 10 sec")
+    if (totalSeconds < 60) {
+        return totalSeconds + " sec";
+    } else {
+        let mins = Math.floor(totalSeconds / 60);
+        let secs = totalSeconds % 60;
+        return secs > 0 ? `${mins} min ${secs} sec` : `${mins} min`;
+    }
+}
+
+function videoCard(v) {
+    const status = statusOf(v);
+    const cardCls  = status === 'NotReady' ? 'notready-card' : (status === 'Deleted' ? 'deleted-card' : '');
+    const badgeCls = status === 'NotReady' ? 'status-notready' : (status === 'Deleted' ? 'status-deleted' : 'status-ready');
+    const badgeDot = status === 'NotReady' ? 'bg-amber-400' : (status === 'Deleted' ? 'bg-gray-400' : 'bg-green-400');
+    const badgeLbl = status === 'NotReady' ? 'Disabled' : (status === 'Deleted' ? 'Removed' : 'Active');
+
+    const url    = escapeAttr(v.VideoUrl);
+    const isOn   = status === 'Ready';
+    const isDel  = status === 'Deleted';
+
+    let toggleHtml = isDel ? '' : `<button class="toggle-switch ${isOn ? 'on' : ''}" onclick="toggleVideo('${url}')"><span class="knob"></span></button>`;
+
+    return `
+    <div class="video-card ${cardCls} flex flex-col justify-between h-full">
+        <div class="video-thumb-wrap">
+            ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">⚡</div>`}
+<span class="duration-chip">${formatDuration(v)}</span>
+        </div>
+        <div class="p-3 flex-1 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="status-badge ${badgeCls}"><span class="dot ${badgeDot}"></span>${badgeLbl}</span>
+                    ${toggleHtml}
+                </div>
+                <div class="text-xs font-bold text-[#211F1F] leading-snug mb-1 truncate">${v.VideoTitle || 'Untitled Short'}</div>
+                <div class="text-[10px] text-muted mb-3">Pulled: ${fmtDate(v.CreatedDate)}</div>
+            </div>
+            <div class="flex gap-1.5 mt-2">
+                <a href="${v.VideoUrl}" target="_blank" class="btn-outline flex-1 py-1.5 rounded-xl text-[11px] font-semibold text-center no-underline">▶ Open</a>
+                <button onclick="openDetail('${url}')" class="btn-outline flex-1 py-1.5 rounded-xl text-[11px] font-semibold">Specs</button>
+            </div>
+        </div>
+    </div>`;
+}
+
+async function toggleVideo(videoUrl) {
+    const v = allVideos.find(v => v.VideoUrl === videoUrl);
+    if (!v) return;
+
+    if (statusOf(v) === 'Deleted') return;
+    const newStatus = statusOf(v) === 'Ready' ? 'NotReady' : 'Ready';
+
+    try {
+        const data = await callApi('setVideoStatus', { videoUrl, newStatus });
+        if (data.status === 'success') {
+            v.VideoStatus = data.newStatus;
+            applyFilter();
+            showToast(newStatus === 'Ready' ? '✅ Short added to pool.' : '⏸️ Short pulled out of active matching.');
+        } else {
+            showToast(data.message || 'Could not alter status parameter.', true);
+        }
+    } catch (e) {
+        showToast('Network interface error.', true);
+    }
+}
+
+async function bulkSetStatus(newStatus) {
+    const label = newStatus === 'Ready' ? 'Enabled' : 'Disabled';
+    const result = await Swal.fire({
+        icon: 'question',
+        title: `Bulk update allocations to ${label}?`,
+        text: `This executes changes on live indexing files for short variables matching.`,
+        showCancelButton: true,
+        confirmButtonText: 'Confirm Actions',
+        cancelButtonText: 'Dismiss',
+        confirmButtonColor: '#211F1F'
+    });
+    if (!result.isConfirmed) return;
+
+    try {
+        const data = await callApi('bulkSetVideoStatus', { newStatus });
+        if (data.status === 'success') {
+            allVideos.forEach(v => {
+                const type = (v.VideoType || 'Long').toLowerCase();
+                if (type === 'short' && statusOf(v) !== 'Deleted') {
+                    v.VideoStatus = newStatus;
+                }
+            });
+            applyFilter();
+            showToast(`Batch allocation processing complete.`);
+        }
+    } catch (e) {
+        showToast('Batch communication error.', true);
+    }
+}
+
+async function doImportVideos() {
+    const btn = document.getElementById('importBtn');
+    btn.disabled = true; btn.textContent = 'Mapping YouTube matrix…';
+    try {
+        const data = await callApi('addVideos', { channelId: myChannel.ChannelId });
+        showToast(data.message || 'Assets successfully matched.');
+        await loadVideos();
+    } catch (e) {
+        showToast('Import interface dropped.', true);
+    }
+    btn.disabled = false; btn.innerHTML = '⬇️ Pull Latest Videos';
+}
+
+async function doSyncVideos() {
+    const btn = document.getElementById('syncBtn');
+    btn.disabled = true; btn.textContent = 'Syncing...';
+    try {
+        const data = await callApi('syncVideos', { channelId: myChannel.ChannelId });
+        showToast(data.message || 'Channel synchronized.');
+        await loadVideos();
+    } catch (e) {
+        showToast('Synchronization error.', true);
+    }
+    btn.disabled = false; btn.textContent = '🔄 Sync Shorts from YT';
+}
+
+function openDetail(videoUrl) {
+    const v = allVideos.find(v => v.VideoUrl === videoUrl);
+    if (!v) return;
+    const status = statusOf(v);
+    const badgeCls = status === 'NotReady' ? 'status-notready' : (status === 'Deleted' ? 'status-deleted' : 'status-ready');
+    const badgeLbl = status === 'NotReady' ? 'Not Active' : (status === 'Deleted' ? 'Removed' : 'Active Pool');
+
+    document.getElementById('detailBody').innerHTML = `
+        <div class="video-thumb-wrap rounded-2xl overflow-hidden border-2 border-[#211F1F] max-w-[200px] mx-auto mb-2">
+            ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">⚡</div>`}
+        </div>
+        <div class="text-sm font-bold text-[#211F1F] text-center">${v.VideoTitle || 'Untitled short track'}</div>
+        <div class="text-center mt-1"><span class="status-badge ${badgeCls}">${badgeLbl}</span></div>
+        <div class="grid grid-cols-2 gap-3 text-xs mt-3">
+            <div class="bg-white border-2 border-[#211F1F] rounded-xl p-2.5">
+                <div class="text-muted mb-0.5">Duration metric</div>
+<div class="font-semibold">${formatDuration(v)}</div>
+            </div>
+            <div class="bg-white border-2 border-[#211F1F] rounded-xl p-2.5">
+                <div class="text-muted mb-0.5">Index Date</div>
+                <div class="font-semibold">${fmtDate(v.CreatedDate)}</div>
+            </div>
+        </div>
+        <a href="${v.VideoUrl}" target="_blank" class="btn-purple w-full py-2.5 rounded-xl text-xs font-semibold text-center block mt-4 no-underline">▶ Open in Shorts Feed</a>
+    `;
+    document.getElementById('detailModal').classList.add('open');
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+}
+
+
+</script>
+</body>
+</html>

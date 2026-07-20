@@ -47,11 +47,11 @@ const NAVBAR_TEMPLATE = `
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
       <div id="channelsGroup" class="sidebar-submenu">
-        <a href="channels.html?view=promotional">❍ Promotional Channel</a>
-        <a href="channels.html?view=longvideos">❍ Long Videos</a>
-        <a href="channels.html?view=shortvideos">❍ Short Videos</a>
-        <a href="channels.html?view=playlist">❍ Playlists</a>
-        <a href="channels.html?view=working">❍ Working Channel</a>
+        <a href="channels.html">❍ Promotional Channel</a>
+        <a href="videos.html">❍ Long Videos</a>
+        <a href="shortvideos.html">❍ Short Videos</a>
+        <a href="#">❍ Playlists</a>
+        <a href="#">❍ Working Channel</a>
             <a href="channels.html?view=working">❍ Settings</a>
       </div>
     </div>
@@ -66,9 +66,9 @@ const NAVBAR_TEMPLATE = `
       <div id="tasksGroup" class="sidebar-submenu">
         <a href="subscriberstask.html">❍ Subscriber Tasks</a>
         <a href="videotask.html">❍ Long Video Tasks</a>
-          <a href="videotask.html">❍ Short Video Tasks</a>
-        <a href="playlisttask.html">❍ Playlist Tasks</a>
-        <a href="likeandcommentstasks.html">❍ Like &amp; Comment Tasks</a>
+          <a href="#">❍ Short Video Tasks</a>
+        <a href="#">❍ Playlist Tasks</a>
+        <a href="#">❍ Like &amp; Comment Tasks</a>
       </div>
     </div>
 

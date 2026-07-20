@@ -3,556 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Channel Videos — Exsub Group</title>
+<title>Long Videos — Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
 <style>
+
+/* ══════════════════════════════════════════════════════════════
+   PROMOTIONAL VIDEOS — LIGHT THEME (matches Analytics / Video Tasks)
+   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
+   ══════════════════════════════════════════════════════════════ */
+
 :root {
-    --bg: #050508;
-    --card: #12141c;
-    --border: #1e212c;
-    --purple: #7c3aed;
-    --muted: #8a8f9e;
+    --bg: #F5F4EB;
+    --ink: #211F1F;
+    --mint: #ACD1C0;
+    --sand: #DBD4B7;
+    --muted: #6b7280;
+    --border: #211F1F;
 }
+
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: white; overflow-x: hidden; }
-body::before {
-    content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
-                radial-gradient(ellipse at bottom, rgba(124,58,237,0.08) 0%, transparent 50%);
-    z-index: 0; pointer-events: none;
+
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
+body::before { content: none; }
+
+.gradient-text { color: #211F1F; -webkit-text-fill-color: #211F1F; }
+
+.card {
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
 }
-.gradient-text {
-    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+
+.video-card {
+    background: #ffffff;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.2s ease;
+    overflow: hidden;
 }
-.glass-nav {
-    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); color: white;
-}
-.card { background: linear-gradient(180deg, #151821 0%, #101219 100%); border: 1px solid var(--border); box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset; }
-.video-card { background: linear-gradient(180deg, #151821 0%, #101219 100%); border: 1px solid var(--border); transition: 0.25s ease; }
-.video-card:hover { transform: translateY(-3px); border-color: rgba(124,58,237,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.35); }
+.video-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+
+.video-card.notready-card { border-color: #b45309; background: #fffbeb; }
+.video-card.notready-card:hover { box-shadow: 6px 6px 0px 0px #b45309; }
+
+.video-card.deleted-card { border-color: #9ca3af; background: #f9fafb; opacity: 0.85; }
+.video-card.deleted-card:hover { transform: none; box-shadow: 4px 4px 0px 0px #9ca3af; }
+
 .text-muted { color: var(--muted); }
-.btn-purple { background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; transition: 0.25s; cursor: pointer; }
-.btn-purple:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
-.btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
-.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); transition: 0.25s; cursor: pointer; }
-.btn-outline:hover:not(:disabled) { border-color: var(--purple); color: white; }
-.btn-red { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; border: none; transition: 0.25s; cursor: pointer; }
-.btn-red:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
-.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 500; }
+
+.btn-purple {
+    background: #211F1F; color: #ffffff; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-outline {
+    background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F;
+    border-radius: 14px; transition: 0.15s; cursor: pointer;
+}
+.btn-outline:hover:not(:disabled) { background: var(--sand); }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-teal {
+    background: var(--mint); color: #211F1F; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-teal:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-amber {
+    background: #fbbf24; color: #211F1F; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-amber:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-amber:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-red {
+    background: #ef4444; color: white; border: 2px solid #211F1F;
+    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
+    transition: 0.15s; cursor: pointer;
+}
+.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-red:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.filter-tab {
+    background: #ffffff; border: 2px solid #211F1F; transition: 0.2s;
+    color: var(--ink); cursor: pointer; white-space: nowrap;
+}
+.filter-tab:hover { background: var(--sand); }
+.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
+
+.status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; padding: 3px 10px; border-radius: 999px;
+    font-weight: 700; border: 1px solid rgba(33,31,31,0.15);
+}
+.status-ready    { background:#dcfce7; color:#166534; }
+.status-notready { background:#fef3c7; color:#92400e; }
+.status-deleted  { background:#e5e7eb; color:#374151; }
+
 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-.skeleton { background: linear-gradient(90deg, #1a1d27 25%, #21253a 50%, #1a1d27 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px; }
+
+.modal-bg {
+    position: fixed; inset: 0; background: rgba(33,31,31,0.55);
+    backdrop-filter: blur(4px); z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s;
+}
+.modal-bg.open { opacity: 1; visibility: visible; }
+
+.modal-box {
+    background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px;
+    box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px;
+    width: 100%; max-width: 460px; transform: scale(0.96); transition: 0.25s;
+    max-height: 90vh; overflow-y: auto;
+}
+.modal-bg.open .modal-box { transform: scale(1); }
+
+.skeleton {
+    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px;
+}
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
 #toast {
     position: fixed; bottom: 24px; right: 24px; z-index: 999;
-    background: linear-gradient(180deg, #8b5cf6, #7c3aed); color: white; padding: 13px 22px;
-    border-radius: 14px; font-size: 13px; font-weight: 500; transform: translateY(80px); opacity: 0;
-    transition: 0.3s; pointer-events: none; max-width: 320px;
+    background: #211F1F; color: white; padding: 13px 22px; border-radius: 14px;
+    font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0;
+    transition: 0.3s; pointer-events: none; max-width: 320px; border: 2px solid #211F1F;
 }
 #toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: linear-gradient(180deg, #ef4444, #b91c1c); }
-#pageLoader {
-    position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease;
+#toast.error { background: #b91c1c; }
+
+.spinner{
+  width:40px; height:40px; border-radius:50%;
+  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
+  animation:spin 0.7s linear infinite;
 }
-#pageLoader.hidden { opacity: 0; pointer-events: none; }
-#pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(124,58,237,0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.thumb-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px 14px 0 0; overflow: hidden; background: #1a1d27; }
-.thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.duration-chip { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
-.sync-box { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2); border-radius: 18px; }
-.spin-icon { animation: spin 0.8s linear infinite; }
-.swal2-popup { background: #151821 !important; border: 1px solid #1e212c !important; color: white !important; border-radius: 24px !important; font-family: 'Inter', sans-serif !important; }
-.swal2-title { color: white !important; } .swal2-html-container { color: #8a8f9e !important; }
-.swal2-confirm { background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%) !important; border-radius: 14px !important; font-weight: 600 !important; }
-.swal2-cancel { background: transparent !important; border: 1px solid #1e212c !important; color: #8a8f9e !important; border-radius: 14px !important; }
-#mobileBottomNav { display:none; position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%); border: 1px solid rgba(255,255,255,0.06);
-  color: white; border-radius:999px; padding:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); }
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{ width:52px; height:52px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#fff; text-decoration:none; }
-#mobileBottomNav a svg{ width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; } #mobileBottomNav a.active svg{ stroke:#0f1118; }
-@media (max-width: 767px){ #mobileBottomNav{ display:block; } body{ padding-bottom: 90px; } }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+.video-thumb-wrap {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    background: #e8e5d8; border-bottom: 2px solid #211F1F; overflow: hidden;
+}
+.video-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
+.video-thumb-wrap .play-badge {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(33,31,31,0.08); font-size: 30px;
+}
+.duration-chip {
+    position: absolute; bottom: 8px; right: 8px; background: #211F1F; color: white;
+    font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
+}
+
+.toggle-switch {
+    position: relative; width: 46px; height: 26px; border-radius: 999px;
+    background: #e5e7eb; border: 2px solid #211F1F; cursor: pointer; flex-shrink: 0;
+    transition: 0.2s; padding: 0;
+}
+.toggle-switch.on { background: var(--mint); }
+.toggle-switch .knob {
+    position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%;
+    background: #211F1F; transition: 0.2s;
+}
+.toggle-switch.on .knob { transform: translateX(20px); }
+.toggle-switch:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.progress-track { background: #ffffff; border: 2px solid #211F1F; height: 14px; border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; transition: width 0.8s ease; }
+
+/* SweetAlert2 light theme overrides */
+.swal2-popup {
+    background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important;
+    border-radius: 24px !important; font-family: 'Inter', sans-serif !important;
+    box-shadow: 6px 6px 0px 0px #211F1F !important;
+}
+.swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
+.swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
+.swal2-confirm { background: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+.swal2-cancel {
+    background: transparent !important; border: 2px solid #211F1F !important; color: #211F1F !important;
+    border-radius: 14px !important;
+}
+.swal2-deny { background: var(--mint) !important; color: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
 </style>
 <base target="_blank">
 </head>
 <body>
 
-<div id="pageLoader">
-    <div class="spin"></div>
-    <p style="color: var(--muted); font-size: 14px;">Loading your channel videos…</p>
-</div>
-
+<!-- TOAST -->
 <div id="toast"></div>
 
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-    <button id="mobileMenuBtn"
-      class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a id="lnkDashboard" href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-
-      <!-- CHANNELS DROPDOWN -->
-      <div class="task-dropdown-wrap">
-        <a id="lnkChannels" href="#" onclick="toggleChannelsMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Channels
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="channelsDropdown" class="task-dropdown">
-          <a href="channels.html?view=promotional">📢 Promotional Channel</a>
-          <a href="channels.html?view=longvideos">🎬 Long Videos</a>
-          <a href="channels.html?view=shortvideos">⚡ Short Videos</a>
-          <a href="channels.html?view=playlist">⏱ Playlist</a>
-          <a href="channels.html?view=working">✅ Working Channel</a>
-        </div>
-      </div>
-
-      <a id="lnkGroups" href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
-
-      <!-- TASKS DROPDOWN -->
-      <div class="task-dropdown-wrap">
-        <a href="#" onclick="toggleTasksMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Tasks
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="tasksDropdown" class="task-dropdown">
-          <a href="subscriberstask.html">📺 Subscriber Tasks</a>
-          <a href="videotask.html">🎬 Video Tasks</a>
-          <a href="playlisttask.html">⏱ Playlist Tasks</a>
-          <a href="likeandcommentstasks.html">💬 Like &amp; Comment Tasks</a>
-        </div>
-      </div>
-
-      <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn"
-          class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown"
-          class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
-      </div>
-
-      <div class="relative">
-        <button id="profileBtn"
-          class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown"
-          class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p  id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-2">
-            <a id="ddProfile" href="profile.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-            <a href="support.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-            <button onclick="logoutUser()"
-              class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu"
-    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a id="mLnkDashboard" href="analytics.html" class="text-white">Dashboard</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Channels</span>
-        <a href="channels.html?view=promotional" class="mobile-task-link">📢 Promotional Channel</a>
-        <a href="channels.html?view=longvideos" class="mobile-task-link">🎬 Long Videos</a>
-        <a href="channels.html?view=shortvideos" class="mobile-task-link">⚡ Short Videos</a>
-        <a href="channels.html?view=playlist" class="mobile-task-link">⏱ Playlist</a>
-        <a href="channels.html?view=working" class="mobile-task-link">✅ Working Channel</a>
-      </div>
-
-      <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Tasks</span>
-        <a href="subscriberstask.html" class="mobile-task-link">📺 Subscriber Tasks</a>
-        <a href="videotask.html" class="mobile-task-link">🎬 Video Tasks</a>
-        <a href="playlisttask.html" class="mobile-task-link">⏱ Playlist Tasks</a>
-        <a href="likeandcommentstasks.html" class="mobile-task-link">💬 Like &amp; Comment Tasks</a>
-      </div>
-
-      <a id="mLnkHowTo"     href="howtowork.html"      class="text-white">How To Work</a>
-      <a id="mLnkExtension" href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a id="mLnkSupport"   href="support.html"        class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
-
-<!-- ══════════════════ MOBILE BOTTOM NAV ══════════════════ -->
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-    <a href="subscriberstask.html" data-page="subscriberstask.html" title="Subscribers Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-        <path d="M10 9l5 3-5 3V9z"/>
-      </svg>
-    </a>
-    <a href="videotask.html" data-page="videotask.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-    <a href="playlisttask.html" data-page="playlisttask.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"></circle>
-        <polyline points="12 7 12 12 16 14"></polyline>
-      </svg>
-    </a>
-    <a href="likeandcommentstasks.html" data-page="likeandcommentstasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-  </div>
-</nav>
-
+<!-- NAVBAR -->
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
 
 <!-- MAIN -->
-<div class="max-w-[1200px] mx-auto px-4 pt-28 pb-12 relative z-10">
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
 
-    <div class="text-center mb-10">
-        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-            🎬 Promotional Channel Videos
+  <!-- LOADING -->
+  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
+    <div class="spinner"></div>
+    <div class="text-gray-500 text-sm">Loading your Long videos…</div>
+  </div>
+
+  <!-- ERROR -->
+  <div id="errorState" class="hidden text-center py-32">
+    <div class="text-5xl mb-4">⚠️</div>
+    <div class="text-xl font-bold mb-2">Could not load data</div>
+    <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
+    <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashContent" class="hidden">
+
+    <!-- ── HEADER ── -->
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-icon">🎞️</span>
+          <span class="nb-card-title">Long Videos</span>
         </div>
-        <h1 class="text-4xl md:text-5xl font-black gradient-text">My Channel Videos</h1>
-        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
-            Pull long-form uploads straight from your YouTube channel. Shorts are detected and filtered out
-            automatically, so only proper videos ever get matched for watch-exchange tasks.
-        </p>
+        <div class="nb-status-card">
+          <span class="nb-card-icon">✅</span>
+          <span class="nb-card-title">Ready</span>
+          <span id="badgeReady" class="nb-pill" style="background:#dcfce7;color:#166534;border-color:#166534;">0</span>
+        </div>
+        <div class="nb-status-card">
+          <span class="nb-card-icon">⏸️</span>
+          <span class="nb-card-title">Not Ready</span>
+          <span id="badgeNotReady" class="nb-pill nb-pill-warning">0</span>
+        </div>
+        <a href="channels.html?view=promotional" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">📢</span>
+          <span class="nb-card-title">Channel Settings</span>
+        </a>
+      </div>
+      <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Long Videos</h1>
+      <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: auto;">
+          Manage which long video from your promotional channel are eligible for the Video Watch-Time Exchange.
+          Videos marked <strong class="text-[#211F1F]">Ready</strong> can be matched into tasks — mark any video
+          <strong class="text-[#211F1F]">Not Ready</strong> at any time to pull it out of matching.
+      </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
 
     <!-- SIDEBAR -->
-    <aside class="w-full lg:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
-        <div class="card rounded-3xl p-5">
-            <div class="flex items-center gap-4">
-                <img id="sideAvatar" src="https://i.pravatar.cc/100" class="w-14 h-14 rounded-2xl border-2 border-purple-500 object-cover flex-shrink-0">
-                <div class="min-w-0">
-                    <h2 id="sideName" class="font-semibold text-base truncate">—</h2>
-                    <p id="sideCode" class="text-muted text-sm">—</p>
-                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium">Active</span>
-                </div>
-            </div>
+    <aside class="w-full lg:w-[280px] xl:w-[300px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
+
+        <!-- NO CHANNEL STATE -->
+        <div id="noChannelCard" class="hidden card rounded-3xl p-6 text-center">
+            <div class="text-4xl mb-3">📺</div>
+            <h3 class="font-semibold text-base mb-2">No Promotional Channel</h3>
+            <p class="text-muted text-xs mb-4 leading-relaxed">Add a promotional channel first, then come back here to manage its videos.</p>
+            <a href="channels.html?view=promotional" class="btn-purple px-5 py-2.5 rounded-2xl font-semibold text-xs inline-block">+ Add Channel</a>
         </div>
 
-        <div class="card rounded-3xl p-5">
+        <!-- CHANNEL CARD -->
+        <div id="channelCard" class="hidden card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-3">Channel</h2>
-            <div id="channelBox" class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-full bg-[#1a1d27] flex-shrink-0"></div>
+            <div class="flex items-center gap-3 mb-3">
+                <img id="chanImage" src="" alt="" class="w-11 h-11 rounded-full object-cover border-2 border-[#211F1F]" onerror="this.style.display='none'">
                 <div class="min-w-0">
-                    <p id="chanName" class="text-sm font-semibold truncate">—</p>
-                    <p id="chanHandle" class="text-xs text-muted truncate">—</p>
+                    <div id="chanName" class="font-bold text-sm truncate">—</div>
+                    <div id="chanHandle" class="text-xs text-muted font-mono truncate">—</div>
                 </div>
             </div>
-            <a id="chanLinkBtn" href="#" class="hidden mt-3 btn-outline w-full py-2 rounded-xl text-xs font-medium text-center block no-underline">Open Channel →</a>
+            <a id="chanLink" href="#" class="text-xs text-[#211F1F] underline font-semibold">Open Channel →</a>
         </div>
 
-        <div class="card rounded-3xl p-5">
+        <!-- VIDEO STATS -->
+      <!-- VIDEO STATS -->
+        <div id="statsCard" class="hidden card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-4">Video Stats</h2>
-            <div class="space-y-3 text-sm">
+            <div class="space-y-3 text-sm mb-4">
                 <div class="flex items-center justify-between">
-                    <span class="text-muted">Long-Form Videos</span>
-                    <span id="st-total" class="font-bold text-purple-400">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Ready</span>
+                    <span id="st-ready" class="font-bold">—</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-muted">Ready</span>
-                    <span id="st-ready" class="font-bold text-green-400">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-amber-400"></span>Not Ready</span>
+                    <span id="st-notready" class="font-bold">—</span>
                 </div>
-                <div class="border-t border-[#232632] pt-3 flex items-center justify-between">
-                    <span class="text-muted">Last Synced</span>
-                    <span id="st-lastsync" class="font-bold text-xs">—</span>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Removed / Deleted</span>
+                    <span id="st-deleted" class="font-bold">—</span>
+                </div>
+                <!-- ── NEW TYPE COUNTERS ── -->
+                <div class="border-t border-[#211F1F]/10 pt-2 flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Long Videos</span>
+                    <span id="st-long" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Short Videos</span>
+                    <span id="st-short" class="font-bold">—</span>
+                </div>
+                <!-- ─────────────────────── -->
+                <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
+                    <span class="text-muted">Total Videos</span>
+                    <span id="st-total" class="font-bold text-[#211F1F]">—</span>
                 </div>
             </div>
+
+            <div class="mb-1 flex justify-between text-[11px] font-semibold text-muted">
+                <span>Ready Progress</span>
+                <span id="st-readypct">0%</span>
+            </div>
+            <div class="progress-track mb-1">
+                <div id="readyBar" class="progress-fill bg-[#ACD1C0]" style="width:0%"></div>
+            </div>
+            <p class="text-[11px] text-muted leading-relaxed mt-2">Need at least <strong class="text-[#211F1F]">5 Ready videos</strong> before you can generate video-watch tasks.</p>
         </div>
+
+        <!-- BULK ACTIONS -->
+        <div id="bulkCard" class="hidden card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Bulk Actions</h2>
+            <div class="space-y-2.5">
+                <button id="bulkReadyBtn" onclick="bulkSetStatus('Ready')" class="btn-teal w-full py-2.5 rounded-2xl text-xs font-semibold">✅ Mark All Ready</button>
+                <button id="bulkNotReadyBtn" onclick="bulkSetStatus('NotReady')" class="btn-amber w-full py-2.5 rounded-2xl text-xs font-semibold">⏸️ Mark All Not Ready</button>
+            </div>
+            <div class="border-t-2 border-[#211F1F]/10 mt-4 pt-4 space-y-2.5">
+                <button id="syncBtn" onclick="doSyncVideos()" class="btn-outline w-full py-2.5 rounded-2xl text-xs font-semibold">🔄 Sync With YouTube</button>
+                <button id="fixBtn" onclick="doFixVideos()" class="btn-outline w-full py-2.5 rounded-2xl text-xs font-semibold">🧹 Remove Deleted</button>
+            </div>
+        </div>
+
     </aside>
 
     <!-- CONTENT -->
     <main class="flex-1 min-w-0">
 
-        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-800/60" style="background:linear-gradient(180deg,#1c0a0a,#120606);">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
-                <div>
-                    <h3 class="font-semibold text-red-300 mb-1">Account Restricted</h3>
-                    <p id="blockedMsg" class="text-red-400/80 text-sm leading-relaxed">Your account cannot sync channel videos right now.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="noChannelBanner" class="hidden mb-6 rounded-3xl p-5 border border-yellow-700/50" style="background:linear-gradient(180deg,#1c1608,#120d04);">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-yellow-500/20 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
-                <div>
-                    <h3 class="font-semibold text-yellow-300 mb-1">No Channel Registered</h3>
-                    <p class="text-yellow-400/80 text-sm leading-relaxed">Add your YouTube channel on the <a href="channels.html" class="underline">Channels</a> page before syncing videos.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- SYNC PANEL -->
-        <div class="sync-box p-5 mb-7">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h3 class="font-semibold text-sm text-purple-200 mb-1">🔄 Sync From YouTube</h3>
-                    <p class="text-xs text-muted leading-relaxed max-w-[520px]">
-                        Fetches your latest uploads and keeps only long-form videos. A video is treated as a
-                        <strong class="text-white">Short</strong> (and skipped) if either: its duration is
-                        180 seconds or less, <em>or</em> YouTube itself serves it as a Short.
-                    </p>
-                </div>
-                <button id="syncBtn" onclick="doSyncVideos()" class="btn-purple px-6 py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 flex-shrink-0">
-                    <svg id="syncIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <polyline points="1 20 1 14 7 14"></polyline>
-                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"></path>
-                    </svg>
-                    Sync Now
-                </button>
-            </div>
-            <div id="syncResultBox" class="hidden mt-4 rounded-2xl p-4 text-sm"></div>
-        </div>
-
-        <!-- SEARCH -->
+        <!-- TOP BAR -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 class="text-xl font-bold">Long-Form Videos</h2>
-            <input id="searchInput" type="text" placeholder="Search your videos…" oninput="applyFilter()"
-                class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[46px] outline-none w-full sm:w-[240px] text-sm focus:border-purple-500 transition">
+            <div>
+                <h2 class="text-2xl font-bold">My Videos</h2>
+                <p class="text-muted mt-1 text-sm">Toggle individual videos in or out of task matching</p>
+            </div>
+            <button id="importBtn" onclick="doImportVideos()" class="btn-purple px-5 rounded-2xl font-semibold h-[46px] flex items-center justify-center gap-2 text-sm">
+                ⬇️ Import New Videos
+            </button>
+        </div>
+
+        <!-- FILTER TABS -->
+  <!-- FILTER TABS -->
+        <div class="flex flex-wrap gap-2 mb-6">
+            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All</button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Ready" onclick="setTab('Ready',this)">
+                <span class="dot bg-green-400 mr-1"></span>Ready
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotReady" onclick="setTab('NotReady',this)">
+                <span class="dot bg-amber-400 mr-1"></span>Not Ready
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotConfirmed" onclick="setTab('NotConfirmed',this)">
+                <span class="dot bg-purple-400 mr-1"></span>Not Confirmed <!-- <-- ADD THIS LINE -->
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Deleted" onclick="setTab('Deleted',this)">
+                <span class="dot bg-gray-400 mr-1"></span>Removed
+            </button>
         </div>
 
         <!-- VIDEO GRID -->
         <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            <div class="skeleton h-[260px]"></div>
-            <div class="skeleton h-[260px]"></div>
-            <div class="skeleton h-[260px]"></div>
+            <div class="skeleton h-[280px]"></div>
+            <div class="skeleton h-[280px]"></div>
+            <div class="skeleton h-[280px]"></div>
         </div>
 
         <!-- EMPTY STATE -->
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
-            <div class="text-5xl mb-4">🎬</div>
-            <h3 class="text-xl font-semibold mb-2">No Long-Form Videos Yet</h3>
+            <div class="text-5xl mb-4">🎞️</div>
+            <h3 class="text-xl font-semibold mb-2">No Videos Found</h3>
             <p class="text-muted text-sm mb-7 leading-relaxed">
-                Click <strong class="text-white">Sync Now</strong> above to pull your channel's uploads.<br>
-                Shorts are filtered out automatically — only long-form videos will appear here.
+                We haven't imported any videos from your promotional channel yet.<br>
+                Click <strong class="text-[#211F1F]">Import New Videos</strong> to pull them in from YouTube.
             </p>
-            <button onclick="doSyncVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">🔄 Sync Now</button>
+            <button onclick="doImportVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">⬇️ Import New Videos</button>
+        </div>
+
+        <!-- PAGINATION -->
+        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
         </div>
 
     </main>
     </div>
+
+  </div><!-- /dashContent -->
+
+</div>
+</main>
+</main>
+
+<!-- VIDEO DETAIL MODAL -->
+<div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-bold">Video Detail</h2>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+        </div>
+        <div id="detailBody" class="space-y-3"></div>
+    </div>
 </div>
 
-<footer class="relative z-10 border-t border-[#1e212c]">
-    <div class="max-w-[1400px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2">
-                <img src="images/logo.svg" class="w-6 h-6" onerror="this.style.display='none'">
-                <span class="font-semibold">Exsub Group</span>
-            </div>
-            <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
-        </div>
-        <div class="flex gap-6 text-sm text-muted">
-            <a href="#" class="hover:text-white transition">Privacy</a>
-            <a href="#" class="hover:text-white transition">Terms</a>
-            <a href="support.html" class="hover:text-white transition">Support</a>
-        </div>
-    </div>
-</footer>
-
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-    <a href="subscriberstask.html" title="Subscribers Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/><path d="M10 9l5 3-5 3V9z"/></svg>
-    </a>
-    <a href="channelvideos.html" class="active" title="My Videos">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-    <a href="videotask.html" title="Video Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 16 14"></polyline></svg>
-    </a>
-  </div>
-</nav>
-
+<!-- SCRIPTS -->
 <script>
-/* AUTH */
-function logoutUser() { localStorage.clear(); window.location.href = "signin.html"; }
-const savedUsername = localStorage.getItem("username") || "";
-const savedPassword = localStorage.getItem("password") || "";
-const savedUserCode = localStorage.getItem("usercode") || "";
-if (!savedUsername || !savedPassword) window.location.href = "signin.html";
 
-document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
-document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
-document.addEventListener("click", () => {
-    document.getElementById("mobileMenu").classList.add("hidden");
-    document.getElementById("profileDropdown").classList.add("hidden");
-});
-document.getElementById("navUserName").textContent      = savedUsername || "Member";
-document.getElementById("dropdownUserName").textContent = savedUsername || "Member";
-document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCode || "0000");
-</script>
-
-<script>
-/* ────────────────────────────────────────
-   CONFIG — replace with your Channel Videos Web App URL
-   (deploy channelvideos_google_script.gs as its own Web App)
-──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbFK7Shu_ELv2j5f-9NsTn1y0AN8FoTvun21oNhbGqPyjfO0AEuuvwx3pisclrEEO_/exec';
-const USER_CODE  = savedUserCode;
-
-let member       = null;
-let channel      = null;
-let allVideos    = [];
-let filtered     = [];
-let isBlocked    = false;
-
-window.addEventListener('DOMContentLoaded', init);
-
-async function init() {
-    try {
-        const res  = await fetch(`${SCRIPT_URL}?action=getMemberChannelVideos&userCode=${USER_CODE}`);
-        const data = await res.json();
-        hideLoader();
-
-        if (!data.success) {
-            showToast(data.message || 'Error loading data', true);
-            clearGrid();
-            return;
+// Add this helper function at the top of your script block
+function formatDuration(v) {
+    if (!v || v.VideoDurationSeconds === undefined) return '0 sec';
+    
+    // Force conversion to a clean string
+    let raw = String(v.VideoDurationSeconds).trim();
+    let totalSeconds = 0;
+    
+    // 1. If it's a timestamp string from Google Sheets (e.g., "1899-12-29T19:37:48.000Z")
+    if (raw.includes('T') && raw.includes('Z')) {
+        try {
+            let timePart = raw.split('T')[1].split('.')[0]; // Extracts "19:37:48"
+            let parts = timePart.split(':');
+            let seconds = parseInt(parts[2], 10) || 0;
+            
+            // If the time zone shifted the seconds into minutes (e.g. 19:36:48 instead of 19:37:48)
+            // we calculate the difference to find the raw seconds remainder.
+            totalSeconds = seconds; 
+            
+            // Fallback safety check: If it didn't align cleanly, use the last 2 digits before the 'Z'
+            if (isNaN(totalSeconds) || totalSeconds === 0) {
+                totalSeconds = parseInt(timePart.slice(-2), 10) || 0;
+            }
+        } catch(e) {
+            totalSeconds = 0;
         }
+    } else {
+        // 2. If it's already a clean integer raw number (like 40, 50, 70)
+        totalSeconds = parseInt(raw.replace(/[^\d]/g, ''), 10) || 0;
+    }
+    
+    // 3. Format output exactly as requested (e.g., "40 sec", "1 min 10 sec")
+    if (totalSeconds < 60) {
+        return totalSeconds + " sec";
+    } else {
+        let mins = Math.floor(totalSeconds / 60);
+        let secs = totalSeconds % 60;
+        return secs > 0 ? `${mins} min ${secs} sec` : `${mins} min`;
+    }
+}
 
-        member  = data.member;
-        channel = data.channel;
-        allVideos = data.videos || [];
+async function confirmVideoType(videoUrl, selectedType) {
+    const result = await Swal.fire({
+        icon: 'question',
+        title: `Confirm as ${selectedType} Video?`,
+        text: `This will mark the video type as ${selectedType} and automatically update its status to Ready.`,
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Confirm',
+        cancelButtonText: 'Cancel',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
+    });
+    if (!result.isConfirmed) return;
 
-        renderMember();
-        renderChannel();
-        checkBlock();
-        calcStats();
-        applyFilter();
+    try {
+        const data = await callApi('setVideoType', { videoUrl, newType: selectedType });
+        if (data.status === 'success') {
+            showToast(data.message || 'Video type confirmed.');
+            await loadVideos(); // Refresh layout arrays & counters
+        } else {
+            showToast(data.message || 'Could not update video type.', true);
+        }
     } catch (e) {
-        hideLoader();
-        clearGrid();
-        showToast('Could not connect to server.', true);
+        showToast('Connection error.', true);
     }
 }
 
-function hideLoader() {
-    const loader = document.getElementById('pageLoader');
-    loader.classList.add('hidden');
-    setTimeout(() => loader.style.display = 'none', 400);
+/* ────────────────────────────────────────
+   AUTH
+──────────────────────────────────────── */
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
 }
 
-function renderMember() {
-    if (!member) return;
-    const pic  = member.ProfilePicture || 'https://i.pravatar.cc/100';
-    const name = member.UserName || savedUsername || '—';
-    const code = member.UserCode || savedUserCode || '—';
+const USERNAME = localStorage.getItem("username") || "";
+const PASSWORD = localStorage.getItem("password") || "";
 
-    document.getElementById('navAvatar').src               = pic;
-    document.getElementById('navUserName').textContent     = name;
-    document.getElementById('dropAvatar').src               = pic;
-    document.getElementById('dropdownUserName').textContent = name;
-    document.getElementById('dropdownUserCode').textContent = `ID #${code}`;
-    document.getElementById('sideAvatar').src               = pic;
-    document.getElementById('sideName').textContent         = name;
-    document.getElementById('sideCode').textContent         = `ID #${code}`;
-
-    const st   = member.Status || 'Active';
-    const stEl = document.getElementById('sideStatus');
-    stEl.textContent = st;
-    if      (st === 'Active')    stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium';
-    else if (st === 'Suspended') stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-400 font-medium';
-    else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 font-medium';
+if (!USERNAME || !PASSWORD) {
+    window.location.href = "signin.html";
 }
 
-function renderChannel() {
-    const noChanBanner = document.getElementById('noChannelBanner');
-    if (!channel) {
-        noChanBanner.classList.remove('hidden');
-        document.getElementById('syncBtn').disabled = true;
-        document.getElementById('syncBtn').classList.add('opacity-40', 'cursor-not-allowed');
-        return;
-    }
-    document.getElementById('chanName').textContent   = channel.ChannelName || 'Unnamed Channel';
-    document.getElementById('chanHandle').textContent = channel.ChannelHandle || '';
-    const box = document.getElementById('channelBox');
-    if (channel.ChannelImage) {
-        box.querySelector('div').outerHTML = `<img src="${channel.ChannelImage}" class="w-11 h-11 rounded-full object-cover flex-shrink-0" onerror="this.style.display='none'">`;
-    }
-    if (channel.ChannelLink) {
-        const btn = document.getElementById('chanLinkBtn');
-        btn.href = channel.ChannelLink;
-        btn.classList.remove('hidden');
-    }
-}
+/* ────────────────────────────────────────
+   CONFIG — replace with your deployed Web App URL
+   (same backend as channels.html / promotional channel actions)
+──────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0ieuQ_cQFFrgYgiyqnxieLF11iX5-SW1ocdczFZBJ-_vmXAcOccpBNrN_Zv6rNtyHqg/exec';
 
-function checkBlock() {
-    if (!member) return;
-    const suspended = member.ViolationFlag === 'Suspended';
-    if (suspended) {
-        isBlocked = true;
-        document.getElementById('blockedBanner').classList.remove('hidden');
-        document.getElementById('blockedMsg').textContent =
-            `Your account is suspended until ${member.SuspendedUntil || 'further notice'}.`;
-        const btn = document.getElementById('syncBtn');
-        btn.disabled = true;
-        btn.classList.add('opacity-40', 'cursor-not-allowed');
-    }
-}
+/* ────────────────────────────────────────
+   STATE
+──────────────────────────────────────── */
+let myChannel   = null;   // { ChannelId, ChannelName, ChannelHandle, ChannelLink, ChannelImage, ... }
+let allVideos   = [];
+let filtered    = [];
+let activeTab   = 'All';
+let currentPage = 1;
+const PER_PAGE  = 12;
 
-function calcStats() {
-    document.getElementById('st-total').textContent = allVideos.length;
-    document.getElementById('st-ready').textContent = allVideos.filter(v => v.VideoStatus === 'Ready').length;
-    document.getElementById('st-lastsync').textContent = channel && channel.LastTimeVideoUpdated
-        ? fmtDate(channel.LastTimeVideoUpdated) : 'Never';
-}
-
-function fmtDate(v) {
-    if (!v) return '—';
-    const d = new Date(v);
-    if (isNaN(d)) return v;
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
-           ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-}
+/* ────────────────────────────────────────
+   DOM SHOW/HIDE HELPERS
+──────────────────────────────────────── */
+function show(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function hide(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
 
 function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
@@ -561,139 +540,485 @@ function showToast(msg, isError = false) {
     setTimeout(() => { t.className = ''; }, 3200);
 }
 
-function clearGrid() {
-    document.getElementById('videoGrid').innerHTML = '';
-    document.getElementById('emptyState').classList.remove('hidden');
+/* ────────────────────────────────────────
+   API HELPER (this backend uses GET + username/password)
+──────────────────────────────────────── */
+async function callApi(action, params = {}) {
+    const qs = new URLSearchParams({ action, username: USERNAME, password: PASSWORD, ...params });
+    const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
+    return res.json();
 }
 
-/* SEARCH + RENDER */
+/* ────────────────────────────────────────
+   BOOT
+──────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    show('loadingState'); hide('errorState'); hide('dashContent');
+
+    try {
+        const chanData = await callApi('getMyChannel');
+        if (chanData.status !== 'success') throw new Error(chanData.message || 'Could not load channel data');
+
+        myChannel = (chanData.channels && chanData.channels[0]) || null;
+
+        if (!myChannel) {
+            show('noChannelCard');
+            hide('channelCard'); hide('statsCard'); hide('bulkCard');
+            document.getElementById('importBtn').disabled = true;
+            allVideos = [];
+            applyFilter();
+            hide('loadingState'); show('dashContent');
+            return;
+        }
+
+        renderChannelCard();
+        show('channelCard'); show('statsCard'); show('bulkCard');
+        hide('noChannelCard');
+
+        await loadVideos();
+
+        hide('loadingState'); show('dashContent');
+    } catch (e) {
+        hide('loadingState'); show('errorState');
+        document.getElementById('errorMsg').textContent = e.message || 'Network error. Please try again.';
+    }
+}
+async function loadVideos() {
+    const data = await callApi('getMyVideos');
+    if (data.status !== 'success') throw new Error(data.message || 'Could not load videos');
+
+    allVideos = data.videos || [];
+    
+    // Compute status and type counts simultaneously
+    const counts = recomputeCounts();
+    
+    updateStats(
+        data.readyCount || counts.ready, 
+        data.notReadyCount || counts.notReady, 
+        data.deletedCount || counts.deleted, 
+        data.total || allVideos.length,
+        counts.long,
+        counts.short
+    );
+    applyFilter();
+}
+
+function renderChannelCard() {
+    document.getElementById('chanImage').src  = myChannel.ChannelImage || '';
+    document.getElementById('chanName').textContent   = myChannel.ChannelName || '—';
+    document.getElementById('chanHandle').textContent = myChannel.ChannelHandle || '—';
+    document.getElementById('chanLink').href = myChannel.ChannelLink || '#';
+}
+
+/* ────────────────────────────────────────
+   STATS
+──────────────────────────────────────── */
+function updateStats(readyCount, notReadyCount, deletedCount, total, longCount = 0, shortCount = 0) {
+    document.getElementById('st-ready').textContent    = readyCount;
+    document.getElementById('st-notready').textContent = notReadyCount;
+    document.getElementById('st-deleted').textContent  = deletedCount;
+    document.getElementById('st-total').textContent    = total;
+    
+    // Update the new DOM elements for types
+    document.getElementById('st-long').textContent     = longCount;
+    document.getElementById('st-short').textContent    = shortCount;
+
+    document.getElementById('badgeReady').textContent    = readyCount;
+    document.getElementById('badgeNotReady').textContent = notReadyCount;
+
+    const pct = total > 0 ? Math.round((readyCount / total) * 100) : 0;
+    document.getElementById('st-readypct').textContent = pct + '%';
+    document.getElementById('readyBar').style.width = pct + '%';
+
+    const readyEnough = readyCount >= 5;
+    document.getElementById('readyBar').style.background = readyEnough ? '#ACD1C0' : '#fbbf24';
+}
+
+/* ────────────────────────────────────────
+   FILTER + TABS
+──────────────────────────────────────── */
+/* ────────────────────────────────────────
+   FILTER + TABS
+──────────────────────────────────────── */
+function setTab(tab, btn) {
+    activeTab   = tab;
+    currentPage = 1;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyFilter();
+}
+
+function statusOf(v) {
+    if ((v.VideoType || '').toLowerCase() === 'notconfirmed') return 'NotConfirmed';
+    const s = (v.VideoStatus || 'Ready').toLowerCase();
+    if (s === 'notready') return 'NotReady';
+    if (s === 'deleted')  return 'Deleted';
+    return 'Ready';
+}
+
 function applyFilter() {
-    const q = (document.getElementById('searchInput').value || '').toLowerCase();
-    filtered = allVideos.filter(v => !q || (v.VideoTitle || '').toLowerCase().includes(q));
+    // 1. First, apply the strict Front-End type filter:
+    //    Allow "Long" or empty types, hide "Short" videos completely.
+    let baseFiltered = allVideos.filter(v => {
+        const type = (v.VideoType || 'Long').toLowerCase(); // fallback to 'Long' if undefined
+        if (type === 'short') return false; // Don't allow Short videos
+        return true; // Allow everything else (Long, NotConfirmed, etc.)
+    });
+
+    // 2. Then, apply your existing status tab filters on top of it
+    if (activeTab === 'All') {
+        filtered = baseFiltered;
+    } else {
+        filtered = baseFiltered.filter(v => statusOf(v) === activeTab);
+    }
+    
     renderGrid();
 }
-
+/* ────────────────────────────────────────
+   RENDER GRID
+──────────────────────────────────────── */
 function renderGrid() {
     const grid  = document.getElementById('videoGrid');
     const empty = document.getElementById('emptyState');
+    const pages = document.getElementById('paginationBar');
 
     if (filtered.length === 0) {
         grid.innerHTML = '';
         empty.classList.remove('hidden');
+        pages.classList.add('hidden');
         return;
     }
     empty.classList.add('hidden');
-    grid.innerHTML = filtered.map(videoCard).join('');
+
+    const total = Math.ceil(filtered.length / PER_PAGE);
+    currentPage = Math.min(currentPage, total);
+    const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+    grid.innerHTML = slice.map(videoCard).join('');
+
+    if (filtered.length > PER_PAGE) {
+        pages.classList.remove('hidden');
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${total}`;
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === total;
+    } else {
+        pages.classList.add('hidden');
+    }
 }
 
-const STATUS_CFG = {
-    'Ready':  { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Ready'  },
-    'Active': { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Active' },
-};
+function changePage(d) {
+    currentPage += d;
+    renderGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
+/* ────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────── */
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function escapeAttr(s) {
+    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+}
+
+function getVideoByUrl(url) {
+    return allVideos.find(v => v.VideoUrl === url);
+}
+
+/* ────────────────────────────────────────
+   VIDEO CARD
+──────────────────────────────────────── */
 function videoCard(v) {
-    const sc = STATUS_CFG[v.VideoStatus] || { bg: 'bg-gray-500/15', text: 'text-gray-400', dot: 'bg-gray-400', label: v.VideoStatus || '—' };
-    const safeUrl = (v.VideoUrl || '').replace(/'/g, "\\'");
+    const status = statusOf(v);
+    const isNC = status === 'NotConfirmed';
+    
+    const cardCls  = isNC ? 'border-purple-500 bg-purple-50/40' : (status === 'NotReady' ? 'notready-card' : (status === 'Deleted' ? 'deleted-card' : ''));
+    const badgeCls = isNC ? 'bg-purple-100 text-purple-700' : (status === 'NotReady' ? 'status-notready' : (status === 'Deleted' ? 'status-deleted' : 'status-ready'));
+    const badgeDot = isNC ? 'bg-purple-500' : (status === 'NotReady' ? 'bg-amber-400' : (status === 'Deleted' ? 'bg-gray-400' : 'bg-green-400'));
+    const badgeLbl = isNC ? 'Unconfirmed (3 min)' : (status === 'NotReady' ? 'Not Ready' : (status === 'Deleted' ? 'Removed' : 'Ready'));
+
+    const url    = escapeAttr(v.VideoUrl);
+    const isOn   = status === 'Ready';
+    const isDel  = status === 'Deleted';
+
+    let toggleHtml = '';
+    if (isDel) {
+        toggleHtml = `<div class="text-xs text-muted font-semibold">Resolve via Recheck</div>`;
+    } else if (isNC) {
+        toggleHtml = `<div class="text-[11px] font-bold text-purple-600">Action Required</div>`;
+    } else {
+        toggleHtml = `<button class="toggle-switch ${isOn ? 'on' : ''}" onclick="toggleVideo('${url}')" title="${isOn ? 'Turn Not Ready' : 'Turn Ready'}"><span class="knob"></span></button>`;
+    }
+
+    // Append type action buttons right above the action row if it's NotConfirmed
+    const confirmationActions = isNC ? `
+        <div class="bg-purple-100/70 border border-purple-200 rounded-xl p-2 mb-3 text-center">
+            <div class="text-[11px] font-semibold text-purple-900 mb-1.5">Confirm Video Type:</div>
+            <div class="flex gap-2 justify-center">
+                <button onclick="confirmVideoType('${url}', 'Long')" class="bg-white hover:bg-purple-200 text-purple-700 border border-purple-400 font-bold px-3 py-1 rounded-lg text-xs transition">📐 Long Video</button>
+                <button onclick="confirmVideoType('${url}', 'Short')" class="bg-white hover:bg-purple-200 text-purple-700 border border-purple-400 font-bold px-3 py-1 rounded-lg text-xs transition">⚡ Short Video</button>
+            </div>
+        </div>
+    ` : '';
+
     return `
-    <div class="video-card rounded-3xl overflow-hidden">
-        <div class="thumb-wrap">
-            ${v.VideoThumbnail
-                ? `<img src="${v.VideoThumbnail}" alt="" onerror="this.parentElement.innerHTML='<div class=&quot;w-full h-full flex items-center justify-center text-3xl&quot;>🎬</div>'">`
-                : `<div class="w-full h-full flex items-center justify-center text-3xl">🎬</div>`}
-            <span class="duration-chip">${v.VideoDurationText || (v.VideoMinutes + ' min')}</span>
+    <div class="video-card ${cardCls} rounded-3xl">
+        <div class="video-thumb-wrap">
+            ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">🎬</div>`}
+<span class="duration-chip">${formatDuration(v)}</span>
         </div>
         <div class="p-4">
-            <div class="flex items-center gap-2 mb-2">
-                <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
+            <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="status-badge ${badgeCls}"><span class="dot ${badgeDot}"></span>${badgeLbl}</span>
+                ${toggleHtml}
             </div>
-            <h3 class="text-sm font-semibold leading-snug mb-3" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.VideoTitle || 'Untitled Video'}</h3>
+            <div class="text-sm font-semibold text-[#211F1F] leading-snug mb-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.VideoTitle || 'Untitled video'}</div>
+            <div class="flex flex-wrap gap-3 text-[11px] text-muted mb-3">
+                <span>Added: ${fmtDate(v.CreatedDate)}</span>
+                <span class="font-medium text-gray-700">Type: ${v.VideoType || 'Long'}</span>
+            </div>
+            ${confirmationActions}
             <div class="flex gap-2">
-                <a href="${v.VideoUrl}" target="_blank" rel="noopener"
-                    class="btn-outline flex-1 py-2 rounded-xl text-xs font-medium text-center no-underline">▶ Watch</a>
-                <button onclick="confirmDeleteVideo('${safeUrl}')"
-                    class="btn-red px-3 py-2 rounded-xl text-xs font-medium">🗑</button>
+                <a href="${v.VideoUrl}" target="_blank" rel="noopener" class="btn-outline flex-1 py-2 rounded-xl text-xs font-semibold text-center no-underline">▶ Watch</a>
+                <button onclick="openDetail('${url}')" class="btn-outline flex-1 py-2 rounded-xl text-xs font-semibold">Details</button>
             </div>
         </div>
     </div>`;
 }
+/* ────────────────────────────────────────
+   TOGGLE READY / NOTREADY (single video)
+──────────────────────────────────────── */
+async function toggleVideo(videoUrl) {
+    const v = getVideoByUrl(videoUrl);
+    if (!v) return;
 
-/* SYNC */
-async function doSyncVideos() {
-    if (isBlocked) { showToast('Your account is restricted.', true); return; }
-
-    const btn  = document.getElementById('syncBtn');
-    const icon = document.getElementById('syncIcon');
-    btn.disabled = true;
-    icon.classList.add('spin-icon');
-    btn.querySelector('svg').nextSibling ? null : null;
-    const originalLabel = btn.innerHTML;
-    btn.innerHTML = `<svg class="spin-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10" opacity="0.25"></circle><path d="M12 2a10 10 0 019.9 8.7"></path></svg> Syncing…`;
-
-    try {
-        const res  = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'syncChannelVideos', userCode: USER_CODE })
-        });
-        const data = await res.json();
-        const box  = document.getElementById('syncResultBox');
-        box.classList.remove('hidden');
-
-        if (data.success) {
-            box.textContent = `✅ ${data.message} (Scanned: ${data.totalScanned}, Added: ${data.addedCount}, Updated: ${data.updatedCount})`;
-            box.className   = 'mt-4 rounded-2xl p-4 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
-            allVideos = data.videos || allVideos;
-            calcStats();
-            applyFilter();
-            showToast(`Synced! ${data.shortsSkippedCount} Short(s) filtered out.`);
-        } else {
-            box.textContent = data.message || 'Sync failed.';
-            box.className   = 'mt-4 rounded-2xl p-4 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
-        }
-    } catch (e) {
-        showToast('Connection error while syncing.', true);
+    const current = statusOf(v);
+    if (current === 'Deleted') {
+        showToast('This video was removed from YouTube. Recheck it first.', true);
+        return;
     }
+    const newStatus = current === 'Ready' ? 'NotReady' : 'Ready';
 
-    btn.disabled = false;
-    btn.innerHTML = originalLabel;
-}
-
-/* DELETE */
-function confirmDeleteVideo(videoUrl) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Remove this video?',
-        text: 'It will no longer be used for watch-exchange matching.',
-        showCancelButton: true,
-        confirmButtonText: 'Remove',
-        cancelButtonText: 'Cancel',
-        background: '#151821',
-        color: '#fff'
-    }).then(result => {
-        if (result.isConfirmed) doDeleteVideo(videoUrl);
-    });
-}
-
-async function doDeleteVideo(videoUrl) {
     try {
-        const res  = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'deleteVideo', userCode: USER_CODE, videoUrl })
-        });
-        const data = await res.json();
-        if (data.success) {
-            allVideos = allVideos.filter(v => v.VideoUrl !== videoUrl);
-            calcStats();
+        const data = await callApi('setVideoStatus', { videoUrl, newStatus });
+        if (data.status === 'success') {
+            v.VideoStatus = data.newStatus;
+            const counts = recomputeCounts();
+            updateStats(counts.ready, counts.notReady, counts.deleted, allVideos.length);
             applyFilter();
-            showToast('Video removed.');
+            showToast(newStatus === 'Ready' ? '✅ Video marked Ready.' : '⏸️ Video marked Not Ready.');
         } else {
-            showToast(data.message || 'Could not remove video.', true);
+            showToast(data.message || 'Could not update video status.', true);
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 }
+function recomputeCounts() {
+    let ready = 0, notReady = 0, deleted = 0;
+    let long = 0, short = 0;
+
+    allVideos.forEach(v => {
+        // 1. Check Status
+        const s = statusOf(v);
+        if (s === 'Ready') ready++;
+        else if (s === 'NotReady') notReady++;
+        else deleted++;
+
+        // 2. Check Type (Fallback to 'Long' if field is blank/missing)
+        const type = (v.VideoType || 'Long').toLowerCase();
+        if (type === 'short') {
+            short++;
+        } else {
+            long++; // Counts 'Long' and default 'NotConfirmed' before choice
+        }
+    });
+
+    return { ready, notReady, deleted, long, short };
+}
+
+/* ────────────────────────────────────────
+   BULK READY / NOTREADY
+──────────────────────────────────────── */
+async function bulkSetStatus(newStatus) {
+    const label = newStatus === 'Ready' ? 'Ready' : 'Not Ready';
+    const result = await Swal.fire({
+        icon: 'question',
+        title: `Mark all videos as ${label}?`,
+        text: newStatus === 'Ready'
+            ? 'Every eligible video will become available for task matching.'
+            : 'Every eligible video will be pulled out of task matching until you turn it back on.',
+        showCancelButton: true,
+        confirmButtonText: `Yes, mark all ${label}`,
+        cancelButtonText: 'Cancel',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = newStatus === 'Ready' ? document.getElementById('bulkReadyBtn') : document.getElementById('bulkNotReadyBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Updating…';
+
+    try {
+        const data = await callApi('bulkSetVideoStatus', { newStatus });
+        if (data.status === 'success') {
+            allVideos.forEach(v => {
+                if (statusOf(v) !== 'Deleted') v.VideoStatus = newStatus;
+            });
+            const counts = recomputeCounts();
+            updateStats(counts.ready, counts.notReady, counts.deleted, allVideos.length);
+            applyFilter();
+            showToast(`${data.updated} video(s) marked ${label}.`);
+        } else {
+            showToast(data.message || 'Could not update videos.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   IMPORT / SYNC / FIX
+──────────────────────────────────────── */
+async function doImportVideos() {
+    if (!myChannel) { showToast('Add a promotional channel first.', true); return; }
+    const btn = document.getElementById('importBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true; btn.textContent = 'Importing…';
+
+    try {
+        const data = await callApi('addVideos', { channelId: myChannel.ChannelId });
+        if (data.status === 'success') {
+            showToast(data.message || 'Videos imported.');
+            await loadVideos();
+        } else {
+            showToast(data.message || 'Could not import videos.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.innerHTML = originalText;
+}
+
+async function doSyncVideos() {
+    if (!myChannel) { showToast('Add a promotional channel first.', true); return; }
+    const btn = document.getElementById('syncBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Syncing…';
+
+    try {
+        const data = await callApi('syncVideos', { channelId: myChannel.ChannelId });
+        if (data.status === 'success') {
+            showToast(data.message || 'Sync complete.');
+            await loadVideos();
+        } else {
+            showToast(data.message || 'Could not sync videos.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+async function doFixVideos() {
+    if (!myChannel) { showToast('Add a promotional channel first.', true); return; }
+
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: 'Remove deleted videos?',
+        text: 'This permanently removes rows for videos that no longer exist on YouTube.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove them',
+        cancelButtonText: 'Cancel',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#dc2626'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = document.getElementById('fixBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Checking…';
+
+    try {
+        const data = await callApi('fixVideos', { channelId: myChannel.ChannelId });
+        if (data.status === 'success') {
+            showToast(data.message || 'Cleanup complete.');
+            await loadVideos();
+        } else {
+            showToast(data.message || 'Could not clean up videos.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+async function recheckVideo(videoUrl) {
+    try {
+        const data = await callApi('fixSingleVideo', { videoUrl });
+        showToast(data.message || (data.status === 'success' ? 'Rechecked.' : 'Could not recheck video.'), data.status !== 'success');
+        await loadVideos();
+        closeDetailModal();
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+}
+
+/* ────────────────────────────────────────
+   DETAIL MODAL
+──────────────────────────────────────── */
+function openDetail(videoUrl) {
+    const v = getVideoByUrl(videoUrl);
+    if (!v) return;
+    const status = statusOf(v);
+    const badgeCls = status === 'NotReady' ? 'status-notready' : (status === 'Deleted' ? 'status-deleted' : 'status-ready');
+    const badgeLbl = status === 'NotReady' ? 'Not Ready' : (status === 'Deleted' ? 'Removed from YouTube' : 'Ready');
+
+    document.getElementById('detailBody').innerHTML = `
+        <div class="video-thumb-wrap rounded-2xl overflow-hidden border-2 border-[#211F1F] mb-1">
+            ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">🎬</div>`}
+        </div>
+        <div class="text-base font-bold text-[#211F1F]">${v.VideoTitle || 'Untitled video'}</div>
+        <span class="status-badge ${badgeCls}">${badgeLbl}</span>
+        <div class="grid grid-cols-2 gap-3 text-sm mt-3">
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-3">
+                <div class="text-muted mb-0.5">Duration metric</div>
+<div class="font-semibold">${formatDuration(v)}</div>
+            </div>
+            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-3">
+                <div class="text-muted text-xs mb-1">Added</div>
+                <div class="font-semibold">${fmtDate(v.CreatedDate)}</div>
+            </div>
+            ${v.issue ? `<div class="bg-red-50 border-2 border-red-300 rounded-2xl p-3 col-span-2">
+                <div class="text-red-700 text-xs mb-1 font-semibold">Issue</div>
+                <div class="text-red-700 text-xs">${v.issue}</div>
+            </div>` : ''}
+        </div>
+        <a href="${v.VideoUrl}" target="_blank" rel="noopener" class="btn-purple w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-2">▶ Open on YouTube</a>
+        ${status === 'Deleted'
+            ? `<button onclick="recheckVideo('${escapeAttr(v.VideoUrl)}')" class="btn-outline w-full py-3 rounded-2xl text-sm font-semibold mt-2">🔄 Recheck on YouTube</button>`
+            : `<button onclick="toggleVideo('${escapeAttr(v.VideoUrl)}'); closeDetailModal();" class="btn-outline w-full py-3 rounded-2xl text-sm font-semibold mt-2">${status === 'Ready' ? '⏸️ Mark Not Ready' : '✅ Mark Ready'}</button>`}
+    `;
+
+    document.getElementById('detailModal').classList.add('open');
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+}
+
+
 </script>
 
 </body>
