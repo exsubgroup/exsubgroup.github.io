@@ -941,3 +941,142 @@ loadRrweb();
 </script>
 </body>
 </html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single-File Background Alerts</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #23272a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .panel {
+            background-color: #2f3136;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        button {
+            background-color: #7289da;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #677bc4; }
+        .trigger-btn { background-color: #43b581; }
+        .trigger-btn:hover { background-color: #3ca374; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>YouTube-Style Notification Demo</h2>
+    <p>This single file generates its own background engine dynamically!</p>
+    
+    <button onclick="setupNotificationEngine()">1. Grant System Permission</button>
+    <button class="trigger-btn" onclick="fireSystemAlert()">2. Test Background Alert</button>
+</div>
+
+<script>
+    let backgroundWorkerRegistration = null;
+
+    // 1. Generate the service worker background code inline as a raw string text bundle
+    const workerCodeBundle = `
+        self.addEventListener('message', function(event) {
+            if (event.data && event.data.action === 'PING_ALERT') {
+                const options = {
+                    body: event.data.body,
+                    icon: 'https://via.placeholder.com/128/7289da/FFFFFF?text=MS',
+                    tag: 'chat-sync-alert', // Prevents duplicates by overwriting existing notifications
+                    renotify: true
+                };
+                
+                // Triggers the persistent operating system banner
+                self.registration.showNotification(event.data.title, options);
+            }
+        });
+
+        // When the native banner layout card is clicked, bring your application back into focus
+        self.addEventListener('notificationclick', function(event) {
+            event.notification.close();
+            event.waitUntil(
+                clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+                    for (var i = 0; i < windowClients.length; i++) {
+                        var client = windowClients[i];
+                        if ('focus' in client) return client.focus();
+                    }
+                    if (clients.openWindow) return clients.openWindow('/');
+                })
+            );
+        });
+    `;
+
+    // 2. Compile text stream into a dynamic system payload and register it
+    async function setupNotificationEngine() {
+        if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+            alert('Your web platform configuration layout is missing service worker capabilities.');
+            return;
+        }
+
+        // Request permission
+        const status = await Notification.requestPermission();
+        if (status !== 'granted') {
+            alert('Permission denied. Please reset permissions in your browser address bar panel settings.');
+            return;
+        }
+
+        try {
+            // Converts our string block into a temporary inline file layout asset safely
+            const blob = new Blob([workerCodeBundle], { type: 'application/javascript' });
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Registers the compiled source code directly into the browser runtime engine
+            backgroundWorkerRegistration = await navigator.serviceWorker.register(blobUrl, { scope: './' });
+            alert('Background notification engine registered successfully!');
+        } catch (error) {
+            console.error('Registration runtime breakdown:', error);
+            alert('Failed to boot local compilation: ' + error.message);
+        }
+    }
+
+    // 3. Ping the background script to fire a persistent OS banner notification
+    function fireSystemAlert() {
+        if (!backgroundWorkerRegistration) {
+            alert("Please execute '1. Grant System Permission' first to build the background handle!");
+            return;
+        }
+
+        // Send data payload downwards to the active background thread process
+        if (backgroundWorkerRegistration.active) {
+            backgroundWorkerRegistration.active.postMessage({
+                action: 'PING_ALERT',
+                title: 'New Message from Mazhar',
+                body: 'Hey! The database sync updates are live on the repo framework structure.'
+            });
+        } else {
+            alert("The background worker thread is still initializing. Wait 2 seconds and retry!");
+        }
+    }
+</script>
+
+</body>
+</html>
