@@ -168,3 +168,140 @@ svg {
   #mobileBottomNav{ display:block; }
   body{ padding-bottom: 90px; }
 }
+
+
+
+/* profile css */
+/* profile css */
+/* profile css */
+/* profile css */
+/* profile css */
+/* profile css */
+
+
+
+/* ── USER PROFILE SECTION (ADDITIONS) ── */
+.sidebar-user-panel {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.user-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.user-profile-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.user-profile-trigger.expanded {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#navProfilePic {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; /* Prevents text overflow */
+}
+
+.user-info .username {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-info .user-status {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.chev-profile {
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+
+.user-profile-trigger.expanded .chev-profile {
+  transform: rotate(180deg);
+}
+
+/* Profile Dropdown styling */
+.profile-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: max-height 0.25s ease, margin-top 0.25s ease;
+  padding: 0 4px;
+}
+
+.profile-dropdown.open {
+  max-height: 120px;
+  margin-top: 8px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.dropdown-item svg {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dropdown-divider {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 4px 8px;
+}
+
+.logout-btn {
+  color: #ff6b6b;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff8787;
+}
+
+.logout-btn svg {
+  color: inherit;
+}
