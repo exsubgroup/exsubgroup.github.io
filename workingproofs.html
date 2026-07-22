@@ -25,17 +25,17 @@
     <div class="nb-badge-container">
       <div class="nb-status-card nb-status-static">
         <span class="nb-card-icon">📸</span>
-        <span class="nb-card-title">Watching Proof Center</span>
+        <span class="nb-card-title">Video Watching Proof</span>
       </div>
     </div>
-    <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Your Watching Proof</h1>
-    <div class="text-gray-400 text-sm mt-1">Track every watch proof submitted by you or for your content — grouped by video.</div>
+    <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Your Video Watching Proof</h1>
+    <div class="text-gray-400 text-sm mt-1">Track every video watch proof submitted by you or for your content.</div>
   </div>
 
   <!-- LOADING -->
   <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
     <div class="spinner"></div>
-    <div class="text-gray-400 text-sm">Loading your proof records…</div>
+    <div class="text-gray-400 text-sm">Loading your video proof records…</div>
   </div>
 
   <!-- ERROR -->
@@ -43,8 +43,7 @@
     <div class="text-5xl mb-4">⚠️</div>
     <div class="text-xl font-bold mb-2">Could not load data</div>
     <div id="errorMsg" class="text-gray-400 text-sm mb-6"></div>
-    <button onclick="loadProofData()"
-      class="btn-retro btn-charcoal font-semibold text-sm">Retry</button>
+    <button onclick="loadProofData()" class="btn-retro btn-charcoal font-semibold text-sm">Retry</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -101,14 +100,14 @@
         </div>
       </div>
 
-      <!-- PROOF LIST (card view — replaces old table) -->
+      <!-- PROOF LIST -->
       <div id="proofList" class="wproof-list"></div>
 
       <!-- EMPTY STATE -->
       <div id="emptyState" class="hidden card p-10 text-center">
         <div class="text-5xl mb-4">📭</div>
-        <div class="text-xl font-bold mb-2">No Records Found</div>
-        <div class="text-gray-400 text-sm">No proof records found for this view.</div>
+        <div class="text-xl font-bold mb-2">No Video Proof Records Found</div>
+        <div class="text-gray-400 text-sm">No video proof records found for this view.</div>
       </div>
 
       <!-- PAGINATION -->
@@ -124,27 +123,49 @@
 'use strict';
 
 /* ══════════════════ CONFIG ══════════════════ */
-const GAS_URL   = 'https://script.google.com/macros/s/AKfycbzAUwBFh_cHAsvSW5lpP-J1kZl1X9Tm3GxHwkeL6ggVWOCXzdwGGEawna6Tzd0ocPVveQ/exec'; // ← replace after deploying Code.gs
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwvMGmvFNcNq8w167EPtrurAkpUOC_gO_Bgu4NcJRWNmGx_nbkxnHacBWuozOJYtnuo8A/exec';
 const PAGE_SIZE = 15;
 
 /* ══════════════════ SESSION ══════════════════ */
 const usercode = (localStorage.getItem("usercode") || "").trim();
 const username = localStorage.getItem("username") || "";
 
-if (!usercode || !username) { window.location.replace("signin.html"); }
+if (!usercode || !username) { 
+  window.location.replace("signin.html"); 
+}
 
 /* ══════════════════ STATE ══════════════════ */
 let currentTab  = 'watched';
-let watchedData = [];   // grouped by VideoTitle
+let watchedData = [];
 let mineData    = [];
 let currentPage = 1;
 
 /* ══════════════════ LOAD ══════════════════ */
 async function loadProofData() {
-  show("loadingState"); hide("errorState"); hide("dashContent");
+  show("loadingState"); 
+  hide("errorState"); 
+  hide("dashContent");
+  
   try {
-    const res  = await fetch(`${GAS_URL}?action=getProofData&userCode=${encodeURIComponent(usercode)}`);
-    const json = await res.json();
+    const url = `${GAS_URL}?action=getProofData&userCode=${encodeURIComponent(usercode)}`;
+    console.log('Fetching:', url);
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('Received non-JSON response:', text.substring(0, 200));
+      throw new Error('Server returned HTML instead of JSON. Please check the GAS URL.');
+    }
+    
+    const json = await response.json();
+    console.log('Response:', json);
+    
     if (!json.success) throw new Error(json.message || 'Server error.');
 
     const m = json.member || {};
@@ -157,53 +178,79 @@ async function loadProofData() {
       show("blockedBanner");
       const ac = document.getElementById("activeContent");
       if (ac) ac.style.display = "none";
-      hide("loadingState"); show("dashContent");
+      hide("loadingState"); 
+      show("dashContent");
       return;
     }
 
     watchedData = groupByTitle(json.watched || []);
     mineData    = groupByTitle(json.mine    || []);
 
-    hide("loadingState"); show("dashContent");
+    console.log('Watched groups:', watchedData.length);
+    console.log('Mine groups:', mineData.length);
+
+    hide("loadingState"); 
+    show("dashContent");
     renderTab();
 
   } catch (err) {
-    hide("loadingState"); show("errorState");
+    console.error('Load error:', err);
+    hide("loadingState"); 
+    show("errorState");
     setText("errorMsg", err.message || "Network error. Please try again.");
   }
 }
 
-/* ══════════════════ GROUP records by VideoTitle ══════════════════ */
+/* ══════════════════ GROUP by VideoTitle ══════════════════ */
 function groupByTitle(records) {
   const map = {};
+  
   records.forEach(r => {
     const key = (r.VideoTitle || '').trim() || r.VideoId || '_unknown';
+    
     if (!map[key]) {
       map[key] = {
-        VideoTitle           : r.VideoTitle,
-        VideoId              : r.VideoId,
-        ChannelName          : r.ChannelName,
-        VideoDurationSeconds : Number(r.VideoDurationSeconds),
-        VideoDurationText    : r.VideoDurationText || '',
-        TaskType             : r.TaskType,
-        entries              : []
+        VideoTitle           : r.VideoTitle || 'Unknown Title',
+        VideoId              : r.VideoId || '',
+        ChannelName          : r.ChannelName || '',
+        VideoDurationSeconds : Number(r.VideoDurationSeconds) || 0,
+        VideoDurationText    : r.VideoDuration || '',
+        TaskType             : r.TaskType || 'Video',
+        entries              : [],
+        highestPercentage    : 0  // Initialize here
       };
     }
     map[key].entries.push(r);
   });
-  Object.values(map).forEach(g => {
+  
+  // Process each group
+  const result = Object.values(map);
+  result.forEach(g => {
+    // Sort entries by timestamp (newest first)
     g.entries.sort((a, b) => new Date(b.Timestamp || 0) - new Date(a.Timestamp || 0));
+    
+    // Calculate the HIGHEST (maximum) percentage from all entries
+    let highestPct = 0;
+    g.entries.forEach(e => {
+      const pct = Number(e.Percentage) || 0;
+      if (pct > highestPct) {
+        highestPct = pct;
+      }
+    });
+    g.highestPercentage = highestPct;
   });
-  return Object.values(map);
+  
+  return result;
 }
-
 /* ══════════════════ TAB SWITCH ══════════════════ */
 function switchTab(tab) {
-  currentTab = tab; currentPage = 1;
+  currentTab = tab; 
+  currentPage = 1;
   document.getElementById('tabWatched').classList.toggle('active', tab === 'watched');
   document.getElementById('tabMine').classList.toggle('active',    tab === 'mine');
   renderTab();
 }
+
 function renderTab() {
   const data = currentTab === 'watched' ? watchedData : mineData;
   renderStats(data);
@@ -222,12 +269,12 @@ function renderStats(data) {
   setText("statCheat",   cheat);
 }
 
-/* ══════════════════ CARD LIST (replaces table) ══════════════════ */
+/* ══════════════════ CARD LIST ══════════════════ */
 function renderList(data) {
   const isW  = currentTab === 'watched';
   const list = document.getElementById('proofList');
 
-  if (!data.length) {
+  if (!data || !data.length) {
     list.innerHTML = '';
     show("emptyState");
     renderPagination(0);
@@ -238,72 +285,83 @@ function renderList(data) {
   const start = (currentPage - 1) * PAGE_SIZE;
   const page  = data.slice(start, start + PAGE_SIZE);
 
-  list.innerHTML = page.map((g, idx) => {
+  let html = '';
+  
+  page.forEach((group, idx) => {
     const n    = start + idx + 1;
     const id   = 'sr-' + n;
-    const best = bestStatus(g.entries);
+    const best = bestStatus(group.entries);
 
-    const last     = g.entries[0] || {};
+    const last     = group.entries[0] || {};
     const playS    = Number(last.PlaySeconds) || 0;
     const stopS    = Number(last.StopSeconds) || 0;
-    const pct      = watchTimePct(playS, stopS);
-    const barColor = pct >= 80 ? '#3f9d6f' : pct >= 50 ? '#c9a227' : '#dc2626';
+    const duration = group.VideoDurationSeconds || 0;
+    
+    // Get percentage from the Percentage column
+    const percentage = Number(last.Percentage) || 0;
+    const finalPct = percentage > 100 ? 100 : percentage;
+    const barColor = finalPct >= 80 ? '#3f9d6f' : finalPct >= 50 ? '#c9a227' : '#dc2626';
 
-    const thumb  = g.VideoId ? `https://img.youtube.com/vi/${g.VideoId}/mqdefault.jpg` : '';
-    const ytLink = g.VideoId ? `https://www.youtube.com/watch?v=${g.VideoId}` : '#';
+    const thumb  = group.VideoId ? `https://img.youtube.com/vi/${group.VideoId}/mqdefault.jpg` : '';
+    const ytLink = group.VideoId ? `https://www.youtube.com/watch?v=${group.VideoId}` : '#';
     const sideLabel = isW ? 'Channel' : 'Worker';
-    const sideValue = isW ? esc(g.ChannelName || '—') : esc(last.UserCode || '—');
+    const sideValue = isW ? esc(group.ChannelName || '—') : esc(last.UserCode || '—');
 
-    return `
+    html += `
     <div class="wproof-card">
       <div class="wproof-card-head">
         <a class="wproof-thumb-link" href="${ytLink}" target="_blank" rel="noopener">
           <img class="wproof-thumb" src="${esc(thumb)}" alt="" onerror="this.style.opacity='.15'"/>
         </a>
         <div class="wproof-info">
-          <div class="wproof-title" title="${esc(g.VideoTitle || '')}">${esc(g.VideoTitle || 'Unknown Title')}</div>
-          <div class="wproof-sub">${esc(g.VideoId || '—')} · Duration ${fmtDuration(g.VideoDurationSeconds)}</div>
+          <div class="wproof-title" title="${esc(group.VideoTitle)}">${esc(group.VideoTitle)}</div>
+          <div class="wproof-sub">${esc(group.VideoId || '—')} · Duration ${fmtDuration(duration)}</div>
           <div class="wproof-badges">
-            ${taskBadge(g.TaskType)}
+            ${taskBadge(group.TaskType)}
             ${badgeHtml(best)}
           </div>
         </div>
         <div class="wproof-side-stats">
           <div class="wproof-mini-stat"><span class="k">${sideLabel}</span><span class="v">${sideValue}</span></div>
-          <div class="wproof-mini-stat"><span class="k">Proofs</span><span class="v">${g.entries.length}</span></div>
+          <div class="wproof-mini-stat"><span class="k">Proofs</span><span class="v">${group.entries.length}</span></div>
+          <div class="wproof-mini-stat"><span class="k">Avg %</span>  <span class="v">${group.highestPercentage || 0}%</span></div>
         </div>
       </div>
 
       <div class="wproof-ratio">
         <div class="wproof-ratio-row">
-          <span style="color:#3f9d6f;">▶ ${fmtSec(playS)}</span>
-          <span style="color:#dc2626;">⏸ ${fmtSec(stopS)}</span>
-          <span>${pct}% playing (last)</span>
+          <span style="color:#3f9d6f;">▶ ${fmtSec(playS)} watched</span>
+          <span style="color:#dc2626;">⏸ ${fmtSec(stopS)} paused</span>
+          <span><strong>${finalPct}%</strong> watched</span>
         </div>
         <div class="wproof-bar-track">
-          <div class="wproof-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+          <div class="wproof-bar-fill" style="width:${finalPct}%;background:${barColor}"></div>
         </div>
       </div>
 
-      <button class="wproof-expand-btn" id="btn-${id}" onclick="toggleSub('${id}')">▼ View ${g.entries.length} Proof ${g.entries.length === 1 ? 'Entry' : 'Entries'}</button>
+      <button class="wproof-expand-btn" id="btn-${id}" onclick="toggleSub('${id}')">▼ View ${group.entries.length} Proof ${group.entries.length === 1 ? 'Entry' : 'Entries'}</button>
 
       <div class="wproof-details" id="${id}">
         <div class="wproof-entries">
-          ${g.entries.map((e, i) => buildEntryCard(e, i, isW)).join('')}
+          ${group.entries.map((e, i) => buildEntryCard(e, i, isW)).join('')}
         </div>
       </div>
     </div>`;
-  }).join('');
+  });
 
+  list.innerHTML = html;
   renderPagination(data.length);
 }
 
-/* ══════════════════ ENTRY CARD (replaces sub-table) ══════════════════ */
+/* ══════════════════ ENTRY CARD ══════════════════ */
 function buildEntryCard(e, i, isW) {
   const playS  = Number(e.PlaySeconds) || 0;
   const stopS  = Number(e.StopSeconds) || 0;
-  const pct    = watchTimePct(playS, stopS);
-  const bar    = pct >= 80 ? '#3f9d6f' : pct >= 50 ? '#c9a227' : '#dc2626';
+  
+  // Get percentage from the Percentage column
+  const percentage = Number(e.Percentage) || 0;
+  const finalPct = percentage > 100 ? 100 : percentage;
+  const bar    = finalPct >= 80 ? '#3f9d6f' : finalPct >= 50 ? '#c9a227' : '#dc2626';
   const isLast = i === 0;
   const screenshotHtml = e.ProofScreenshot
     ? `<a class="wproof-link" href="${esc(e.ProofScreenshot)}" target="_blank" rel="noopener">📸 View Screenshot</a>`
@@ -312,24 +370,26 @@ function buildEntryCard(e, i, isW) {
   return `
   <div class="wproof-entry ${isLast ? 'is-last' : ''}">
     <div class="wproof-entry-top">
-      <span class="wproof-entry-tag">${isLast ? '⭐ Last Submitted' : '#' + (i + 1)}</span>
+      <span class="wproof-entry-tag">${isLast ? '⭐ Latest' : '#' + (i + 1)}</span>
       <span class="wproof-entry-date">${fmtDate(e.Timestamp)}</span>
       ${badgeHtml(e.Checked)}
+      <span style="font-size:0.7rem;color:#6b7280;margin-left:auto;">${finalPct}% watched</span>
     </div>
     <div class="wproof-entry-grid">
       <div><span class="k">${isW ? 'Target' : 'Worker'}</span><span class="v">${esc(isW ? (e.TargetUserCode || '—') : (e.UserCode || '—'))}</span></div>
-      <div><span class="k">Play / Stop</span><span class="v" style="color:#3f9d6f;">${fmtSec(playS)}</span> <span class="v" style="color:#dc2626;">/ ${fmtSec(stopS)}</span></div>
-      <div><span class="k">Ratio</span><span class="v">${pct}%</span></div>
+      <div><span class="k">Watched</span><span class="v" style="color:#3f9d6f;">${fmtSec(playS)}</span></div>
+      <div><span class="k">Paused</span><span class="v" style="color:#dc2626;">${fmtSec(stopS)}</span></div>
       <div><span class="k">Task ID</span><span class="v">${esc(e.TaskID || '—')}</span></div>
     </div>
     <div class="wproof-bar-track" style="margin-bottom:8px;">
-      <div class="wproof-bar-fill" style="width:${pct}%;background:${bar}"></div>
+      <div class="wproof-bar-fill" style="width:${finalPct}%;background:${bar}"></div>
     </div>
     ${e.CheckRemarks ? `<div class="wproof-entry-remarks">📋 ${esc(e.CheckRemarks)}</div>` : ''}
     ${screenshotHtml}
   </div>`;
 }
 
+/* ══════════════════ HELPERS ══════════════════ */
 function toggleSub(id) {
   const row = document.getElementById(id);
   const btn = document.getElementById('btn-' + id);
@@ -341,7 +401,6 @@ function toggleSub(id) {
     : `▼ View ${count} Proof ${count === 1 ? 'Entry' : 'Entries'}`;
 }
 
-/* ══════════════════ PAGINATION ══════════════════ */
 function renderPagination(total) {
   const pages = Math.ceil(total / PAGE_SIZE);
   const pg    = document.getElementById('pagination');
@@ -359,6 +418,7 @@ function renderPagination(total) {
   h += `<span class="text-gray-400 text-xs ml-2">Page ${currentPage} / ${pages} · ${total} groups</span>`;
   pg.innerHTML = h;
 }
+
 function goPage(p) {
   currentPage = p;
   const data = currentTab === 'watched' ? watchedData : mineData;
@@ -372,6 +432,7 @@ function bestStatus(entries) {
     if (entries.some(e => e.Checked === s)) return s;
   return entries[0]?.Checked || '—';
 }
+
 function badgeHtml(s) {
   const cls = {
     Valid: 'wproof-badge-valid', Pending: 'wproof-badge-pending',
@@ -379,42 +440,17 @@ function badgeHtml(s) {
   }[s] || 'wproof-badge-default';
   return `<span class="wproof-badge ${cls}">${esc(s || '—')}</span>`;
 }
+
 function taskBadge(t) {
   if (!t) return '';
   return `<span class="wproof-badge wproof-badge-tasktype">${esc(t)}</span>`;
 }
-function watchTimePct(play, stop) {
-  const p = Number(play) || 0, st = Number(stop) || 0, total = p + st;
-  if (!total) return 0;
-  return Math.min(100, Math.round((p / total) * 100));
-}
+
 function fmtDuration(d) {
-  if (d === undefined || d === null || d === '') return '—';
-
-  // 1. Convert input to a clean number of seconds
-  let totalSeconds = 0;
-  const str = String(d).trim();
-
-  // Handle legacy colon format (e.g., "02:40" or "01:02:40") if any exists
-  if (str.includes(':')) {
-    const parts = str.split(':').map(p => Number(p) || 0);
-    if (parts.length === 3) {
-      totalSeconds = (parts[0] * 3600) + (parts[1] * 60) + parts[2];
-    } else if (parts.length === 2) {
-      totalSeconds = (parts[0] * 60) + parts[1];
-    }
-  } else {
-    totalSeconds = Math.round(Number(str)) || 0;
-  }
-
-  if (totalSeconds <= 0) return '0s';
-
-  // 2. Extract Hours, Minutes, and Seconds
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-
-  // 3. Format output dynamically
+  if (!d || d <= 0) return '—';
+  const h = Math.floor(d / 3600);
+  const m = Math.floor((d % 3600) / 60);
+  const s = Math.floor(d % 60);
   if (h > 0) {
     const padM = String(m).padStart(2, '0');
     const padS = String(s).padStart(2, '0');
@@ -427,9 +463,24 @@ function fmtDuration(d) {
   }
 }
 
-function fmtDate(s) { if (!s) return '—'; try { return new Date(s).toLocaleString(); } catch { return s; } }
-function fmtSec(s) { const n = Number(s) || 0; if (n < 60) return n + 's'; return Math.floor(n / 60) + 'm ' + (n % 60) + 's'; }
-function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function fmtDate(s) { 
+  if (!s) return '—'; 
+  try { 
+    return new Date(s).toLocaleString(); 
+  } catch { 
+    return s; 
+  } 
+}
+
+function fmtSec(s) { 
+  const n = Number(s) || 0; 
+  if (n < 60) return n + 's'; 
+  return Math.floor(n / 60) + 'm ' + (n % 60) + 's'; 
+}
+
+function esc(s) { 
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); 
+}
 
 /* ══════════════════ DOM HELPERS ══════════════════ */
 function show(id) {
