@@ -515,7 +515,7 @@ if (!USERNAME || !PASSWORD) {
    CONFIG — replace with your deployed Web App URL
    (same backend as channels.html / promotional channel actions)
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0ieuQ_cQFFrgYgiyqnxieLF11iX5-SW1ocdczFZBJ-_vmXAcOccpBNrN_Zv6rNtyHqg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwV3c59jjvimkrJwitVZOnkmdqzZtvrC5K8bXLTBZVzEzgTqhs_3PNLQr79IDuvoxDb2g/exec';
 
 /* ────────────────────────────────────────
    STATE
@@ -890,25 +890,43 @@ async function bulkSetStatus(newStatus) {
    IMPORT / SYNC / FIX
 ──────────────────────────────────────── */
 async function doImportVideos() {
-    if (!myChannel) { showToast('Add a promotional channel first.', true); return; }
-    const btn = document.getElementById('importBtn');
-    const originalText = btn.innerHTML;
-    btn.disabled = true; btn.textContent = 'Importing…';
-
-    try {
-        const data = await callApi('addVideos', { channelId: myChannel.ChannelId });
-        if (data.status === 'success') {
-            showToast(data.message || 'Videos imported.');
-            await loadVideos();
-        } else {
-            showToast(data.message || 'Could not import videos.', true);
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
+    if (!myChannel) { 
+        showToast('Please add a promotional channel first.', true); 
+        return; 
     }
 
-    btn.disabled = false; btn.innerHTML = originalText;
+    const btn = document.getElementById('importBtn');
+    if (!btn) return;
+    
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.textContent = 'Importing from YouTube...';
+
+    try {
+        const data = await callApi('importVideos', {
+            // username/password usually handled by callApi session
+        });
+
+        if (data.status === 'success') {
+            showToast(data.message || `Imported ${data.addedCount || 0} videos.`);
+            await loadVideos();           // Refresh the video table
+            // Optionally refresh channel meta too
+            if (typeof loadMyChannel === 'function') await loadMyChannel();
+        } else {
+            showToast(data.message || 'Failed to import videos.', true);
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('Connection error while importing videos.', true);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
 }
+
+
+
+
 
 async function doSyncVideos() {
     if (!myChannel) { showToast('Add a promotional channel first.', true); return; }
