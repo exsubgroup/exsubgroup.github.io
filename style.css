@@ -130,7 +130,12 @@
 }
 
 
-
+   :root{
+      
+        --ink:#211F1F;
+        --mint:#ACD1C0;
+        --sand:#DBD4B7;
+    }
 
 :root{ --bg:#F5F4EB; --card:#12141c; --border:#232938; --purple:#7c3aed; }
 *{ font-family:'Inter',sans-serif; box-sizing:border-box; }
@@ -1648,3 +1653,241 @@ btnssssss */
 /* proof style */
 /* proof style */
 /* proof style */
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE FIXES FOR MOBILE - Video Task Cards
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Make task cards full width and reduce padding */
+    .task-card {
+        padding: 14px !important;
+        border-radius: 16px !important;
+        width: 100% !important;
+    }
+
+    /* Stack the main layout vertically */
+    .task-card .flex-col.xl\:flex-row {
+        flex-direction: column !important;
+    }
+
+    /* Make left section full width */
+    .task-card .flex-1.min-w-0 {
+        width: 100% !important;
+        flex: 1 1 auto !important;
+    }
+
+    /* Right actions - full width stacked */
+    .task-card .flex.xl\:flex-col {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 6px !important;
+        margin-top: 10px !important;
+    }
+
+    .task-card .xl\:w-\[160px\] {
+        width: 100% !important;
+    }
+
+    /* All action buttons full width */
+    .task-card .flex.xl\:flex-col a,
+    .task-card .flex.xl\:flex-col button,
+    .task-card .flex.xl\:flex-col .px-4 {
+        width: 100% !important;
+        flex: 1 1 auto !important;
+        padding: 10px 12px !important;
+        font-size: 11px !important;
+        justify-content: center !important;
+        min-height: 40px !important;
+    }
+
+    /* Action buttons container */
+    .task-card .flex.xl\:flex-col.items-center.xl\:items-stretch {
+        align-items: stretch !important;
+    }
+
+    /* Channel link full width */
+    .task-card .flex.xl\:flex-col a.no-underline {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    /* Video thumb - smaller on mobile */
+    .video-thumb-wrap {
+        max-width: 100px !important;
+        min-width: 80px !important;
+    }
+
+    /* Keep video info in row */
+    .task-card .flex.items-start.gap-3 {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    /* Smaller text */
+    .task-card .min-w-0.flex-1 .text-sm {
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+        word-break: break-word !important;
+    }
+
+    .task-card .min-w-0.flex-1 .text-xs {
+        font-size: 10px !important;
+    }
+
+    /* Badges wrap and smaller */
+    .task-card .flex-wrap {
+        gap: 4px !important;
+    }
+
+    .task-card .flex-wrap code {
+        font-size: 10px !important;
+        padding: 2px 8px !important;
+    }
+
+    .task-card .status-badge {
+        font-size: 9px !important;
+        padding: 2px 8px !important;
+    }
+
+    .task-card .paired-badge,
+    .task-card .match-badge,
+    .task-card .gap-badge {
+        font-size: 9px !important;
+        padding: 2px 6px !important;
+    }
+
+    /* Instructions box */
+    .instructions-box {
+        padding: 8px 10px !important;
+    }
+
+    .instructions-box .text-xs {
+        font-size: 10px !important;
+    }
+
+    /* Punishment box buttons */
+    .punishment-box .flex.gap-2.mt-3 {
+        flex-wrap: wrap !important;
+    }
+
+    .punishment-box .flex.gap-2.mt-3 a,
+    .punishment-box .flex.gap-2.mt-3 button {
+        font-size: 10px !important;
+        padding: 6px 10px !important;
+        flex: 1 1 auto !important;
+        min-width: 70px !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    /* Issue box */
+    .issue-box .flex.items-center.justify-between {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    .issue-box .flex.items-center.justify-between span {
+        font-size: 10px !important;
+    }
+
+    .issue-box .flex.items-center.justify-between button {
+        font-size: 10px !important;
+    }
+
+    /* Meta info */
+    .task-card .flex.flex-wrap.gap-4.text-xs {
+        gap: 4px 8px !important;
+    }
+
+    .task-card .flex.flex-wrap.gap-4.text-xs span {
+        font-size: 9px !important;
+    }
+
+    .duration-chip {
+        font-size: 9px !important;
+        padding: 1px 6px !important;
+    }
+
+    /* Filter tabs */
+    .filter-tab {
+        font-size: 11px !important;
+        padding: 6px 12px !important;
+        white-space: nowrap !important;
+    }
+
+    .filter-tab .dot {
+        width: 5px !important;
+        height: 5px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .task-card {
+        padding: 10px !important;
+    }
+
+    .video-thumb-wrap {
+        max-width: 70px !important;
+        min-width: 55px !important;
+    }
+
+    .task-card .min-w-0.flex-1 .text-sm {
+        font-size: 10px !important;
+    }
+
+    .task-card .min-w-0.flex-1 .text-xs {
+        font-size: 9px !important;
+    }
+
+    .task-card .flex.xl\:flex-col a,
+    .task-card .flex.xl\:flex-col button,
+    .task-card .flex.xl\:flex-col .px-4 {
+        font-size: 9px !important;
+        padding: 7px 8px !important;
+        min-height: 32px !important;
+    }
+
+    .task-card .flex-wrap code {
+        font-size: 8px !important;
+        padding: 1px 5px !important;
+    }
+
+    .task-card .status-badge {
+        font-size: 8px !important;
+        padding: 1px 6px !important;
+    }
+
+    .task-card .paired-badge,
+    .task-card .match-badge,
+    .task-card .gap-badge {
+        font-size: 8px !important;
+        padding: 1px 5px !important;
+    }
+}
+
+/* Fix for task list items */
+#taskList > div {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Ensure all content stays visible */
+.task-card {
+    overflow: hidden !important;
+    width: 100% !important;
+}
+
+    /* ── ICON CHIP ── */
+    .idx-icon-chip{
+        width:44px; height:44px; min-width:44px;
+        border-radius:14px;
+        background:var(--mint);
+        border:2px solid var(--ink);
+        display:flex; align-items:center; justify-content:center;
+        flex-shrink:0;
+    }

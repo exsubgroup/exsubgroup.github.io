@@ -1,1273 +1,688 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Extension – Exsub Group</title>
-
 <link rel="icon" href="images/logo.svg">
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
 
 <style>
+/* ══════════════════════════════════════════════
+   EXT-* — Namespaced styles for the Extension page
+   Neo-brutalist light theme, matches analytics.html
+   ══════════════════════════════════════════════ */
 
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
+.ext-section-tag{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 16px; border-radius:999px;
+  background:#ACD1C0; border:2px solid #211F1F;
+  font-size:12px; font-weight:800; color:#211F1F;
+  box-shadow:3px 3px 0px 0px #211F1F;
+  margin-bottom:14px;
 }
 
-
-:root{
-    --bg:#050508;
-    --card:#12141c;
-    --border:#232938;
-    --purple:#7c3aed;
+.ext-heading{
+  font-size:2rem; font-weight:900; color:#211F1F; letter-spacing:-0.02em;
 }
 
-*{ font-family:'Inter',sans-serif; }
-
-body{
-    background:#050508;
-    color:white;
-    overflow-x:hidden;
+.ext-sub{
+  color:#4b5563; font-size:14px; line-height:1.7;
 }
 
-/* ── BG GLOW ── */
-body::before{
-    content:'';
-    position:fixed;
-    top:-50%; left:-50%;
-    width:200%; height:200%;
-    background:
-        radial-gradient(ellipse at top center,rgba(124,58,237,0.18) 0%,transparent 40%),
-        radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);
-    z-index:0;
-    pointer-events:none;
+/* ── HERO ── */
+.ext-hero{
+  display:grid; grid-template-columns:1.1fr 0.9fr; gap:32px; align-items:center;
 }
+@media (max-width:900px){ .ext-hero{ grid-template-columns:1fr; } }
 
-/* ── NAV ── */
-.glass-nav{
-    background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.06);
+.ext-chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 22px; }
+.ext-chip{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 13px; border-radius:999px; font-size:11px; font-weight:800;
+  border:2px solid #211F1F; background:#DBD4B7; color:#211F1F;
 }
+.ext-chip-dot{ width:7px; height:7px; border-radius:50%; background:#22c55e; animation:extPulseDot 1.6s ease-in-out infinite; }
+@keyframes extPulseDot{ 0%,100%{opacity:1} 50%{opacity:.35} }
 
-/* ── CARD ── */
-.card{
-    background:linear-gradient(180deg,#171a24,#101219);
-    border:1px solid var(--border);
-}
+.ext-trust-row{ display:flex; flex-wrap:wrap; gap:16px; margin-top:20px; }
+.ext-trust-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:#6b7280; font-weight:600; }
 
-/* ── HERO EXT MOCKUP ── */
+/* ── Browser mockup (light) ── */
 .ext-mockup{
-    background:linear-gradient(145deg,#1a1d2a,#111320);
-    border:1px solid #2a2d40;
-    border-radius:20px;
-    padding:18px;
-    width:320px;
-    box-shadow:0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.15);
+  background:#ffffff; border:2px solid #211F1F; border-radius:20px;
+  padding:16px; box-shadow:6px 6px 0px 0px #211F1F; max-width:340px; margin:0 auto;
 }
-
-.ext-mockup-bar{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    margin-bottom:14px;
-}
-
-.ext-mockup-dot{
-    width:10px; height:10px;
-    border-radius:50%;
-}
-
+.ext-mockup-bar{ display:flex; align-items:center; gap:6px; margin-bottom:12px; }
+.ext-mockup-dot{ width:10px; height:10px; border-radius:50%; }
 .ext-mockup-url{
-    flex:1;
-    background:#0d0f17;
-    border:1px solid #252938;
-    border-radius:6px;
-    padding:4px 10px;
-    font-size:11px;
-    color:#555;
+  flex:1; background:#F5F4EB; border:1px solid #DBD4B7; border-radius:6px;
+  padding:4px 10px; font-size:10px; color:#6b7280; font-family:'JetBrains Mono',monospace;
+}
+.ext-popup{ background:#F5F4EB; border:2px solid #211F1F; border-radius:14px; padding:14px; }
+.ext-popup-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:2px dashed #DBD4B7; }
+.ext-logo-badge{
+  width:36px; height:36px; border-radius:11px; background:#211F1F;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  border:2px solid #211F1F;
+}
+.ext-watch-box{ background:#ACD1C0; border:2px solid #211F1F; border-radius:12px; padding:10px; margin-bottom:8px; }
+.ext-progress-track{ background:#ffffff; border:1px solid #211F1F; border-radius:4px; height:6px; margin:6px 0; overflow:hidden; }
+.ext-progress-fill{ background:#211F1F; height:100%; border-radius:4px; transition:width .8s linear; }
+.ext-stat-mini{ background:#ffffff; border:2px solid #211F1F; border-radius:10px; padding:8px; text-align:center; }
+.ext-alert-box{ background:#EBE492; border:2px solid #211F1F; border-radius:10px; padding:9px; margin-bottom:8px; display:flex; align-items:center; gap:7px; }
+.ext-submit-btn{ background:#211F1F; color:#DBD4B7; border-radius:12px; padding:11px; text-align:center; cursor:pointer; transition:.2s; font-weight:800; }
+.ext-submit-btn:hover{ transform:translateY(-1px); }
+
+/* ── FEATURE CARDS ── */
+.ext-feat-card{
+  background:#ffffff; border:2px solid #211F1F; border-radius:20px;
+  padding:28px; box-shadow:4px 4px 0px 0px #211F1F;
+}
+.ext-feat-tag{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 12px; border-radius:999px; font-size:10px; font-weight:900;
+  letter-spacing:.05em; border:1px solid #211F1F; background:#DBD4B7; color:#211F1F;
+  margin-bottom:12px; text-transform:uppercase;
+}
+.ext-feat-title{ font-size:20px; font-weight:900; color:#211F1F; margin-bottom:10px; }
+.ext-feat-desc{ color:#4b5563; font-size:13.5px; line-height:1.7; margin-bottom:14px; }
+.ext-pill-list{ display:flex; flex-wrap:wrap; gap:8px; }
+.ext-pill-ok{
+  padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700;
+  background:#ACD1C0; color:#211F1F; border:1px solid #211F1F;
 }
 
-.ext-icon-large{
-    width:56px; height:56px;
-    border-radius:16px;
-    background:linear-gradient(135deg,#7c3aed,#5b21b6);
-    display:flex; align-items:center; justify-content:center;
-    font-size:26px;
-    box-shadow:0 8px 24px rgba(124,58,237,0.4);
-    flex-shrink:0;
+.ext-mini-visual{
+  background:#F5F4EB; border:2px solid #211F1F; border-radius:16px; padding:16px; min-width:220px;
 }
+.ext-mini-label{ font-size:10px; color:#6b7280; margin-bottom:10px; letter-spacing:.05em; font-weight:800; text-transform:uppercase; }
+.ext-timeline-row{
+  display:flex; align-items:center; gap:8px; background:#ffffff; border:1.5px solid #211F1F;
+  border-radius:9px; padding:9px;
+}
+.ext-timeline-icon{ width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; border:1px solid #211F1F; }
 
-/* ── DOWNLOAD BUTTON ── */
-.btn-download{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:16px 32px;
-    border-radius:14px;
-    font-size:15px;
-    font-weight:700;
-    color:white;
-    background:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);
-    border:1px solid rgba(255,255,255,0.1);
-    cursor:pointer;
-    transition:.25s;
-    text-decoration:none;
-    box-shadow:0 8px 32px rgba(124,58,237,0.35);
+/* ── STEP PILLS (installation) ── */
+.ext-steps-wrap{ position:relative; }
+.ext-steps-wrap::before{
+  content:''; position:absolute; left:22px; top:36px; bottom:36px; width:2px;
+  background:repeating-linear-gradient(to bottom,#211F1F 0,#211F1F 6px,transparent 6px,transparent 12px);
 }
-
-.btn-download:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 40px rgba(124,58,237,0.5);
+.ext-step-pill{
+  display:flex; align-items:flex-start; gap:16px; padding:16px;
+  background:#ffffff; border:2px solid #211F1F; border-radius:16px;
+  box-shadow:3px 3px 0px 0px #211F1F; position:relative;
 }
-
-.btn-outline{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:14px 28px;
-    border-radius:14px;
-    font-size:14px;
-    font-weight:600;
-    color:#c4b5fd;
-    background:rgba(124,58,237,0.08);
-    border:1px solid rgba(124,58,237,0.3);
-    cursor:pointer;
-    transition:.25s;
-    text-decoration:none;
+.ext-step-num{
+  width:44px; height:44px; border-radius:12px; background:#ACD1C0; border:2px solid #211F1F;
+  display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900;
+  color:#211F1F; flex-shrink:0;
 }
-
-.btn-outline:hover{
-    background:rgba(124,58,237,0.18);
-    border-color:rgba(124,58,237,0.6);
-}
-
-/* ── FEATURE CARD ── */
-.feat-card{
-    background:linear-gradient(180deg,#171a24,#101219);
-    border:1px solid #252938;
-    border-radius:20px;
-    padding:24px;
-    transition:.3s;
-}
-
-.feat-card:hover{
-    transform:translateY(-3px);
-    border-color:rgba(124,58,237,0.45);
-}
-
-.feat-icon{
-    width:46px; height:46px;
-    border-radius:13px;
-    background:rgba(124,58,237,0.12);
-    border:1px solid rgba(124,58,237,0.25);
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px;
-    margin-bottom:14px;
-}
-
-/* ── STEP PILLS ── */
-.step-pill{
-    display:flex;
-    align-items:flex-start;
-    gap:16px;
-    padding:20px;
-    background:linear-gradient(180deg,#171a24,#101219);
-    border:1px solid #252938;
-    border-radius:18px;
-    transition:.3s;
-}
-
-.step-pill:hover{
-    border-color:rgba(124,58,237,0.4);
-}
-
-.step-num{
-    width:36px; height:36px;
-    border-radius:10px;
-    background:rgba(124,58,237,0.15);
-    border:1px solid rgba(124,58,237,0.3);
-    display:flex; align-items:center; justify-content:center;
-    font-size:14px; font-weight:900;
-    color:#c4b5fd;
-    flex-shrink:0;
-}
-
-/* ── CONNECTOR LINE ── */
-.steps-wrap{
-    position:relative;
-}
-
-.steps-wrap::before{
-    content:'';
-    position:absolute;
-    left:38px; top:36px; bottom:36px;
-    width:1px;
-    background:linear-gradient(to bottom,rgba(124,58,237,0.4),rgba(124,58,237,0.05));
-}
-
-/* ── BADGE ── */
-.badge{
-    padding:4px 11px;
-    border-radius:999px;
-    font-size:11px;
-    background:rgba(124,58,237,.15);
-    color:#c4b5fd;
-    border:1px solid rgba(124,58,237,0.2);
-}
-
-.badge-green{
-    padding:4px 11px;
-    border-radius:999px;
-    font-size:11px;
-    background:rgba(34,197,94,.12);
-    color:#86efac;
-    border:1px solid rgba(34,197,94,0.2);
-}
-
-/* ── GRADIENT TEXT ── */
-.gradient-text{
-    background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.purple-text{
-    background:linear-gradient(135deg,#a78bfa,#7c3aed);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-/* ── PULSE RING ── */
-@keyframes pulse-ring{
-    0%  { transform:scale(1);   opacity:.6; }
-    100%{ transform:scale(1.55);opacity:0; }
-}
-
-.pulse-ring{
-    position:absolute;
-    inset:-12px;
-    border-radius:50%;
-    border:2px solid rgba(124,58,237,0.4);
-    animation:pulse-ring 2s ease-out infinite;
-    pointer-events:none;
-}
-
-.pulse-ring-2{
-    animation-delay:.7s;
-}
-
-/* ── VERSION CHIP ── */
-.version-chip{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:5px 14px;
-    border-radius:999px;
-    background:rgba(124,58,237,0.1);
-    border:1px solid rgba(124,58,237,0.25);
-    font-size:12px;
-    color:#a78bfa;
-}
-
-/* ── REQUIREMENT ROW ── */
-.req-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:13px 0;
-    border-bottom:1px solid #1a1d28;
-}
-.req-row:last-child{ border-bottom:none; }
+.ext-step-title{ font-weight:800; color:#211F1F; margin-bottom:4px; font-size:14.5px; }
+.ext-step-desc{ color:#4b5563; font-size:13px; line-height:1.7; }
+.ext-code{ background:#211F1F; color:#DBD4B7; padding:2px 7px; border-radius:5px; font-size:12px; font-family:'JetBrains Mono',monospace; }
 
 /* ── FAQ ── */
-.faq-item{
-    background:linear-gradient(180deg,#171a24,#101219);
-    border:1px solid #252938;
-    border-radius:16px;
-    overflow:hidden;
-    transition:.3s;
+.ext-faq-item{
+  background:#ffffff; border:2px solid #211F1F; border-radius:16px; overflow:hidden;
+  box-shadow:3px 3px 0px 0px #211F1F; transition:.2s;
 }
-.faq-item:hover{ border-color:rgba(124,58,237,0.4); }
-
-.faq-btn{
-    width:100%;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:18px 22px;
-    background:none; border:none;
-    color:white; cursor:pointer;
-    font-size:14px; font-weight:600;
-    text-align:left; gap:12px;
+.ext-faq-btn{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; background:none; border:none; color:#211F1F; cursor:pointer;
+  font-size:14px; font-weight:800; text-align:left; gap:12px;
 }
+.ext-faq-answer{ display:none; padding:0 20px 16px; color:#4b5563; font-size:13px; line-height:1.75; }
+.ext-faq-answer.open{ display:block; }
+.ext-chevron{ transition:.3s; flex-shrink:0; color:#211F1F; }
+.ext-chevron.open{ transform:rotate(180deg); }
 
-.faq-answer{
-    display:none;
-    padding:0 22px 18px;
-    color:#9ca3af; font-size:13.5px; line-height:1.75;
-}
-.faq-answer.open{ display:block; }
-
-.chevron{ transition:.3s; flex-shrink:0; color:#7c3aed; }
-.chevron.open{ transform:rotate(180deg); }
-
-/* ── SHIMMER BORDER HERO ── */
-@keyframes border-spin{
-    from{ transform:rotate(0deg); }
-    to  { transform:rotate(360deg); }
-}
-
-.spin-border{
-    position:absolute;
-    inset:-2px;
-    border-radius:22px;
-    background:conic-gradient(from 0deg, transparent 70%, rgba(124,58,237,0.6) 100%);
-    animation:border-spin 4s linear infinite;
-    z-index:-1;
-}
-
+/* ── BUTTONS reuse .btn-retro / .btn-charcoal / .btn-sand / .btn-mint from style.css ── */
+.ext-btn-lg{ height:48px; font-size:14px; padding:0 1.4rem; }
 </style>
 
 </head>
 <body>
 
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-<!-- ══════════════════ NAVBAR ══════════════════ -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-    <button id="mobileMenuBtn"
-      class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-
-    <div class="hidden md:flex items-center gap-8 text-[13px]">
-      <a id="lnkDashboard" href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-
-      <!-- CHANNELS DROPDOWN -->
-      <div class="task-dropdown-wrap">
-        <a id="lnkChannels" href="#" onclick="toggleChannelsMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Channels
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="channelsDropdown" class="task-dropdown">
-          <a href="channels.html?view=promotional">📢 Promotional Channel</a>
-          <a href="channels.html?view=longvideos">🎬 Long Videos</a>
-          <a href="channels.html?view=shortvideos">⚡ Short Videos</a>
-          <a href="channels.html?view=playlist">⏱ Playlist</a>
-          <a href="channels.html?view=working">✅ Working Channel</a>
-        </div>
-      </div>
-
-      <a id="lnkGroups" href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
-
-      <!-- TASKS DROPDOWN -->
-      <div class="task-dropdown-wrap">
-        <a href="#" onclick="toggleTasksMenu(event)" class="text-white hover:text-purple-300 transition" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
-          Tasks
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </a>
-        <div id="tasksDropdown" class="task-dropdown">
-          <a href="subscriberstask.html">📺 Subscriber Tasks</a>
-          <a href="videotask.html">🎬 Video Tasks</a>
-          <a href="playlisttask.html">⏱ Playlist Tasks</a>
-          <a href="likeandcommentstasks.html">💬 Like &amp; Comment Tasks</a>
-        </div>
-      </div>
-
-      <a id="lnkHowTo"     href="howtowork.html"      class="text-white hover:text-purple-300 transition">How To Work</a>
-      <a id="lnkExtension" href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-      <a id="lnkSupport"   href="support.html"        class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn"
-          class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown"
-          class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
-      </div>
-
-      <div class="relative">
-        <button id="profileBtn"
-          class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown"
-          class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p  id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-2">
-            <a id="ddProfile" href="profile.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-            <a href="support.html"
-              class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-            <button onclick="logoutUser()"
-              class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu"
-    class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a id="mLnkDashboard" href="analytics.html" class="text-white">Dashboard</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Channels</span>
-        <a href="channels.html?view=promotional" class="mobile-task-link">📢 Promotional Channel</a>
-        <a href="channels.html?view=longvideos" class="mobile-task-link">🎬 Long Videos</a>
-        <a href="channels.html?view=shortvideos" class="mobile-task-link">⚡ Short Videos</a>
-        <a href="channels.html?view=playlist" class="mobile-task-link">⏱ Playlist</a>
-        <a href="channels.html?view=working" class="mobile-task-link">✅ Working Channel</a>
-      </div>
-
-      <a id="mLnkGroups"    href="groups.html"         class="text-white">Groups</a>
-
-      <div class="flex flex-col gap-2">
-        <span class="text-white font-semibold">Tasks</span>
-        <a href="subscriberstask.html" class="mobile-task-link">📺 Subscriber Tasks</a>
-        <a href="videotask.html" class="mobile-task-link">🎬 Video Tasks</a>
-        <a href="playlisttask.html" class="mobile-task-link">⏱ Playlist Tasks</a>
-        <a href="likeandcommentstasks.html" class="mobile-task-link">💬 Like &amp; Comment Tasks</a>
-      </div>
-
-      <a id="mLnkHowTo"     href="howtowork.html"      class="text-white">How To Work</a>
-      <a id="mLnkExtension" href="exsubextension.html" class="text-white">Exsub Extension</a>
-      <a id="mLnkSupport"   href="support.html"        class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
-
-<!-- ══════════════════ MOBILE BOTTOM NAV ══════════════════ -->
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-    <a href="subscriberstask.html" data-page="subscriberstask.html" title="Subscribers Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-        <path d="M10 9l5 3-5 3V9z"/>
-      </svg>
-    </a>
-    <a href="videotask.html" data-page="videotask.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-    <a href="playlisttask.html" data-page="playlisttask.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"></circle>
-        <polyline points="12 7 12 12 16 14"></polyline>
-      </svg>
-    </a>
-    <a href="likeandcommentstasks.html" data-page="likeandcommentstasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-  </div>
-</nav>
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
 
 <!-- ══════════════════ MAIN ══════════════════ -->
-<main class="relative z-10 pt-28 pb-20 px-4">
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
+  <!-- ── HEADER ── -->
+  <div class="nb-dashboard-header">
+    <div class="nb-badge-container">
+      <div class="nb-status-card nb-status-static">
+        <span class="nb-card-icon">🧩</span>
+        <span class="nb-card-title">Official Browser Extension</span>
+      </div>
+      <div class="nb-status-card">
+        <span class="nb-card-icon">✅</span>
+        <span class="nb-card-title">Free for Members</span>
+      </div>
+      <div class="nb-status-card">
+        <span class="nb-card-icon">🔓</span>
+        <span class="nb-card-title">Open Source</span>
+      </div>
+    </div>
+    <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Exsub Group Extension</h1>
+    <div class="text-gray-500 text-sm mt-1">Automatic proof capture for your YouTube tasks — install once, work faster forever.</div>
+  </div>
 
-    <!-- ── HERO ── -->
-    <section class="flex flex-col lg:flex-row items-center gap-14 mb-24 pt-6">
+  <!-- ── HERO ── -->
+  <section class="card p-8 mb-10 fade-in">
+    <div class="ext-hero">
 
-        <!-- Left text -->
-        <div class="flex-1 text-center lg:text-left">
+      <!-- Left text -->
+      <div>
+        <div class="ext-section-tag">🧩 Track Automatically. Submit Instantly.</div>
 
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-6">
-                <span>🧩</span>
-                <span>Official Browser Extension</span>
-            </div>
+        <p class="ext-sub mb-2 max-w-lg">
+          The official extension for Exsub Group members. It automatically tracks your YouTube watch activity, detects play/pause events, and sends your proof directly to admin — with zero manual steps.
+        </p>
 
-            <h1 class="text-5xl sm:text-6xl font-black leading-tight mb-5">
-                <span class="gradient-text">Exsub Group</span><br>
-                <span class="purple-text">Extension</span>
-            </h1>
-
-            <p class="text-gray-400 text-lg leading-relaxed mb-4 max-w-lg mx-auto lg:mx-0">
-                The official extension for Exsub Group members. It automatically tracks your YouTube watch activity, detects play/pause events, and sends your proof directly to admin — automtically.
-            </p>
-
-            <div class="flex items-center gap-3 mb-8 justify-center lg:justify-start flex-wrap">
-                <span class="version-chip">
-                    <span style="width:7px;height:7px;border-radius:50%;background:#86efac;display:inline-block;"></span>
-                    Latest Version
-                </span>
-                <span class="badge-green">Free for all members</span>
-                <span class="badge">Any Browser Which Support Extesnion Installation</span>
-            </div>
-
-            <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-
-                <!-- Primary download -->
-                <a href="https://drive.google.com/drive/folders/1804k50RIOXzq2pzUDoo-_DujUD5DDQTv?usp=drive_link" id="downloadBtn" class="btn-download">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="7 10 12 15 17 10"/>
-                        <line x1="12" y1="15" x2="12" y2="3"/>
-                    </svg>
-                    Download Extension
-                </a>
-
-                <!-- Install guide -->
-                <a href="#install" class="btn-outline">
-                    📖 Installation Guide
-                </a>
-
-            </div>
-
-            <!-- Trust badges -->
-            <div class="flex items-center gap-5 mt-8 justify-center lg:justify-start flex-wrap">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <span>🔒</span><span>Safe & Easy to Use</span>
-                </div>
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <span>⚡</span><span>Lightweight — under 500 KB</span>
-                </div>
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <span>🔄</span><span>Open Source</span>
-                </div>
-            </div>
-
+        <div class="ext-chip-row">
+          <span class="ext-chip"><span class="ext-chip-dot"></span> Latest Version</span>
+          <span class="ext-chip">Free for all members</span>
+          <span class="ext-chip">Works on any Chromium browser</span>
         </div>
 
-        <!-- Right mockup -->
-        <div class="flex-shrink-0 flex items-center justify-center">
-
-            <div style="position:relative;">
-
-                <!-- Glow blob -->
-                <div style="position:absolute;inset:-60px;background:radial-gradient(circle,rgba(124,58,237,0.2),transparent 70%);border-radius:50%;pointer-events:none;"></div>
-
-                <!-- Browser mockup -->
-                <div class="ext-mockup">
-
-                    <!-- Browser bar -->
-                    <div class="ext-mockup-bar">
-                        <div class="ext-mockup-dot" style="background:#ff5f56;"></div>
-                        <div class="ext-mockup-dot" style="background:#ffbd2e;"></div>
-                        <div class="ext-mockup-dot" style="background:#27c93f;"></div>
-                        <div class="ext-mockup-url">exsub.group/dashboard</div>
-                        <!-- extension icon in toolbar -->
-                        <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;">
-                            <img src="images/logo.svg" style="width:14px;height:14px;" onerror="this.style.display='none'">
-                        </div>
-                    </div>
-
-                    <!-- Extension popup preview -->
-                    <div style="background:#0d0f17;border-radius:14px;padding:16px;border:1px solid #1e2130;">
-
-                        <!-- Popup header -->
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1e2130;">
-                            <div style="position:relative;">
-                                <div class="pulse-ring"></div>
-                                <div class="pulse-ring pulse-ring-2"></div>
-                                <div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;">
-                                    <img src="images/logo.svg" style="width:22px;height:22px;" onerror="this.style.display='none'">
-                                </div>
-                            </div>
-                            <div>
-                                <div style="font-size:12px;font-weight:700;">Exsub Group</div>
-                                <div style="font-size:9px;color:#86efac;display:flex;align-items:center;gap:3px;">
-                                    <span style="width:5px;height:5px;border-radius:50%;background:#86efac;display:inline-block;"></span>
-                                    Tracking Active
-                                </div>
-                            </div>
-                            <div style="margin-left:auto;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;padding:3px 8px;font-size:9px;color:#c4b5fd;">
-                                ID #4821
-                            </div>
-                        </div>
-
-                        <!-- YouTube watch status -->
-                        <div style="background:#0a1a0a;border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:10px;margin-bottom:8px;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                                <div class="mockup-state" style="font-size:9px;color:#86efac;font-weight:700;letter-spacing:.5px;">▶ PLAYING</div>
-                                <div class="mockup-time" style="font-size:9px;color:#555;">4:32 / 8:10</div>
-                            </div>
-                            <!-- Progress bar -->
-                            <div style="background:#1a1d28;border-radius:4px;height:4px;margin-bottom:6px;">
-                                <div class="mockup-progress-fill" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);width:55%;height:4px;border-radius:4px;transition:width .8s linear;"></div>
-                            </div>
-                            <div style="font-size:9px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                                📺 How to grow your YouTube channel fast
-                            </div>
-                        </div>
-
-                        <!-- Watch stats row -->
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
-                            <div style="background:#131620;border:1px solid #1e2130;border-radius:8px;padding:8px;text-align:center;">
-                                <div class="mockup-pct" style="font-size:14px;font-weight:900;color:#86efac;">55%</div>
-                                <div style="font-size:8px;color:#555;margin-top:1px;">Watched</div>
-                            </div>
-                            <div style="background:#131620;border:1px solid #1e2130;border-radius:8px;padding:8px;text-align:center;">
-                                <div style="font-size:14px;font-weight:900;color:#fbbf24;">2</div>
-                                <div style="font-size:8px;color:#555;margin-top:1px;">Pauses</div>
-                            </div>
-                            <div style="background:#131620;border:1px solid #1e2130;border-radius:8px;padding:8px;text-align:center;">
-                                <div style="font-size:14px;font-weight:900;color:#a78bfa;">4:32</div>
-                                <div style="font-size:8px;color:#555;margin-top:1px;">Watch Time</div>
-                            </div>
-                        </div>
-
-                        <!-- Auto proof sent alert -->
-                        <div style="background:#0f1a1f;border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:9px;margin-bottom:8px;display:flex;align-items:center;gap:7px;">
-                            <span style="font-size:13px;">📤</span>
-                            <div>
-                                <div style="font-size:9px;color:#7dd3fc;font-weight:600;">Proof auto-sent to admin</div>
-                                <div style="font-size:8px;color:#555;">Screenshot captured at 4:32</div>
-                            </div>
-                            <div style="margin-left:auto;font-size:9px;color:#86efac;">✓</div>
-                        </div>
-
-                        <!-- One-click submit button -->
-                        <div style="background:linear-gradient(180deg,#7c3aed,#5b21b6);border-radius:10px;padding:10px;text-align:center;cursor:pointer;">
-                            <div style="font-size:11px;font-weight:700;letter-spacing:.3px;">⚡ Submit Subscribe Proof</div>
-                            <div style="font-size:8px;color:rgba(255,255,255,0.6);margin-top:2px;">One click · Auto-fills your ID</div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+        <div class="flex flex-wrap gap-3">
+          <a href="https://drive.google.com/drive/folders/1804k50RIOXzq2pzUDoo-_DujUD5DDQTv?usp=drive_link" id="downloadBtn" class="btn-retro btn-charcoal ext-btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Extension
+          </a>
+          <a href="#install" class="btn-retro btn-sand ext-btn-lg">📖 Installation Guide</a>
         </div>
 
-    </section>
+        <div class="ext-trust-row">
+          <div class="ext-trust-item">🔒 Safe & easy to use</div>
+          <div class="ext-trust-item">⚡ Lightweight — under 500 KB</div>
+          <div class="ext-trust-item">🔄 Open source</div>
+        </div>
+      </div>
 
-
-    <!-- ── FEATURES ── -->
-    <section class="mb-20">
-
-        <div class="text-center mb-12">
-            <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-4">✨ Core Features</div>
-            <h2 class="text-3xl font-black gradient-text">Four powerful tools in one extension</h2>
-            <p class="text-gray-400 mt-3 max-w-xl mx-auto">Everything the extension does automatically — so you focus on the task, not the paperwork.</p>
+      <!-- Right mockup -->
+      <div class="ext-mockup">
+        <div class="ext-mockup-bar">
+          <div class="ext-mockup-dot" style="background:#ff5f56;"></div>
+          <div class="ext-mockup-dot" style="background:#ffbd2e;"></div>
+          <div class="ext-mockup-dot" style="background:#27c93f;"></div>
+          <div class="ext-mockup-url">exsub.group/dashboard</div>
+          <div style="width:20px;height:20px;border-radius:6px;background:#211F1F;display:flex;align-items:center;justify-content:center;">
+            <img src="images/logo.svg" style="width:13px;height:13px;" onerror="this.style.display='none'">
+          </div>
         </div>
 
-        <!-- Feature 1 — full width highlight -->
-        <div class="feat-card mb-5" style="border-color:rgba(124,58,237,0.35);background:linear-gradient(135deg,#181b28,#101420);padding:32px;">
-            <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
-
-                <div style="flex:1;min-width:260px;">
-                    <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);font-size:11px;color:#a78bfa;margin-bottom:14px;">
-                        FEATURE 01
-                    </div>
-                    <h3 class="text-xl font-black mb-3">📤 Automatic Proof Sent to Admin</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                        The moment you complete a task on YouTube, the extension automatically captures your proof — screenshot, watch time, and your working — and sends it directly to your admin. No manual steps, no forgetting.
-                    </p>
-                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2);">✓ Screenshot auto-captured</span>
-                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2);">✓ User Code auto-attached</span>
-                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2);">✓ Sent instantly</span>
-                    </div>
-                </div>
-
-                <!-- Mini visual -->
-                <div style="flex-shrink:0;background:#0d0f17;border:1px solid #1e2130;border-radius:16px;padding:16px;min-width:220px;">
-                    <div style="font-size:10px;color:#555;margin-bottom:10px;letter-spacing:.5px;">AUTO PROOF SYSTEM</div>
-                    <div style="display:flex;flex-direction:column;gap:7px;">
-                        <div style="display:flex;align-items:center;gap:8px;background:#111420;border:1px solid #1e2130;border-radius:9px;padding:9px;">
-                            <span style="font-size:14px;">📺</span>
-                            <div style="flex:1;">
-                                <div style="font-size:9px;color:#d1d5db;font-weight:600;">Task video detected</div>
-                                <div style="font-size:8px;color:#555;">youtube.com/watch?v=...</div>
-                            </div>
-                            <div style="width:7px;height:7px;border-radius:50%;background:#86efac;"></div>
-                        </div>
-                        <div style="text-align:center;font-size:10px;color:#7c3aed;">↓ capturing...</div>
-                        <div style="display:flex;align-items:center;gap:8px;background:#111420;border:1px solid #1e2130;border-radius:9px;padding:9px;">
-                            <span style="font-size:14px;">📸</span>
-                            <div style="flex:1;">
-                                <div style="font-size:9px;color:#d1d5db;font-weight:600;">Proof screenshot taken</div>
-                                <div style="font-size:8px;color:#555;">ID #4821 · 4m32s watched</div>
-                            </div>
-                        </div>
-                        <div style="text-align:center;font-size:10px;color:#7c3aed;">↓ sending...</div>
-                        <div style="display:flex;align-items:center;gap:8px;background:#0a1a10;border:1px solid rgba(34,197,94,0.2);border-radius:9px;padding:9px;">
-                            <span style="font-size:14px;">✅</span>
-                            <div>
-                                <div style="font-size:9px;color:#86efac;font-weight:600;">Proof delivered to admin</div>
-                                <div style="font-size:8px;color:#555;">Just now</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+        <div class="ext-popup">
+          <div class="ext-popup-head">
+            <div class="ext-logo-badge">
+              <img src="images/logo.svg" style="width:20px;height:20px;" onerror="this.style.display='none'">
             </div>
-        </div>
-
-        <!-- Feature 2 — full width highlight -->
-        <div class="feat-card mb-5" style="border-color:rgba(56,189,248,0.2);background:linear-gradient(135deg,#181b28,#101420);padding:32px;">
-            <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
-
-                <div style="flex:1;min-width:260px;">
-                    <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);font-size:11px;color:#7dd3fc;margin-bottom:14px;">
-                        FEATURE 02
-                    </div>
-                    <h3 class="text-xl font-black mb-3">📊 YouTube Watch Performance Tracker</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                        The extension tracks exactly how much of each assigned video a member has watched — total watch time, percentage completed, number of pauses, and re-watches. All data is recorded per member and per video.
-                    </p>
-                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);">📈 % watched tracked</span>
-                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);">⏱ Total watch time</span>
-                        <span style="padding:4px 12px;border-radius:999px;font-size:11px;background:rgba(56,189,248,0.08);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2);">🔁 Re-watch count</span>
-                    </div>
-                </div>
-
-                <!-- Mini visual -->
-                <div style="flex-shrink:0;background:#0d0f17;border:1px solid #1e2130;border-radius:16px;padding:16px;min-width:220px;">
-                    <div style="font-size:10px;color:#555;margin-bottom:10px;letter-spacing:.5px;">WATCH PERFORMANCE</div>
-                    <!-- progress bars -->
-                    <div style="display:flex;flex-direction:column;gap:9px;">
-                        <div>
-                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-                                <span style="font-size:9px;color:#9ca3af;">Video #1</span>
-                                <span style="font-size:9px;color:#86efac;font-weight:700;">100%</span>
-                            </div>
-                            <div style="background:#1a1d28;border-radius:4px;height:6px;">
-                                <div style="background:linear-gradient(90deg,#22c55e,#86efac);width:100%;height:6px;border-radius:4px;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-                                <span style="font-size:9px;color:#9ca3af;">Video #2</span>
-                                <span style="font-size:9px;color:#7dd3fc;font-weight:700;">78%</span>
-                            </div>
-                            <div style="background:#1a1d28;border-radius:4px;height:6px;">
-                                <div style="background:linear-gradient(90deg,#38bdf8,#7dd3fc);width:78%;height:6px;border-radius:4px;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-                                <span style="font-size:9px;color:#9ca3af;">Video #3</span>
-                                <span style="font-size:9px;color:#fbbf24;font-weight:700;">55%</span>
-                            </div>
-                            <div style="background:#1a1d28;border-radius:4px;height:6px;">
-                                <div style="background:linear-gradient(90deg,#f59e0b,#fbbf24);width:55%;height:6px;border-radius:4px;"></div>
-                            </div>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
-                            <div style="background:#111420;border:1px solid #1e2130;border-radius:8px;padding:7px;text-align:center;">
-                                <div style="font-size:13px;font-weight:900;color:#a78bfa;">14:21</div>
-                                <div style="font-size:8px;color:#555;">Total Watch</div>
-                            </div>
-                            <div style="background:#111420;border:1px solid #1e2130;border-radius:8px;padding:7px;text-align:center;">
-                                <div style="font-size:13px;font-weight:900;color:#fbbf24;">5</div>
-                                <div style="font-size:8px;color:#555;">Pauses</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Features 3 & 4 — side by side -->
-        <div class="grid md:grid-cols-2 gap-5">
-
-            <!-- Feature 3 -->
-            <div class="feat-card" style="padding:28px;">
-                <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);font-size:11px;color:#fde68a;margin-bottom:14px;">
-                    FEATURE 03
-                </div>
-                <h3 class="text-lg font-black mb-3">⏯ Play / Pause Detection</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                    The extension listens to every play and pause event on the assigned YouTube video. If a member pauses too often or skips ahead, it is recorded and flagged automatically — no way to fake a full watch.
-                </p>
-
-                <!-- Visual event log -->
-                <div style="background:#0d0f17;border:1px solid #1e2130;border-radius:12px;padding:12px;">
-                    <div style="font-size:9px;color:#555;margin-bottom:8px;letter-spacing:.5px;">LIVE EVENT LOG</div>
-                    <div style="display:flex;flex-direction:column;gap:6px;">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">▶</div>
-                            <div style="font-size:10px;color:#9ca3af;">Video started <span style="color:#555;">— 0:00</span></div>
-                            <div style="margin-left:auto;font-size:9px;color:#555;">12:01</div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(251,191,36,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;">⏸</div>
-                            <div style="font-size:10px;color:#9ca3af;">Paused <span style="color:#555;">— 1:45</span></div>
-                            <div style="margin-left:auto;font-size:9px;color:#555;">12:03</div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">▶</div>
-                            <div style="font-size:10px;color:#9ca3af;">Resumed <span style="color:#555;">— 1:45</span></div>
-                            <div style="margin-left:auto;font-size:9px;color:#555;">12:04</div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;">⏭</div>
-                            <div style="font-size:10px;color:#fca5a5;">Skip detected <span style="color:#555;">— 2:10→5:30</span></div>
-                            <div style="margin-left:auto;font-size:9px;color:#ef4444;">⚠</div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <div style="width:20px;height:20px;border-radius:6px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">✓</div>
-                            <div style="font-size:10px;color:#9ca3af;">Video ended <span style="color:#555;">— 8:10</span></div>
-                            <div style="margin-left:auto;font-size:9px;color:#86efac;">done</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Feature 4 -->
-            <div class="feat-card" style="padding:28px;border-color:rgba(124,58,237,0.35);">
-                <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);font-size:11px;color:#c4b5fd;margin-bottom:14px;">
-                    FEATURE 04
-                </div>
-                <h3 class="text-lg font-black mb-3">⚡ One-Click Subscribe Proof Submit</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                    After subscribing to the assigned channel, hit the submit button in the extension. It automatically fills in your User Code, captures the subscribed state, and sends the proof to admin — all in one click.
-                </p>
-
-                <!-- Visual button demo -->
-                <div style="background:#0d0f17;border:1px solid #1e2130;border-radius:12px;padding:14px;">
-                    <div style="font-size:9px;color:#555;margin-bottom:10px;letter-spacing:.5px;">SUBSCRIBE PROOF PANEL</div>
-
-                    <div style="background:#111420;border:1px solid #1e2130;border-radius:10px;padding:10px;margin-bottom:8px;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                            <div style="font-size:10px;color:#9ca3af;">Channel assigned</div>
-                            <div style="font-size:10px;color:#86efac;font-weight:600;">✓ Subscribed</div>
-                        </div>
-                        <div style="font-size:9px;color:#555;">@ExsubOfficialChannel</div>
-                    </div>
-
-                    <div style="background:#111420;border:1px solid #1e2130;border-radius:10px;padding:10px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:12px;">🪪</span>
-                        <div>
-                            <div style="font-size:9px;color:#555;">Member ID</div>
-                            <div style="font-size:10px;color:#c4b5fd;font-weight:700;">#4821 — auto-filled</div>
-                        </div>
-                        <div style="margin-left:auto;">
-                            <div style="width:16px;height:16px;border-radius:4px;background:rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:8px;">✓</div>
-                        </div>
-                    </div>
-
-                    <!-- The big button -->
-                    <div id="demoSubmitBtn" onclick="demoSubmit()" style="background:linear-gradient(180deg,#924ef4,#7b2af0);border-radius:10px;padding:13px;text-align:center;cursor:pointer;transition:.2s;user-select:none;">
-                        <div style="font-size:12px;font-weight:800;letter-spacing:.3px;">⚡ Submit Subscribe Proof</div>
-                        <div style="font-size:9px;color:rgba(255,255,255,0.55);margin-top:2px;">Tap to send · takes 1 second</div>
-                    </div>
-                    <div id="demoSuccess" style="display:none;background:#0a1a0a;border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:11px;text-align:center;margin-top:8px;">
-                        <div style="font-size:12px;font-weight:700;color:#86efac;">✅ Proof sent to admin!</div>
-                        <div style="font-size:9px;color:#555;margin-top:2px;">Confirmed · ID #4821</div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ── INSTALLATION GUIDE ── -->
-    <section id="install" class="mb-20">
-
-        <div class="text-center mb-10">
-            <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-4">📥 Installation</div>
-            <h2 class="text-3xl font-black gradient-text">Install in under 2 minutes</h2>
-            <p class="text-gray-400 mt-3">Works on Chrome, Brave, Edge, and any Chromium browser.</p>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-8 items-start">
-
-            <!-- Steps -->
-            <div class="steps-wrap flex flex-col gap-4">
-
-                <div class="step-pill">
-                    <div class="step-num">1</div>
-                    <div>
-                        <div class="font-semibold mb-1">Download the extension file</div>
-                        <p class="text-gray-400 text-sm leading-relaxed">Click the <strong class="text-white">Download Extension</strong> button above. A <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">.crx</code> or <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">.zip</code> file will be saved to your device.</p>
-                    </div>
-                </div>
-
-                <div class="step-pill">
-                    <div class="step-num">2</div>
-                    <div>
-                        <div class="font-semibold mb-1">Open Extensions page in Chrome</div>
-                        <p class="text-gray-400 text-sm leading-relaxed">Type <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">chrome://extensions</code> in your address bar and press Enter. Make sure <strong class="text-white">Developer Mode</strong> is toggled ON (top-right corner).</p>
-                    </div>
-                </div>
-
-                <div class="step-pill">
-                    <div class="step-num">3</div>
-                    <div>
-                        <div class="font-semibold mb-1">Load the extension</div>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            If you have a <strong class="text-white">.zip</strong> file: unzip it first, then click <strong class="text-white">Load Unpacked</strong> and select the unzipped folder.<br><br>
-                            If you have a <strong class="text-white">.crx</strong> file: drag and drop it directly onto the <code style="background:#1a1d28;padding:2px 6px;border-radius:4px;font-size:12px;color:#a78bfa;">chrome://extensions</code> page.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="step-pill">
-                    <div class="step-num">4</div>
-                    <div>
-                        <div class="font-semibold mb-1">Pin it to your toolbar</div>
-                        <p class="text-gray-400 text-sm leading-relaxed">Click the puzzle-piece icon 🧩 in the Chrome toolbar, find <strong class="text-white">Exsub Group</strong>, and click the pin icon so it always shows.</p>
-                    </div>
-                </div>
-
-                <div class="step-pill">
-                    <div class="step-num">5</div>
-                    <div>
-                        <div class="font-semibold mb-1">Enter your Login</div>
-                        <p class="text-gray-400 text-sm leading-relaxed">Now you can login using your name and password. <strong class="text-white">Now!</strong> you are fully connected your exsub account. You're done!</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Requirements card -->
             <div>
-
-                <!-- <div class="card rounded-3xl p-6 mb-5">
-
-                    <div class="flex items-center gap-3 mb-5">
-                        <div style="width:40px;height:40px;border-radius:11px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;">💻</div>
-                        <div>
-                            <div class="font-bold">System Requirements</div>
-                            <div class="text-gray-500 text-xs">Compatible browsers & OS</div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="req-row">
-                            <span class="text-gray-400 text-sm">Browser</span>
-                            <span class="text-sm font-medium">Chrome 88+, Edge 88+, Brave</span>
-                        </div>
-                        <div class="req-row">
-                            <span class="text-gray-400 text-sm">Operating System</span>
-                            <span class="text-sm font-medium">Windows, macOS, Linux</span>
-                        </div>
-                        <div class="req-row">
-                            <span class="text-gray-400 text-sm">File Size</span>
-                            <span class="text-sm font-medium">~480 KB</span>
-                        </div>
-                        <div class="req-row">
-                            <span class="text-gray-400 text-sm">Version</span>
-                            <span class="badge-green">v2.4.1</span>
-                        </div>
-                        <div class="req-row">
-                            <span class="text-gray-400 text-sm">Last Updated</span>
-                            <span class="text-sm font-medium">June 2025</span>
-                        </div>
-                        <div class="req-row">
-                            <span class="text-gray-400 text-sm">Required</span>
-                            <span class="text-sm font-medium">Active Exsub Member Account</span>
-                        </div>
-                    </div>
-
-                </div> -->
-
-                <!-- Download again CTA inside this col -->
-                <div class="card rounded-3xl p-6 text-center" style="border-color:rgba(124,58,237,0.3);background:linear-gradient(135deg,#171a24,#13101f);">
-                    <div class="text-3xl mb-3">⬇️</div>
-                    <div class="font-bold text-lg mb-1">Ready to install?</div>
-                    <p class="text-gray-400 text-sm mb-5">Free for all registered Exsub Group members.</p>
-                    <a href="https://drive.google.com/drive/folders/1804k50RIOXzq2pzUDoo-_DujUD5DDQTv?usp=drive_link" id="downloadBtn2" class="btn-download" style="width:100%;justify-content:center;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Download Extension
-                    </a>
-                </div>
-
+              <div style="font-size:12px;font-weight:800;color:#211F1F;">Exsub Group</div>
+              <div style="font-size:9px;color:#166534;display:flex;align-items:center;gap:3px;font-weight:700;">
+                <span style="width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
+                Tracking Active
+              </div>
             </div>
+            <div style="margin-left:auto;background:#DBD4B7;border:1px solid #211F1F;border-radius:8px;padding:3px 8px;font-size:9px;font-weight:800;color:#211F1F;">
+              ID #4821
+            </div>
+          </div>
 
+          <div class="ext-watch-box">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <div class="mockup-state" style="font-size:9px;color:#166534;font-weight:900;letter-spacing:.5px;">▶ PLAYING</div>
+              <div class="mockup-time" style="font-size:9px;color:#211F1F;font-weight:700;">4:32 / 8:10</div>
+            </div>
+            <div class="ext-progress-track"><div class="mockup-progress-fill ext-progress-fill" style="width:55%;"></div></div>
+            <div style="font-size:9px;color:#211F1F;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">📺 How to grow your YouTube channel fast</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
+            <div class="ext-stat-mini"><div class="mockup-pct" style="font-size:14px;font-weight:900;color:#211F1F;">55%</div><div style="font-size:8px;color:#6b7280;">Watched</div></div>
+            <div class="ext-stat-mini"><div style="font-size:14px;font-weight:900;color:#211F1F;">2</div><div style="font-size:8px;color:#6b7280;">Pauses</div></div>
+            <div class="ext-stat-mini"><div style="font-size:14px;font-weight:900;color:#211F1F;">4:32</div><div style="font-size:8px;color:#6b7280;">Watch Time</div></div>
+          </div>
+
+          <div class="ext-alert-box">
+            <span style="font-size:13px;">📤</span>
+            <div>
+              <div style="font-size:9px;color:#211F1F;font-weight:800;">Proof auto-sent to admin</div>
+              <div style="font-size:8px;color:#4b5563;">Screenshot captured at 4:32</div>
+            </div>
+            <div style="margin-left:auto;font-size:9px;">✓</div>
+          </div>
+
+          <div class="ext-submit-btn">
+            <div style="font-size:11px;">⚡ Submit Subscribe Proof</div>
+            <div style="font-size:8px;color:#DBD4B7;margin-top:2px;font-weight:500;">One click · Auto-fills your ID</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="mb-10">
+
+    <div class="text-center mb-8">
+      <div class="ext-section-tag">✨ Core Features</div>
+      <div class="ext-heading">Four powerful tools in one extension</div>
+      <p class="ext-sub mt-2 max-w-xl mx-auto">Everything the extension does automatically — so you focus on the task, not the paperwork.</p>
+    </div>
+
+    <!-- Feature 1 — full width -->
+    <div class="ext-feat-card mb-5">
+      <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+        <div style="flex:1;min-width:260px;">
+          <div class="ext-feat-tag">Feature 01</div>
+          <div class="ext-feat-title">📤 Automatic Proof Sent to Admin</div>
+          <p class="ext-feat-desc">The moment you complete a task on YouTube, the extension automatically captures your proof — screenshot, watch time, and your working — and sends it directly to your admin. No manual steps, no forgetting.</p>
+          <div class="ext-pill-list">
+            <span class="ext-pill-ok">✓ Screenshot auto-captured</span>
+            <span class="ext-pill-ok">✓ User Code auto-attached</span>
+            <span class="ext-pill-ok">✓ Sent instantly</span>
+          </div>
+        </div>
+        <div class="ext-mini-visual">
+          <div class="ext-mini-label">Auto Proof System</div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div class="ext-timeline-row">
+              <div class="ext-timeline-icon" style="background:#ACD1C0;">📺</div>
+              <div style="flex:1;"><div style="font-size:9px;color:#211F1F;font-weight:700;">Task video detected</div><div style="font-size:8px;color:#6b7280;">youtube.com/watch?v=...</div></div>
+              <div style="width:7px;height:7px;border-radius:50%;background:#22c55e;"></div>
+            </div>
+            <div style="text-align:center;font-size:10px;color:#211F1F;font-weight:700;">↓ capturing...</div>
+            <div class="ext-timeline-row">
+              <div class="ext-timeline-icon" style="background:#DBD4B7;">📸</div>
+              <div style="flex:1;"><div style="font-size:9px;color:#211F1F;font-weight:700;">Proof screenshot taken</div><div style="font-size:8px;color:#6b7280;">ID #4821 · 4m32s watched</div></div>
+            </div>
+            <div style="text-align:center;font-size:10px;color:#211F1F;font-weight:700;">↓ sending...</div>
+            <div class="ext-timeline-row" style="background:#ACD1C0;">
+              <div class="ext-timeline-icon" style="background:#ffffff;">✅</div>
+              <div><div style="font-size:9px;color:#211F1F;font-weight:800;">Proof delivered to admin</div><div style="font-size:8px;color:#211F1F;">Just now</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2 — full width -->
+    <div class="ext-feat-card mb-5">
+      <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+        <div style="flex:1;min-width:260px;">
+          <div class="ext-feat-tag">Feature 02</div>
+          <div class="ext-feat-title">📊 YouTube Watch Performance Tracker</div>
+          <p class="ext-feat-desc">The extension tracks exactly how much of each assigned video a member has watched — total watch time, percentage completed, number of pauses, and re-watches. All data is recorded per member and per video.</p>
+          <div class="ext-pill-list">
+            <span class="ext-pill-ok">📈 % watched tracked</span>
+            <span class="ext-pill-ok">⏱ Total watch time</span>
+            <span class="ext-pill-ok">🔁 Re-watch count</span>
+          </div>
+        </div>
+        <div class="ext-mini-visual">
+          <div class="ext-mini-label">Watch Performance</div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:9px;color:#4b5563;font-weight:600;">Video #1</span><span style="font-size:9px;color:#211F1F;font-weight:800;">100%</span></div>
+              <div class="ext-progress-track"><div class="ext-progress-fill" style="width:100%;background:#22c55e;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:9px;color:#4b5563;font-weight:600;">Video #2</span><span style="font-size:9px;color:#211F1F;font-weight:800;">78%</span></div>
+              <div class="ext-progress-track"><div class="ext-progress-fill" style="width:78%;background:#38bdf8;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:9px;color:#4b5563;font-weight:600;">Video #3</span><span style="font-size:9px;color:#211F1F;font-weight:800;">55%</span></div>
+              <div class="ext-progress-track"><div class="ext-progress-fill" style="width:55%;background:#fbbf24;"></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
+              <div class="ext-stat-mini"><div style="font-size:13px;font-weight:900;color:#211F1F;">14:21</div><div style="font-size:8px;color:#6b7280;">Total Watch</div></div>
+              <div class="ext-stat-mini"><div style="font-size:13px;font-weight:900;color:#211F1F;">5</div><div style="font-size:8px;color:#6b7280;">Pauses</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features 3 & 4 — side by side -->
+    <div class="grid md:grid-cols-2 gap-5">
+
+      <!-- Feature 3 -->
+      <div class="ext-feat-card">
+        <div class="ext-feat-tag">Feature 03</div>
+        <div class="ext-feat-title" style="font-size:17px;">⏯ Play / Pause Detection</div>
+        <p class="ext-feat-desc">The extension listens to every play and pause event on the assigned YouTube video. If a member pauses too often or skips ahead, it is recorded and flagged automatically — no way to fake a full watch.</p>
+
+        <div class="ext-mini-visual">
+          <div class="ext-mini-label">Live Event Log</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="ext-timeline-icon" style="background:#ACD1C0;">▶</div>
+              <div style="font-size:10px;color:#211F1F;font-weight:600;">Video started <span style="color:#6b7280;">— 0:00</span></div>
+              <div style="margin-left:auto;font-size:9px;color:#6b7280;">12:01</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="ext-timeline-icon" style="background:#EBE492;">⏸</div>
+              <div style="font-size:10px;color:#211F1F;font-weight:600;">Paused <span style="color:#6b7280;">— 1:45</span></div>
+              <div style="margin-left:auto;font-size:9px;color:#6b7280;">12:03</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="ext-timeline-icon" style="background:#ACD1C0;">▶</div>
+              <div style="font-size:10px;color:#211F1F;font-weight:600;">Resumed <span style="color:#6b7280;">— 1:45</span></div>
+              <div style="margin-left:auto;font-size:9px;color:#6b7280;">12:04</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="ext-timeline-icon" style="background:#fca5a5;">⏭</div>
+              <div style="font-size:10px;color:#b91c1c;font-weight:700;">Skip detected <span style="color:#6b7280;">— 2:10→5:30</span></div>
+              <div style="margin-left:auto;font-size:9px;color:#ef4444;">⚠</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="ext-timeline-icon" style="background:#ACD1C0;">✓</div>
+              <div style="font-size:10px;color:#211F1F;font-weight:600;">Video ended <span style="color:#6b7280;">— 8:10</span></div>
+              <div style="margin-left:auto;font-size:9px;color:#166534;font-weight:800;">done</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="ext-feat-card">
+        <div class="ext-feat-tag">Feature 04</div>
+        <div class="ext-feat-title" style="font-size:17px;">⚡ One-Click Subscribe Proof Submit</div>
+        <p class="ext-feat-desc">After subscribing to the assigned channel, hit the submit button in the extension. It automatically fills in your User Code, captures the subscribed state, and sends the proof to admin — all in one click.</p>
+
+        <div class="ext-mini-visual">
+          <div class="ext-mini-label">Subscribe Proof Panel</div>
+
+          <div style="background:#ffffff;border:1.5px solid #211F1F;border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <div style="font-size:10px;color:#4b5563;font-weight:600;">Channel assigned</div>
+              <div style="font-size:10px;color:#166534;font-weight:800;">✓ Subscribed</div>
+            </div>
+            <div style="font-size:9px;color:#6b7280;">@ExsubOfficialChannel</div>
+          </div>
+
+          <div style="background:#ffffff;border:1.5px solid #211F1F;border-radius:10px;padding:10px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;">🪪</span>
+            <div>
+              <div style="font-size:9px;color:#6b7280;">Member ID</div>
+              <div style="font-size:10px;color:#211F1F;font-weight:800;">#4821 — auto-filled</div>
+            </div>
+            <div style="margin-left:auto;">
+              <div style="width:16px;height:16px;border-radius:4px;background:#ACD1C0;border:1px solid #211F1F;display:flex;align-items:center;justify-content:center;font-size:8px;">✓</div>
+            </div>
+          </div>
+
+          <div id="demoSubmitBtn" onclick="demoSubmit()" class="ext-submit-btn">
+            <div style="font-size:12px;">⚡ Submit Subscribe Proof</div>
+            <div style="font-size:9px;color:#DBD4B7;margin-top:2px;font-weight:500;">Tap to send · takes 1 second</div>
+          </div>
+          <div id="demoSuccess" style="display:none;background:#ACD1C0;border:1.5px solid #211F1F;border-radius:10px;padding:11px;text-align:center;margin-top:8px;">
+            <div style="font-size:12px;font-weight:800;color:#211F1F;">✅ Proof sent to admin!</div>
+            <div style="font-size:9px;color:#211F1F;margin-top:2px;">Confirmed · ID #4821</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ── INSTALLATION GUIDE ── -->
+  <section id="install" class="mb-10">
+
+    <div class="text-center mb-8">
+      <div class="ext-section-tag">📥 Installation</div>
+      <div class="ext-heading">Install in under 2 minutes</div>
+      <p class="ext-sub mt-2">Works on Chrome, Brave, Edge, and any Chromium browser.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8 items-start">
+
+      <!-- Steps -->
+      <div class="ext-steps-wrap flex flex-col gap-4">
+
+        <div class="ext-step-pill">
+          <div class="ext-step-num">1</div>
+          <div>
+            <div class="ext-step-title">Download the extension file</div>
+            <p class="ext-step-desc">Click the <strong>Download Extension</strong> button above. A <span class="ext-code">.crx</span> or <span class="ext-code">.zip</span> file will be saved to your device.</p>
+          </div>
         </div>
 
-    </section>
-
-
-    <!-- ── FAQ ── -->
-    <section class="mb-20">
-
-        <div class="text-center mb-10">
-            <div class="inline-flex px-5 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-sm mb-4">❓ FAQ</div>
-            <h2 class="text-3xl font-black gradient-text">Common Questions</h2>
+        <div class="ext-step-pill">
+          <div class="ext-step-num">2</div>
+          <div>
+            <div class="ext-step-title">Open Extensions page in Chrome</div>
+            <p class="ext-step-desc">Type <span class="ext-code">chrome://extensions</span> in your address bar and press Enter. Make sure <strong>Developer Mode</strong> is toggled ON (top-right corner).</p>
+          </div>
         </div>
 
-        <div class="flex flex-col gap-3 max-w-3xl mx-auto">
-
-            <div class="faq-item">
-                <button class="faq-btn" onclick="toggleFaq(this)">
-                    <span>Is the extension free?</span>
-                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div class="faq-answer">Yes, the Exsub Group extension is completely free for all registered members. You only need an active member account to use it.</div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-btn" onclick="toggleFaq(this)">
-                    <span>Is it safe to install?</span>
-                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div class="faq-answer">Absolutely. The extension is built and maintained by the Exsub Group team. It does not collect personal data, does not access any websites outside of Exsub platforms, and stores your User Code locally in encrypted form.It one more thing its is Opensource.</div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-btn" onclick="toggleFaq(this)">
-                    <span>Does it work on every browser</span>
-                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div class="faq-answer">Currently the extension supports in those browsers which have the feature of installing crx extension file.</div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-btn" onclick="toggleFaq(this)">
-                    <span>How do I update to a newer version?</span>
-                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div class="faq-answer">Our extesnion updated and quicly uploaded on drive so you can manually install in browser.</div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-btn" onclick="toggleFaq(this)">
-                    <span>The extension says "Not from Chrome Web Store" — is that normal?</span>
-                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div class="faq-answer">Yes, this is expected. Because we distribute the extension directly rather than through the Chrome Web Store, Chrome will show this warning. It is safe to dismiss. Make sure you only download the extension from this official Exsub Group page.</div>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-btn" onclick="toggleFaq(this)">
-                    <span>I installed it but it's not connecting. What do I do?</span>
-                    <svg class="chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div class="faq-answer">Make sure you are you are login. For this you need to open extension by clicking its icon and than login.</div>
-            </div>
-
+        <div class="ext-step-pill">
+          <div class="ext-step-num">3</div>
+          <div>
+            <div class="ext-step-title">Load the extension</div>
+            <p class="ext-step-desc">
+              If you have a <strong>.zip</strong> file: unzip it first, then click <strong>Load Unpacked</strong> and select the unzipped folder.<br><br>
+              If you have a <strong>.crx</strong> file: drag and drop it directly onto the <span class="ext-code">chrome://extensions</span> page.
+            </p>
+          </div>
         </div>
 
-    </section>
-
-
-    <!-- ── BOTTOM CTA ── -->
-    <section class="card rounded-3xl p-10 text-center" style="border-color:rgba(124,58,237,0.3);background:linear-gradient(135deg,#171a24,#13101f);">
-
-        <div style="position:relative;display:inline-block;margin-bottom:20px;">
-            <div style="width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 12px 40px rgba(124,58,237,0.4);">
-                <img src="images/logo.svg" style="width:44px;height:44px;" onerror="this.parentElement.innerHTML='🧩'">
-            </div>
+        <div class="ext-step-pill">
+          <div class="ext-step-num">4</div>
+          <div>
+            <div class="ext-step-title">Pin it to your toolbar</div>
+            <p class="ext-step-desc">Click the puzzle-piece icon 🧩 in the Chrome toolbar, find <strong>Exsub Group</strong>, and click the pin icon so it always shows.</p>
+          </div>
         </div>
 
-        <h3 class="text-3xl font-black mb-3 gradient-text">Download &amp; Get Started</h3>
-        <p class="text-gray-400 mb-8 max-w-md mx-auto">Join thousands of Exsub Group members already using the extension to work smarter and faster.</p>
-
-        <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://drive.google.com/drive/folders/1804k50RIOXzq2pzUDoo-_DujUD5DDQTv?usp=drive_link" class="btn-download">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Extension
-            </a>
-            <a href="support.html" class="btn-outline">Need help? Contact Support</a>
+        <div class="ext-step-pill">
+          <div class="ext-step-num">5</div>
+          <div>
+            <div class="ext-step-title">Enter your Login</div>
+            <p class="ext-step-desc">Now you can login using your name and password. <strong>Now!</strong> you are fully connected to your Exsub account. You're done!</p>
+          </div>
         </div>
 
-    </section>
+      </div>
 
+      <!-- Requirements / CTA card -->
+      <div>
+        <div class="card p-8 text-center">
+          <div class="text-3xl mb-3">⬇️</div>
+          <div class="font-black text-lg mb-1 text-[#211F1F]">Ready to install?</div>
+          <p class="ext-sub mb-5">Free for all registered Exsub Group members.</p>
+          <a href="https://drive.google.com/drive/folders/1804k50RIOXzq2pzUDoo-_DujUD5DDQTv?usp=drive_link" id="downloadBtn2" class="btn-retro btn-charcoal ext-btn-lg" style="width:100%;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Extension
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="mb-10">
+
+    <div class="text-center mb-8">
+      <div class="ext-section-tag">❓ FAQ</div>
+      <div class="ext-heading">Common Questions</div>
+    </div>
+
+    <div class="flex flex-col gap-3 max-w-3xl mx-auto">
+
+      <div class="ext-faq-item">
+        <button class="ext-faq-btn" onclick="toggleFaq(this)">
+          <span>Is the extension free?</span>
+          <svg class="ext-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="ext-faq-answer">Yes, the Exsub Group extension is completely free for all registered members. You only need an active member account to use it.</div>
+      </div>
+
+      <div class="ext-faq-item">
+        <button class="ext-faq-btn" onclick="toggleFaq(this)">
+          <span>Is it safe to install?</span>
+          <svg class="ext-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="ext-faq-answer">Absolutely. The extension is built and maintained by the Exsub Group team. It does not collect personal data, does not access any websites outside of Exsub platforms, and stores your User Code locally in encrypted form. It's also open source.</div>
+      </div>
+
+      <div class="ext-faq-item">
+        <button class="ext-faq-btn" onclick="toggleFaq(this)">
+          <span>Does it work on every browser?</span>
+          <svg class="ext-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="ext-faq-answer">Currently the extension supports any browser that has the feature of installing a .crx extension file.</div>
+      </div>
+
+      <div class="ext-faq-item">
+        <button class="ext-faq-btn" onclick="toggleFaq(this)">
+          <span>How do I update to a newer version?</span>
+          <svg class="ext-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="ext-faq-answer">Our extension gets updated and quickly uploaded to Drive, so you can manually reinstall in your browser.</div>
+      </div>
+
+      <div class="ext-faq-item">
+        <button class="ext-faq-btn" onclick="toggleFaq(this)">
+          <span>The extension says "Not from Chrome Web Store" — is that normal?</span>
+          <svg class="ext-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="ext-faq-answer">Yes, this is expected. Because we distribute the extension directly rather than through the Chrome Web Store, Chrome will show this warning. It is safe to dismiss. Make sure you only download the extension from this official Exsub Group page.</div>
+      </div>
+
+      <div class="ext-faq-item">
+        <button class="ext-faq-btn" onclick="toggleFaq(this)">
+          <span>I installed it but it's not connecting. What do I do?</span>
+          <svg class="ext-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="ext-faq-answer">Make sure you are logged in. To do this, open the extension by clicking its icon and then log in.</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ── BOTTOM CTA ── -->
+  <section class="card p-10 text-center">
+    <div style="width:72px;height:72px;border-radius:20px;background:#211F1F;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:2px solid #211F1F;box-shadow:4px 4px 0px 0px #ACD1C0;">
+      <img src="images/logo.svg" style="width:44px;height:44px;" onerror="this.parentElement.innerHTML='🧩'">
+    </div>
+
+    <div class="ext-heading mb-3">Download &amp; Get Started</div>
+    <p class="ext-sub mb-8 max-w-md mx-auto">Join thousands of Exsub Group members already using the extension to work smarter and faster.</p>
+
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="https://drive.google.com/drive/folders/1804k50RIOXzq2pzUDoo-_DujUD5DDQTv?usp=drive_link" class="btn-retro btn-charcoal ext-btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Extension
+      </a>
+      <a href="support.html" class="btn-retro btn-sand ext-btn-lg">Need help? Contact Support</a>
+    </div>
+  </section>
 
 </div>
 </main>
-
-
+</main>
 <script>
+'use strict';
 
 /* ── FAQ ── */
 function toggleFaq(btn){
-    const answer  = btn.nextElementSibling;
-    const chevron = btn.querySelector('.chevron');
-    const isOpen  = answer.classList.contains('open');
+  const answer  = btn.nextElementSibling;
+  const chevron = btn.querySelector('.ext-chevron');
+  const isOpen  = answer.classList.contains('open');
 
-    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.ext-faq-answer').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.ext-chevron').forEach(c => c.classList.remove('open'));
 
-    if(!isOpen){
-        answer.classList.add('open');
-        chevron.classList.add('open');
-    }
+  if(!isOpen){
+    answer.classList.add('open');
+    chevron.classList.add('open');
+  }
 }
-
 
 /* ── ONE-CLICK SUBMIT DEMO ── */
 function demoSubmit(){
-    const btn     = document.getElementById('demoSubmitBtn');
-    const success = document.getElementById('demoSuccess');
+  const btn     = document.getElementById('demoSubmitBtn');
+  const success = document.getElementById('demoSuccess');
 
-    btn.style.opacity = '.5';
-    btn.style.pointerEvents = 'none';
-    btn.querySelector('div').textContent = '⏳ Sending proof...';
+  btn.style.opacity = '.5';
+  btn.style.pointerEvents = 'none';
+  btn.querySelector('div').textContent = '⏳ Sending proof...';
 
+  setTimeout(()=>{
+    btn.style.display  = 'none';
+    success.style.display = 'block';
     setTimeout(()=>{
-        btn.style.display  = 'none';
-        success.style.display = 'block';
-        // reset after 3s so they can try again
-        setTimeout(()=>{
-            btn.style.display      = 'block';
-            btn.style.opacity      = '1';
-            btn.style.pointerEvents= 'auto';
-            btn.querySelector('div').textContent = '⚡ Submit Subscribe Proof';
-            success.style.display  = 'none';
-        }, 3000);
-    }, 1200);
+      btn.style.display      = 'block';
+      btn.style.opacity      = '1';
+      btn.style.pointerEvents= 'auto';
+      btn.querySelector('div').textContent = '⚡ Submit Subscribe Proof';
+      success.style.display  = 'none';
+    }, 3000);
+  }, 1200);
 }
 
 /* ── MOCKUP PROGRESS BAR ANIMATION ── */
 (function(){
-    const bar   = document.querySelector('.mockup-progress-fill');
-    const pct   = document.querySelector('.mockup-pct');
-    const time  = document.querySelector('.mockup-time');
-    const state = document.querySelector('.mockup-state');
-    if(!bar) return;
+  const bar   = document.querySelector('.mockup-progress-fill');
+  const pct   = document.querySelector('.mockup-pct');
+  const time  = document.querySelector('.mockup-time');
+  const state = document.querySelector('.mockup-state');
+  if(!bar) return;
 
-    const total = 490; // 8:10 in seconds
-    let current = 272; // start at 4:32
-    let playing = true;
+  const total = 490; // 8:10 in seconds
+  let current = 272; // start at 4:32
+  let playing = true;
 
-    function fmt(s){ return Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60); }
+  function fmt(s){ return Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60); }
 
-    setInterval(()=>{
-        if(playing){
-            current = Math.min(current+1, total);
-            const p = Math.round(current/total*100);
-            bar.style.width = p+'%';
-            if(pct)  pct.textContent  = p+'%';
-            if(time) time.textContent = fmt(current)+' / '+fmt(total);
-            if(current === total){
-                state.textContent = '✓ COMPLETE';
-                state.style.color = '#86efac';
-            }
-        }
-    }, 800);
+  setInterval(()=>{
+    if(playing){
+      current = Math.min(current+1, total);
+      const p = Math.round(current/total*100);
+      bar.style.width = p+'%';
+      if(pct)  pct.textContent  = p+'%';
+      if(time) time.textContent = fmt(current)+' / '+fmt(total);
+      if(current === total){
+        state.textContent = '✓ COMPLETE';
+        state.style.color = '#166534';
+      }
+    }
+  }, 800);
 
-    // simulate a pause at ~70%
+  // simulate a pause at ~70%
+  setTimeout(()=>{
+    playing = false;
+    if(state){ state.textContent = '⏸ PAUSED'; state.style.color='#b45309'; }
     setTimeout(()=>{
-        playing = false;
-        if(state){ state.textContent = '⏸ PAUSED'; state.style.color='#fbbf24'; }
-        setTimeout(()=>{
-            playing = true;
-            if(state){ state.textContent = '▶ PLAYING'; state.style.color='#86efac'; }
-        }, 2500);
-    }, 14000);
+      playing = true;
+      if(state){ state.textContent = '▶ PLAYING'; state.style.color='#166534'; }
+    }, 2500);
+  }, 14000);
 })();
 
-/* ── DOWNLOAD BUTTON ──
-   Replace href="#" with your real file URL, e.g.:
-   document.querySelectorAll('[id^="downloadBtn"]').forEach(b => b.href = "files/exsub-extension.zip");
-*/
-
+/* ── LOGOUT ── */
+function logoutUser(){
+  if (!confirm("Are you sure you want to logout?")) return;
+  localStorage.clear(); sessionStorage.clear();
+  window.location.replace("signin.html");
+}
 </script>
 
-
-<script>
-
-    /* =========================================================
-   LOGOUT + MENUS
-========================================================= */
-function logoutUser() { localStorage.clear(); window.location.href = "index.html"; }
-
-document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
-document.getElementById("profileBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
-document.getElementById("notifBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
-document.addEventListener("click", () => {
-  document.getElementById("mobileMenu").classList.add("hidden");
-  document.getElementById("profileDropdown").classList.add("hidden");
-  document.getElementById("notifDropdown").classList.add("hidden");
-});
-</script>
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
-
-<script>
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
-  });
-})();
-</script>
 </body>
 </html>
