@@ -1891,3 +1891,290 @@ btnssssss */
         display:flex; align-items:center; justify-content:center;
         flex-shrink:0;
     }
+
+    .mt-10 {
+    margin-top: 1.5rem;
+}
+
+
+
+
+
+/* =========================================================
+   SETTINGS.CSS
+   Namespaced styles for settings.html (Interests + Countries).
+   Every class is prefixed `settings-` so nothing here collides
+   with existing site-wide styles in style.css / promochannel.css.
+
+   Ported from oldchannel.html's dark "Settings" tab, restyled to
+   match the neo-brutalist light theme (analytics.html / channels.html):
+   bg #F5F4EB, ink #211F1F, mint #ACD1C0, sand #DBD4B7, hard shadows.
+========================================================= */
+
+.settings-section {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ── PANEL ── */
+.settings-panel {
+  background-color: #F5F4EB;
+  border: 2px solid #211F1F;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  box-sizing: border-box;
+}
+
+.settings-panel + .settings-panel {
+  margin-top: 24px;
+}
+
+.settings-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.settings-panel-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #211F1F;
+  margin: 0;
+}
+
+.settings-panel-subtitle {
+  font-size: 13px;
+  color: #4b5563;
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+/* ── TOGGLE ROW ── */
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  border: 2px solid #211F1F;
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.settings-toggle-label {
+  font-weight: 800;
+  font-size: 13px;
+  color: #211F1F;
+}
+
+.settings-toggle-desc {
+  color: #4b5563;
+  font-size: 12px;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+/* ── SWITCH ── */
+.settings-switch { position: relative; display: inline-block; width: 48px; height: 28px; flex-shrink: 0; }
+.settings-switch input { opacity: 0; width: 0; height: 0; }
+.settings-switch-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: #DBD4B7;
+  border: 2px solid #211F1F;
+  border-radius: 999px;
+  transition: 0.25s ease;
+}
+.settings-switch-slider::before {
+  content: '';
+  position: absolute;
+  height: 18px; width: 18px;
+  left: 3px; top: 3px;
+  background: #211F1F;
+  border-radius: 50%;
+  transition: 0.25s ease;
+}
+.settings-switch input:checked + .settings-switch-slider { background: #ACD1C0; }
+.settings-switch input:checked + .settings-switch-slider::before { transform: translateX(20px); background: #211F1F; }
+
+/* ── SEARCH BAR ── */
+.settings-search-wrap { position: relative; }
+.settings-search-wrap::before {
+  content: '🔍';
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+}
+.settings-search-bar {
+  width: 100%;
+  background: #ffffff;
+  border: 2px solid #211F1F;
+  border-radius: 14px;
+  padding: 11px 14px 11px 42px;
+  color: #211F1F;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  box-sizing: border-box;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.settings-search-bar:focus {
+  box-shadow: 3px 3px 0px 0px #211F1F;
+  transform: translate(-1px, -1px);
+}
+
+/* ── TYPE / INTEREST GRID ── */
+.settings-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+.settings-type-opt {
+  background: #ffffff;
+  border: 2px solid #211F1F;
+  border-radius: 12px;
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.15s ease;
+  font-size: 12px;
+  font-weight: 700;
+  color: #211F1F;
+}
+.settings-type-opt:hover {
+  box-shadow: 3px 3px 0px 0px #211F1F;
+  transform: translate(-1px, -1px);
+}
+.settings-type-opt.settings-selected {
+  background: #ACD1C0;
+  box-shadow: 3px 3px 0px 0px #211F1F;
+}
+.settings-type-opt .settings-emoji {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ── SELECTED CHIPS (interests + countries) ── */
+.settings-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ACD1C0;
+  border: 2px solid #211F1F;
+  color: #211F1F;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0px 0px #211F1F;
+}
+.settings-chip button {
+  background: none;
+  border: none;
+  color: #211F1F;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+}
+.settings-chip button:hover { opacity: 1; color: #dc2626; }
+
+.settings-empty-note {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── REGION QUICK MAP ── */
+.settings-region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+.settings-region-card {
+  background: #ffffff;
+  border: 2px solid #211F1F;
+  border-radius: 14px;
+  padding: 14px 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.15s ease;
+}
+.settings-region-card:hover {
+  box-shadow: 3px 3px 0px 0px #211F1F;
+  transform: translate(-1px, -1px);
+}
+.settings-region-card.settings-active {
+  background: #ACD1C0;
+  box-shadow: 3px 3px 0px 0px #211F1F;
+}
+.settings-region-card .settings-region-emoji { font-size: 22px; display: block; margin-bottom: 6px; }
+.settings-region-card .settings-region-name { font-size: 12px; font-weight: 800; color: #211F1F; }
+.settings-region-card .settings-region-count { font-size: 10px; color: #4b5563; margin-top: 2px; font-weight: 600; }
+
+/* ── COUNTRY GRID ── */
+.settings-country-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.settings-country-opt {
+  display: flex; align-items: center; gap: 8px;
+  background: #ffffff;
+  border: 2px solid #211F1F;
+  border-radius: 10px;
+  padding: 9px 10px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #211F1F;
+  transition: 0.15s ease;
+}
+.settings-country-opt:hover {
+  box-shadow: 3px 3px 0px 0px #211F1F;
+  transform: translate(-1px, -1px);
+}
+.settings-country-opt.settings-selected {
+  background: #ACD1C0;
+  box-shadow: 3px 3px 0px 0px #211F1F;
+}
+.settings-country-opt .settings-flag { font-size: 15px; }
+
+/* ── SECTION LABEL ── */
+.settings-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+/* ── SKELETON / LOADING ── */
+.settings-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .settings-type-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .settings-panel { padding: 18px; }
+}

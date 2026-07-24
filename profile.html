@@ -3,480 +3,588 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile – EXSUB Group</title>
+<title>Profile – Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+
 <style>
+/* =========================================================
+   PROFILE.CSS (page-scoped, namespaced `profile-`)
+   Neo-brutalist light theme — matches analytics.html /
+   channels.html tokens: #F5F4EB bg, #211F1F ink,
+   #ACD1C0 mint, #DBD4B7 sand, 2px borders, hard shadows.
+========================================================= */
 
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
+.profile-skeleton{
+  background:linear-gradient(90deg,#EAE9DF 25%,#F5F4EB 50%,#EAE9DF 75%);
+  background-size:200% 100%;
+  animation:profile-shimmer 1.4s infinite;
+  border-radius:14px;
 }
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
+@keyframes profile-shimmer{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── TOP PHOTO BLOCK ── */
+.profile-avatar-wrap{ position:relative; flex-shrink:0; }
+.profile-avatar{
+  width:120px; height:120px; border-radius:28px; object-fit:cover;
+  border:2px solid #211F1F;
+  box-shadow:4px 4px 0px 0px #211F1F;
+  background:#DBD4B7;
 }
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
+.profile-avatar-grid{ 
+  display:grid; 
+  grid-template-columns:repeat(5,1fr); 
+  gap:8px; 
+  margin-top:10px; 
+  max-width:280px; 
 }
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
+.profile-avatar-opt{
+  width:44px; height:44px; border-radius:50%; cursor:pointer; object-fit:cover;
+  border:2px solid #211F1F; transition:.15s ease; background:#fff;
 }
+.profile-avatar-opt:hover{ transform:translateY(-2px); }
+.profile-avatar-opt.profile-sel{ box-shadow:0 0 0 3px #ACD1C0; }
+.profile-avatar-opt.profile-disabled{ cursor:not-allowed; opacity:.4; pointer-events:none; }
 
-
-
-:root{--bg:#050508;--card:#12141c;--border:#1e212c;--purple:#7c3aed;--purple2:#8b5cf6;--text-muted:#8a8f9e}
-*{font-family:'Inter',sans-serif}
-body{background:var(--bg);color:white;overflow-x:hidden}
-body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at top center,rgba(124,58,237,0.15) 0%,transparent 40%),radial-gradient(ellipse at bottom,rgba(124,58,237,0.08) 0%,transparent 50%);z-index:0;pointer-events:none}
-.glass-nav{background-image:linear-gradient(180deg,#924ef4 0,#7b2af0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);color:white}
-.card{background:linear-gradient(180deg,#151821 0%,#101219 100%);border:1px solid var(--border);box-shadow:0 1px 0 rgba(255,255,255,0.03) inset}
-.text-muted{color:var(--text-muted)}
-.gradient-text{background:linear-gradient(180deg,#fff 0%,#c9cdd8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.input-box{width:100%;background:#0f1118;border:1px solid #232632;border-radius:16px;padding:15px 18px;color:white;outline:none;transition:0.3s ease;font-size:14px}
-.input-box:focus{border-color:#7c3aed;box-shadow:0 0 0 4px rgba(124,58,237,0.15)}
-.input-box:disabled{opacity:0.45;cursor:not-allowed}
-.label{display:block;margin-bottom:10px;font-size:14px;font-weight:600}
-.save-btn{background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);color:white;border:none;padding:14px 28px;border-radius:16px;font-weight:700;transition:0.3s ease;cursor:pointer}
-.save-btn:hover{transform:translateY(-2px)}
-.save-btn:disabled{opacity:0.5;transform:none;cursor:not-allowed;pointer-events:none}
-.ghost-btn{background:#171a24;border:1px solid #2a2e3d;padding:14px 24px;border-radius:16px;font-size:14px;font-weight:600;transition:0.3s ease;cursor:pointer;color:white}
-.ghost-btn:hover{border-color:#7c3aed}
-.ghost-btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
-.danger-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:14px 24px;border-radius:16px;font-size:14px;font-weight:600;color:#f87171;transition:0.3s ease;cursor:pointer}
-.danger-btn:hover{background:rgba(239,68,68,0.2);border-color:#ef4444}
-.danger-btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
-.profile-image{width:120px;height:120px;border-radius:30px;object-fit:cover;border:3px solid rgba(124,58,237,0.5)}
-.upload-btn{background:#171a24;border:1px solid #2a2e3d;padding:10px 18px;border-radius:14px;font-size:13px;transition:0.3s ease;cursor:pointer;color:white;display:inline-block}
-.upload-btn:hover{border-color:#7c3aed}
-.upload-btn.disabled-btn{opacity:0.4;cursor:not-allowed;pointer-events:none}
-.skeleton{background:linear-gradient(90deg,#1a1d27 25%,#232636 50%,#1a1d27 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:12px}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600}
-.badge-active{background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
-.badge-blocked{background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25)}
-.stat-card{background:#0f1118;border:1px solid #232632;border-radius:20px;padding:16px 20px}
-.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-.avatar-opt{width:48px;height:48px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;object-fit:cover}
-.avatar-opt:hover{border-color:#7c3aed;transform:scale(1.08)}
-.avatar-opt.sel{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(124,58,237,.25)}
-.avatar-opt.disabled-avatar{cursor:not-allowed;opacity:0.4;pointer-events:none}
-select.input-box{appearance:none;-webkit-appearance:none}
-
-/* BLOCKED BANNER */
-.blocked-banner{
-  background:linear-gradient(135deg,rgba(239,68,68,0.15) 0%,rgba(185,28,28,0.1) 100%);
-  border:1px solid rgba(239,68,68,0.4);
-  border-radius:24px;
-  padding:28px 32px;
-  margin-bottom:28px;
+/* ── AVATAR STYLE PICKER ── */
+.profile-style-row{
   display:flex;
-  flex-direction:column;
+  flex-wrap:wrap;
+  gap:6px;
+  padding-bottom:6px;
+  margin-top:10px;
+  max-width:100%;
+}
+.profile-style-chip{
+  flex-shrink:0;
+  display:inline-flex;
   align-items:center;
-  text-align:center;
-  gap:14px;
-  animation: pulseRed 2.5s ease-in-out infinite;
+  gap:5px;
+  padding:6px 12px;
+  border-radius:999px;
+  border:2px solid #211F1F;
+  background:#fff;
+  font-size:11.5px;
+  font-weight:700;
+  color:#211F1F;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.15s ease;
 }
-@keyframes pulseRed{
-  0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
-  50%{box-shadow:0 0 0 8px rgba(239,68,68,0.08)}
-}
-.blocked-icon{
-  width:64px;height:64px;border-radius:50%;
-  background:rgba(239,68,68,0.15);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;
-  border:2px solid rgba(239,68,68,0.3);
-}
-.blocked-contact-btn{
-  background:linear-gradient(180deg,#ef4444 0%,#b91c1c 100%);
-  color:white;border:none;padding:12px 28px;
-  border-radius:14px;font-weight:700;font-size:14px;
-  cursor:pointer;transition:0.3s;text-decoration:none;
-  display:inline-block;
-}
-.blocked-contact-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(239,68,68,0.3)}
+.profile-style-chip:hover{ background:#F5F4EB; }
+.profile-style-chip.profile-style-active{ background:#211F1F; color:#DBD4B7; }
+.profile-style-chip.profile-disabled{ cursor:not-allowed; opacity:.4; pointer-events:none; }
 
-/* BLOCKED OVERLAY on form */
-.blocked-form-overlay{
-  position:relative;
+.profile-shuffle-btn{
+  display:inline-flex; align-items:center; gap:6px; margin-top:10px;
+  padding:6px 14px; border-radius:999px; border:2px solid #211F1F;
+  background:#ACD1C0; font-size:11.5px; font-weight:800; color:#211F1F;
+  cursor:pointer; transition:.15s ease;
 }
-.blocked-form-overlay::after{
-  content:'🔒 Account Blocked';
-  position:absolute;inset:0;
-  background:rgba(5,5,8,0.6);
-  border-radius:32px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:700;color:#f87171;
-  letter-spacing:0.5px;
-  backdrop-filter:blur(2px);
-  pointer-events:all;
-  cursor:not-allowed;
+.profile-shuffle-btn:hover{ transform:translateY(-1px); box-shadow:2px 2px 0px 0px #211F1F; }
+.profile-shuffle-btn:disabled{ cursor:not-allowed; opacity:.4; pointer-events:none; }
+
+/* ── FORM FIELDS ── */
+.profile-label{ display:block; margin-bottom:8px; font-size:13px; font-weight:800; color:#211F1F; }
+.profile-input, .profile-select, .profile-textarea{
+  width:100%; background:#fff; border:2px solid #211F1F; border-radius:14px;
+  padding:12px 16px; color:#211F1F; outline:none; font-size:14px;
+  font-family:'Inter',sans-serif; transition:.15s ease; box-sizing:border-box;
+}
+.profile-input:focus, .profile-select:focus, .profile-textarea:focus{
+  box-shadow:3px 3px 0px 0px #211F1F; transform:translate(-1px,-1px);
+}
+.profile-input:disabled, .profile-select:disabled, .profile-textarea:disabled{
+  opacity:.5; cursor:not-allowed; background:#EAE9DF;
+}
+.profile-textarea{ resize:none; min-height:120px; }
+.profile-field-hint{ font-size:11px; color:#6b7280; margin-top:6px; }
+.profile-select-wrap{ position:relative; }
+.profile-select{ appearance:none; -webkit-appearance:none; padding-right:40px; }
+.profile-select-caret{ position:absolute; right:14px; top:50%; transform:translateY(-50%); pointer-events:none; }
+
+/* ── STAT / STATUS PILLS ── */
+.profile-badge{
+  display:inline-flex; align-items:center; gap:6px; padding:5px 13px;
+  border-radius:999px; font-size:11px; font-weight:800; border:2px solid #211F1F;
+  text-transform:uppercase; letter-spacing:.02em;
+}
+.profile-badge-active{ background:#ACD1C0; color:#211F1F; }
+.profile-badge-blocked{ background:#ef4444; color:#fff; }
+.profile-badge-yes{ background:#ACD1C0; color:#211F1F; }
+.profile-badge-no{ background:#EAE9DF; color:#6b7280; }
+.profile-badge-warning{ background:#fbbf24; color:#211F1F; }
+.profile-badge-danger{ background:#ef4444; color:#fff; }
+
+.profile-promo-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+@media (min-width:640px){ .profile-promo-grid{ grid-template-columns:repeat(4,1fr); } }
+.profile-promo-card{
+  background:#fff; border:2px solid #211F1F; border-radius:16px; padding:14px;
+  box-shadow:3px 3px 0px 0px #211F1F; display:flex; flex-direction:column; gap:8px; align-items:flex-start;
+}
+.profile-promo-label{ font-size:11px; font-weight:800; color:#6b7280; text-transform:uppercase; letter-spacing:.03em; }
+
+/* ── VIOLATION / SUSPENSION NOTICE ── */
+.profile-violation-box{
+  border:2px solid #211F1F; border-radius:16px; padding:16px 18px;
+  display:flex; gap:12px; align-items:flex-start; margin-top:16px;
+}
+.profile-violation-box.profile-vwarning{ background:#fff7db; }
+.profile-violation-box.profile-vsuspended{ background:#fee2e2; }
+.profile-violation-icon{ font-size:22px; line-height:1; }
+.profile-violation-title{ font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.03em; color:#211F1F; }
+.profile-violation-text{ font-size:12.5px; color:#3f3d3d; margin-top:4px; line-height:1.5; }
+
+/* ── DANGER ZONE ── */
+.profile-danger-zone{
+  border:2px dashed #ef4444; border-radius:20px; padding:20px 22px; margin-top:28px;
+  background:rgba(239,68,68,0.05);
+}
+
+/* ── BLOCKED FORM OVERLAY ── */
+.profile-blocked-overlay{ position:relative; }
+.profile-blocked-overlay::after{
+  content:'🔒 Account Blocked — Editing Disabled';
+  position:absolute; inset:0; background:rgba(245,244,235,0.85);
+  border-radius:20px; display:flex; align-items:center; justify-content:center;
+  font-size:15px; font-weight:800; color:#211F1F; text-align:center; padding:20px;
+  backdrop-filter:blur(1px); pointer-events:all; cursor:not-allowed; z-index:5;
+}
+
+/* ── RESPONSIVE FIXES FOR MOBILE ── */
+@media (max-width: 768px) {
+  .profile-avatar-wrap {
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  
+  .profile-avatar {
+    width:100px;
+    height:100px;
+  }
+  
+  #profileName {
+    text-align:center;
+    font-size:1.5rem;
+  }
+  
+  #profileCodeLabel {
+    text-align:center;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-avatar-grid {
+    grid-template-columns:repeat(5,1fr);
+    max-width:100%;
+    gap:6px;
+  }
+  
+  .profile-avatar-opt {
+    width:38px;
+    height:38px;
+  }
+  
+  .profile-style-row {
+    gap:4px;
+  }
+  
+  .profile-style-chip {
+    font-size:10px;
+    padding:4px 10px;
+  }
+  
+  .profile-shuffle-btn {
+    font-size:10px;
+    padding:5px 12px;
+    width:auto;
+  }
+  
+  .profile-photo-section {
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-avatar-grid {
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
+  }
+  
+  .profile-avatar-opt {
+    width:32px;
+    height:32px;
+  }
+  
+  .profile-style-chip {
+    font-size:9px;
+    padding:3px 8px;
+  }
+  
+  .profile-style-row {
+    gap:3px;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile-avatar-grid {
+    grid-template-columns:repeat(3,1fr);
+  }
+  
+  .profile-avatar-opt {
+    width:28px;
+    height:28px;
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-  <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-    <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-      <img src="images/logo.svg" class="w-7 h-7 hidden md:block">
-      <span class="font-semibold text-[17px]">Exsub Group</span>
-    </div>
-    <div class="hidden md:flex items-center gap-8 text-[13px]" id="navLinks">
-      <a href="analytics.html" class="text-white hover:text-purple-300 transition nav-lockable">Dashboard</a>
-      <a href="channels.html"  class="text-white hover:text-purple-300 transition nav-lockable">Channels</a>
-      <a href="groups.html"    class="text-white hover:text-purple-300 transition nav-lockable">Groups</a>
-      <a href="howtowork.html" class="text-white hover:text-purple-300 transition nav-lockable">How To Work</a>
-      <a href="exsubextension.html" class="text-white hover:text-purple-300 transition nav-lockable">Exsub Extension</a>
-      <a href="support.html"   class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="relative">
-        <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-        <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-          <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-          <div class="p-4 text-sm text-gray-400">No new notifications</div>
-        </div>
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main class="page-content relative z-10 pb-5 px-4">
+<main class="relative z-10 pt-5 pb-5 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+
+  <!-- LOADING -->
+  <div id="loadingState" class="space-y-6">
+    <div class="flex gap-6 items-center">
+      <div class="profile-skeleton w-[120px] h-[120px] shrink-0"></div>
+      <div class="flex-1 space-y-3">
+        <div class="profile-skeleton h-8 w-48"></div>
+        <div class="profile-skeleton h-5 w-32"></div>
+        <div class="profile-skeleton h-9 w-40 mt-2"></div>
       </div>
-      <div class="relative">
-        <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-          <img id="navAvatar" src="https://api.dicebear.com/8.x/adventurer/svg?seed=alpha&backgroundColor=1e212c" class="w-8 h-8 rounded-full object-cover">
-          <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-        </button>
-        <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-          <div class="p-4 border-b border-[#232632]">
-            <div class="flex items-center gap-3">
-              <img id="dropAvatar" src="https://api.dicebear.com/8.x/adventurer/svg?seed=alpha&backgroundColor=1e212c" class="w-12 h-12 rounded-full object-cover">
-              <div>
-                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #----</p>
-              </div>
-            </div>
-          </div>
-        <div class="py-2">
-
-  <a href="profile.html"
-     class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-     My Profile
-  </a>
-
-  <!-- Task Menu -->
-  <div class="border-t border-[#232632] my-1"></div>
-
-  <button id="taskMenuBtn"
-          class="w-full flex items-center justify-between px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-      <span>📋 Tasks</span>
-      <span id="taskArrow">▼</span>
-  </button>
-
-  <div id="taskSubMenu" class="hidden bg-[#0f1118]">
-
-      <a href="subscriberstasks.html"
-         class="block pl-10 pr-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-         👥 Subscribers Task
-      </a>
-
-      <a href="videotasks.html"
-         class="block pl-10 pr-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-         🎥 Video Task
-      </a>
-
-      <a href="othertasks.html"
-         class="block pl-10 pr-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-         📦 Other Tasks
-      </a>
-
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="profile-skeleton h-20"></div>
+      <div class="profile-skeleton h-20"></div>
+      <div class="profile-skeleton h-20"></div>
+      <div class="profile-skeleton h-20"></div>
+    </div>
+    <div class="profile-skeleton h-40"></div>
   </div>
 
-  <div class="border-t border-[#232632] my-1"></div>
+  <!-- ERROR -->
+  <div id="errorState" class="hidden text-center py-32">
+    <div class="text-5xl mb-4">⚠️</div>
+    <div class="text-xl font-bold mb-2 text-[#211F1F]">Could not load your profile</div>
+    <div class="text-gray-500 text-sm mb-6">Please check your connection and try again.</div>
+    <button onclick="loadProfile()" class="btn-retro btn-charcoal">Retry</button>
+  </div>
 
-  <a href="support.html"
-     class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
-     Contact &amp; Support
-  </a>
+  <!-- PROFILE CONTENT -->
+  <div id="profileContent" class="hidden">
 
-  <button onclick="logoutUser()"
-          class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
-      Logout
-  </button>
+    <!-- ── HEADER ── -->
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-title">My Profile</span>
+        </div>
+
+        <div id="statusBadgeCard" class="nb-status-card">
+          <span id="statusIcon" class="nb-card-icon">✅</span>
+          <span class="nb-card-title">Account</span>
+          <span id="statusPill" class="nb-pill nb-pill-warning">ACTIVE</span>
+        </div>
+
+        <div id="extensionStatus" class="nb-status-card nb-ext-not-ready">
+          <span id="extIcon" class="nb-card-icon">🔌</span>
+          <span class="nb-card-title">Extension</span>
+          <span id="extBadge" class="nb-pill nb-pill-warning">PENDING</span>
+          <a id="extCTA" href="exsubextension.html" class="nb-card-btn">Setup</a>
+        </div>
+
+        <a id="violationBadgeCard" href="support.html" class="nb-status-card nb-status-link hidden">
+          <span class="nb-card-icon">⚠️</span>
+          <span class="nb-card-title">Account Notice</span>
+          <span id="violationPill" class="nb-pill nb-pill-danger nb-pill-blink">WARNING</span>
+        </a>
+      </div>
+
+      <h1 class="text-4xl font-black text-[#211F1F]">Edit Your Profile</h1>
+      <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Update your personal information, profile image and account details.</div>
+    </div>
+
+    <!-- ── BLOCKED BANNER ── -->
+    <div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; font-family: system-ui, -apple-system, sans-serif; border: 2px solid #211F1F; border-radius: 10px; max-width: 100%; margin-bottom: 24px;">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+        <span style="font-size: 1.75rem; line-height: 1;">⛔</span>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: #1f2937; margin: 0; letter-spacing: -0.025em;">Account Blocked</h2>
+      </div>
+      <p style="font-size: 0.9rem; color: #4b5563; margin: 0 0 1rem 0; line-height: 1.4;">
+        Your account has been suspended by an administrator. All platform features, task submissions, and profile editing are disabled immediately.
+      </p>
+      <div id="blockedReasonBox" class="hidden" style="background-color: #fee2e2; border-left: 3px solid #ef4444; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+        <span style="font-size: 1rem;">📋</span>
+        <div style="font-size: 0.85rem; color: #7f1d1d; line-height: 1.4;">
+          <strong style="color: #991b1b; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; display: inline-block; margin-right: 0.5rem;">Reason:</strong>
+          <span id="blockedReasonText"></span>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid #EAE9DF;">
+        <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Please provide your User Code when appealing.</span>
+        <div style="display: flex; gap: 0.5rem; width: auto;">
+          <a href="support.html" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #dc2626; color: #ffffff; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-radius: 6px; white-space: nowrap;">Appeal Block</a>
+          <button onclick="logoutUser()" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #d1d5db; color: #4b5563; font-weight: 600; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATS ROW ── -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="card p-5 text-center">
+        <div class="text-2xl mb-1">🆔</div>
+        <div class="text-xs text-gray-500 mb-1">Member ID</div>
+        <div id="statCode" class="font-bold text-sm">#----</div>
+      </div>
+      <div class="card p-5 text-center">
+        <div class="text-2xl mb-1">📅</div>
+        <div class="text-xs text-gray-500 mb-1">Joined</div>
+        <div id="statJoin" class="font-bold text-sm">--/--/----</div>
+      </div>
+      <div class="card p-5 text-center">
+        <div class="text-2xl mb-1">🌍</div>
+        <div class="text-xs text-gray-500 mb-1">Country</div>
+        <div id="statCountry" class="font-bold text-sm">--</div>
+      </div>
+      <div class="card p-5 text-center">
+        <div class="text-2xl mb-1">✅</div>
+        <div class="text-xs text-gray-500 mb-1">Account Completed</div>
+        <div id="statCompleted" class="font-bold text-sm">--</div>
+      </div>
+    </div>
+
+    <!-- ── PROMOTION STATUS ── -->
+    <div class="card p-6 mb-6">
+      <h3 class="text-sm font-black uppercase tracking-wider text-[#211F1F] mb-4">Promotion Status</h3>
+      <div class="profile-promo-grid">
+        <div class="profile-promo-card">
+          <span class="profile-promo-label">👥 Subscribers</span>
+          <span id="promoSubs" class="profile-badge profile-badge-no">No</span>
+        </div>
+        <div class="profile-promo-card">
+          <span class="profile-promo-label">🎬 Video Watch</span>
+          <span id="promoVideo" class="profile-badge profile-badge-no">No</span>
+        </div>
+        <div class="profile-promo-card">
+          <span class="profile-promo-label">⏱ Playlist</span>
+          <span id="promoPlaylist" class="profile-badge profile-badge-no">No</span>
+        </div>
+        <div class="profile-promo-card">
+          <span class="profile-promo-label">💬 Like &amp; Comment</span>
+          <span id="promoEngage" class="profile-badge profile-badge-no">No</span>
+        </div>
+      </div>
+
+      <!-- Violation / Suspension notice (hidden unless flagged) -->
+      <div id="violationBox" class="profile-violation-box hidden">
+        <span id="violationIcon" class="profile-violation-icon">⚠️</span>
+        <div>
+          <div id="violationTitle" class="profile-violation-title">Warning</div>
+          <div id="violationText" class="profile-violation-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MAIN FORM CARD ── -->
+    <div id="mainFormCard" class="card p-6 md:p-8">
+
+      <!-- PHOTO - Responsive section -->
+      <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8 pb-8" style="border-bottom:2px solid #EAE9DF;">
+        <div class="profile-avatar-wrap profile-photo-section">
+          <img id="profilePreview" src="" class="profile-avatar" alt="Profile">
+        </div>
+        <div class="flex-1 w-full text-center md:text-left">
+          <h2 id="profileName" class="text-2xl md:text-3xl font-black text-[#211F1F]">--</h2>
+          <p class="text-gray-500 mt-1 text-sm" id="profileCodeLabel">Exsub Member ID: #----</p>
+
+          <div class="mt-4 w-full">
+            <p class="text-xs text-gray-500 mb-1 text-left md:text-left">Choose your avatar style:</p>
+            <div class="profile-style-row w-full" id="styleRow"></div>
+            
+            <p class="text-xs text-gray-500 mt-3 mb-1 text-left md:text-left">Select an avatar:</p>
+            <div class="profile-avatar-grid w-full" id="miniAvatarGrid"></div>
+            
+            <button type="button" id="shuffleBtn" class="profile-shuffle-btn">🔀 Shuffle Options</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM FIELDS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+
+        <div>
+          <label class="profile-label">Username <span class="text-red-500">*</span></label>
+          <input type="text" id="fUsername" maxlength="7" class="profile-input" placeholder="5–7 characters, no spaces">
+          <p class="profile-field-hint">5–7 characters, no spaces, must be unique.</p>
+        </div>
+
+        <div>
+          <label class="profile-label">Member ID</label>
+          <input type="text" id="fUserCode" class="profile-input" disabled>
+        </div>
+
+        <div>
+          <label class="profile-label">WhatsApp Number <span class="text-xs text-gray-400 font-normal">(with country code)</span></label>
+          <input type="tel" id="fWhatsapp" class="profile-input" placeholder="+923001234567" maxlength="16">
+          <p class="profile-field-hint">Numbers only with country code. Example: +923001234567</p>
+        </div>
+
+        <div>
+          <label class="profile-label">Facebook Profile Link</label>
+          <input type="url" id="fFacebook" class="profile-input" placeholder="https://facebook.com/yourprofile">
+          <p class="profile-field-hint">Must be a facebook.com or fb.com profile link.</p>
+        </div>
+
+        <div>
+          <label class="profile-label">Country <span class="text-red-500">*</span></label>
+          <div class="profile-select-wrap">
+            <select id="fCountry" class="profile-select">
+             <option value="">Select Country</option>
+            <option>Afghanistan</option><option>Albania</option><option>Algeria</option>
+            <option>Angola</option><option>Argentina</option><option>Armenia</option>
+            <option>Australia</option><option>Austria</option><option>Azerbaijan</option>
+            <option>Bahrain</option><option>Bangladesh</option><option>Belarus</option>
+            <option>Belgium</option><option>Bolivia</option><option>Bosnia and Herzegovina</option>
+            <option>Brazil</option><option>Bulgaria</option><option>Cambodia</option>
+            <option>Cameroon</option><option>Canada</option><option>Chile</option>
+            <option>China</option><option>Colombia</option><option>Congo</option>
+            <option>Costa Rica</option><option>Croatia</option><option>Cuba</option>
+            <option>Czech Republic</option><option>Denmark</option><option>Dominican Republic</option>
+            <option>Ecuador</option><option>Egypt</option><option>Estonia</option>
+            <option>Ethiopia</option><option>Finland</option><option>France</option>
+            <option>Georgia</option><option>Germany</option><option>Ghana</option>
+            <option>Greece</option><option>Guatemala</option><option>Honduras</option>
+            <option>Hungary</option><option>Iceland</option><option>India</option>
+            <option>Indonesia</option><option>Iran</option><option>Iraq</option>
+            <option>Ireland</option><option>Italy</option><option>Jamaica</option>
+            <option>Japan</option><option>Jordan</option><option>Kazakhstan</option>
+            <option>Kenya</option><option>Kuwait</option><option>Kyrgyzstan</option>
+            <option>Latvia</option><option>Lebanon</option><option>Libya</option>
+            <option>Lithuania</option><option>Luxembourg</option><option>Malaysia</option>
+            <option>Maldives</option><option>Mali</option><option>Malta</option>
+            <option>Mauritius</option><option>Mexico</option><option>Moldova</option>
+            <option>Mongolia</option><option>Montenegro</option><option>Morocco</option>
+            <option>Mozambique</option><option>Myanmar</option><option>Nepal</option>
+            <option>Netherlands</option><option>New Zealand</option><option>Nicaragua</option>
+            <option>Nigeria</option><option>North Macedonia</option><option>Norway</option>
+            <option>Oman</option><option>Pakistan</option><option>Panama</option>
+            <option>Paraguay</option><option>Peru</option><option>Philippines</option>
+            <option>Poland</option><option>Portugal</option><option>Qatar</option>
+            <option>Romania</option><option>Russia</option><option>Rwanda</option>
+            <option>Saudi Arabia</option><option>Senegal</option><option>Serbia</option>
+            <option>Singapore</option><option>Slovakia</option><option>Slovenia</option>
+            <option>Somalia</option><option>South Africa</option><option>South Korea</option>
+            <option>Spain</option><option>Sri Lanka</option><option>Sudan</option>
+            <option>Sweden</option><option>Switzerland</option><option>Syria</option>
+            <option>Taiwan</option><option>Tajikistan</option><option>Tanzania</option>
+            <option>Thailand</option><option>Trinidad and Tobago</option><option>Tunisia</option>
+            <option>Turkey</option><option>Turkmenistan</option><option>UAE</option>
+            <option>Uganda</option><option>Ukraine</option><option>United Kingdom</option>
+            <option>United States</option><option>Uruguay</option><option>Uzbekistan</option>
+            <option>Venezuela</option><option>Vietnam</option><option>Yemen</option>
+            <option>Zambia</option><option>Zimbabwe</option>
+            </select>
+            <div class="profile-select-caret">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#211F1F" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="profile-label">Join Date</label>
+          <input type="text" id="fJoinDate" class="profile-input" disabled>
+        </div>
+
+      </div>
+
+      <!-- BIO -->
+      <div class="mt-6">
+        <label class="profile-label">Bio</label>
+        <textarea id="fBio" class="profile-textarea" maxlength="200" placeholder="Write about yourself..."></textarea>
+        <p class="profile-field-hint">Max 200 characters.</p>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="mt-10">
+        <h2 class="text-xl font-black text-[#211F1F] mb-6">🔒 Change Password</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="profile-label">Current Password <span class="text-red-500">*</span></label>
+            <input type="password" id="fCurrentPwd" class="profile-input" placeholder="Enter current password" maxlength="7">
+          </div>
+          <div>
+            <label class="profile-label">New Password <span class="text-red-500">*</span></label>
+            <input type="password" id="fNewPwd" class="profile-input" placeholder="5–7 characters, no spaces" maxlength="7">
+          </div>
+        </div>
+        <p class="profile-field-hint mt-3">Leave both fields empty if you don't want to change your password.</p>
+      </div>
+
+      <!-- SAVE BUTTONS -->
+      <div class="flex flex-wrap gap-4 mt-10">
+        <button id="saveBtn" class="btn-retro btn-charcoal" onclick="saveProfile()">💾 Save Changes</button>
+        <button id="resetBtn" class="btn-retro btn-sand" onclick="loadProfile()">↩ Reset</button>
+      </div>
+
+    </div>
+    <!-- /mainFormCard -->
+
+  </div>
+  <!-- /profileContent -->
 
 </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-    <div class="flex flex-col gap-4 text-sm">
-      <a href="analytics.html" class="text-white nav-lockable">Dashboard</a>
-      <a href="channels.html"  class="text-white nav-lockable">Channels</a>
-      <a href="groups.html"    class="text-white nav-lockable">Groups</a>
-      <a href="howtowork.html" class="text-white nav-lockable">How To Work</a>
-      <a href="exsubextension.html" class="text-white nav-lockable">Exsub Extension</a>
-      <a href="support.html"   class="text-white">Contact &amp; Support</a>
-      <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-    </div>
-  </div>
-</nav>
-
-<!-- MAIN -->
-<main class="relative z-10 pt-32 pb-20 px-4">
-  <div class="max-w-[900px] mx-auto">
-
-    <!-- PAGE HEADER -->
-    <div class="text-center mb-10">
-      <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-        👤 Member Profile
-      </div>
-      <h1 class="text-4xl md:text-5xl font-black gradient-text">Edit Your Profile</h1>
-      <p class="text-muted mt-5 max-w-[650px] mx-auto leading-7">Update your personal information, profile image and account details.</p>
-    </div>
-
-    <!-- LOADING SKELETON -->
-    <div id="loadingState" class="card rounded-[32px] p-8 space-y-6">
-      <div class="flex gap-6 items-center">
-        <div class="skeleton w-[120px] h-[120px] rounded-[30px] shrink-0"></div>
-        <div class="flex-1 space-y-3">
-          <div class="skeleton h-8 w-48 rounded-xl"></div>
-          <div class="skeleton h-5 w-32 rounded-xl"></div>
-          <div class="skeleton h-9 w-40 rounded-xl mt-2"></div>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="skeleton h-14 rounded-2xl"></div>
-        <div class="skeleton h-14 rounded-2xl"></div>
-        <div class="skeleton h-14 rounded-2xl"></div>
-        <div class="skeleton h-14 rounded-2xl"></div>
-      </div>
-      <div class="skeleton h-32 rounded-2xl"></div>
-    </div>
-
-    <!-- BLOCKED BANNER (hidden by default) -->
-    <div id="blockedBanner" class="hidden blocked-banner">
-      <div class="blocked-icon">🚫</div>
-      <div>
-        <h2 class="text-2xl font-black text-red-400 mb-2">Your Account Has Been Blocked</h2>
-        <p class="text-red-300/80 text-sm leading-relaxed max-w-[520px] mx-auto">
-          Your EXSUB account has been suspended by an administrator. You cannot access any features until the block is lifted.
-          Please contact our support team for more information.
-        </p>
-      </div>
-      <a href="support.html" class="blocked-contact-btn">📩 Contact Support</a>
-    </div>
-
-    <!-- PROFILE CARD (hidden until loaded) -->
-    <div id="profileCard" class="hidden">
-
-      <!-- STATS ROW -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <div class="stat-card text-center">
-          <p class="text-muted text-xs mb-1">Status</p>
-          <span id="statStatus" class="badge badge-active">● Active</span>
-        </div>
-        <div class="stat-card text-center">
-          <p class="text-muted text-xs mb-1">Member ID</p>
-          <p id="statCode" class="text-sm font-bold text-purple-400">#----</p>
-        </div>
-        <div class="stat-card text-center">
-          <p class="text-muted text-xs mb-1">Joined</p>
-          <p id="statJoin" class="text-sm font-semibold">--/--/----</p>
-        </div>
-        <div class="stat-card text-center">
-          <p class="text-muted text-xs mb-1">Country</p>
-          <p id="statCountry" class="text-sm font-semibold">--</p>
-        </div>
-      </div>
-
-      <!-- MAIN FORM CARD -->
-      <div id="mainFormCard" class="card rounded-[32px] p-6 md:p-8">
-
-        <!-- PROFILE TOP -->
-        <div class="flex flex-col md:flex-row items-center gap-8 pb-8 border-b border-[#232632]">
-          <div class="relative">
-            <img id="profilePreview" src="" class="profile-image" alt="Profile">
-          </div>
-          <div class="flex-1">
-            <h2 id="profileName" class="text-3xl font-bold">--</h2>
-            <p class="text-muted mt-1 text-sm" id="profileCodeLabel">EXSUB Member ID: #----</p>
-
-            <!-- Photo actions -->
-            <div class="flex flex-wrap gap-3 mt-5" id="photoActionBtns">
-              <label for="photoUploadInput" class="upload-btn" id="uploadPhotoLabel">📷 Upload Photo</label>
-              <input type="file" id="photoUploadInput" accept=".jpg,.jpeg,.png" class="hidden">
-              <button id="removePhotoBtn" class="upload-btn">🗑 Remove Photo</button>
-            </div>
-            <p class="text-[11px] text-muted mt-2">Only <strong class="text-gray-300">JPEG, JPG, PNG</strong> allowed — max 2MB.</p>
-
-            <!-- Mini avatar picker -->
-            <div class="mt-4">
-              <p class="text-xs text-muted mb-1">Or choose a default avatar:</p>
-              <div class="avatar-grid" id="miniAvatarGrid"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- FORM FIELDS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-
-          <div>
-            <label class="label">Username <span class="text-red-400">*</span></label>
-            <input type="text" id="fUsername" maxlength="7" class="input-box" placeholder="5–7 characters, no spaces">
-            <p class="text-[11px] text-muted mt-1">5–7 characters, no spaces, must be unique.</p>
-          </div>
-
-          <div>
-            <label class="label">Member ID</label>
-            <input type="text" id="fUserCode" class="input-box" disabled>
-          </div>
-
-          <div>
-            <label class="label">
-              WhatsApp Number
-              <span class="text-xs text-muted font-normal">(with country code)</span>
-            </label>
-            <input type="tel" id="fWhatsapp" class="input-box" placeholder="+923001234567" maxlength="16">
-            <p class="text-[11px] text-muted mt-1">Numbers only with country code. Example: +923001234567</p>
-          </div>
-
-          <div>
-            <label class="label">Facebook Profile Link</label>
-            <input type="url" id="fFacebook" class="input-box" placeholder="https://facebook.com/yourprofile">
-            <p class="text-[11px] text-muted mt-1">Must be a facebook.com or fb.com profile link.</p>
-          </div>
-
-          <div>
-            <label class="label">Country <span class="text-red-400">*</span></label>
-            <div class="relative">
-              <select id="fCountry" class="input-box pr-10">
-                <option value="">Select Country</option>
-                <option>Pakistan</option><option>India</option><option>Bangladesh</option>
-                <option>United States</option><option>United Kingdom</option><option>Canada</option>
-                <option>Australia</option><option>Germany</option><option>France</option>
-                <option>Saudi Arabia</option><option>UAE</option><option>Turkey</option>
-                <option>Indonesia</option><option>Malaysia</option><option>Brazil</option>
-              </select>
-              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label class="label">Join Date</label>
-            <input type="text" id="fJoinDate" class="input-box" disabled>
-          </div>
-
-        </div>
-
-        <!-- BIO -->
-        <div class="mt-6">
-          <label class="label">Bio</label>
-          <textarea id="fBio" class="input-box min-h-[120px] resize-none" maxlength="200" placeholder="Write about yourself..."></textarea>
-          <p class="text-[11px] text-muted mt-1">Max 200 characters.</p>
-        </div>
-
-        <!-- CHANGE PASSWORD -->
-        <div class="mt-10">
-          <h2 class="text-xl font-bold mb-6">🔒 Change Password</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="label">Current Password <span class="text-red-400">*</span></label>
-              <input type="password" id="fCurrentPwd" class="input-box" placeholder="Enter current password" maxlength="7">
-            </div>
-            <div>
-              <label class="label">New Password <span class="text-red-400">*</span></label>
-              <input type="password" id="fNewPwd" class="input-box" placeholder="5–7 characters, no spaces" maxlength="7">
-            </div>
-          </div>
-          <p class="text-[12px] text-muted mt-3">Leave both fields empty if you don't want to change your password.</p>
-        </div>
-
-        <!-- SAVE BUTTONS -->
-        <div class="flex flex-wrap gap-4 mt-10">
-          <button id="saveBtn" class="save-btn" onclick="saveProfile()">💾 Save Changes</button>
-          <button id="resetBtn" class="ghost-btn" onclick="loadProfile()">↩ Reset</button>
-        </div>
-
-        <!-- DANGER ZONE -->
-        <!-- <div class="mt-10 border border-red-500/20 rounded-[20px] p-6 bg-red-500/5">
-          <h3 class="text-red-400 font-bold text-lg mb-2">⚠️ Danger Zone</h3>
-          <p class="text-muted text-sm mb-5">Deleting your account is permanent and cannot be undone. All your data, channels, and progress will be lost.</p>
-          <button id="deleteBtn" class="danger-btn" onclick="deleteAccount()">🗑 Delete My Account</button>
-        </div> -->
-
-      </div>
-    </div>
-
-    <!-- ERROR STATE -->
-    <div id="errorState" class="hidden card rounded-[32px] p-10 text-center">
-      <p class="text-5xl mb-4">😕</p>
-      <h3 class="text-xl font-bold mb-2">Failed to Load Profile</h3>
-      <p class="text-muted text-sm mb-6">Please check your connection and try again.</p>
-      <button class="save-btn" onclick="loadProfile()">Try Again</button>
-    </div>
-
-  </div>
+</main>
 </main>
 
-<!-- FOOTER -->
-<footer class="relative z-10 border-t border-[#1e212c]">
-  <div class="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2">
-        <img src="images/logo.svg" class="w-6 h-6">
-        <span class="font-semibold">Exsub Group</span>
-      </div>
-      <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
-    </div>
-    <div class="flex gap-6 text-sm text-muted">
-      <a href="#" class="hover:text-white transition">Privacy</a>
-      <a href="#" class="hover:text-white transition">Terms</a>
-      <a href="support.html" class="hover:text-white transition">Support</a>
-    </div>
-  </div>
-</footer>
-
 <script>
+'use strict';
+
 /* ============================================================
    CONFIG
 ============================================================ */
-const WEB_APP_URL   = "https://script.google.com/macros/s/AKfycbx9iWxNfqlVIAgUF4uUNoXIzX_BrmsFZB7l0AGq5CN5YLxqenqaugPXk8BO12kM2sG5/exec";
-const AVATAR_SEEDS  = ["alpha","bravo","charlie","delta","echo","foxtrot","golf","hotel","india","juliet"];
-const avUrl         = s => `https://api.dicebear.com/8.x/adventurer/svg?seed=${s}&backgroundColor=1e212c`;
+const WEB_APP_URL   = "https://script.google.com/macros/s/AKfycbwR6Qy6S7pep2iHdMkoD4Gcn-zE2RfqWXy2wjFzo6jnn0tABdD7QJFDwTQZ1xKPKWTP/exec";
+
+/* DiceBear v10 — free, keyless, deterministic-by-seed avatars.
+   Any string is a valid seed, so this isn't a fixed list of
+   avatars — it's a live generator. We show a handful of random
+   ones per style and let the person shuffle for more, across a
+   curated set of styles instead of just one. */
+const AVATAR_STYLES = [
+  { id:"adventurer",  label:"Adventurer" },
+  { id:"avataaars",   label:"Avataaars" },
+  { id:"micah",       label:"Micah" },
+  { id:"lorelei",     label:"Lorelei" },
+  { id:"notionists",  label:"Notionists" },
+  { id:"open-peeps",  label:"Open Peeps" },
+  { id:"personas",    label:"Personas" },
+  { id:"miniavs",     label:"Miniavs" },
+  { id:"bottts",      label:"Bottts" },
+  { id:"pixel-art",   label:"Pixel Art" },
+  { id:"fun-emoji",   label:"Fun Emoji" },
+  { id:"thumbs",      label:"Thumbs" }
+];
+const AVATAR_OPTIONS_PER_PAGE = 10;
+const avUrl = (seed, style) => `https://api.dicebear.com/10.x/${style || "adventurer"}/svg?seed=${encodeURIComponent(seed)}&backgroundColor=ACD1C0`;
+const randomSeed = () => Math.random().toString(36).slice(2, 10);
 
 /* ============================================================
    STATE
@@ -489,77 +597,74 @@ let isBlocked    = false;
 /* ============================================================
    AUTH GUARD
 ============================================================ */
-const storedCode = localStorage.getItem("usercode");
-if (!storedCode) window.location.href = "signin.html";
+const storedCode = (localStorage.getItem("usercode") || "").trim();
+if (!storedCode) window.location.replace("signin.html");
 
 /* ============================================================
-   AVATAR GRID
+   AVATAR PICKER — style tabs + shufflable random grid
 ============================================================ */
-const miniGrid = document.getElementById("miniAvatarGrid");
-AVATAR_SEEDS.forEach(seed => {
-  const img   = document.createElement("img");
-  img.src     = avUrl(seed);
-  img.className = "avatar-opt";
-  img.title   = seed;
-  img.addEventListener("click", () => {
-    if (isBlocked) return;
-    document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
-    img.classList.add("sel");
-    newPhotoData = avUrl(seed);
-    photoChanged = true;
-    document.getElementById("profilePreview").src = newPhotoData;
+let currentAvatarStyle = AVATAR_STYLES[0].id;
+let currentAvatarSeeds = [];
+
+function newSeedBatch() {
+  currentAvatarSeeds = Array.from({ length: AVATAR_OPTIONS_PER_PAGE }, () => randomSeed());
+}
+
+function renderStyleRow() {
+  const row = document.getElementById("styleRow");
+  row.innerHTML = "";
+  AVATAR_STYLES.forEach(style => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "profile-style-chip" + (style.id === currentAvatarStyle ? " profile-style-active" : "");
+    chip.textContent = style.label;
+    chip.addEventListener("click", () => {
+      if (isBlocked) return;
+      currentAvatarStyle = style.id;
+      renderStyleRow();
+      renderAvatarGrid();
+    });
+    row.appendChild(chip);
   });
-  miniGrid.appendChild(img);
-});
+}
 
-/* ============================================================
-   PHOTO UPLOAD
-============================================================ */
-document.getElementById("photoUploadInput").addEventListener("change", function () {
+function renderAvatarGrid() {
+  const grid = document.getElementById("miniAvatarGrid");
+  grid.innerHTML = "";
+  currentAvatarSeeds.forEach(seed => {
+    const url = avUrl(seed, currentAvatarStyle);
+    const img = document.createElement("img");
+    img.src       = url;
+    img.className = "profile-avatar-opt";
+    img.title     = `${currentAvatarStyle} · ${seed}`;
+    img.loading   = "lazy";
+    img.addEventListener("click", () => {
+      if (isBlocked) return;
+      document.querySelectorAll(".profile-avatar-opt").forEach(el => el.classList.remove("profile-sel"));
+      img.classList.add("profile-sel");
+      newPhotoData = url;
+      photoChanged = true;
+      document.getElementById("profilePreview").src = url;
+    });
+    grid.appendChild(img);
+  });
+}
+
+document.getElementById("shuffleBtn").addEventListener("click", () => {
   if (isBlocked) return;
-  const file = this.files[0];
-  if (!file) return;
-
-  // Format check — only jpg, jpeg, png
-  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-  const ext          = file.name.split(".").pop().toLowerCase();
-  const allowedExts  = ["jpg","jpeg","png"];
-
-  if (!allowedTypes.includes(file.type) || !allowedExts.includes(ext)) {
-    this.value = "";
-    return swalErr("Invalid File Type", "Only JPEG, JPG and PNG images are allowed.");
-  }
-
-  if (file.size > 2 * 1024 * 1024) {
-    this.value = "";
-    return swalErr("Image Too Large", "Please upload an image under 2MB.");
-  }
-
-  const reader = new FileReader();
-  reader.onload = ev => {
-    newPhotoData = ev.target.result;
-    photoChanged = true;
-    document.getElementById("profilePreview").src = newPhotoData;
-    document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
-  };
-  reader.readAsDataURL(file);
+  newSeedBatch();
+  renderAvatarGrid();
 });
 
-document.getElementById("removePhotoBtn").addEventListener("click", () => {
-  if (isBlocked) return;
-  newPhotoData = avUrl("alpha");
-  photoChanged = true;
-  document.getElementById("profilePreview").src = newPhotoData;
-  document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
-});
+newSeedBatch();
+renderStyleRow();
+renderAvatarGrid();
 
 /* ============================================================
    WHATSAPP — numbers + + only, no letters
 ============================================================ */
 document.getElementById("fWhatsapp").addEventListener("input", function () {
-  // Allow + at start, digits only after
   let val = this.value;
-  // Keep leading + then strip all non-digits
   const hasPlus = val.startsWith("+");
   val = val.replace(/[^\d]/g, "");
   this.value = (hasPlus ? "+" : "") + val;
@@ -579,7 +684,7 @@ async function loadProfile() {
     currentUser = data.profile;
     populateForm(currentUser);
 
-    isBlocked = (currentUser.status === "Blocked");
+    isBlocked = String(currentUser.status || "").toLowerCase() === "blocked";
     showState("profile");
 
     if (isBlocked) applyBlockedState();
@@ -593,31 +698,39 @@ async function loadProfile() {
    POPULATE FORM
 ============================================================ */
 function populateForm(p) {
-  const pic = p.profilePicture || avUrl("alpha");
+  const pic = p.profilePicture || avUrl("alpha", "adventurer");
 
-  // Navbar + dropdown
-  document.getElementById("profilePreview").src    = pic;
-  document.getElementById("navAvatar").src         = pic;
-  document.getElementById("dropAvatar").src        = pic;
-  document.getElementById("profileName").textContent      = p.username || "Member";
-  document.getElementById("profileCodeLabel").textContent = `EXSUB Member ID: #${p.userCode}`;
-  document.getElementById("navUserName").textContent      = p.username || "Member";
-  document.getElementById("dropdownUserName").textContent = p.username || "Member";
-  document.getElementById("dropdownUserCode").textContent = `ID #${p.userCode}`;
+  document.getElementById("profilePreview").src            = pic;
+  document.getElementById("profileName").textContent       = p.username || "Member";
+  document.getElementById("profileCodeLabel").textContent  = `Exsub Member ID: #${p.userCode}`;
+  document.getElementById("welcomeSubtitle").textContent   = `Welcome back, ${p.username || "Member"} · Joined ${fmtDate(p.dateOfJoin)}`;
 
   // Stats bar
-  document.getElementById("statCode").textContent    = `#${p.userCode}`;
-  document.getElementById("statJoin").textContent    = p.dateOfJoin ? p.dateOfJoin.split(" ")[0] : "--";
-  document.getElementById("statCountry").textContent = p.country || "--";
+  document.getElementById("statCode").textContent      = `#${p.userCode}`;
+  document.getElementById("statJoin").textContent      = fmtDate(p.dateOfJoin) || "--";
+  document.getElementById("statCountry").textContent   = p.country || "--";
+  document.getElementById("statCompleted").textContent = p.accountCompleted === "Yes" ? "Yes ✅" : "No";
 
-  const statusBadge = document.getElementById("statStatus");
-  if (p.status === "Active") {
-    statusBadge.className   = "badge badge-active";
-    statusBadge.textContent = "● Active";
-  } else {
-    statusBadge.className   = "badge badge-blocked";
-    statusBadge.textContent = "🚫 Blocked";
-  }
+  // Status badge (header)
+  const statusPill = document.getElementById("statusPill");
+  const statusIcon = document.getElementById("statusIcon");
+  const isActive   = String(p.status || "").toLowerCase() === "active";
+  statusPill.textContent = (p.status || "Unknown").toUpperCase();
+  statusPill.className   = "nb-pill " + (isActive ? "nb-pill-warning" : "nb-pill-danger");
+  statusPill.style.background = isActive ? "#ACD1C0" : "";
+  statusPill.style.color      = isActive ? "#211F1F" : "";
+
+  // Extension badge
+  renderExtensionStatus(p.extensionReady);
+
+  // Violation badge (header) + violation box (body)
+  renderViolation(p);
+
+  // Promotion status pills
+  renderPromoBadge("promoSubs",     p.subscribersPromotionActive);
+  renderPromoBadge("promoVideo",    p.videoPromotionActive);
+  renderPromoBadge("promoPlaylist", p.playlistPromotionActive);
+  renderPromoBadge("promoEngage",   p.engagementPromotionActive);
 
   // Fields
   document.getElementById("fUsername").value  = p.username || "";
@@ -625,15 +738,82 @@ function populateForm(p) {
   document.getElementById("fWhatsapp").value  = p.whatsappNumber || "";
   document.getElementById("fFacebook").value  = p.facebookId || "";
   document.getElementById("fBio").value       = p.bio || "";
-  document.getElementById("fJoinDate").value  = p.dateOfJoin ? p.dateOfJoin.split(" ")[0] : "";
+  document.getElementById("fJoinDate").value  = fmtDate(p.dateOfJoin) || "";
   setSelectValue("fCountry", p.country);
 
   // Reset photo state
   newPhotoData = null;
   photoChanged = false;
-  document.querySelectorAll(".avatar-opt").forEach(el => el.classList.remove("sel"));
+  document.querySelectorAll(".profile-avatar-opt").forEach(el => el.classList.remove("profile-sel"));
   document.getElementById("fCurrentPwd").value = "";
   document.getElementById("fNewPwd").value     = "";
+}
+
+function renderPromoBadge(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const on = String(val || "").toLowerCase() === "yes";
+  el.textContent = on ? "Yes" : "No";
+  el.className   = "profile-badge " + (on ? "profile-badge-yes" : "profile-badge-no");
+}
+
+function renderExtensionStatus(isReady) {
+  const icon  = document.getElementById('extIcon');
+  const badge = document.getElementById('extBadge');
+  const cta   = document.getElementById('extCTA');
+  
+  // Fix: Case insensitive check and trim
+  const readyStatus = String(isReady || "").trim().toLowerCase();
+  
+  if (readyStatus === "yes") {
+    icon.textContent  = '✅';
+    badge.textContent = 'ACTIVE';
+    badge.className   = 'nb-pill';
+    badge.style.background = '#ACD1C0';
+    badge.style.color = '#211F1F';
+    cta.style.display = 'none';
+  } else {
+    icon.textContent  = '🔌';
+    badge.textContent = 'PENDING';
+    badge.className   = 'nb-pill nb-pill-warning';
+    badge.style.background = '';
+    badge.style.color = '';
+    cta.style.display = 'inline-flex';
+  }
+}
+
+function renderViolation(p) {
+  const flag   = String(p.violationFlag || "None");
+  const flagLc = flag.toLowerCase();
+  const headerCard = document.getElementById("violationBadgeCard");
+  const headerPill = document.getElementById("violationPill");
+  const box     = document.getElementById("violationBox");
+  const boxIcon = document.getElementById("violationIcon");
+  const boxTitle = document.getElementById("violationTitle");
+  const boxText  = document.getElementById("violationText");
+
+  if (flagLc === "none" || !flagLc) {
+    headerCard.classList.add("hidden");
+    box.classList.add("hidden");
+    return;
+  }
+
+  const isSuspended = flagLc === "suspended";
+
+  headerCard.classList.remove("hidden");
+  headerPill.textContent = flag.toUpperCase();
+
+  box.classList.remove("hidden");
+  box.classList.toggle("profile-vsuspended", isSuspended);
+  box.classList.toggle("profile-vwarning", !isSuspended);
+  boxIcon.textContent = isSuspended ? "⛔" : "⚠️";
+  boxTitle.textContent = isSuspended ? "Account Suspended" : "Account Warning";
+
+  let text = p.violationReason ? p.violationReason.trim() : "No reason provided.";
+  if (isSuspended && p.suspendedUntil) {
+    text += ` Suspension ends: ${fmtDate(p.suspendedUntil)}.`;
+  }
+  boxText.textContent = text;
 }
 
 function setSelectValue(id, val) {
@@ -647,45 +827,28 @@ function setSelectValue(id, val) {
    BLOCKED STATE — disable everything except Contact & Support
 ============================================================ */
 function applyBlockedState() {
-  // Show blocked banner
-  document.getElementById("blockedBanner").classList.remove("hidden");
+  show("blockedBanner");
+  if (currentUser && currentUser.violationReason && String(currentUser.violationFlag||"").toLowerCase() !== "none") {
+    document.getElementById("blockedReasonText").textContent = currentUser.violationReason;
+    const rb = document.getElementById("blockedReasonBox");
+    rb.classList.remove("hidden"); rb.style.display = "flex";
+  }
 
-  // Add overlay to main form card
-  document.getElementById("mainFormCard").classList.add("blocked-form-overlay");
+  document.getElementById("mainFormCard").classList.add("profile-blocked-overlay");
 
-  // Disable all inputs, selects, textareas
   document.querySelectorAll("#mainFormCard input, #mainFormCard textarea, #mainFormCard select").forEach(el => {
     el.disabled = true;
   });
 
-  // Disable buttons
-  ["saveBtn","resetBtn","deleteBtn","removePhotoBtn"].forEach(id => {
+  ["saveBtn","resetBtn","deleteBtn","shuffleBtn"].forEach(id => {
     const el = document.getElementById(id);
-    if (el) { el.disabled = true; el.classList.add("disabled-btn"); }
+    if (el) el.disabled = true;
   });
 
-  // Disable photo upload label
-  document.getElementById("uploadPhotoLabel").classList.add("disabled-btn");
-  document.getElementById("photoUploadInput").disabled = true;
+  document.querySelectorAll(".profile-avatar-opt").forEach(el => el.classList.add("profile-disabled"));
+  document.querySelectorAll(".profile-style-chip").forEach(el => el.classList.add("profile-disabled"));
 
-  // Disable avatar grid
-  document.querySelectorAll(".avatar-opt").forEach(el => el.classList.add("disabled-avatar"));
-
-  // Lock nav links (except Contact & Support)
-  document.querySelectorAll(".nav-lockable").forEach(el => {
-    el.addEventListener("click", e => {
-      e.preventDefault();
-      Swal.fire({
-        icon: "error",
-        title: "Account Blocked",
-        text: "Your account is blocked. Please contact support.",
-        background: "#12141c",
-        color: "#fff",
-        confirmButtonColor: "#ef4444",
-        confirmButtonText: "Contact Support",
-      }).then(r => { if (r.isConfirmed) window.location.href = "support.html"; });
-    });
-  });
+  if (typeof disableNavbarForBlockedUser === "function") disableNavbarForBlockedUser();
 }
 
 /* ============================================================
@@ -702,15 +865,12 @@ async function saveProfile() {
   const currentPwd = document.getElementById("fCurrentPwd").value.trim();
   const newPwd     = document.getElementById("fNewPwd").value.trim();
 
-  /* --- Username --- */
   if (!username)                                   return swalErr("Required","Username cannot be empty");
   if (username.length < 5 || username.length > 7) return swalErr("Invalid Username","Username must be 5–7 characters");
   if (username.includes(" "))                      return swalErr("Invalid Username","Username cannot contain spaces");
 
-  /* --- Country --- */
   if (!country) return swalErr("Required","Please select your country");
 
-  /* --- WhatsApp --- */
   if (whatsapp) {
     if (!/^\+\d{7,15}$/.test(whatsapp)) {
       return swalErr("Invalid WhatsApp Number",
@@ -718,7 +878,6 @@ async function saveProfile() {
     }
   }
 
-  /* --- Facebook --- */
   if (facebook) {
     const fbPattern = /^https?:\/\/(www\.)?(facebook\.com|fb\.com)\/.+/i;
     if (!fbPattern.test(facebook)) {
@@ -727,7 +886,6 @@ async function saveProfile() {
     }
   }
 
-  /* --- Password --- */
   let changePassword = false;
   if (currentPwd || newPwd) {
     if (!currentPwd) return swalErr("Password Required","Please enter your current password");
@@ -738,7 +896,7 @@ async function saveProfile() {
     changePassword = true;
   }
 
-  const finalPhoto = photoChanged ? newPhotoData : (currentUser.profilePicture || avUrl("alpha"));
+  const finalPhoto = photoChanged ? newPhotoData : (currentUser.profilePicture || avUrl("alpha", "adventurer"));
 
   const btn = document.getElementById("saveBtn");
   btn.textContent = "Saving...";
@@ -765,7 +923,7 @@ async function saveProfile() {
       currentUser = { ...currentUser, username, whatsappNumber: whatsapp, facebookId: facebook, bio, country, profilePicture: finalPhoto };
       if (changePassword) currentUser.password = newPwd;
 
-      Swal.fire({ icon:"success", title:"Profile Updated", text:"Your changes have been saved.", background:"#12141c", color:"#fff", confirmButtonColor:"#7c3aed" });
+      Swal.fire({ icon:"success", title:"Profile Updated", text:"Your changes have been saved.", confirmButtonColor:"#211F1F" });
       populateForm(currentUser);
     } else {
       swalErr("Update Failed", data.message);
@@ -779,137 +937,59 @@ async function saveProfile() {
 }
 
 /* ============================================================
-   DELETE ACCOUNT
-============================================================ */
-async function deleteAccount() {
-  if (isBlocked) return;
-
-  const r1 = await Swal.fire({
-    icon: "warning",
-    title: "Delete Account?",
-    html: `<p style="color:#8a8f9e;font-size:14px">This will <strong style="color:#f87171">permanently delete</strong> your account and all data. This cannot be undone.</p>`,
-    showCancelButton:  true,
-    confirmButtonText: "Yes, Delete",
-    cancelButtonText:  "Cancel",
-    confirmButtonColor:"#ef4444",
-    cancelButtonColor: "#232632",
-    background:"#12141c", color:"#fff"
-  });
-  if (!r1.isConfirmed) return;
-
-  const r2 = await Swal.fire({
-    icon: "warning",
-    title: "Are you absolutely sure?",
-    text: "Type DELETE to confirm",
-    input: "text",
-    inputPlaceholder: "DELETE",
-    showCancelButton:  true,
-    confirmButtonText: "Delete Forever",
-    confirmButtonColor:"#ef4444",
-    cancelButtonColor: "#232632",
-    background:"#12141c", color:"#fff",
-    preConfirm: val => {
-      if (val !== "DELETE") { Swal.showValidationMessage("You must type DELETE exactly"); return false; }
-    }
-  });
-  if (!r2.isConfirmed) return;
-
-  try {
-    const res  = await fetch(WEB_APP_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", usercode: storedCode }) });
-    const data = await res.json();
-    if (data.status === "success") {
-      await Swal.fire({ icon:"success", title:"Account Deleted", text:"Your account has been permanently deleted.", background:"#12141c", color:"#fff", confirmButtonColor:"#7c3aed" });
-      localStorage.clear();
-      window.location.href = "index.html";
-    } else {
-      swalErr("Delete Failed", data.message);
-    }
-  } catch(e) {
-    swalErr("Server Error","Something went wrong.");
-  }
-}
-
-/* ============================================================
    HELPERS
 ============================================================ */
 function showState(s) {
   document.getElementById("loadingState").classList.toggle("hidden", s !== "loading");
-  document.getElementById("profileCard").classList.toggle("hidden", s !== "profile");
+  document.getElementById("profileContent").classList.toggle("hidden", s !== "profile");
   document.getElementById("errorState").classList.toggle("hidden",  s !== "error");
 }
+function show(id) { const el = document.getElementById(id); if (el) el.classList.remove("hidden"); }
 
 function swalErr(title, text) {
-  return Swal.fire({ icon:"error", title, text, background:"#12141c", color:"#fff", confirmButtonColor:"#7c3aed" });
+  return Swal.fire({ icon:"error", title, text, confirmButtonColor:"#ef4444" });
 }
 
-function logoutUser() {
-  localStorage.clear();
-  window.location.href = "index.html";
-}
-
-/* ============================================================
-   NAV MENUS
-============================================================ */
-document.getElementById("mobileMenuBtn").addEventListener("click", e => { e.stopPropagation(); document.getElementById("mobileMenu").classList.toggle("hidden"); });
-document.getElementById("profileBtn").addEventListener("click",    e => { e.stopPropagation(); document.getElementById("profileDropdown").classList.toggle("hidden"); });
-document.getElementById("notifBtn").addEventListener("click",      e => { e.stopPropagation(); document.getElementById("notifDropdown").classList.toggle("hidden"); });
-document.addEventListener("click", () => {
-  document.getElementById("mobileMenu").classList.add("hidden");
-  document.getElementById("profileDropdown").classList.add("hidden");
-  document.getElementById("notifDropdown").classList.add("hidden");
-
-// Task submenu
-document.getElementById("taskMenuBtn").addEventListener("click", function (e) {
-    e.stopPropagation();
-
-    const menu = document.getElementById("taskSubMenu");
-    const arrow = document.getElementById("taskArrow");
-
-    menu.classList.toggle("hidden");
-    arrow.textContent = menu.classList.contains("hidden") ? "▼" : "▲";
-});
-
-});
-
-/* ============================================================
-   INIT
-============================================================ */
-loadProfile();
-</script>
-
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
-
-<script>
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
+function fmtDate(d) {
+  if (!d) return "";
+  
+  if (typeof d === 'string' && d.match(/^\d{2}\/\d{2}\/\d{4}/)) {
+    const parts = d.split(/[\/\s:]/);
+    const day = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1;
+    const year = parseInt(parts[2]);
+    const hour = parseInt(parts[3]) || 0;
+    const min = parseInt(parts[4]) || 0;
+    const sec = parseInt(parts[5]) || 0;
+    const dateObj = new Date(year, month, day, hour, min, sec);
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.toLocaleDateString("en-GB", { 
+        day: "numeric", 
+        month: "short", 
+        year: "numeric" 
+      }) + " at " + dateObj.toLocaleTimeString("en-GB", {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+  }
+  
+  const dt = new Date(d);
+  if (isNaN(dt.getTime())) return String(d).split(" ")[0];
+  return dt.toLocaleDateString("en-GB", { 
+    day: "numeric", 
+    month: "short", 
+    year: "numeric" 
   });
-})();
+}
+function logoutUser() {
+  if (!confirm("Are you sure you want to logout?")) return;
+  localStorage.clear(); sessionStorage.clear();
+  window.location.replace("signin.html");
+}
+
+/* ── KICK OFF ── */
+loadProfile();
 </script>
 </body>
 </html>

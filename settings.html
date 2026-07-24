@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+
+<!-- MAIN -->
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+  <div class="flex flex-col">
+
+    <!-- ── HEADER ── -->
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-title">Settings</span>
+        </div>
+      </div>
+
+      <h1 class="text-4xl font-black text-[#211F1F]">Group Settings</h1>
+      <div class="text-gray-400 text-sm mt-1">
+        Control which categories and countries your subscriber &amp; watch-time tasks get matched against.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LOADING STATE -->
+  <div id="settingsLoading" class="settings-skeleton">
+    <div class="spinner"></div>
+    <span>Loading your preferences…</span>
+  </div>
+
+  <!-- ===== SETTINGS CONTENT ===== -->
+  <div id="settingsContent" class="settings-section hidden mt-6">
+
+    <!-- INTERESTS PANEL -->
+    <div class="settings-panel">
+      <div class="settings-panel-head">
+        <div>
+          <h2 class="settings-panel-title">🎯 Channel Interests</h2>
+          <p class="settings-panel-subtitle" style="width: 100%;">Pick the categories you want subscriber/watch-time tasks matched against. These are the interests other members will see when we build tasks for your promotional &amp; working channels.</p>
+        </div>
+      </div>
+
+      <div class="settings-toggle-row">
+        <div>
+          <div class="settings-toggle-label">No Preference — Match Any Category</div>
+          <div class="settings-toggle-desc">Turn this on to subscribe to &amp; get watch time from channels of any interest, regardless of category.</div>
+        </div>
+        <label class="settings-switch">
+          <input type="checkbox" id="noInterestToggle" onchange="onToggleNoInterest()">
+          <span class="settings-switch-slider"></span>
+        </label>
+      </div>
+
+      <div id="interestsPickerWrap">
+        <div class="settings-search-wrap mb-4">
+          <input type="text" id="interestSearchInput" class="settings-search-bar" placeholder="Search a category to add…" oninput="filterInterestGrid()">
+        </div>
+        <div class="settings-type-grid" id="interestAddGrid"></div>
+
+        <div class="mt-6">
+          <div class="settings-label">Your Selected Interests</div>
+          <div id="selectedInterestsWrap" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COUNTRIES PANEL -->
+    <div class="settings-panel">
+      <div class="settings-panel-head">
+        <div>
+          <h2 class="settings-panel-title">🌍 Subscriber Countries</h2>
+          <p class="settings-panel-subtitle">Choose which countries your subscribers/viewers should come from for matching purposes.</p>
+        </div>
+      </div>
+
+      <div class="settings-toggle-row">
+        <div>
+          <div class="settings-toggle-label">Global — Accept Any Country</div>
+          <div class="settings-toggle-desc">Turn this on to match with members from anywhere in the world.</div>
+        </div>
+        <label class="settings-switch">
+          <input type="checkbox" id="globalCountryToggle" onchange="onToggleGlobalCountry()">
+          <span class="settings-switch-slider"></span>
+        </label>
+      </div>
+
+      <div id="countryPickerWrap">
+        <!-- REGION QUICK MAP -->
+        <div class="settings-label">Quick Select by Region</div>
+        <div id="regionMapGrid" class="settings-region-grid mb-6"></div>
+
+        <div class="settings-search-wrap mb-4">
+          <input type="text" id="countrySearchInput" class="settings-search-bar" placeholder="Search a country…" oninput="renderCountryGrid()">
+        </div>
+        <div class="settings-country-grid" id="countryGrid"></div>
+
+        <div class="mt-6">
+          <div class="flex items-center justify-between mb-3">
+            <div class="settings-label" style="margin-bottom:0;">Selected Countries (<span id="selectedCountryCount">0</span>)</div>
+            <button onclick="saveCountrySelection()" class="btn-retro btn-charcoal">💾 Save Selection</button>
+          </div>
+          <div id="selectedCountriesWrap" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</main>
+</main>
+
+<script>
+'use strict';
+
+/* =========================================================
+   CONFIG
+========================================================= */
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxyWaLI5KD9O-imw_i_pD3htxWW-MlPsvE2eXX8Le2jGiMZ85t7R5zlYEF0h9bSY7mddw/exec";
+
+/* =========================================================
+   SESSION
+========================================================= */
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
+
+if (!savedUsername || !savedPassword) {
+  window.location.href = "signin.html";
+}
+
+/* =========================================================
+   STATE
+========================================================= */
+let myInterests    = [];     // array of interest ids currently selected
+let noInterest     = false;  // "match any category" toggle
+let myCountries    = [];     // array of country codes currently selected
+let globalCountry  = false;  // "accept any country" toggle
+let settingsLoaded = false;
+
+/* =========================================================
+   CHANNEL TYPES (used as the interest category list)
+========================================================= */
+const CHANNEL_TYPES = [
+  // Official YouTube upload categories
+  { id:'film_animation',        emoji:'🎬', label:'Film & Animation' },
+  { id:'autos_vehicles',        emoji:'🚗', label:'Autos & Vehicles' },
+  { id:'music',                 emoji:'🎵', label:'Music' },
+  { id:'pets_animals',          emoji:'🐾', label:'Pets & Animals' },
+  { id:'sports',                emoji:'⚽', label:'Sports' },
+  { id:'travel_events',         emoji:'✈️', label:'Travel & Events' },
+  { id:'gaming',                emoji:'🎮', label:'Gaming' },
+  { id:'people_blogs',          emoji:'🙋', label:'People & Blogs' },
+  { id:'comedy',                emoji:'😂', label:'Comedy' },
+  { id:'entertainment',         emoji:'🎭', label:'Entertainment' },
+  { id:'news_politics',         emoji:'📰', label:'News & Politics' },
+  { id:'howto_style',           emoji:'💄', label:'How-to & Style' },
+  { id:'education',             emoji:'📚', label:'Education' },
+  { id:'science_tech',          emoji:'🔬', label:'Science & Technology' },
+  { id:'nonprofits_activism',   emoji:'❤️', label:'Nonprofits & Activism' },
+  // Extended / niche types
+  { id:'vlogging',              emoji:'🎥', label:'Vlogging' },
+  { id:'fashion',                emoji:'👗', label:'Fashion' },
+  { id:'beauty',                 emoji:'💅', label:'Beauty' },
+  { id:'food_cooking',           emoji:'🍳', label:'Food & Cooking' },
+  { id:'health_fitness',         emoji:'💪', label:'Health & Fitness' },
+  { id:'motivation',             emoji:'🔥', label:'Motivation' },
+  { id:'finance',                emoji:'💰', label:'Finance' },
+  { id:'business',               emoji:'📈', label:'Business' },
+  { id:'product_reviews',        emoji:'⭐', label:'Product Reviews' },
+  { id:'unboxing',               emoji:'📦', label:'Unboxing' },
+  { id:'diy_crafts',             emoji:'✂️', label:'DIY & Crafts' },
+  { id:'home_decor',             emoji:'🏠', label:'Home Decor' },
+  { id:'parenting',              emoji:'👶', label:'Parenting' },
+  { id:'education_kids',         emoji:'🧒', label:'Education Kids' },
+  { id:'language_learning',      emoji:'🗣️', label:'Language Learning' },
+  { id:'history',                emoji:'🏛️', label:'History' },
+  { id:'science_experiments',    emoji:'🧪', label:'Science Experiments' },
+  { id:'tech_reviews',           emoji:'📱', label:'Technology Reviews' },
+  { id:'programming',            emoji:'💻', label:'Programming' },
+  { id:'ai_automation',          emoji:'🤖', label:'AI & Automation' },
+  { id:'travel_vlogs',           emoji:'🧳', label:'Travel Vlogs' },
+  { id:'adventure',              emoji:'🏔️', label:'Adventure' },
+  { id:'luxury_lifestyle',       emoji:'💎', label:'Luxury Lifestyle' },
+  { id:'minimalism',             emoji:'🍃', label:'Minimalism' },
+  { id:'podcasts',               emoji:'🎙️', label:'Podcasts' },
+  { id:'reaction',               emoji:'😮', label:'Reaction Videos' },
+  { id:'challenges',             emoji:'🏆', label:'Challenges' },
+  { id:'pranks',                 emoji:'🤪', label:'Pranks' },
+  { id:'asmr',                   emoji:'🎧', label:'ASMR' },
+  { id:'meditation',             emoji:'🧘', label:'Meditation' },
+  { id:'music_covers',           emoji:'🎤', label:'Music Covers' },
+  { id:'dance',                  emoji:'💃', label:'Dance' },
+  { id:'film_reviews',           emoji:'🎞️', label:'Film Reviews' },
+  { id:'book_reviews',           emoji:'📖', label:'Book Reviews' },
+  { id:'documentary',            emoji:'📽️', label:'Documentary Style' },
+  { id:'spirituality',           emoji:'🕊️', label:'Spirituality' },
+  { id:'motorsports',            emoji:'🏁', label:'Motorsports' },
+  { id:'wildlife',               emoji:'🦁', label:'Wildlife' },
+  { id:'charity',                emoji:'🤲', label:'Charity' },
+  { id:'islamic',                emoji:'🕌', label:'Islamic' },
+  { id:'discovery',              emoji:'🔎', label:'Discovery Videos' },
+  { id:'informative',            emoji:'ℹ️', label:'Informative Videos' },
+  { id:'shocking',                emoji:'😱', label:'Shocking Videos' },
+  { id:'shocking_informative',    emoji:'😲', label:'Shocking & Informative Videos' },
+  { id:'other',                   emoji:'🌐', label:'Other (type your own)' },
+];
+
+/* =========================================================
+   COUNTRIES DATA
+   [code, name, continent] — flag emoji derived from ISO code
+========================================================= */
+const REGIONS = [
+  { id:'africa',      emoji:'🌍', label:'Africa' },
+  { id:'asia',        emoji:'🌏', label:'Asia' },
+  { id:'europe',      emoji:'🌍', label:'Europe' },
+  { id:'north_america', emoji:'🌎', label:'North America' },
+  { id:'south_america', emoji:'🌎', label:'South America' },
+  { id:'oceania',     emoji:'🌏', label:'Oceania' },
+  { id:'middle_east', emoji:'🌍', label:'Middle East' },
+];
+
+const COUNTRIES = [
+  ['US','United States','north_america'],['CA','Canada','north_america'],['MX','Mexico','north_america'],
+  ['GT','Guatemala','north_america'],['CU','Cuba','north_america'],['DO','Dominican Republic','north_america'],
+  ['HN','Honduras','north_america'],['JM','Jamaica','north_america'],['PA','Panama','north_america'],
+  ['CR','Costa Rica','north_america'],['NI','Nicaragua','north_america'],['SV','El Salvador','north_america'],
+  ['BZ','Belize','north_america'],['TT','Trinidad and Tobago','north_america'],['BS','Bahamas','north_america'],
+  ['BR','Brazil','south_america'],['AR','Argentina','south_america'],['CO','Colombia','south_america'],
+  ['PE','Peru','south_america'],['VE','Venezuela','south_america'],['CL','Chile','south_america'],
+  ['EC','Ecuador','south_america'],['BO','Bolivia','south_america'],['PY','Paraguay','south_america'],
+  ['UY','Uruguay','south_america'],['GY','Guyana','south_america'],['SR','Suriname','south_america'],
+  ['GB','United Kingdom','europe'],['DE','Germany','europe'],['FR','France','europe'],['IT','Italy','europe'],
+  ['ES','Spain','europe'],['PT','Portugal','europe'],['NL','Netherlands','europe'],['BE','Belgium','europe'],
+  ['CH','Switzerland','europe'],['AT','Austria','europe'],['SE','Sweden','europe'],['NO','Norway','europe'],
+  ['DK','Denmark','europe'],['FI','Finland','europe'],['IE','Ireland','europe'],['PL','Poland','europe'],
+  ['CZ','Czech Republic','europe'],['SK','Slovakia','europe'],['HU','Hungary','europe'],['RO','Romania','europe'],
+  ['BG','Bulgaria','europe'],['GR','Greece','europe'],['UA','Ukraine','europe'],['RU','Russia','europe'],
+  ['HR','Croatia','europe'],['RS','Serbia','europe'],['SI','Slovenia','europe'],['LT','Lithuania','europe'],
+  ['LV','Latvia','europe'],['EE','Estonia','europe'],['IS','Iceland','europe'],['LU','Luxembourg','europe'],
+  ['MT','Malta','europe'],['CY','Cyprus','europe'],['AL','Albania','europe'],['MK','North Macedonia','europe'],
+  ['BA','Bosnia and Herzegovina','europe'],['MD','Moldova','europe'],['BY','Belarus','europe'],
+  ['CN','China','asia'],['IN','India','asia'],['JP','Japan','asia'],['KR','South Korea','asia'],
+  ['ID','Indonesia','asia'],['PK','Pakistan','asia'],['BD','Bangladesh','asia'],['PH','Philippines','asia'],
+  ['VN','Vietnam','asia'],['TH','Thailand','asia'],['MY','Malaysia','asia'],['SG','Singapore','asia'],
+  ['NP','Nepal','asia'],['LK','Sri Lanka','asia'],['MM','Myanmar','asia'],['KH','Cambodia','asia'],
+  ['LA','Laos','asia'],['MN','Mongolia','asia'],['KZ','Kazakhstan','asia'],['UZ','Uzbekistan','asia'],
+  ['AF','Afghanistan','asia'],['TW','Taiwan','asia'],['HK','Hong Kong','asia'],['BT','Bhutan','asia'],
+  ['MV','Maldives','asia'],['BN','Brunei','asia'],['TL','Timor-Leste','asia'],['KG','Kyrgyzstan','asia'],
+  ['TJ','Tajikistan','asia'],['TM','Turkmenistan','asia'],
+  ['NG','Nigeria','africa'],['EG','Egypt','africa'],['ZA','South Africa','africa'],['KE','Kenya','africa'],
+  ['ET','Ethiopia','africa'],['GH','Ghana','africa'],['TZ','Tanzania','africa'],['UG','Uganda','africa'],
+  ['DZ','Algeria','africa'],['MA','Morocco','africa'],['TN','Tunisia','africa'],['SD','Sudan','africa'],
+  ['LY','Libya','africa'],['CM','Cameroon','africa'],['CI',"Cote d'Ivoire",'africa'],['SN','Senegal','africa'],
+  ['ML','Mali','africa'],['ZW','Zimbabwe','africa'],['ZM','Zambia','africa'],['MZ','Mozambique','africa'],
+  ['RW','Rwanda','africa'],['SO','Somalia','africa'],['BF','Burkina Faso','africa'],['NE','Niger','africa'],
+  ['MW','Malawi','africa'],['AO','Angola','africa'],['MG','Madagascar','africa'],['BJ','Benin','africa'],
+  ['TG','Togo','africa'],['SL','Sierra Leone','africa'],['LR','Liberia','africa'],['GM','Gambia','africa'],
+  ['GN','Guinea','africa'],['NA','Namibia','africa'],['BW','Botswana','africa'],['LS','Lesotho','africa'],
+  ['SZ','Eswatini','africa'],['GA','Gabon','africa'],['CG','Congo','africa'],['CD','DR Congo','africa'],
+  ['SA','Saudi Arabia','middle_east'],['AE','United Arab Emirates','middle_east'],['IL','Israel','middle_east'],
+  ['TR','Turkey','middle_east'],['IQ','Iraq','middle_east'],['IR','Iran','middle_east'],['JO','Jordan','middle_east'],
+  ['LB','Lebanon','middle_east'],['KW','Kuwait','middle_east'],['QA','Qatar','middle_east'],['OM','Oman','middle_east'],
+  ['BH','Bahrain','middle_east'],['YE','Yemen','middle_east'],['SY','Syria','middle_east'],['PS','Palestine','middle_east'],
+  ['AU','Australia','oceania'],['NZ','New Zealand','oceania'],['FJ','Fiji','oceania'],['PG','Papua New Guinea','oceania'],
+  ['SB','Solomon Islands','oceania'],['WS','Samoa','oceania'],['TO','Tonga','oceania'],['VU','Vanuatu','oceania'],
+];
+
+function flagEmoji(code) {
+  if (!code || code.length !== 2) return '🏳️';
+  return String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0)));
+}
+
+/* =========================================================
+   LOAD SETTINGS
+========================================================= */
+async function renderSettingsTab() {
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=getMySettings`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+    );
+    const d = await r.json();
+
+    if (d.status !== 'success') {
+      document.getElementById('settingsLoading').classList.add('hidden');
+      Swal.fire({ icon:'error', title:'Error', text:d.message || 'Unable to load settings.' });
+      return;
+    }
+
+    myInterests    = Array.isArray(d.interests) ? d.interests : [];
+    noInterest     = !!d.noInterest;
+    myCountries    = Array.isArray(d.countries) ? d.countries : [];
+    globalCountry  = !!d.globalCountry;
+    settingsLoaded = true;
+
+    document.getElementById('noInterestToggle').checked = noInterest;
+    document.getElementById('globalCountryToggle').checked = globalCountry;
+    document.getElementById('interestsPickerWrap').style.display = noInterest ? 'none' : '';
+    document.getElementById('countryPickerWrap').style.display = globalCountry ? 'none' : '';
+
+    renderInterestAddGrid();
+    renderSelectedInterests();
+    renderRegionMap();
+    renderCountryGrid();
+    renderSelectedCountries();
+
+    document.getElementById('settingsLoading').classList.add('hidden');
+    document.getElementById('settingsContent').classList.remove('hidden');
+  } catch (err) {
+    document.getElementById('settingsLoading').classList.add('hidden');
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to load settings: ' + err.message });
+  }
+}
+
+/* ---------- INTERESTS ---------- */
+function renderInterestAddGrid() {
+  const grid = document.getElementById('interestAddGrid');
+  grid.innerHTML = CHANNEL_TYPES.filter(t => t.id !== 'other').map(t => {
+    const selected = myInterests.includes(t.id);
+    return `<div class="settings-type-opt${selected ? ' settings-selected' : ''}" data-label="${t.label.toLowerCase()}" onclick="toggleInterest('${t.id}')">
+      <span class="settings-emoji">${t.emoji}</span>${t.label}
+    </div>`;
+  }).join('');
+}
+
+function filterInterestGrid() {
+  const q = document.getElementById('interestSearchInput').value.toLowerCase().trim();
+  document.querySelectorAll('#interestAddGrid .settings-type-opt').forEach(el => {
+    el.style.display = (!q || el.dataset.label.includes(q)) ? '' : 'none';
+  });
+}
+
+async function toggleInterest(id) {
+  const isSelected = myInterests.includes(id);
+  try {
+    const action = isSelected ? 'deleteInterest' : 'addInterest';
+    const r = await fetch(ChannelCRUDScript
+      + `?action=${action}`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&interestName=${encodeURIComponent(id)}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    myInterests = isSelected ? myInterests.filter(x => x !== id) : [...myInterests, id];
+    renderInterestAddGrid();
+    renderSelectedInterests();
+  } catch (e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to update interest' }); }
+}
+
+function renderSelectedInterests() {
+  const wrap = document.getElementById('selectedInterestsWrap');
+  if (myInterests.length === 0) {
+    wrap.innerHTML = `<span class="settings-empty-note">No interests selected yet — pick some categories above.</span>`;
+    return;
+  }
+  wrap.innerHTML = myInterests.map(id => {
+    const t = CHANNEL_TYPES.find(c => c.id === id) || { emoji:'🌐', label:id };
+    return `<span class="settings-chip">${t.emoji} ${t.label} <button onclick="toggleInterest('${id}')" title="Remove">✕</button></span>`;
+  }).join('');
+}
+
+async function onToggleNoInterest() {
+  const enabled = document.getElementById('noInterestToggle').checked;
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setNoInterest`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&enabled=${enabled ? 'yes' : 'no'}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      document.getElementById('noInterestToggle').checked = !enabled;
+      Swal.fire({ icon:'error', title:'Failed', text:d.message });
+      return;
+    }
+    noInterest = enabled;
+    if (enabled) myInterests = [];
+    document.getElementById('interestsPickerWrap').style.display = enabled ? 'none' : '';
+    renderInterestAddGrid();
+    renderSelectedInterests();
+  } catch (e) {
+    document.getElementById('noInterestToggle').checked = !enabled;
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to update preference' });
+  }
+}
+
+/* ---------- COUNTRIES ---------- */
+function renderRegionMap() {
+  const grid = document.getElementById('regionMapGrid');
+  grid.innerHTML = REGIONS.map(r => {
+    const countInRegion = COUNTRIES.filter(c => c[2] === r.id).length;
+    const selInRegion = COUNTRIES.filter(c => c[2] === r.id && myCountries.includes(c[0])).length;
+    const active = selInRegion === countInRegion && countInRegion > 0;
+    return `<div class="settings-region-card${active ? ' settings-active' : ''}" onclick="toggleRegion('${r.id}')">
+      <span class="settings-region-emoji">${r.emoji}</span>
+      <div class="settings-region-name">${r.label}</div>
+      <div class="settings-region-count">${selInRegion}/${countInRegion} selected</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleRegion(regionId) {
+  const regionCodes = COUNTRIES.filter(c => c[2] === regionId).map(c => c[0]);
+  const allSelected = regionCodes.every(code => myCountries.includes(code));
+  if (allSelected) {
+    myCountries = myCountries.filter(code => !regionCodes.includes(code));
+  } else {
+    regionCodes.forEach(code => { if (!myCountries.includes(code)) myCountries.push(code); });
+  }
+  renderRegionMap();
+  renderCountryGrid();
+  renderSelectedCountries();
+}
+
+function renderCountryGrid() {
+  const grid = document.getElementById('countryGrid');
+  const q = (document.getElementById('countrySearchInput')?.value || '').toLowerCase().trim();
+  const list = q ? COUNTRIES.filter(c => c[1].toLowerCase().includes(q)) : COUNTRIES;
+  grid.innerHTML = list.map(c => {
+    const selected = myCountries.includes(c[0]);
+    return `<div class="settings-country-opt${selected ? ' settings-selected' : ''}" onclick="toggleCountry('${c[0]}')">
+      <span class="settings-flag">${flagEmoji(c[0])}</span> ${c[1]}
+    </div>`;
+  }).join('');
+}
+
+function toggleCountry(code) {
+  if (myCountries.includes(code)) {
+    myCountries = myCountries.filter(c => c !== code);
+  } else {
+    myCountries.push(code);
+  }
+  renderCountryGrid();
+  renderRegionMap();
+  renderSelectedCountries();
+}
+
+function renderSelectedCountries() {
+  const wrap = document.getElementById('selectedCountriesWrap');
+  document.getElementById('selectedCountryCount').innerText = myCountries.length;
+  if (myCountries.length === 0) {
+    wrap.innerHTML = `<span class="settings-empty-note">No countries selected yet.</span>`;
+    return;
+  }
+  wrap.innerHTML = myCountries.map(code => {
+    const c = COUNTRIES.find(x => x[0] === code);
+    const name = c ? c[1] : code;
+    return `<span class="settings-chip">${flagEmoji(code)} ${name} <button onclick="toggleCountry('${code}')" title="Remove">✕</button></span>`;
+  }).join('');
+}
+
+async function onToggleGlobalCountry() {
+  const enabled = document.getElementById('globalCountryToggle').checked;
+  try {
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setGlobalCountries`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&enabled=${enabled ? 'yes' : 'no'}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') {
+      document.getElementById('globalCountryToggle').checked = !enabled;
+      Swal.fire({ icon:'error', title:'Failed', text:d.message });
+      return;
+    }
+    globalCountry = enabled;
+    if (enabled) myCountries = [];
+    document.getElementById('countryPickerWrap').style.display = enabled ? 'none' : '';
+    renderRegionMap(); renderCountryGrid(); renderSelectedCountries();
+  } catch (e) {
+    document.getElementById('globalCountryToggle').checked = !enabled;
+    Swal.fire({ icon:'error', title:'Error', text:'Unable to update preference' });
+  }
+}
+
+async function saveCountrySelection() {
+  try {
+    Swal.fire({ title:'Saving…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+    const r = await fetch(ChannelCRUDScript
+      + `?action=setCountries`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&countries=${encodeURIComponent(myCountries.join(','))}`
+    );
+    const d = await r.json();
+    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Failed', text:d.message }); return; }
+    Swal.fire({ icon:'success', title:'Saved!', timer:1200, showConfirmButton:false });
+  } catch (e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to save countries' }); }
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+function logoutUser() {
+  if (!confirm("Are you sure you want to logout?")) return;
+  localStorage.clear(); sessionStorage.clear();
+  window.location.replace("signin.html");
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+renderSettingsTab();
+</script>
+
+<script>
+(function(){
+  const current = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
+    if (a.getAttribute("data-page") === current) a.classList.add("active");
+  });
+})();
+</script>
+</body>
+</html>

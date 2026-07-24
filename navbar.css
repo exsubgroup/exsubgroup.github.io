@@ -182,7 +182,7 @@ svg {
 
 /* ── USER PROFILE SECTION (ADDITIONS) ── */
 .sidebar-user-panel {
-  padding: 12px 14px;
+  padding: 0px 5px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
 }
@@ -304,4 +304,44 @@ svg {
 
 .logout-btn svg {
   color: inherit;
+}
+
+#mobileTopBar .mobile-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#fff;
+  font-weight:600;
+  font-size:15px;
+  line-height:1;
+}
+#mobileTopBar .mobile-brand img{
+  width:22px;
+  height:22px;
+  display:block;      /* kills the inline-image baseline gap */
+  flex-shrink:0;
+}
+#mobileTopBar .mobile-brand span{
+  display:inline-block;
+  line-height:1;
+}
+
+/* Icon alignment for nav links */
+.link-icon-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.sidebar-link{
+  justify-content:space-between; /* keeps chevron pinned right on toggle buttons */
+}
+.sidebar-submenu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.sidebar-submenu a svg,
+.link-icon-wrap svg{
+  flex-shrink:0;
+  opacity:0.85;
 }

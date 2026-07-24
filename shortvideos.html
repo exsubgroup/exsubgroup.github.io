@@ -241,7 +241,7 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
                     <span id="badgeNotReady" class="nb-pill nb-pill-warning">0</span>
                     </div>
                 </div>
-                <h1 class="text-4xl font-black mt-10 text-[#211F1F]">Short Videos Management</h1>
+                <h1 class="text-4xl font-black text-[#211F1F]">Short Videos</h1>
                 <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: auto;">
                     Manage your YouTube Shorts configured for target view distributions. Videos categorized under 
                     <strong class="text-[#211F1F]">Shorts</strong> will be filtered dynamically here.
@@ -404,7 +404,7 @@ if (!USERNAME || !PASSWORD) {
     window.location.href = "signin.html";
 }
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzgChg93gLdwgXeVW2dhQP4xDysXUh1wDygKZeimrptgRGI7Ru77e_X8cLHmerBFSbxrw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJT-qfv_bFGAGw-LMGB3fzDfOfmEMruTcsnpX05RarM_JVYR3X3Cs3Dwflmdjow3VEnQ/exec';
 
 let myChannel   = null;   
 let allVideos   = [];
@@ -487,8 +487,8 @@ function statusOf(v) {
 function applyFilter() {
     // FRONT-END SHORTS INVERSION FILTER: Keep ONLY videos explicitly labeled as short
     let shortsOnly = allVideos.filter(v => {
-        const type = (v.VideoType || 'Long').toLowerCase();
-        return type === 'short'; 
+        const type = v.VideoType || 'Long';
+        return type === 'Short'; 
     });
 
     // Compute metrics based exclusively on the Short video space array

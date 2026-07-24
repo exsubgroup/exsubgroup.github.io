@@ -11,58 +11,17 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
 <style>
 
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
-@media (max-width: 767px){
-  #mobileBottomNav{ display:block; }
-  body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
-}
-
-
 :root {
-    --bg: #050508;
-    --card: #12141c;
-    --card2: #161922;
-    --border: #1e212c;
-    --purple: #7c3aed;
-    --purple2: #8b5cf6;
-    --muted: #8a8f9e;
+    --bg: #F5F4EB;
+    --ink: #211F1F;
+    --mint: #ACD1C0;
+    --sand: #DBD4B7;
+    --card: #F5F4EB;
+    --muted: #6b7280;
 }
 
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,116 +29,112 @@ html { scroll-behavior: smooth; }
 
 body {
     background: var(--bg);
-    color: white;
+    color: var(--ink);
     overflow-x: hidden;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background:
-        radial-gradient(ellipse at top center, rgba(124,58,237,0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at bottom, rgba(124,58,237,0.08) 0%, transparent 50%);
-    z-index: 0;
-    pointer-events: none;
-}
+body::before { content: none; }
 
 .gradient-text {
-    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #c4b5fd 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.glass-nav {
-    background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.06);
-    color: white;
+    color: #211F1F;
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
 }
 
 .card {
-    background: linear-gradient(180deg, #151821 0%, #101219 100%);
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
+    background: #F5F4EB;
+    border-radius: 20px;
+    font-family: system-ui, -apple-system, sans-serif;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
 }
 
 .task-card {
-    background: linear-gradient(180deg, #151821 0%, #101219 100%);
-    border: 1px solid var(--border);
-    transition: 0.3s ease;
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.2s ease;
 }
 .task-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(124,58,237,0.5);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #211F1F;
 }
 
 /* Unsubscribed task card — red highlight + pinned look */
 .task-card.unsubscribed-card {
-    border-color: rgba(239,68,68,0.45);
-    background: linear-gradient(180deg, #1c0e0e 0%, #110808 100%);
+    border-color: #dc2626;
+    background: #fef2f2;
+    box-shadow: 4px 4px 0px 0px #dc2626;
 }
 .task-card.unsubscribed-card:hover {
-    border-color: rgba(239,68,68,0.75);
-    box-shadow: 0 20px 40px rgba(239,68,68,0.12);
+    box-shadow: 6px 6px 0px 0px #dc2626;
 }
 
 .text-muted { color: var(--muted); }
 
 .btn-purple {
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
-    border: none;
-    transition: 0.25s;
+    background: #211F1F;
+    color: #DBD4B7;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
+    font-weight: 700;
 }
-.btn-purple:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-purple:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 .btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
 
 .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    transition: 0.25s;
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    color: #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
+    font-weight: 700;
 }
-.btn-outline:hover:not(:disabled) { border-color: var(--purple); color: white; }
-.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
 
 .btn-teal {
-    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
-    color: white;
-    border: none;
-    transition: 0.25s;
+    background: #ACD1C0;
+    color: #211F1F;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
+    font-weight: 700;
 }
-.btn-teal:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
 .btn-red {
-    background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
-    color: white;
-    border: none;
-    transition: 0.25s;
+    background: #ef4444;
+    color: #ffffff;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
     cursor: pointer;
+    font-weight: 700;
 }
-.btn-red:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.92; }
+.btn-red:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
 .filter-tab {
-    background: #161922;
-    border: 1px solid #232632;
-    transition: 0.25s;
-    color: var(--muted);
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    transition: 0.15s;
+    color: #211F1F;
     cursor: pointer;
     white-space: nowrap;
+    font-weight: 700;
 }
-.filter-tab:hover { border-color: var(--purple); color: white; }
+.filter-tab:hover { background: #DBD4B7; }
 .filter-tab.active {
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-    border-color: transparent;
-    color: white;
+    background: #211F1F;
+    border-color: #211F1F;
+    color: #DBD4B7;
 }
 .filter-tab:disabled {
     opacity: 0.4;
@@ -187,14 +142,13 @@ body::before {
     transform: none;
 }
 .filter-tab:disabled:hover {
-    border-color: #232632;
-    color: var(--muted);
+    background: #F5F4EB;
+    color: #211F1F;
 }
 .filter-tab.active:disabled {
     opacity: 1;
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-    border-color: transparent;
-    color: white;
+    background: #211F1F;
+    color: #DBD4B7;
 }
 
 .status-badge {
@@ -204,7 +158,8 @@ body::before {
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 999px;
-    font-weight: 500;
+    font-weight: 700;
+    border: 1px solid #211F1F;
 }
 
 .dot {
@@ -215,31 +170,31 @@ body::before {
 }
 
 .instructions-box {
-    background: rgba(124,58,237,0.08);
-    border: 1px solid rgba(124,58,237,0.2);
+    background: #ACD1C0;
+    border: 2px solid #211F1F;
     border-radius: 14px;
     padding: 10px 14px;
 }
 
 .issue-box {
-    background: rgba(239,68,68,0.06);
-    border: 1px solid rgba(239,68,68,0.18);
+    background: #fee2e2;
+    border: 2px solid #211F1F;
     border-radius: 14px;
     padding: 10px 14px;
 }
 
 /* Punishment banner inside unsubscribed card */
 .punishment-box {
-    background: rgba(239,68,68,0.12);
-    border: 1px solid rgba(239,68,68,0.4);
+    background: #fecaca;
+    border: 2px solid #dc2626;
     border-radius: 14px;
     padding: 10px 14px;
 }
 
 .modal-bg {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(6px);
+    background: rgba(33,31,31,0.55);
+    backdrop-filter: blur(4px);
     z-index: 200;
     display: flex;
     align-items: center;
@@ -252,9 +207,10 @@ body::before {
 .modal-bg.open { opacity: 1; visibility: visible; }
 
 .modal-box {
-    background: linear-gradient(180deg, #151821 0%, #101219 100%);
-    border: 1px solid var(--border);
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
     border-radius: 24px;
+    box-shadow: 6px 6px 0px 0px #211F1F;
     padding: 28px;
     width: 100%;
     max-width: 500px;
@@ -266,22 +222,25 @@ body::before {
 .modal-bg.open .modal-box { transform: scale(1); }
 
 .skeleton {
-    background: linear-gradient(90deg, #1a1d27 25%, #21253a 50%, #1a1d27 75%);
+    background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
-    border-radius: 24px;
+    border-radius: 20px;
+    border: 2px solid #211F1F;
 }
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
 #toast {
     position: fixed; bottom: 24px; right: 24px;
     z-index: 999;
-    background: linear-gradient(180deg, #8b5cf6, #7c3aed);
-    color: white;
+    background: #211F1F;
+    color: #DBD4B7;
     padding: 13px 22px;
     border-radius: 14px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 700;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3);
     transform: translateY(80px);
     opacity: 0;
     transition: 0.3s;
@@ -289,7 +248,7 @@ body::before {
     max-width: 320px;
 }
 #toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: linear-gradient(180deg, #ef4444, #b91c1c); }
+#toast.error { background: #ef4444; color: #ffffff; }
 
 #pageLoader {
     position: fixed; inset: 0;
@@ -305,15 +264,15 @@ body::before {
 #pageLoader.hidden { opacity: 0; pointer-events: none; }
 #pageLoader .spin {
     width: 44px; height: 44px;
-    border: 3px solid rgba(124,58,237,0.2);
-    border-top-color: #8b5cf6;
+    border: 3px solid rgba(33,31,31,0.15);
+    border-top-color: #211F1F;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-input, textarea { color: white; }
-input::placeholder, textarea::placeholder { color: #7d8395; }
+input, textarea { color: #211F1F; }
+input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
 .step-item {
     display: flex;
@@ -327,9 +286,9 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: rgba(124,58,237,0.25);
-    border: 1px solid rgba(124,58,237,0.5);
-    color: #a78bfa;
+    background: #ACD1C0;
+    border: 1px solid #211F1F;
+    color: #211F1F;
     font-size: 10px;
     font-weight: 700;
     display: flex;
@@ -346,7 +305,8 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 10px;
     padding: 2px 8px;
     border-radius: 999px;
-    font-weight: 500;
+    font-weight: 700;
+    border: 1px solid #211F1F;
 }
 
 .issue-pill {
@@ -356,15 +316,16 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 11px;
     padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(239,68,68,0.3);
-    background: rgba(239,68,68,0.06);
-    color: #f87171;
+    border: 2px solid #211F1F;
+    background: #F5F4EB;
+    color: #b91c1c;
     cursor: pointer;
     transition: 0.2s;
     white-space: nowrap;
+    font-weight: 600;
 }
-.issue-pill:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.6); }
-.issue-pill.selected { background: rgba(239,68,68,0.25); border-color: #ef4444; color: #fca5a5; }
+.issue-pill:hover { background: #fee2e2; }
+.issue-pill.selected { background: #ef4444; border-color: #211F1F; color: #ffffff; }
 
 .pref-pill {
     display: inline-flex;
@@ -373,15 +334,16 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 11px;
     padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(124,58,237,0.3);
-    background: rgba(124,58,237,0.06);
-    color: #c4b5fd;
+    border: 2px solid #211F1F;
+    background: #F5F4EB;
+    color: #211F1F;
     cursor: pointer;
     transition: 0.2s;
     white-space: nowrap;
+    font-weight: 600;
 }
-.pref-pill:hover { background: rgba(124,58,237,0.18); border-color: rgba(124,58,237,0.6); }
-.pref-pill.selected { background: rgba(124,58,237,0.28); border-color: #7c3aed; color: #ede9fe; }
+.pref-pill:hover { background: #DBD4B7; }
+.pref-pill.selected { background: #ACD1C0; border-color: #211F1F; color: #211F1F; }
 .pref-pill:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .match-badge {
@@ -391,10 +353,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     font-size: 10.5px;
     padding: 3px 9px;
     border-radius: 999px;
-    background: rgba(124,58,237,0.12);
-    border: 1px solid rgba(124,58,237,0.3);
-    color: #c4b5fd;
-    font-weight: 500;
+    background: #ACD1C0;
+    border: 1px solid #211F1F;
+    color: #211F1F;
+    font-weight: 700;
     white-space: nowrap;
 }
 
@@ -404,44 +366,50 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     justify-content: center;
     width: 22px; height: 22px;
     border-radius: 6px;
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.25);
+    background: #ACD1C0;
+    border: 1px solid #211F1F;
     cursor: pointer;
     transition: 0.2s;
     flex-shrink: 0;
     vertical-align: middle;
 }
-.copy-handle-btn:hover { background: rgba(124,58,237,0.35); }
+.copy-handle-btn:hover { background: #9bc2b1; }
 .copy-handle-btn svg { width: 11px; height: 11px; }
 
-/* SweetAlert2 dark theme overrides */
+/* SweetAlert2 neo-brutalist theme overrides */
 .swal2-popup {
-    background: #151821 !important;
-    border: 1px solid #1e212c !important;
-    color: white !important;
-    border-radius: 24px !important;
+    background: #F5F4EB !important;
+    border: 2px solid #211F1F !important;
+    color: #211F1F !important;
+    border-radius: 20px !important;
+    box-shadow: 6px 6px 0px 0px #211F1F !important;
     font-family: 'Inter', sans-serif !important;
 }
-.swal2-title { color: white !important; font-family: 'Inter', sans-serif !important; }
-.swal2-html-container { color: #8a8f9e !important; font-family: 'Inter', sans-serif !important; }
+.swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
+.swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
 .swal2-confirm {
-    background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%) !important;
-    border-radius: 14px !important;
+    background: #211F1F !important;
+    color: #DBD4B7 !important;
+    border-radius: 12px !important;
+    border: 2px solid #211F1F !important;
     font-family: 'Inter', sans-serif !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
 .swal2-cancel {
-    background: transparent !important;
-    border: 1px solid #1e212c !important;
-    color: #8a8f9e !important;
-    border-radius: 14px !important;
+    background: #F5F4EB !important;
+    border: 2px solid #211F1F !important;
+    color: #211F1F !important;
+    border-radius: 12px !important;
     font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
 }
 .swal2-deny {
-    background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%) !important;
-    border-radius: 14px !important;
+    background: #ACD1C0 !important;
+    color: #211F1F !important;
+    border: 2px solid #211F1F !important;
+    border-radius: 12px !important;
     font-family: 'Inter', sans-serif !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
 </style>
 </head>
@@ -456,89 +424,29 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 <!-- TOAST -->
 <div id="toast"></div>
 
-<!-- NAVBAR -->
-<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1200px] z-50">
-    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between relative">
-
-        <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center bg-[#161922] border border-[#252936] rounded-full">☰</button>
-
-        <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
-            <img src="images/logo.svg" class="w-7 h-7 hidden md:block" onerror="this.style.display='none'">
-            <span class="font-semibold text-[17px]">Exsub Group</span>
-        </div>
-
-        <div class="hidden md:flex items-center gap-8 text-[13px]">
-            <a href="analytics.html" class="text-white hover:text-purple-300 transition">Dashboard</a>
-            <a href="channels.html" class="text-white hover:text-purple-300 transition">Channels</a>
-            <a href="groups.html" class="text-white hover:text-purple-300 transition">Groups</a>
-            <a href="subscriberstask.html" class="text-purple-300 font-semibold">Tasks</a>
-            <a href="howtowork.html" class="text-white hover:text-purple-300 transition">How To Work</a>
-            <a href="exsubextension.html" class="text-white hover:text-purple-300 transition">Exsub Extension</a>
-            <a href="support.html" class="text-white hover:text-purple-300 transition">Contact &amp; Support</a>
-        </div>
-
-        <div class="flex items-center gap-2">
-            <div class="relative">
-                <button id="notifBtn" class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center">🔔</button>
-                <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-72 card rounded-2xl overflow-hidden z-50">
-                    <div class="p-3 border-b border-[#232632] font-semibold text-sm">Notifications</div>
-                    <div class="p-4 text-sm text-gray-400">No new notifications</div>
-                </div>
-            </div>
-            <div class="relative">
-                <button id="profileBtn" class="flex items-center gap-2 bg-[#161922] border border-[#252936] px-2 py-1.5 rounded-full">
-                    <img id="navAvatar" src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
-                    <span id="navUserName" class="hidden sm:block text-[13px]">Member</span>
-                </button>
-                <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card z-50">
-                    <div class="p-4 border-b border-[#232632]">
-                        <div class="flex items-center gap-3">
-                            <img id="dropAvatar" src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
-                            <div>
-                                <h3 id="dropdownUserName" class="font-semibold text-sm">Member</h3>
-                                <p id="dropdownUserCode" class="text-gray-500 text-xs">ID #0000</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="py-2">
-                        <a href="profile.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">My Profile</a>
-                        <button onclick="openPreferencesModal()" class="w-full text-left block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">🎯 Match Preferences</button>
-                        <a href="support.html" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">Contact &amp; Support</a>
-                        <button onclick="logoutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">Logout</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden md:hidden mt-3 bg-[#0f1118] border border-[#252936] rounded-2xl p-4">
-        <div class="flex flex-col gap-4 text-sm">
-            <a href="analytics.html" class="text-white">Dashboard</a>
-            <a href="channels.html" class="text-white">Channels</a>
-            <a href="groups.html" class="text-white">Groups</a>
-            <a href="subscriberstask.html" class="text-purple-300 font-semibold">Tasks</a>
-            <a href="howtowork.html" class="text-white">How To Work</a>
-            <a href="exsubextension.html" class="text-white">Exsub Extension</a>
-            <a href="support.html" class="text-white">Contact &amp; Support</a>
-            <button onclick="logoutUser()" class="text-left text-red-400">🚪 Logout</button>
-        </div>
-    </div>
-</nav>
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
 
 <!-- MAIN -->
-<div class="max-w-[1200px] mx-auto px-4 pt-28 pb-12 relative z-10">
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
 
     <!-- PAGE HEADER -->
-    <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-300 px-5 py-2 rounded-full text-sm mb-5">
-            📺 Subscriber Star System
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-title">📺 Subscriber Tasks</span>
         </div>
-        <h1 class="text-4xl md:text-5xl font-black gradient-text">Subscriber Tasks</h1>
-        <p class="text-muted max-w-[700px] mx-auto mt-5 text-[15px] leading-7">
-            Subscribe to member channels and earn their subscription back.
-            Watch a video, subscribe, and grow your channel together with creators worldwide.
-        </p>
+          <a href="workingproofs.html" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">🎥</span>
+          <span class="nb-card-title">View Proofs</span>
+        </a>
+      </div>
+      <h1 class="text-4xl font-black text-[#211F1F]">Subscriber Tasks</h1>
+      <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
+        Subscribe to member channels and earn their subscription back. Watch a video, subscribe, and grow your channel together with creators worldwide.
+      </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
@@ -554,7 +462,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 <div class="min-w-0">
                     <h2 id="sideName" class="font-semibold text-base truncate">—</h2>
                     <p id="sideCode" class="text-muted text-sm">—</p>
-                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium">Active</span>
+                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-600 font-medium">Active</span>
                 </div>
             </div>
         </div>
@@ -569,7 +477,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
-                    <span id="st-pending" class="font-bold">�</span>
+                    <span id="st-pending" class="font-bold">—</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span>
@@ -583,26 +491,26 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
                     <span id="st-rejected" class="font-bold">—</span>
                 </div>
-                <div class="border-t border-[#232632] pt-3 flex items-center justify-between">
+                <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
                     <span class="text-muted">Total Tasks</span>
-                    <span id="st-total" class="font-bold text-purple-400">—</span>
+                    <span id="st-total" class="font-bold text-purple-700">—</span>
                 </div>
             </div>
 
             <!-- Exchange status counts -->
-            <div class="mt-4 pt-4 border-t border-[#232632] space-y-2.5 text-sm">
+            <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
                 <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Sub Back</span>
-                    <span id="st-awaiting" class="font-bold text-blue-400">—</span>
+                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span>
-                    <span id="st-both" class="font-bold text-teal-400">—</span>
+                    <span id="st-both" class="font-bold text-teal-600">—</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                    <span id="st-theirpending" class="font-bold text-orange-400">—</span>
+                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
                 </div>
             </div>
         </div>
@@ -617,21 +525,21 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
                 </div>
                 <div class="flex justify-between">
                     <span class="text-muted">Limit</span>
-                    <span id="lim-limit" class="font-bold text-purple-400">—</span>
+                    <span id="lim-limit" class="font-bold text-purple-700">—</span>
                 </div>
                 <div id="lim-reached-row" class="hidden flex justify-between">
                     <span class="text-muted">Status</span>
-                    <span class="font-bold text-red-400">Limit Reached</span>
+                    <span class="font-bold text-red-600">Limit Reached</span>
                 </div>
             </div>
             <div id="lim-bar-wrap" class="mt-3">
-                <div class="w-full bg-[#1a1d27] rounded-full h-2">
+                <div class="w-full bg-white rounded-full h-2">
                     <div id="lim-bar" class="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all" style="width:0%"></div>
                 </div>
             </div>
             <p class="text-xs text-muted mt-3 leading-relaxed">
                 📎 Submit your Subscription proof via the
-                <a href="exsubextension.html" class="text-purple-300 underline hover:text-purple-200">Exsub Extension</a>.
+                <a href="exsubextension.html" class="text-purple-700 underline hover:text-purple-700">Exsub Extension</a>.
             </p>
             <!-- Verify button shown when limit is reached -->
             <div id="lim-verify-wrap" class="hidden mt-3">
@@ -647,25 +555,25 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <main class="flex-1 min-w-0">
 
         <!-- BLOCKED BANNER -->
-        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-800/60" style="background:linear-gradient(180deg,#1c0a0a,#120606);">
+        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
                 <div>
-                    <h3 class="font-semibold text-red-300 mb-1">Group Access Restricted</h3>
-                    <p id="blockedMsg" class="text-red-400/80 text-sm leading-relaxed">Your account has been restricted from the Subscribers Group.</p>
+                    <h3 class="font-semibold text-red-600 mb-1">Group Access Restricted</h3>
+                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Subscribers Group.</p>
                 </div>
             </div>
         </div>
 
         <!-- UNSUBSCRIBED WARNING BANNER (shown when member has unsubscribed tasks) -->
-        <div id="unsubBanner" class="hidden mb-6 rounded-3xl p-5 border border-red-600/50" style="background:linear-gradient(180deg,#200a0a,#140606);">
+        <div id="unsubBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
                 <div class="flex-1">
-                    <h3 class="font-semibold text-red-300 mb-1">You Have Unsubscribed Channels!</h3>
-                    <p class="text-red-400/80 text-sm leading-relaxed mb-3">
-                        You have <strong id="unsubCount" class="text-red-300">0</strong> task(s) where you unsubscribed from a channel.
-                        You <strong class="text-white">must re-subscribe</strong> to these channels before you can do any other work.
+                    <h3 class="font-semibold text-red-600 mb-1">You Have Unsubscribed Channels!</h3>
+                    <p class="text-red-600/80 text-sm leading-relaxed mb-3">
+                        You have <strong id="unsubCount" class="text-red-600">0</strong> task(s) where you unsubscribed from a channel.
+                        You <strong class="text-[#211F1F]">must re-subscribe</strong> to these channels before you can do any other work.
                         These tasks are pinned at the top.
                     </p>
                     <div class="flex gap-3 flex-wrap">
@@ -682,16 +590,9 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
             <div>
                 <h2 class="text-2xl font-bold">My Tasks</h2>
-                <p class="text-muted mt-1 text-sm">Track your subscriber exchange tasks below</p>
+                <p class="text-muted mt-1 text-sm">Make sure exsub extension is install</p>
             </div>
             <div class="flex flex-col sm:flex-row gap-3">
-                <input id="searchInput" type="text" placeholder="Search Task ID or Member…"
-                    oninput="applyFilter()"
-                    class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[48px] outline-none w-full sm:w-[210px] text-sm focus:border-purple-500 transition">
-                <a href="workingproofs.html"
-                    class="btn-teal px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm no-underline">
-                    🎥 View Proofs
-                </a>
                 <button id="prefsBtn" onclick="openPreferencesModal()"
                     class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
                     🎯 Match Preferences
@@ -708,20 +609,20 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
         </div>
 
         <!-- HOW IT WORKS BANNER -->
-        <div class="card rounded-3xl p-5 mb-6 border border-purple-500/15">
-            <h3 class="font-semibold text-sm text-purple-300 mb-3">📋 How Subscriber Tasks Work</h3>
+        <div class="card rounded-3xl p-5 mb-6">
+            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Subscriber Tasks Work</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="step-item">
                     <div class="step-num">1</div>
-                    <div>Open the target channel on YouTube and <strong class="text-white">pick any video</strong> to watch</div>
+                    <div>Open the target channel on YouTube and <strong class="text-[#211F1F]">pick any video</strong> to watch</div>
                 </div>
                 <div class="step-item">
                     <div class="step-num">2</div>
-                    <div>Watch the video for at least <strong class="text-white">2 full minutes</strong> (minimum 1 min before subscribing)</div>
+                    <div>Watch the video for at least <strong class="text-[#211F1F]">2 full minutes</strong> (minimum 1 min before subscribing)</div>
                 </div>
                 <div class="step-item">
                     <div class="step-num">3</div>
-                    <div><strong class="text-white">Subscribe</strong> to the channel, then come back and click <em>Mark Subscribed</em></div>
+                    <div><strong class="text-[#211F1F]">Subscribe</strong> to the channel, then come back and click <em>Mark Subscribed</em></div>
                 </div>
             </div>
         </div>
@@ -759,7 +660,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
             <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
             <p class="text-muted text-sm mb-7 leading-relaxed">
                 You don't have any tasks here yet.<br>
-                Click <strong class="text-white">Create Tasks</strong> to generate new subscriber tasks and start growing!
+                Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new subscriber tasks and start growing!
             </p>
             <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
         </div>
@@ -773,41 +674,27 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 
     </main>
 </div>
-</div>
 
-<!-- FOOTER -->
-<footer class="relative z-10 border-t border-[#1e212c]">
-    <div class="max-w-[1400px] mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2">
-                <img src="images/logo.svg" class="w-6 h-6" onerror="this.style.display='none'">
-                <span class="font-semibold">Exsub Group</span>
-            </div>
-            <p class="text-muted text-sm mt-3">Grow together with creators worldwide.</p>
-        </div>
-        <div class="flex gap-6 text-sm text-muted">
-            <a href="#" class="hover:text-white transition">Privacy</a>
-            <a href="#" class="hover:text-white transition">Terms</a>
-            <a href="support.html" class="hover:text-white transition">Support</a>
-        </div>
-    </div>
-</footer>
+</div>
+</main>
+</main>
+
 
 <!-- MATCH PREFERENCES MODAL -->
 <div id="prefsModal" class="modal-bg" onclick="if(event.target===this)closePreferencesModal()">
     <div class="modal-box max-w-[560px]">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">🎯 Match Preferences</h2>
-            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            Tell us what kind of subscribers you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-white">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get 20 tasks even if your preferences are rare.
+            Tell us what kind of subscribers you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get 20 tasks even if your preferences are rare.
         </p>
 
-        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-purple-400">(0/5)</span></label>
+        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-purple-700">(0/5)</span></label>
         <div id="prefInterestPills" class="flex flex-wrap gap-2 mb-5"></div>
 
-        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-purple-400">(0/5)</span></label>
+        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-purple-700">(0/5)</span></label>
         <div id="prefCountryPills" class="flex flex-wrap gap-2 mb-5"></div>
 
         <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
@@ -824,17 +711,17 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Create Subscriber Tasks</h2>
-            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            The system will find up to <strong class="text-white">20 members</strong> you haven't worked with yet and create <strong class="text-white">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
+            The system will find up to <strong class="text-[#211F1F]">20 members</strong> you haven't worked with yet and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
         </p>
         <div class="instructions-box mb-5">
-            <p class="text-xs text-purple-200 leading-relaxed">
+            <p class="text-xs text-purple-700 leading-relaxed">
                 🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first. Set your preferences beforehand for better-targeted matches — the rest of the slots are filled with random untouched members as usual.
             </p>
         </div>
-        <div class="bg-[#1a1d27] border border-[#232632] rounded-2xl p-4 mb-5 space-y-3 text-sm">
+        <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 mb-5 space-y-3 text-sm">
             <div class="flex justify-between items-center">
                 <span class="text-muted">Your Pending (Not Started) Tasks</span>
                 <span id="modalPendingCount" class="font-bold text-lg">—</span>
@@ -857,7 +744,7 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
     <div class="modal-box max-w-[540px]">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Task Detail</h2>
-            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <div id="detailBody" class="space-y-4"></div>
     </div>
@@ -867,8 +754,8 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-lg font-bold text-red-300">⚠ Report Issue</h2>
-            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-[#1a1d27] border border-[#232632] flex items-center justify-center text-muted hover:text-white transition text-lg">✕</button>
+            <h2 class="text-lg font-bold text-red-600">⚠ Report Issue</h2>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
 
         <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
@@ -885,10 +772,10 @@ input::placeholder, textarea::placeholder { color: #7d8395; }
 
         <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
         <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
-            class="w-full bg-[#1a1d27] border border-[#232632] rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
 
         <input type="hidden" id="issueTaskId">
-        <div id="issuePillSelected" class="text-xs text-red-400 mb-3 min-h-[16px]"></div>
+        <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
 
         <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
 
@@ -917,37 +804,14 @@ if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
 
-/* ────────────────────────────────────────
-   NAVBAR MENUS
-──────────────────────────────────────── */
-document.getElementById("mobileMenuBtn").addEventListener("click", e => {
-    e.stopPropagation();
-    document.getElementById("mobileMenu").classList.toggle("hidden");
-});
-document.getElementById("profileBtn").addEventListener("click", e => {
-    e.stopPropagation();
-    document.getElementById("profileDropdown").classList.toggle("hidden");
-});
-document.getElementById("notifBtn").addEventListener("click", e => {
-    e.stopPropagation();
-    document.getElementById("notifDropdown").classList.toggle("hidden");
-});
-document.addEventListener("click", () => {
-    document.getElementById("mobileMenu").classList.add("hidden");
-    document.getElementById("profileDropdown").classList.add("hidden");
-    document.getElementById("notifDropdown").classList.add("hidden");
-});
-
-document.getElementById("navUserName").textContent      = savedUsername || "Member";
-document.getElementById("dropdownUserName").textContent = savedUsername || "Member";
-document.getElementById("dropdownUserCode").textContent = "ID #" + (savedUserCode || "0000");
+/* Navbar menu wiring (mobile drawer, active-link highlight) is handled by navbar.js */
 </script>
 
 <script>
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0GcrwtGqDF1bSBNCMDvRH1VUkP6TyM8CaqvYHGPnsy3oe2M_yXqHB6SvGkA8vJ0R2hQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx_3rd90zbT3JM3K1nb1ChdBK9JKW47AluvnyYKmNsXWVjrMW4FbvM6txdH2jedkgrbZQ/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -1047,11 +911,6 @@ function renderMember() {
     const name = member.UserName  || savedUsername || '—';
     const code = member.UserCode  || savedUserCode || '—';
 
-    document.getElementById('navAvatar').src               = pic;
-    document.getElementById('navUserName').textContent     = name;
-    document.getElementById('dropAvatar').src              = pic;
-    document.getElementById('dropdownUserName').textContent = name;
-    document.getElementById('dropdownUserCode').textContent = `ID #${code}`;
     document.getElementById('sideAvatar').src              = pic;
     document.getElementById('sideName').textContent        = name;
     document.getElementById('sideCode').textContent        = `ID #${code}`;
@@ -1059,9 +918,9 @@ function renderMember() {
     const st   = member.Status || 'Active';
     const stEl = document.getElementById('sideStatus');
     stEl.textContent = st;
-    if      (st === 'Active')    stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-400 font-medium';
-    else if (st === 'Suspended') stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-400 font-medium';
-    else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 font-medium';
+    if      (st === 'Active')    stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-600 font-medium';
+    else if (st === 'Suspended') stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-600 font-medium';
+    else                         stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-700 font-medium';
 }
 
 /* ────────────────────────────────────────
@@ -1169,12 +1028,12 @@ async function showLimitReachedAlert() {
     const result = await Swal.fire({
         title: '🔒 Subscription Limit Reached',
         html: `
-            <div style="text-align:left;line-height:1.7;font-size:14px;color:#8a8f9e;">
-                <p style="margin-bottom:12px;">You have reached your subscription limit of <strong style="color:white;">${limit} channels</strong>.</p>
+            <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                <p style="margin-bottom:12px;">You have reached your subscription limit of <strong style="color:#211F1F;">${limit} channels</strong>.</p>
                 <p style="margin-bottom:12px;">To continue creating new tasks, you need to:</p>
                 <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
-                    <li style="margin-bottom:6px;">Submit your YouTube subscription list via the <strong style="color:#a78bfa;">Exsub Extension</strong></li>
-                    <li style="margin-bottom:6px;">Click <strong style="color:#2dd4bf;">Verify My Subscriptions</strong> below to confirm your subscriptions</li>
+                    <li style="margin-bottom:6px;">Submit your YouTube subscription list via the <strong style="color:#6d28d9;">Exsub Extension</strong></li>
+                    <li style="margin-bottom:6px;">Click <strong style="color:#0d9488;">Verify My Subscriptions</strong> below to confirm your subscriptions</li>
                     <li style="margin-bottom:6px;">Our system will verify your subscribed channels and unlock your limit</li>
                 </ol>
                 <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
@@ -1209,7 +1068,7 @@ async function showLimitReachedAlert() {
 async function doVerifySubscriptions() {
     Swal.fire({
         title: 'Verifying Subscriptions…',
-        html: '<p style="color:#8a8f9e;font-size:14px;">Checking your subscription list against all your tasks. This may take a moment.</p>',
+        html: '<p style="color:#4b5563;font-size:14px;">Checking your subscription list against all your tasks. This may take a moment.</p>',
         allowOutsideClick: false,
         showConfirmButton: false,
         didOpen: () => Swal.showLoading()
@@ -1247,8 +1106,8 @@ async function doVerifySubscriptions() {
                 Swal.fire({
                     title: '⚠ Verification Complete — Issues Found',
                     html: `
-                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#8a8f9e;">
-                            <p>✅ Verified subscribed: <strong style="color:#4ade80;">${verifiedSub}</strong></p>
+                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                            <p>✅ Verified subscribed: <strong style="color:#16a34a;">${verifiedSub}</strong></p>
                             <p>❌ Found unsubscribed: <strong style="color:#f87171;">${unsubFound}</strong></p>
                             <div style="margin-top:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
                                 You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed before you can continue working. These tasks are now pinned at the top.
@@ -1273,9 +1132,9 @@ async function doVerifySubscriptions() {
                 Swal.fire({
                     title: '🎉 All Subscriptions Verified!',
                     html: `
-                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#8a8f9e;">
-                            <p>✅ All <strong style="color:#4ade80;">${verifiedSub}</strong> subscriptions confirmed.</p>
-                            ${data.newLimit ? `<p style="margin-top:8px;">🚀 Your limit has been increased to <strong style="color:#a78bfa;">${data.newLimit}</strong> channels.</p>` : ''}
+                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                            <p>✅ All <strong style="color:#16a34a;">${verifiedSub}</strong> subscriptions confirmed.</p>
+                            ${data.newLimit ? `<p style="margin-top:8px;">🚀 Your limit has been increased to <strong style="color:#6d28d9;">${data.newLimit}</strong> channels.</p>` : ''}
                             <p style="margin-top:8px;">You can now create new tasks!</p>
                         </div>
                     `,
@@ -1287,7 +1146,7 @@ async function doVerifySubscriptions() {
         } else {
             Swal.fire({
                 title: 'Verification Failed',
-                html: `<p style="color:#8a8f9e;font-size:14px;">${data.message || 'Could not verify subscriptions. Please make sure you have submitted your subscription list via the Exsub Extension.'}</p>`,
+                html: `<p style="color:#4b5563;font-size:14px;">${data.message || 'Could not verify subscriptions. Please make sure you have submitted your subscription list via the Exsub Extension.'}</p>`,
                 icon: 'error',
                 confirmButtonText: 'OK',
                 customClass: { popup: 'swal2-popup' }
@@ -1296,7 +1155,7 @@ async function doVerifySubscriptions() {
     } catch (e) {
         Swal.fire({
             title: 'Connection Error',
-            html: '<p style="color:#8a8f9e;font-size:14px;">Could not reach the server. Please try again.</p>',
+            html: '<p style="color:#4b5563;font-size:14px;">Could not reach the server. Please try again.</p>',
             icon: 'error',
             confirmButtonText: 'OK',
             customClass: { popup: 'swal2-popup' }
@@ -1349,7 +1208,6 @@ function setTab(tab, btn) {
 
 function applyFilter() {
     enforceTaskPriorityTabs();
-    const q = (document.getElementById('searchInput').value || '').toLowerCase();
 
     let base = allTasks.filter(t => {
         if (t.UserCode !== USER_CODE) return false;
@@ -1363,18 +1221,7 @@ function applyFilter() {
             activeTab === 'Rejected'     ? t.Status === 'Rejected' :
             true;
 
-        const chanKey    = t.TargetUserCode || t.TargetChannelId || '';
-        const chanId     = t.TargetChannelId || channelIdCache[chanKey] || '';
-        const chanName   = (t.TargetChannelName || channelNameCache[chanKey] || channelNameCache[chanId] || '').toLowerCase();
-        const chanHandle = (t.TargetChannelHandle || channelHandleCache[chanKey] || channelHandleCache[chanId] || '').toLowerCase();
-        const searchMatch = !q ||
-            (t.TaskID          || '').toLowerCase().includes(q) ||
-            (t.TargetUserCode  || '').toLowerCase().includes(q) ||
-            chanId.toLowerCase().includes(q) ||
-            chanName.includes(q) ||
-            chanHandle.includes(q);
-
-        return tabMatch && searchMatch;
+        return tabMatch;
     });
 
     // Sort: Unsubscribed first, then Pending, then NotWorkYet, then Subscribed, then Rejected
@@ -1436,11 +1283,11 @@ function clearSkeletons() {
    HELPERS
 ──────────────────────────────────────── */
 const STATUS_CFG = {
-    'NotWorkYet':   { bg: 'bg-yellow-500/15', text: 'text-yellow-400', dot: 'bg-yellow-400', label: 'Not Started'  },
-    'Pending':      { bg: 'bg-orange-500/15', text: 'text-orange-400', dot: 'bg-orange-400', label: 'Pending'      },
-    'Subscribed':   { bg: 'bg-green-500/15',  text: 'text-green-400',  dot: 'bg-green-400',  label: 'Subscribed'   },
-    'Unsubscribed': { bg: 'bg-red-500/15',    text: 'text-red-400',    dot: 'bg-red-400',    label: 'Unsubscribed' },
-    'Rejected':     { bg: 'bg-gray-500/15',   text: 'text-gray-400',   dot: 'bg-gray-400',   label: 'Rejected'     },
+    'NotWorkYet':   { bg: 'bg-yellow-500/15', text: 'text-yellow-700', dot: 'bg-yellow-400', label: 'Not Started'  },
+    'Pending':      { bg: 'bg-orange-500/15', text: 'text-orange-600', dot: 'bg-orange-400', label: 'Pending'      },
+    'Subscribed':   { bg: 'bg-green-500/15',  text: 'text-green-600',  dot: 'bg-green-400',  label: 'Subscribed'   },
+    'Unsubscribed': { bg: 'bg-red-500/15',    text: 'text-red-600',    dot: 'bg-red-400',    label: 'Unsubscribed' },
+    'Rejected':     { bg: 'bg-gray-500/15',   text: 'text-gray-600',   dot: 'bg-gray-400',   label: 'Rejected'     },
 };
 
 /**
@@ -1452,11 +1299,11 @@ const STATUS_CFG = {
 function pairedBadge(t) {
     if (t.Status !== 'Subscribed') return '';
     if (t.PairedStatus === 'Subscribed') {
-        return `<span class="paired-badge bg-teal-500/15 text-teal-400">✓ They Subbed Back</span>`;
+        return `<span class="paired-badge bg-teal-500/15 text-teal-600">✓ They Subbed Back</span>`;
     } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
-        return `<span class="paired-badge bg-orange-500/15 text-orange-400">⏳ Their Sub: Pending</span>`;
+        return `<span class="paired-badge bg-orange-500/15 text-orange-600">⏳ Their Sub: Pending</span>`;
     } else {
-        return `<span class="paired-badge bg-blue-500/15 text-blue-400">⏳ Awaiting Their Sub</span>`;
+        return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Sub</span>`;
     }
 }
 
@@ -1537,7 +1384,7 @@ function showToast(msg, isError = false) {
    TASK CARD
 ──────────────────────────────────────── */
 function taskCard(t) {
-    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', dot: 'bg-gray-400', label: t.Status };
+    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
 
     const isUnsubscribed = t.Status === 'Unsubscribed';
     // Unsubscribed tasks: all actions disabled, must re-subscribe
@@ -1551,8 +1398,8 @@ function taskCard(t) {
     const chanUrl    = buildChannelUrl(t);
 
     const chanDisplay = chanName
-        ? `<span class="font-semibold text-white">${chanName}</span>`
-        : `<span class="font-mono text-purple-300 text-sm">${chanId || '—'}</span>`;
+        ? `<span class="font-semibold text-[#211F1F]">${chanName}</span>`
+        : `<span class="font-mono text-purple-700 text-sm">${chanId || '—'}</span>`;
 
     const handleRow = chanHandle
         ? (() => {
@@ -1560,9 +1407,9 @@ function taskCard(t) {
             const escaped = h.replace(/'/g, "\\'");
             return `
             <div class="flex items-center gap-1.5 mt-0.5">
-                <span class="text-xs text-purple-400 font-mono">${h}</span>
+                <span class="text-xs text-purple-700 font-mono">${h}</span>
                 <button class="copy-handle-btn" onclick="copyHandle('${escaped}',this)" title="Copy handle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#a78bfa">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                     </svg>
@@ -1572,15 +1419,15 @@ function taskCard(t) {
         : (chanId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${chanId}</div>` : '');
 
     const issueRow = t.Issue
-        ? `<span class="text-xs text-red-400 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
+        ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
 
     // Punishment block for unsubscribed cards
     const punishmentBlock = isUnsubscribed ? `
         <div class="punishment-box mt-3">
-            <p class="text-xs text-red-300 font-semibold mb-1">🚫 Action Required — Re-Subscribe</p>
-            <p class="text-xs text-red-400/80 leading-relaxed">
-                You have unsubscribed from this channel. You <strong class="text-red-300">must re-subscribe</strong> to it on YouTube and then submit your subscription list via the Exsub Extension to resolve this task.
+            <p class="text-xs text-red-600 font-semibold mb-1">🚫 Action Required — Re-Subscribe</p>
+            <p class="text-xs text-red-600/80 leading-relaxed">
+                You have unsubscribed from this channel. You <strong class="text-red-600">must re-subscribe</strong> to it on YouTube and then submit your subscription list via the Exsub Extension to resolve this task.
                 Until resolved, all other actions are locked.
             </p>
             <a href="${chanUrl}" target="_blank" rel="noopener"
@@ -1593,13 +1440,13 @@ function taskCard(t) {
     const issueSection = !isUnsubscribed ? `
         <div class="issue-box mt-3">
             <div class="flex items-center justify-between">
-                <span class="text-xs text-red-400/80 font-medium">⚠ Report Issue with this task</span>
+                <span class="text-xs text-red-600/80 font-medium">⚠ Report Issue with this task</span>
                 <button onclick="openIssueModal('${t.TaskID}')"
-                    class="text-xs text-red-400 hover:text-red-300 underline transition">
+                    class="text-xs text-red-600 hover:text-red-600 underline transition">
                     ${t.Issue ? 'Update Issue' : 'Report'}
                 </button>
             </div>
-            ${t.Issue ? `<p class="text-xs text-red-400/70 mt-1">Current: ${t.Issue}</p>` : ''}
+            ${t.Issue ? `<p class="text-xs text-red-600/70 mt-1">Current: ${t.Issue}</p>` : ''}
         </div>` : '';
 
     // Right-side action buttons
@@ -1612,7 +1459,7 @@ function taskCard(t) {
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-60">
                 ▶ Open Channel
             </a>` : ''}
-            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-400">
+            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-600">
                 🔒 Actions Locked
             </div>`;
     } else if (canMark) {
@@ -1641,14 +1488,14 @@ function taskCard(t) {
 
     // Pinned indicator for unsubscribed
     const pinnedBadge = isUnsubscribed
-        ? `<span class="text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
+        ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
         : '';
 
     return `
     <div class="task-card ${isUnsubscribed ? 'unsubscribed-card' : ''} rounded-3xl p-5">
         <!-- TOP ROW -->
         <div class="flex flex-wrap items-center gap-2 mb-4">
-            <code class="text-xs text-muted font-mono bg-[#1a1d27] px-2.5 py-1 rounded-lg">${t.TaskID}</code>
+            <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
             ${pairedBadge(t)}
             ${matchBadge(t)}
@@ -1662,11 +1509,11 @@ function taskCard(t) {
 
                 <!-- Channel instruction box -->
                 <div class="instructions-box mb-3">
-                    <p class="text-xs text-purple-300 font-semibold mb-2">📺 ${isUnsubscribed ? 'Re-subscribe to this channel:' : 'Subscribe to this channel:'}</p>
+                    <p class="text-xs text-purple-700 font-semibold mb-2">📺 ${isUnsubscribed ? 'Re-subscribe to this channel:' : 'Subscribe to this channel:'}</p>
                     <div class="flex items-center gap-3">
                         ${chanImage
-                            ? `<img src="${chanImage}" alt="" class="w-11 h-11 rounded-xl object-cover bg-[#1a1d27] border border-[#252936] flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-11 h-11 rounded-xl bg-[#1a1d27] flex items-center justify-center text-lg flex-shrink-0&quot;>?</div>'">`
-                            : `<div class="w-11 h-11 rounded-xl bg-[#1a1d27] flex items-center justify-center text-lg flex-shrink-0">?</div>`}
+                            ? `<img src="${chanImage}" alt="" class="w-11 h-11 rounded-xl object-cover bg-white border border-[#211F1F]/15 flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-11 h-11 rounded-xl bg-white flex items-center justify-center text-lg flex-shrink-0&quot;>?</div>'">`
+                            : `<div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-lg flex-shrink-0">?</div>`}
                         <div class="min-w-0 flex-1">
                             <div class="text-sm">${chanDisplay}</div>
                             ${handleRow}
@@ -1679,10 +1526,10 @@ function taskCard(t) {
 
                 <!-- Meta -->
                 <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
-                    <span>Member: <span class="text-white/70">${t.TargetUserCode || '—'}</span></span>
-                    <span>Created: <span class="text-white/70">${fmtDate(t.CreatedDate)}</span></span>
-                    ${t.WorkedDate  ? `<span>Worked: <span class="text-white/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
-                    ${t.CheckedDate ? `<span>Checked: <span class="text-white/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
+                    <span>Member: <span class="text-[#211F1F]/70">${t.TargetUserCode || '—'}</span></span>
+                    <span>Created: <span class="text-[#211F1F]/70">${fmtDate(t.CreatedDate)}</span></span>
+                    ${t.WorkedDate  ? `<span>Worked: <span class="text-[#211F1F]/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
+                    ${t.CheckedDate ? `<span>Checked: <span class="text-[#211F1F]/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
                 </div>
             </div>
 
@@ -1749,8 +1596,8 @@ async function doMarkSubscribed(taskId, btnEl) {
                 icon: 'warning',
                 title: 'Proof Not Found',
                 text: 'Please watch the video and subscribe first using the Exsub Extension. Your task is not complete yet.',
-                background: '#12141c',
-                color: '#fff',
+                background: '#F5F4EB',
+                color: '#211F1F',
                 confirmButtonColor: '#7c3aed',
                 confirmButtonText: 'Got it'
             });
@@ -1778,7 +1625,7 @@ function openDetail(taskId) {
     const t = allTasks.find(x => x.TaskID === taskId);
     if (!t) return;
 
-    const sc         = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-400', label: t.Status };
+    const sc         = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', label: t.Status };
     const chanId     = getChannelId(t);
     const chanName   = getChannelName(t);
     const chanHandle = getChannelHandle(t);
@@ -1795,13 +1642,13 @@ function openDetail(taskId) {
     if (t.Status === 'Subscribed') {
         if (t.PairedStatus === 'Subscribed') {
             partnerLabel = 'Subscribed Back ✓';
-            partnerClass = 'text-teal-400';
+            partnerClass = 'text-teal-600';
         } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
             partnerLabel = 'Pending (Not Yet Subscribed)';
-            partnerClass = 'text-orange-400';
+            partnerClass = 'text-orange-600';
         } else {
             partnerLabel = 'Not Yet Subscribed';
-            partnerClass = 'text-blue-400';
+            partnerClass = 'text-blue-600';
         }
     } else {
         partnerLabel = 'Awaiting Your Action';
@@ -1812,28 +1659,28 @@ function openDetail(taskId) {
 
     document.getElementById('detailBody').innerHTML = `
         <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Task ID</div>
-                <div class="font-mono font-semibold text-purple-400">${t.TaskID}</div>
+                <div class="font-mono font-semibold text-purple-700">${t.TaskID}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Your Status</div>
                 <div class="font-semibold ${sc.text}">${sc.label}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">You (Worker)</div>
                 <div class="font-semibold">${t.UserCode || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Target Member</div>
-                <div class="font-semibold text-purple-300">${t.TargetUserCode || '—'}</div>
+                <div class="font-semibold text-purple-700">${t.TargetUserCode || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4 col-span-2">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2">
                 <div class="text-muted text-xs mb-1">Target Channel</div>
                 <div class="font-semibold">${chanName || '—'}</div>
                 ${h ? `
                 <div class="flex items-center gap-1.5 mt-1">
-                    <span class="font-mono text-xs text-purple-400">${h}</span>
+                    <span class="font-mono text-xs text-purple-700">${h}</span>
                     <button class="copy-handle-btn" onclick="copyHandle('${escapedHandle}',this)" title="Copy handle">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -1843,13 +1690,13 @@ function openDetail(taskId) {
                 </div>` : ''}
                 <div class="font-mono text-xs text-muted mt-0.5">${chanId || '—'}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Partner Sub Status</div>
                 <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
             </div>
-            <div class="bg-[#1a1d27] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Issue</div>
-                <div class="${t.Issue ? 'text-red-400' : 'text-muted'} text-xs">${t.Issue || 'None'}</div>
+                <div class="${t.Issue ? 'text-red-600' : 'text-muted'} text-xs">${t.Issue || 'None'}</div>
             </div>
         </div>
 
@@ -1864,7 +1711,7 @@ function openDetail(taskId) {
             ⚠ Report / Update Issue
         </button>
 
-        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#232632]">
+        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#211F1F]/15">
             <div>Created: ${fmtDate(t.CreatedDate)}</div>
             ${t.WorkedDate  ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>`  : ''}
             ${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}
@@ -1977,12 +1824,12 @@ async function doSavePreferences() {
         if (data.success) {
             myPreferences = { interests: data.interests || [], countries: data.countries || [] };
             box.textContent = '✅ Preferences saved! New tasks will now prioritize matching members.';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             showToast('Match preferences saved!');
             setTimeout(closePreferencesModal, 1400);
         } else {
             box.textContent = data.message || 'Could not save preferences.';
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -2011,7 +1858,7 @@ function openCreateModal() {
     const canCreate = pending < 5;
     const canEl = document.getElementById('modalCanCreate');
     canEl.textContent = canCreate ? 'Yes — tasks will be created' : 'No — complete your pending tasks first';
-    canEl.className   = `font-semibold ${canCreate ? 'text-green-400' : 'text-red-400'}`;
+    canEl.className   = `font-semibold ${canCreate ? 'text-green-600' : 'text-red-600'}`;
 
     const btn = document.getElementById('doCreateBtn');
     btn.disabled = !canCreate;
@@ -2042,7 +1889,7 @@ async function doCreateTasks() {
 
         if (data.success) {
             box.textContent = `✅ ${data.created} new task(s) created! (${data.pairs} paired tasks created for other members too)`;
-            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             if (data.newTasks?.length) {
                 allTasks = [...allTasks, ...data.newTasks];
                 if (data.channelNames)   Object.assign(channelNameCache,   data.channelNames);
@@ -2060,7 +1907,7 @@ async function doCreateTasks() {
                 showLimitReachedAlert();
             } else {
                 box.textContent = data.message || 'Could not create tasks.';
-                box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+                box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
             }
         }
     } catch (e) {
@@ -2149,14 +1996,14 @@ async function doSubmitIssue() {
 
         if (data.success) {
             box.textContent = `✅ Issue reported: "${issueTitle}"`;
-            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-300';
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             task.Issue = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
             showToast('Issue reported successfully.');
             applyFilter();
             setTimeout(closeIssueModal, 1600);
         } else {
             box.textContent = data.message || 'Could not submit issue.';
-            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-300';
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
@@ -2167,39 +2014,5 @@ async function doSubmitIssue() {
 }
 </script>
 
-<nav id="mobileBottomNav">
-  <div class="bn-inner">
-
-    <a href="subscriberstask.html" data-page="subscriberstasks.html" title="Subscribers Task">
-   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M22 12s0-4-1-6c-.5-1-1.3-1.8-2.3-2.3C16.7 3 12 3 12 3S7.3 3 5.3 3.7C4.3 4.2 3.5 5 3 6c-1 2-1 6-1 6s0 4 1 6c.5 1 1.3 1.8 2.3 2.3C7.3 21 12 21 12 21s4.7 0 6.7-.7c1-.5 1.8-1.3 2.3-2.3 1-2 1-6 1-6z"/>
-  <path d="M10 9l5 3-5 3V9z"/>
-</svg></a>
-
-    <a href="videotask.html" data-page="videotasks.html" title="Video Task">
-      <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-    </a>
-
-    <a href="playlisttask.html" data-page="playlisttasks.html" title="Playlist Task">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="9"></circle>
-  <polyline points="12 7 12 12 16 14"></polyline>
-</svg> </a>
-
-    <a href="likeandcommentstasks.html" data-page="othertasks.html" title="Likes & Comments Task">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </a>
-
-  </div>
-</nav>
-
-<script>
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
-  });
-})();
-</script>
 </body>
 </html>
