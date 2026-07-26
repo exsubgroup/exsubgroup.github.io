@@ -190,32 +190,153 @@ function formatNiceDate(raw) {
  * value previously saved via the "Other" option — either way it's
  * highlighted/pre-filled correctly.
  */
-function typeSelectorHTML(selectedValue = '') {
-  const isKnown  = CHANNEL_TYPES.some(t => t.id === selectedValue);
-  const isCustom = selectedValue && !isKnown;
-  const activeId = isKnown ? selectedValue : (isCustom ? 'other' : '');
-  const customVal = isCustom ? selectedValue : '';
+function typeSelectorHTML() {
+  // Define available channel types with emojis - expanded list
+  const channelTypes = [
+    // Entertainment & Lifestyle
+    { value: 'gaming', label: '🎮 Gaming' },
+    { value: 'entertainment', label: '🎭 Entertainment' },
+    { value: 'vlogs', label: '📹 Vlogs' },
+    { value: 'lifestyle', label: '🌟 Lifestyle' },
+    { value: 'travel', label: '✈️ Travel' },
+    { value: 'food', label: '🍳 Food & Cooking' },
+    { value: 'fitness', label: '💪 Fitness & Health' },
+    { value: 'fashion', label: '👗 Fashion & Beauty' },
+    { value: 'photography', label: '📸 Photography' },
+    { value: 'art', label: '🎨 Art & Design' },
+    
+    // Education & Knowledge
+    { value: 'education', label: '📚 Education' },
+    { value: 'science', label: '🔬 Science' },
+    { value: 'math', label: '📐 Mathematics' },
+    { value: 'history', label: '📜 History' },
+    { value: 'philosophy', label: '🧠 Philosophy' },
+    { value: 'psychology', label: '🧩 Psychology' },
+    { value: 'languages', label: '🗣️ Languages' },
+    { value: 'coding', label: '💻 Coding & Programming' },
+    { value: 'ai', label: '🤖 AI & Machine Learning' },
+    { value: 'data', label: '📊 Data Science' },
+    { value: 'cybersecurity', label: '🔐 Cybersecurity' },
+    
+    // Technology
+    { value: 'tech', label: '💻 Technology' },
+    { value: 'gadgets', label: '📱 Gadgets & Reviews' },
+    { value: 'software', label: '🖥️ Software & Apps' },
+    { value: 'hardware', label: '🔧 Hardware & DIY' },
+    { value: 'robotics', label: '🤖 Robotics' },
+    { value: 'space', label: '🚀 Space & Astronomy' },
+    
+    // Business & Finance
+    { value: 'business', label: '💼 Business' },
+    { value: 'entrepreneurship', label: '🚀 Entrepreneurship' },
+    { value: 'finance', label: '💰 Finance & Investing' },
+    { value: 'crypto', label: '₿ Cryptocurrency' },
+    { value: 'marketing', label: '📈 Marketing & SEO' },
+    { value: 'sales', label: '📊 Sales & Networking' },
+    { value: 'productivity', label: '⏳ Productivity' },
+    
+    // Music & Arts
+    { value: 'music', label: '🎵 Music' },
+    { value: 'singing', label: '🎤 Singing & Vocals' },
+    { value: 'instruments', label: '🎸 Instruments' },
+    { value: 'dj', label: '🎧 DJ & Electronic' },
+    { value: 'dance', label: '💃 Dance' },
+    { value: 'theatre', label: '🎭 Theatre & Performance' },
+    { value: 'film', label: '🎬 Film & Movie Reviews' },
+    { value: 'animation', label: '🎨 Animation' },
+    
+    // Sports
+    { value: 'sports', label: '⚽ Sports' },
+    { value: 'football', label: '⚽ Football' },
+    { value: 'basketball', label: '🏀 Basketball' },
+    { value: 'cricket', label: '🏏 Cricket' },
+    { value: 'tennis', label: '🎾 Tennis' },
+    { value: 'golf', label: '⛳ Golf' },
+    { value: 'esports', label: '🎮 Esports' },
+    { value: 'martialarts', label: '🥋 Martial Arts' },
+    { value: 'yoga', label: '🧘 Yoga & Mindfulness' },
+    { value: 'running', label: '🏃 Running & Athletics' },
+    
+    // News & Politics
+    { value: 'news', label: '📰 News & Current Affairs' },
+    { value: 'politics', label: '🏛️ Politics' },
+    { value: 'worldnews', label: '🌍 World News' },
+    { value: 'technews', label: '📱 Tech News' },
+    
+    // Gaming & Niche
+    { value: 'retrogaming', label: '🕹️ Retro Gaming' },
+    { value: 'speedrun', label: '⚡ Speedruns' },
+    { value: 'gamedev', label: '🎮 Game Development' },
+    { value: 'review', label: '⭐ Reviews & Unboxing' },
+    { value: 'podcast', label: '🎙️ Podcast' },
+    { value: 'comedy', label: '😂 Comedy & Skits' },
+    { value: 'pranks', label: '🎭 Pranks & Challenges' },
+    { value: 'asmr', label: '🔊 ASMR' },
+    { value: 'motivation', label: '🔥 Motivation & Inspiration' },
+    { value: 'selfimprovement', label: '🌱 Self Improvement' },
+    { value: 'parenting', label: '👶 Parenting & Family' },
+    { value: 'pets', label: '🐾 Pets & Animals' },
+    { value: 'nature', label: '🌿 Nature & Wildlife' },
+    { value: 'cars', label: '🚗 Cars & Automotive' },
+    { value: 'motorcycles', label: '🏍️ Motorcycles' },
+    { value: 'diy', label: '🔨 DIY & Crafts' },
+    { value: 'homeimprovement', label: '🏠 Home Improvement' },
+    { value: 'gardening', label: '🌱 Gardening' },
+    { value: 'fishing', label: '🎣 Fishing & Outdoors' },
+    { value: 'camping', label: '🏕️ Camping & Hiking' },
+    { value: 'survival', label: '🌲 Survival & Bushcraft' },
+    { value: 'scienceexperiments', label: '🧪 Science Experiments' },
+    { value: 'mythbusting', label: '🔍 Myth Busting' },
+    { value: 'urbanexploration', label: '🏚️ Urban Exploration' },
+    { value: 'historydocumentary', label: '📜 History Documentary' },
+    { value: 'truecrime', label: '🔎 True Crime' },
+    { value: 'mystery', label: '❓ Mystery & Unsolved' },
+    { value: 'paranormal', label: '👻 Paranormal' },
+    { value: 'religion', label: '✝️ Religion & Spirituality' },
+    { value: 'inspirational', label: '💫 Inspirational' },
+    { value: 'kids', label: '🧒 Kids & Family' },
+    { value: 'educational', label: '📖 Educational' },
+    { value: 'tutorial', label: '📝 Tutorials & How-To' },
+    
+    // Other
+    { value: 'other', label: '✨ Other (Custom)' }
+  ];
 
-  return `
-    <div class="promochannel-type-search-wrap">
-      <input type="text" id="typeSearchInput" class="promochannel-type-search" placeholder="Search channel type…" oninput="filterTypeGrid()" autocomplete="off">
-    </div>
-    <div class="promochannel-type-grid" id="typeGrid">
-      ${CHANNEL_TYPES.map(t =>
-        `<div class="promochannel-type-opt${t.id === activeId ? ' promochannel-type-opt--selected' : ''}" onclick="selectType('${t.id}')" data-type="${t.id}" data-label="${t.label.toLowerCase()}">
-          <span class="promochannel-type-emoji">${t.emoji}</span>${t.label}
-        </div>`
-      ).join('')}
-    </div>
-    <input type="hidden" id="selectedChannelType" value="${activeId}">
-    <div id="customTypeWrap" class="promochannel-type-custom-wrap" style="${activeId === 'other' ? '' : 'display:none;'}">
-      <label class="promochannel-field-label">Type your channel category</label>
-      <input type="text" id="customTypeInput" class="promochannel-field-input" placeholder="e.g. Vintage Cars, Anime Reviews…" value="${customVal.replace(/"/g,'&quot;')}">
-      <p class="promochannel-type-hint">Can't find your category? Type it here — our team reviews custom types and may add them officially.</p>
-    </div>
+  let html = `
+    <div class="promochannel-type-search-wrap" style="margin-top:6px;">
+      <input id="sw_typeSearch" class="promochannel-type-search" 
+             placeholder="🔍 Search channel types or type custom..." 
+             onkeyup="filterChannelTypes(this.value)"
+             style="width:100%; box-sizing:border-box; padding:10px 14px; font-size:13px; font-weight:600; color:#211F1F; background:#ffffff; border:2px solid #211F1F; border-radius:12px; outline:none; transition: box-shadow 0.15s ease, transform 0.15s ease;">
+      
+      <div id="channelTypeGrid" class="promochannel-type-grid" 
+           style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-height:230px; overflow-y:auto; margin-top:10px; padding-right:4px;">
   `;
-}
 
+  channelTypes.forEach(function(type) {
+    const selected = type.value === 'other' ? 'selected' : '';
+    html += `
+      <div class="promochannel-type-opt ${selected}" 
+           data-value="${type.value}"
+           onclick="selectChannelType('${type.value}')"
+           style="display:flex; align-items:center; gap:6px; padding:9px 10px; font-size:11px; font-weight:700; color:#211F1F; background:#ffffff; border:2px solid #211F1F; border-radius:12px; cursor:pointer; transition: 0.15s ease; ${type.value === 'other' ? 'background:#ACD1C0; box-shadow:3px 3px 0px 0px #211F1F;' : ''}">
+        <span style="font-size:14px; flex-shrink:0;">${type.label.split(' ')[0]}</span>
+        <span style="font-size:10px; line-height:1.2;">${type.label.split(' ').slice(1).join(' ')}</span>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+      <div style="margin-top:8px; font-size:10px; color:#6b7280; text-align:center; font-weight:600;">
+        ${channelTypes.length} categories available · Click to select
+      </div>
+    </div>
+    <input type="hidden" id="selectedChannelType" value="other">
+  `;
+
+  return html;
+}
 function selectType(id) {
   document.querySelectorAll('.promochannel-type-opt').forEach(el => {
     el.classList.toggle('promochannel-type-opt--selected', el.dataset.type === id);
@@ -404,21 +525,53 @@ function channelCardHTML(ch) {
 function openAddModal() {
   Swal.fire({
     title: '📢 Add Promotional Channel',
-    width:600,
-    html:`<div style="text-align:left">
-      <label class="promochannel-field-label">YouTube Channel Link</label>
-      <input id="sw_channelLink" class="promochannel-field-input" placeholder="https://youtube.com/@yourchannel">
-      <label class="promochannel-field-label">Channel Type</label>${typeSelectorHTML()}
-    </div>`,
-    confirmButtonText: 'Add Promotional Channel',
-    showCancelButton:true,
-    cancelButtonText:'Cancel',
+    width: 600,
+    background: '#F5F4EB',
+    customClass: {
+      popup: 'swal-promo-popup',
+      confirmButton: 'btn-retro btn-mint',
+      cancelButton: 'btn-retro btn-sand'
+    },
+    html: `
+      <div style="text-align:left; font-family: system-ui, -apple-system, sans-serif;">
+        <!-- Channel Link Field -->
+        <label style="display:block; font-size:12px; font-weight:800; color:#211F1F; margin: 16px 0 6px; text-align:left; text-transform:uppercase; letter-spacing:0.03em;">
+          📺 YouTube Channel Link
+        </label>
+        <input id="sw_channelLink" 
+               class="promochannel-field-input" 
+               placeholder="https://youtube.com/@yourchannel"
+               style="width:100%; box-sizing:border-box; padding:12px 14px; font-size:13px; font-weight:600; color:#211F1F; background:#ffffff; border:2px solid #211F1F; border-radius:14px; outline:none; transition: box-shadow 0.15s ease, transform 0.15s ease;">
+        
+        <label style="display:block; font-size:12px; font-weight:800; color:#211F1F; margin: 16px 0 6px; text-align:left; text-transform:uppercase; letter-spacing:0.03em;">
+          🏷️ Channel Type
+        </label>
+        ${typeSelectorHTML()}
+        
+        <!-- Info Note -->
+        <div style="margin-top:18px; padding:12px 14px; background:#F5F4EB; border:2px dashed #211F1F; border-radius:14px; font-size:12px; color:#4b5563; text-align:left; line-height:1.6;">
+          <strong style="color:#211F1F;">💡 Tip:</strong> Choose a channel type that best describes your content. 
+          This helps us match you with the right groups and tasks.
+        </div>
+      </div>
+    `,
+    confirmButtonText: '➕ Add Channel',
+    cancelButtonText: 'Cancel',
+    showCancelButton: true,
     preConfirm: async () => {
       const channelLink = document.getElementById('sw_channelLink').value.trim();
       const channelType = getSelectedChannelTypeValue();
       const isCustomType = document.getElementById('selectedChannelType')?.value === 'other';
-      if (!channelLink) { Swal.showValidationMessage('Please enter a channel link'); return false; }
-      if (!channelType) { Swal.showValidationMessage('Please select or type a channel type'); return false; }
+      
+      if (!channelLink) { 
+        Swal.showValidationMessage('Please enter a channel link'); 
+        return false; 
+      }
+      if (!channelType) { 
+        Swal.showValidationMessage('Please select or type a channel type'); 
+        return false; 
+      }
+      
       try {
         Swal.showLoading();
         const r = await fetch(ChannelCRUDScript
@@ -430,24 +583,74 @@ function openAddModal() {
           + (isCustomType ? `&isCustomType=yes` : '')
         );
         const d = await r.json();
-        if (d.status !== 'success') { Swal.showValidationMessage(d.message); return false; }
+        if (d.status !== 'success') { 
+          Swal.showValidationMessage(d.message); 
+          return false; 
+        }
         return d;
-      } catch(e) { Swal.showValidationMessage('Something went wrong. Try again.'); return false; }
+      } catch(e) { 
+        Swal.showValidationMessage('Something went wrong. Try again.'); 
+        return false; 
+      }
     }
   }).then(result => {
     if (result.isConfirmed) {
       Swal.fire({
-        icon:'success',
-        title:'Success!',
-        text: 'Promotional Channel added. Relevant issues cleared.',
-        timer:1800,
-        showConfirmButton:false
+        icon: 'success',
+        title: '🎉 Channel Added!',
+        text: 'Your promotional channel was added successfully. Issues cleared.',
+        timer: 2000,
+        showConfirmButton: false,
+        background: '#F5F4EB',
+        customClass: {
+          popup: 'swal-promo-popup'
+        }
       });
-      setTimeout(() => location.reload(), 1900);
+      setTimeout(() => location.reload(), 2100);
     }
   });
 }
 
+// ── CHANNEL TYPE SELECTOR HELPERS ──
+function filterChannelTypes(query) {
+  const grid = document.getElementById('channelTypeGrid');
+  const items = grid.querySelectorAll('.promochannel-type-opt');
+  const q = query.toLowerCase().trim();
+  
+  items.forEach(function(el) {
+    const text = el.textContent.toLowerCase();
+    el.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
+  });
+}
+
+function selectChannelType(value) {
+  // Update all items
+  const grid = document.getElementById('channelTypeGrid');
+  const items = grid.querySelectorAll('.promochannel-type-opt');
+  const hidden = document.getElementById('selectedChannelType');
+  
+  items.forEach(function(el) {
+    el.style.background = '#ffffff';
+    el.style.boxShadow = 'none';
+    el.classList.remove('selected');
+    if (el.dataset.value === value) {
+      el.style.background = '#ACD1C0';
+      el.style.boxShadow = '3px 3px 0px 0px #211F1F';
+      el.classList.add('selected');
+      hidden.value = value;
+    }
+  });
+}
+
+function getSelectedChannelTypeValue() {
+  const hidden = document.getElementById('selectedChannelType');
+  if (hidden && hidden.value) return hidden.value;
+  
+  // Fallback: find selected in grid
+  const grid = document.getElementById('channelTypeGrid');
+  const selected = grid.querySelector('.promochannel-type-opt.selected');
+  return selected ? selected.dataset.value : 'other';
+}
 /* =========================================================
    EDIT CHANNEL MODAL (Promotional Channel only)
 ========================================================= */

@@ -7,9 +7,122 @@
 <link rel="icon" href="images/logo.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 
+<style>
+/* ── ACCOUNT COMPLETION STEPS ── */
+.account-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 2px solid #211F1F;
+  border-radius: 14px;
+  background: #F5F4EB;
+  transition: all 0.3s ease;
+  min-height: 70px;
+}
+
+.account-step.account-step-done {
+  background: #ACD1C0;
+  border-color: #211F1F;
+}
+
+.account-step.account-step-pending {
+  background: #F5F4EB;
+  border-color: #211F1F;
+}
+
+.account-step .step-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 2px solid #211F1F;
+  background: white;
+}
+
+.account-step .step-icon.done {
+  background: #211F1F;
+  color: #ACD1C0;
+  border-color: #211F1F;
+}
+
+.account-step .step-icon.pending {
+  background: white;
+  color: #211F1F;
+  border-color: #211F1F;
+}
+
+.account-step .step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-step .step-label {
+  font-weight: 700;
+  font-size: 13px;
+  color: #211F1F;
+}
+
+.account-step .step-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.account-step.account-step-done .step-status {
+  color: #166534;
+}
+
+.account-step .step-action {
+  flex-shrink: 0;
+}
+
+.account-step .step-btn {
+  background: #211F1F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.account-step .step-btn:hover {
+  transform: scale(1.05);
+}
+
+.account-step.account-step-done .step-btn {
+  display: none;
+}
+
+.account-step .step-check {
+  display: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #211F1F;
+  color: #ACD1C0;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.account-step.account-step-done .step-check {
+  display: flex;
+}
+</style>
 </head>
 <body>
 
@@ -43,79 +156,26 @@
   <div class="flex flex-col">
 
     <!-- ── HEADER ── -->
-  <!-- ── HEADER ── --><!-- ── HEADER ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-
-  <!-- Reusable Top Navigation / Header Section -->
-<!-- Reusable Top Navigation / Header Section -->
-<div class="nb-dashboard-header">
-  <div class="nb-badge-container">
-    
-    <!-- Page Context Badge (Now styled completely identical to the others) -->
-    <div class="nb-status-card nb-status-static">
-      <span class="nb-card-title">Member Analytics</span>
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-title">Member Analytics</span>
+        </div>
+        <div id="extensionStatus" class="nb-status-card nb-ext-not-ready">
+          <span id="extIcon" class="nb-card-icon">🔌</span>
+          <span id="extTitle" class="nb-card-title">Extension</span>
+          <span id="extBadge" class="nb-pill nb-pill-warning">PENDING</span>
+          <a id="extCTA" href="exsubextension.html" class="nb-card-btn">Setup</a>
+        </div>
+        <a id="inlineIssuesBadge" href="issues.html" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">⚠️</span>
+          <span class="nb-card-title">Issues</span>
+          <span id="inlineIssuesCount" class="nb-pill nb-pill-danger nb-pill-blink">1</span>
+        </a>
+      </div>
+      <h1 class="text-4xl font-black text-[#211F1F]">Your Dashboard</h1>
+      <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Welcome back, mazhar · Joined 7 Sept 2026</div>
     </div>
-    
-    <!-- Extension Status Block -->
-    <div id="extensionStatus" class="nb-status-card nb-ext-not-ready">
-      <span id="extIcon" class="nb-card-icon">🔌</span>
-      <span id="extTitle" class="nb-card-title">Extension</span>
-      <span id="extBadge" class="nb-pill nb-pill-warning">PENDING</span>
-      <a id="extCTA" href="exsubextension.html" class="nb-card-btn">Setup</a>
-    </div>
-
-    <!-- Inline Issues Status Badge -->
-    <a id="inlineIssuesBadge" href="issues.html" class="nb-status-card nb-status-link">
-      <span class="nb-card-icon">⚠️</span>
-      <span class="nb-card-title">Issues</span>
-      <span id="inlineIssuesCount" class="nb-pill nb-pill-danger nb-pill-blink">1</span>
-    </a>
-
-  </div>
-
-  <h1 class="text-4xl font-black text-[#211F1F]">Your Dashboard</h1>
-  <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Welcome back, mazhar · Joined 7 Sept 2026</div>
-</div>
-
-<!-- ── HEADER ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-<!-- ── HEADER ROW WITH BADGES ── -->
-
 
     <!-- ── BLOCKED BANNER ── -->
     <div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; font-family: system-ui, -apple-system, sans-serif; border: 2px solid #211F1F; border-radius: 10px; max-width: 100%;">
@@ -141,51 +201,6 @@
         </div>
       </div>
     </div>
-
-<!-- ── BLOCKED BANNER ── -->
-<div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; font-family: system-ui, -apple-system, sans-serif; border: 2px solid #211F1F; border-radius: 10px; max-width: 100%;">
-  
-  <!-- Main Alert Header -->
-  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-    <span style="font-size: 1.75rem; line-height: 1;">⛔</span>
-    <h1 style="font-size: 1.25rem; font-weight: 800; color: #1f2937; margin: 0; letter-spacing: -0.025em;">
-      Account Blocked
-    </h1>
-  </div>
-
-  <p style="font-size: 0.9rem; color: #4b5563; margin: 0 0 1rem 0; line-height: 1.4;">
-    Your account has been suspended by an administrator. All platform features, task submissions, and channel groups are disabled immediately.
-  </p>
-
-  <!-- Dynamic Reason Box (Revealed via JS) -->
-  <div id="blockedReasonBox" class="hidden" style="background-color: #fee2e2; border-left: 3px solid #ef4444; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
-    <span style="font-size: 1rem;">📋</span>
-    <div style="font-size: 0.85rem; color: #7f1d1d; line-height: 1.4;">
-      <strong style="color: #991b1b; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; display: inline-block; margin-right: 0.5rem;">Reason:</strong>
-      <span id="blockedReasonText"></span>
-    </div>
-  </div>
-
-  <!-- Footer Info & Actions Combo Layer -->
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid #EAE9DF;">
-    <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">
-      Please provide your User Code when appealing.
-    </span>
-    
-    <!-- Action Buttons -->
-    <div style="display: flex; gap: 0.5rem; width: auto;">
-      <a href="support.html" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #dc2626; color: #ffffff; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-radius: 6px; white-space: nowrap;">
-        Appeal Block
-      </a>
-      <button onclick="logoutUser()" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #d1d5db; color: #4b5563; font-weight: 600; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">
-        Logout
-      </button>
-    </div>
-  </div>
-
-</div>
-
-    <!-- ── YOUR ISSUES (full list, PC-optimized) ── -->
 
     <!-- ── MEMBER INFO ROW ── -->
     <div id="memberInfoRow" class="hidden fade-in delay-1">
@@ -213,6 +228,95 @@
       </div>
     </div>
 
+    <!-- ── ACCOUNT COMPLETION STATUS ── -->
+    <div id="accountCompletionContainer" class="hidden fade-in delay-1 mb-6">
+      <div class="card p-6 mt-10">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-black text-[#211F1F]">🚀 Account Setup</h2>
+            <p id="accountStatusText" class="text-sm text-muted mt-0.5">Complete the steps below to unlock all features.</p>
+          </div>
+          <div>
+            <span id="accountStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border-2 border-[#211F1F] bg-amber-100 text-amber-800">⚠️ Incomplete</span>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Step 1: Promotional Channel -->
+          <div id="stepPromoChannel" class="account-step account-step-pending">
+            <div class="step-icon pending">📺</div>
+            <div class="step-content">
+              <div class="step-label">Add Promotional Channel</div>
+              <div class="step-status">Pending</div>
+            </div>
+            <div class="step-action">
+              <button onclick="showStepGuide('stepPromoChannel')" class="step-btn">Start</button>
+            </div>
+          </div>
+          
+          <!-- Step 2: Add Videos -->
+          <div id="stepAddVideos" class="account-step account-step-pending">
+            <div class="step-icon pending">🎬</div>
+            <div class="step-content">
+              <div class="step-label">Add Videos</div>
+              <div class="step-status">Pending</div>
+            </div>
+            <div class="step-action">
+              <button onclick="showStepGuide('stepAddVideos')" class="step-btn">Start</button>
+            </div>
+          </div>
+          
+          <!-- Step 3: Create Playlist -->
+          <div id="stepCreatePlaylist" class="account-step account-step-pending">
+            <div class="step-icon pending">⏱️</div>
+            <div class="step-content">
+              <div class="step-label">Create Playlist</div>
+              <div class="step-status">Pending</div>
+            </div>
+            <div class="step-action">
+              <button onclick="showStepGuide('stepCreatePlaylist')" class="step-btn">Start</button>
+            </div>
+          </div>
+          
+          <!-- Step 4: Add Working Channel -->
+          <div id="stepWorkingChannel" class="account-step account-step-pending">
+            <div class="step-icon pending">🔧</div>
+            <div class="step-content">
+              <div class="step-label">Add Working Channel</div>
+              <div class="step-status">Pending</div>
+            </div>
+            <div class="step-action">
+              <button onclick="showStepGuide('stepWorkingChannel')" class="step-btn">Start</button>
+            </div>
+          </div>
+          
+          <!-- Step 5: Join a Group -->
+          <div id="stepJoinGroup" class="account-step account-step-pending">
+            <div class="step-icon pending">👥</div>
+            <div class="step-content">
+              <div class="step-label">Join a Group</div>
+              <div class="step-status">Pending</div>
+            </div>
+            <div class="step-action">
+              <button onclick="showStepGuide('stepJoinGroup')" class="step-btn">Start</button>
+            </div>
+          </div>
+          
+          <!-- Step 6: Extension -->
+          <div id="stepExtension" class="account-step account-step-pending">
+            <div class="step-icon pending">🔌</div>
+            <div class="step-content">
+              <div class="step-label">Install & Login Extension</div>
+              <div class="step-status">Pending</div>
+            </div>
+            <div class="step-action">
+              <button onclick="showStepGuide('stepExtension')" class="step-btn">Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ══════════════════ ACTIVE CONTENT ══════════════════ -->
     <div id="activeContent">
 
@@ -225,22 +329,11 @@
           style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
       </div>
 
-
-
- <!-- Group Analytics Tabs -->
-   <!-- Group Analytics Tabs -->
-     <!-- Group Analytics Tabs -->
-<!-- Group Analytics Tabs -->
-  <div id="groupsTabSection" class="mb-10; mt-10">
-    <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-2 mb-6" id="groupTabs"></div>
-    <div id="tabContent" class="space-y-8"></div>
-  </div>
-
-  
-
-
-    
-
+      <!-- Group Analytics Tabs -->
+      <div id="groupsTabSection" class="mb-10; mt-10">
+        <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-2 mb-6" id="groupTabs"></div>
+        <div id="tabContent" class="space-y-8"></div>
+      </div>
 
     </div><!-- /activeContent -->
 
@@ -250,6 +343,7 @@
 </div>
 </main>
 </main>
+
 <!-- ══════════════════ JAVASCRIPT ══════════════════ -->
 <script>
 
@@ -282,7 +376,503 @@ async function loadDashboard() {
   }
 }
 
-/* ══════════════════ ISSUES ══════════════════ */
+/* ══════════════════ EXTENSION STATUS ══════════════════ */
+function renderExtensionStatus(isReady) {
+  const card = document.getElementById('extensionStatus');
+  const icon = document.getElementById('extIcon');
+  const title = document.getElementById('extTitle');
+  const badge = document.getElementById('extBadge');
+  const cta = document.getElementById('extCTA');
+
+  if (!card) return;
+
+  if (isReady === "Yes") {
+    icon.textContent = '✅';
+    title.textContent = 'Extension';
+    badge.textContent = 'ACTIVE';
+    badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300';
+    if (cta) cta.style.display = 'none';
+  } else {
+    icon.textContent = '🔌';
+    title.textContent = 'Extension';
+    badge.textContent = 'PENDING';
+    badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-300';
+    if (cta) cta.style.display = 'block';
+  }
+}
+
+/* ══════════════════ ACCOUNT COMPLETION STATUS ══════════════════ */
+function renderAccountCompletionStatus(member, data) {
+  // Check account completion status
+  const isAccountCompleted = member.accountCompleted === "Yes";
+  const container = document.getElementById('accountCompletionContainer');
+  const statusBadge = document.getElementById('accountStatusBadge');
+  const statusText = document.getElementById('accountStatusText');
+  
+  if (!container) return;
+  
+  // Check each step status using actual data
+  const hasPromoChannel = (data.promotionalAccountsCount || 0) > 0;
+  const hasWorkingChannel = (data.workingAccountsCount || 0) > 0;
+  const inAnyGroup = member.inSubscribersWork === "Yes" || 
+                      member.inVideoTaskWork === "Yes" || 
+                      member.inWatchtimeWork === "Yes" || 
+                      member.inLikeAndCommentWork === "Yes";
+  
+  // We need to check videos and playlist from other sources
+  // For now, we'll use the videoPerformance and playlistPerformance data
+  // but we need to pass these from the main render function
+  
+  // Store the computed values in the member object for later use
+  member.promoChannelExists = hasPromoChannel;
+  member.workingChannelExists = hasWorkingChannel;
+  member.inAnyGroup = inAnyGroup;
+  
+  // Update status badge
+  if (statusBadge) {
+    if (isAccountCompleted) {
+      statusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border-2 border-[#211F1F] bg-emerald-100 text-emerald-800';
+      statusBadge.innerHTML = '✅ Complete';
+    } else {
+      statusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border-2 border-[#211F1F] bg-amber-100 text-amber-800';
+      statusBadge.innerHTML = '⚠️ Incomplete';
+    }
+  }
+  
+  if (statusText) {
+    statusText.textContent = isAccountCompleted ? 'Your account is fully set up!' : 'Complete the steps below to unlock all features.';
+  }
+
+  // Show container
+  container.classList.remove('hidden');
+  
+  // Define steps with actual check values
+  const steps = [
+    { id: 'stepPromoChannel', label: 'Add Promotional Channel', icon: '📺', check: hasPromoChannel },
+    { id: 'stepAddVideos', label: 'Add Videos', icon: '🎬', check: member.hasVideos || false },
+    { id: 'stepCreatePlaylist', label: 'Create Playlist', icon: '⏱️', check: member.hasPlaylist || false },
+    { id: 'stepWorkingChannel', label: 'Add Working Channel', icon: '🔧', check: hasWorkingChannel },
+    { id: 'stepJoinGroup', label: 'Join a Group', icon: '👥', check: inAnyGroup },
+    { id: 'stepExtension', label: 'Install & Login Extension', icon: '🔌', check: member.extensionReady === "Yes" }
+  ];
+  
+  // Update each step
+  steps.forEach(function(step) {
+    const stepEl = document.getElementById(step.id);
+    if (!stepEl) return;
+    
+    if (step.check) {
+      stepEl.className = 'account-step account-step-done';
+      stepEl.innerHTML = `
+        <div class="step-icon done">✅</div>
+        <div class="step-content">
+          <div class="step-label">${step.label}</div>
+          <div class="step-status">Completed</div>
+        </div>
+        <div class="step-check">✓</div>
+      `;
+    } else {
+      stepEl.className = 'account-step account-step-pending';
+      stepEl.innerHTML = `
+        <div class="step-icon pending">${step.icon}</div>
+        <div class="step-content">
+          <div class="step-label">${step.label}</div>
+          <div class="step-status">Pending</div>
+        </div>
+        <div class="step-action">
+          <button onclick="showStepGuide('${step.id}')" class="step-btn">Start</button>
+        </div>
+      `;
+    }
+  });
+  
+  // If account is not completed, show the completion modal after a delay
+  if (!isAccountCompleted) {
+    setTimeout(function() {
+      showAccountCompletionGuide(steps);
+    }, 1500);
+  }
+}
+
+/* ══════════════════ ACCOUNT COMPLETION GUIDE (SweetAlert2) ══════════════════ */
+function showAccountCompletionGuide(steps) {
+  // Only show if account is not completed and user hasn't dismissed it
+  if (sessionStorage.getItem('accountGuideDismissed') === 'true') return;
+  
+  // Check which steps are completed
+  const completed = steps.filter(s => s.check).length;
+  const total = steps.length;
+  const progress = Math.round((completed / total) * 100);
+  
+  // Build step HTML
+  const stepsHtml = steps.map(function(step, index) {
+    const isDone = step.check;
+    const line = index < steps.length - 1 ? `<div class="step-line ${isDone ? 'done' : ''}"></div>` : '';
+    return `
+      <div class="swal-step-item">
+        <div class="flex items-start gap-3">
+          <div class="swal-step-icon ${isDone ? 'done' : 'pending'}">
+            ${isDone ? '✓' : index + 1}
+          </div>
+          <div class="flex-1">
+            <div class="swal-step-label ${isDone ? 'text-emerald-600' : 'text-gray-500'} font-semibold">${step.icon} ${step.label}</div>
+            <div class="swal-step-status ${isDone ? 'text-emerald-600' : 'text-amber-600'} text-sm">
+              ${isDone ? '✅ Completed' : '⏳ Pending'}
+            </div>
+          </div>
+        </div>
+        ${line}
+      </div>
+    `;
+  }).join('');
+  
+  Swal.fire({
+    title: '🚀 Welcome to Exsub Group!',
+    html: `
+      <div class="swal-account-guide">
+        <div class="swal-progress-container">
+          <div class="swal-progress-bar">
+            <div class="swal-progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <div class="swal-progress-text">${completed} of ${total} steps completed</div>
+        </div>
+        <div class="swal-steps-container">
+          ${stepsHtml}
+        </div>
+        <p class="swal-footer-text">Complete all steps to start earning with Exsub Group!</p>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Continue Setup',
+    cancelButtonText: 'Dismiss',
+    allowOutsideClick: false,
+    width: '600px',
+    background: '#F5F4EB',
+    customClass: {
+      popup: 'swal-account-popup',
+      confirmButton: 'swal-confirm-btn',
+      cancelButton: 'swal-cancel-btn'
+    },
+    preConfirm: function() {
+      // User clicked continue - redirect to first incomplete step
+      const firstIncomplete = steps.find(s => !s.check);
+      if (firstIncomplete) {
+        const redirectMap = {
+          'stepPromoChannel': 'channels.html?view=promotional',
+          'stepAddVideos': 'videotask.html',
+          'stepCreatePlaylist': 'playlists.html',
+          'stepWorkingChannel': 'channels.html?view=working',
+          'stepJoinGroup': 'groups.html',
+          'stepExtension': 'exsubextension.html'
+        };
+        const url = redirectMap[firstIncomplete.id] || 'channels.html';
+        window.location.href = url;
+      }
+    },
+    didOpen: function() {
+      const style = document.createElement('style');
+      style.textContent = `
+        .swal-account-popup {
+          border-radius: 24px !important;
+          border: 2px solid #211F1F !important;
+          box-shadow: 6px 6px 0px 0px #211F1F !important;
+          padding: 1.5rem !important;
+        }
+        .swal-account-guide {
+          font-family: 'Inter', system-ui, sans-serif;
+          text-align: left;
+          padding: 0.5rem 0;
+        }
+        .swal-progress-container {
+          background: #EAE9DF;
+          border-radius: 12px;
+          padding: 0.75rem 1rem;
+          margin-bottom: 1.5rem;
+          border: 1px solid #211F1F;
+        }
+        .swal-progress-bar {
+          background: #F5F4EB;
+          border-radius: 999px;
+          height: 8px;
+          overflow: hidden;
+          border: 1px solid #211F1F;
+        }
+        .swal-progress-fill {
+          height: 100%;
+          background: #ACD1C0;
+          border-radius: 999px;
+          transition: width 0.8s ease;
+        }
+        .swal-progress-text {
+          font-size: 12px;
+          font-weight: 700;
+          color: #211F1F;
+          margin-top: 0.5rem;
+          text-align: center;
+        }
+        .swal-steps-container {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0.5rem 0;
+        }
+        .swal-step-item {
+          padding: 0.25rem 0;
+        }
+        .swal-step-icon {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+          font-size: 13px;
+          flex-shrink: 0;
+          border: 2px solid #211F1F;
+        }
+        .swal-step-icon.done {
+          background: #ACD1C0;
+          color: #211F1F;
+        }
+        .swal-step-icon.pending {
+          background: #F5F4EB;
+          color: #211F1F;
+        }
+        .swal-step-line {
+          margin: 0.25rem 0 0.25rem 14px;
+          width: 2px;
+          height: 12px;
+          background: #EAE9DF;
+        }
+        .swal-step-line.done {
+          background: #ACD1C0;
+        }
+        .swal-step-label {
+          font-size: 14px;
+          line-height: 1.3;
+        }
+        .swal-step-status {
+          font-size: 12px;
+        }
+        .swal-footer-text {
+          font-size: 13px;
+          color: #6b7280;
+          text-align: center;
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid #EAE9DF;
+        }
+        .swal-confirm-btn {
+          background: #211F1F !important;
+          color: white !important;
+          border-radius: 12px !important;
+          font-weight: 700 !important;
+          padding: 0.75rem 1.5rem !important;
+          border: 2px solid #211F1F !important;
+        }
+        .swal-cancel-btn {
+          background: #F5F4EB !important;
+          color: #211F1F !important;
+          border-radius: 12px !important;
+          font-weight: 600 !important;
+          padding: 0.75rem 1.5rem !important;
+          border: 2px solid #211F1F !important;
+        }
+        .swal-cancel-btn:hover {
+          background: #EAE9DF !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  });
+}
+
+/* ══════════════════ STEP GUIDE HANDLER ══════════════════ */
+function showStepGuide(stepId) {
+  const redirectMap = {
+    'stepPromoChannel': 'channels.html?view=promotional',
+    'stepAddVideos': 'videotask.html',
+    'stepCreatePlaylist': 'playlists.html',
+    'stepWorkingChannel': 'channels.html?view=working',
+    'stepJoinGroup': 'groups.html',
+    'stepExtension': 'exsubextension.html'
+  };
+  
+  const url = redirectMap[stepId] || 'channels.html';
+  window.location.href = url;
+}
+
+/* ══════════════════ MAIN RENDER DASHBOARD ══════════════════ */
+function renderDashboard(data) {
+  var m  = data.member               || {};
+  var sp = data.subsPerformance      || {};
+  var vp = data.videoPerformance     || {};
+  var ep = data.engagementPerformance|| {};
+  var pp = data.playlistPerformance  || {};
+  
+  // ── ADD CHECKS FOR ACCOUNT COMPLETION ──
+  var hasPromoChannel = (data.promotionalAccountsCount || 0) > 0;
+  var hasWorkingChannel = (data.workingAccountsCount || 0) > 0;
+  var inAnyGroup = m.inSubscribersWork === "Yes" || 
+                    m.inVideoTaskWork === "Yes" || 
+                    m.inWatchtimeWork === "Yes" || 
+                    m.inLikeAndCommentWork === "Yes";
+  
+  // Check if member has videos (from videoPerformance)
+  var hasVideos = (vp.totalVideoWatched || 0) > 0 || (data.videoCount || 0) > 0;
+  // Check if member has playlist (from playlistPerformance)
+  var hasPlaylist = (pp.totalPlaylistWatched || 0) > 0 || (data.playlistCount || 0) > 0;
+  
+  // Enhance member object
+  m.hasVideos = hasVideos;
+  m.hasPlaylist = hasPlaylist;
+  m.promoChannelExists = hasPromoChannel;
+  m.workingChannelExists = hasWorkingChannel;
+  m.inAnyGroup = inAnyGroup;
+  
+  renderExtensionStatus(m.extensionReady);
+  renderIssues(data.issues || []);
+  
+  // ── RENDER ACCOUNT COMPLETION STATUS ──
+  renderAccountCompletionStatus(m, data);
+
+  if (m.status) localStorage.setItem("status", m.status);
+
+  var isBlocked  = (m.status || "").toLowerCase() === "blocked";
+  /* Header */
+  setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · Joined " + fmtDate(m.dateOfJoin));
+
+  /* Profile picture in nav avatar */
+  if (m.profilePicture) {
+    document.querySelectorAll('img[src="https://i.pravatar.cc/100"]').forEach(function(img){
+      img.src = m.profilePicture;
+    });
+  }
+
+  /* Member info row */
+  setText("infoCountry",  m.country || "—");
+  setText("infoJoin",     fmtDate(m.dateOfJoin) || "—");
+  setText("infoChannels", data.promotionalAccountsCount || 0);
+
+  var statusEl = document.getElementById("infoStatus");
+  if (statusEl) {
+    statusEl.textContent = m.status || "—";
+    statusEl.className = "font-bold text-sm";
+    var sl = (m.status || "").toLowerCase();
+    if (sl === "active")  statusEl.classList.add("status-active");
+    if (sl === "blocked") statusEl.classList.add("status-blocked");
+    if (sl === "pending") statusEl.classList.add("status-pending");
+  }
+  show("memberInfoRow");
+
+  /* ── BLOCKED ── */
+  if (isBlocked) {
+    show("blockedBanner"); hide("memberInfoRow");
+    if (m.blockedReason && m.blockedReason.trim()) {
+      setText("blockedReasonText", m.blockedReason.trim());
+      var rb = document.getElementById("blockedReasonBox");
+      if (rb) { rb.classList.remove("hidden"); rb.style.display = "flex"; }
+    }
+    ["lnkDashboard","lnkChannels","lnkGroups","lnkHowTo","lnkExtension",
+     "mLnkDashboard","mLnkChannels","mLnkGroups","mLnkHowTo","mLnkExtension","ddProfile"]
+    .forEach(function(id){
+      var el = document.getElementById(id);
+      if (el){ el.classList.add("nav-disabled"); el.removeAttribute("href"); }
+    });
+    var ac = document.getElementById("activeContent");
+    if (ac) ac.style.display = "none";
+    hide("loadingState"); show("dashContent");
+    return;
+  }
+
+  /* ── GROUPS (task cards) ── */
+  var groupDefs = [
+    { key:"inSubscribersWork",    label:"Subscribers Group",    emoji:"👥", color:"#b3a1f5", bg:"rgba(139,124,246,0.13)", border:"rgba(139,124,246,0.32)", desc:"Exchange subscriptions with other members and grow your channel." },
+    { key:"inVideoTaskWork",      label:"Video Watch Group",    emoji:"🎬", color:"#7fc7e8", bg:"rgba(56,155,214,0.13)",  border:"rgba(56,155,214,0.32)",  desc:"Watch videos from other members and earn watch-time for yours." },
+    { key:"inWatchtimeWork",      label:"Watch Time Group",     emoji:"⏱", color:"#e0bd7a", bg:"rgba(214,169,79,0.13)",  border:"rgba(214,169,79,0.32)",  desc:"Complete playlist watch tasks and boost your channel watchtime." },
+    { key:"inLikeAndCommentWork", label:"Like & Comment Group", emoji:"💬", color:"#79cdc0", bg:"rgba(45,181,168,0.13)",  border:"rgba(45,181,168,0.32)",  desc:"Give and receive likes and comments to boost engagement." }
+  ];
+
+  var activeGroups = groupDefs.filter(function(g){ return m[g.key] === "Yes"; });
+
+  // ── ONLY SHOW GROUPS IF ACCOUNT IS COMPLETED ──
+  if (m.accountCompleted === "Yes") {
+    if (activeGroups.length > 0) {
+      var cardsEl = document.getElementById("groupTaskCards");
+      if (cardsEl) {
+        cardsEl.innerHTML = activeGroups.map(function(g){
+          return '<div class="group-task-card" style="background:' + g.bg + ';border-color:' + g.border + ';">'
+            + '<div class="flex items-center gap-4 flex-1 min-w-0">'
+            +   '<div style="width:52px;height:52px;border-radius:14px;background:' + g.bg + ';border:1px solid ' + g.border + ';display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">' + g.emoji + '</div>'
+            +   '<div class="min-w-0">'
+            +     '<div class="font-bold text-base" style="color:' + g.color + ';">' + g.label + '</div>'
+            +     '<div class="text-xs text-gray-400 mt-0.5 leading-relaxed">' + g.desc + '</div>'
+            +   '</div>'
+            + '</div>'
+            + '<a href="subscriberstask.html" class="start-task-btn" style="background:' + g.bg + ';border:1px solid ' + g.border + ';color:' + g.color + ';">▶ Start Task</a>'
+            + '</div>';
+        }).join("");
+      }
+      show("groupsSection");
+      hide("noGroupsMsg");
+    } else {
+      show("noGroupsMsg");
+      hide("groupsSection");
+    }
+    
+    // Render group tabs
+    renderGroupTabs(m, sp, vp, ep, pp);
+  } else {
+    // Account not completed - show message but hide groups
+    hide("groupsSection");
+    hide("groupsTabSection");
+    // Show a custom message in the noGroupsMsg area
+    var noGroups = document.getElementById("noGroupsMsg");
+    if (noGroups) {
+      noGroups.classList.remove("hidden");
+      noGroups.innerHTML = `
+        <div class="text-5xl mb-4">🚀</div>
+        <div class="text-xl font-bold mb-2">Complete Your Account Setup</div>
+        <div class="text-gray-400 text-sm mb-5 leading-relaxed max-w-md mx-auto">
+          Complete all 6 steps in the account setup guide above to unlock groups and start earning.
+        </div>
+        <button onclick="showAccountCompletionGuide(getAccountSteps())" class="nb-status-card">
+          📘 View Setup Guide
+        </button>
+      `;
+    }
+  }
+
+  hide("loadingState"); 
+  show("dashContent");
+}
+
+// Helper function to get current account steps
+function getAccountSteps() {
+  const container = document.getElementById('accountCompletionContainer');
+  if (!container) return [];
+  
+  const steps = [];
+  ['stepPromoChannel', 'stepAddVideos', 'stepCreatePlaylist', 'stepWorkingChannel', 'stepJoinGroup', 'stepExtension'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      const isDone = el.classList.contains('account-step-done');
+      const label = el.querySelector('.step-label')?.textContent || id;
+      const icon = el.querySelector('.step-icon')?.textContent || '📌';
+      steps.push({ id: id, label: label, icon: icon, check: isDone });
+    }
+  });
+  return steps.length > 0 ? steps : [
+    { id: 'stepPromoChannel', label: 'Add Promotional Channel', icon: '📺', check: false },
+    { id: 'stepAddVideos', label: 'Add Videos', icon: '🎬', check: false },
+    { id: 'stepCreatePlaylist', label: 'Create Playlist', icon: '⏱️', check: false },
+    { id: 'stepWorkingChannel', label: 'Add Working Channel', icon: '🔧', check: false },
+    { id: 'stepJoinGroup', label: 'Join a Group', icon: '👥', check: false },
+    { id: 'stepExtension', label: 'Install & Login Extension', icon: '🔌', check: false }
+  ];
+}
+
 /* ══════════════════ ISSUES ══════════════════ */
 function renderIssues(rawIssues) {
   try {
@@ -293,7 +883,6 @@ function renderIssues(rawIssues) {
     const inlineBadge = document.getElementById("inlineIssuesBadge");
     const inlineCount = document.getElementById("inlineIssuesCount");
 
-    // If no issues exist, hide everything and clean up classes
     if (myIssues.length === 0) { 
       hide("allIssuesSection"); 
       if (inlineBadge) inlineBadge.classList.add("hidden");
@@ -302,11 +891,9 @@ function renderIssues(rawIssues) {
       return; 
     }
 
-    // Trigger blinking alert indicators because issues are actively present
     if (container) { container.classList.add("blink-alert"); }
     if (countBadge) { countBadge.classList.add("badge-blink-alert"); }
 
-    /* Group by title — merge duplicates, keep the most recently updated copy, tally count */
     var grouped = {};
     myIssues.forEach(function(issue){
       var key = issue.title.toLowerCase();
@@ -325,7 +912,6 @@ function renderIssues(rawIssues) {
       return db - da;
     });
 
-    // NOW update the top inline badge safely after uniqueIssues is defined
     if (inlineBadge) inlineBadge.classList.remove("hidden");
     if (inlineCount) inlineCount.innerText = uniqueIssues.length;
 
@@ -371,16 +957,12 @@ function renderIssues(rawIssues) {
   }
 }
 
-
 /* ══════════════════ TAB COMPONENT RENDERERS ══════════════════ */
-
-/* ══════════════════ TAB COMPONENT RENDERERS (THEMED) ══════════════════ */
 
 function renderSubscribersTab(sp) {
   return `
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <!-- Stat Grid -->
         <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
           <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
             <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Subscribers Gained</div>
@@ -407,8 +989,6 @@ function renderSubscribersTab(sp) {
             <div id="subsPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
           </div>
         </div>
-        
-        <!-- Progress Volume Bar Module -->
         <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
           <h4 class="font-black text-xs mb-4 tracking-wider text-[#211F1F] uppercase">Proportional Status Metrics</h4>
           <div class="space-y-4">
@@ -427,8 +1007,6 @@ function renderSubscribersTab(sp) {
           </div>
         </div>
       </div>
-      
-      <!-- Right Column: Ring Chart & Threshold limits -->
       <div class="space-y-6">
         <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
           <div class="relative w-32 h-32 flex items-center justify-center">
@@ -441,7 +1019,6 @@ function renderSubscribersTab(sp) {
           <div class="mt-4 font-black text-sm text-[#211F1F]">Retention Effectiveness</div>
           <p class="text-xs text-gray-600 mt-1 max-w-[200px] leading-relaxed">Percentage of valid non-dropped subscriptions out of overall interactions.</p>
         </div>
-        
         <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-5 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
           <div class="flex justify-between text-xs font-bold text-[#211F1F] mb-2"><span>Earning Threshold Limit</span><span><span id="subsLimitUsed">0</span> / <span id="subsLimitMax">0</span></span></div>
           <div class="w-full bg-white border-2 border-[#211F1F] h-3 rounded-full overflow-hidden mb-2"><div id="subsLimitBar" class="h-full bg-[#ACD1C0]" style="width:0%"></div></div>
@@ -629,106 +1206,111 @@ function renderEngagementTab(ep) {
       </div>
     </div>`;
 }
-/* ══════════════════ RENDER ══════════════════ */
-/* ══════════════════ RENDER ══════════════════ */
-function renderDashboard(data) {
-  var m  = data.member               || {};
-  var sp = data.subsPerformance      || {};
-  var vp = data.videoPerformance     || {};
-  var ep = data.engagementPerformance|| {};
-  var pp = data.playlistPerformance  || {};
-  
-  renderExtensionStatus(m.extensionReady);
-  renderIssues(data.issues || []);
 
-  if (m.status) localStorage.setItem("status", m.status);
-
-  var isBlocked  = (m.status || "").toLowerCase() === "blocked";
-  /* Header */
-  setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · Joined " + fmtDate(m.dateOfJoin));
-
-  /* Profile picture in nav avatar */
-  if (m.profilePicture) {
-    document.querySelectorAll('img[src="https://i.pravatar.cc/100"]').forEach(function(img){
-      img.src = m.profilePicture;
-    });
-  }
-
-  /* Member info row */
-  setText("infoCountry",  m.country || "—");
-  setText("infoJoin",     fmtDate(m.dateOfJoin) || "—");
-  setText("infoChannels", data.promotionalAccountsCount || 0);
-
-  var statusEl = document.getElementById("infoStatus");
-  if (statusEl) {
-    statusEl.textContent = m.status || "—";
-    statusEl.className = "font-bold text-sm";
-    var sl = (m.status || "").toLowerCase();
-    if (sl === "active")  statusEl.classList.add("status-active");
-    if (sl === "blocked") statusEl.classList.add("status-blocked");
-    if (sl === "pending") statusEl.classList.add("status-pending");
-  }
-  show("memberInfoRow");
-
-  /* ── BLOCKED ── */
-  if (isBlocked) {
-    show("blockedBanner"); hide("memberInfoRow");
-    if (m.blockedReason && m.blockedReason.trim()) {
-      setText("blockedReasonText", m.blockedReason.trim());
-      var rb = document.getElementById("blockedReasonBox");
-      if (rb) { rb.classList.remove("hidden"); rb.style.display = "flex"; }
+/* ══════════════════ GROUP TABS ══════════════════ */
+function renderGroupTabs(m, sp, vp, ep, pp) {
+  const configs = [
+    { 
+      key: "inSubscribersWork", 
+      id: "subs",
+      label: "Subscribers", 
+      emoji: "👥", 
+      render: function() { return renderSubscribersTab(sp); }
+    },
+    { 
+      key: "inVideoTaskWork", 
+      id: "video",
+      label: "Video Watch", 
+      emoji: "🎬", 
+      render: function() { return renderVideoTab(vp); }
+    },
+    { 
+      key: "inWatchtimeWork", 
+      id: "playlist",
+      label: "Playlist", 
+      emoji: "⏱", 
+      render: function() { return renderPlaylistTab(pp); }
+    },
+    { 
+      key: "inLikeAndCommentWork", 
+      id: "engage",
+      label: "Engagement", 
+      emoji: "💬", 
+      render: function() { return renderEngagementTab(ep); }
     }
-    ["lnkDashboard","lnkChannels","lnkGroups","lnkHowTo","lnkExtension",
-     "mLnkDashboard","mLnkChannels","mLnkGroups","mLnkHowTo","mLnkExtension","ddProfile"]
-    .forEach(function(id){
-      var el = document.getElementById(id);
-      if (el){ el.classList.add("nav-disabled"); el.removeAttribute("href"); }
-    });
-    var ac = document.getElementById("activeContent");
-    if (ac) ac.style.display = "none";
-    hide("loadingState"); show("dashContent");
-    return;
-  }
-
-  /* ── GROUPS (task cards) ── */
-  var groupDefs = [
-    { key:"inSubscribersWork",    label:"Subscribers Group",    emoji:"👥", color:"#b3a1f5", bg:"rgba(139,124,246,0.13)", border:"rgba(139,124,246,0.32)", desc:"Exchange subscriptions with other members and grow your channel." },
-    { key:"inVideoTaskWork",      label:"Video Watch Group",    emoji:"🎬", color:"#7fc7e8", bg:"rgba(56,155,214,0.13)",  border:"rgba(56,155,214,0.32)",  desc:"Watch videos from other members and earn watch-time for yours." },
-    { key:"inWatchtimeWork",      label:"Watch Time Group",     emoji:"⏱", color:"#e0bd7a", bg:"rgba(214,169,79,0.13)",  border:"rgba(214,169,79,0.32)",  desc:"Complete playlist watch tasks and boost your channel watchtime." },
-    { key:"inLikeAndCommentWork", label:"Like & Comment Group", emoji:"💬", color:"#79cdc0", bg:"rgba(45,181,168,0.13)",  border:"rgba(45,181,168,0.32)",  desc:"Give and receive likes and comments to boost engagement." }
   ];
 
-  var activeGroups = groupDefs.filter(function(g){ return m[g.key] === "Yes"; });
+  const activeGroups = configs.filter(function(g) { return m[g.key] === "Yes"; });
+  if (activeGroups.length === 0) return;
 
-  if (activeGroups.length > 0) {
-    var cardsEl = document.getElementById("groupTaskCards");
-    if (cardsEl) {
-      cardsEl.innerHTML = activeGroups.map(function(g){
-        return '<div class="group-task-card" style="background:' + g.bg + ';border-color:' + g.border + ';">'
-          + '<div class="flex items-center gap-4 flex-1 min-w-0">'
-          +   '<div style="width:52px;height:52px;border-radius:14px;background:' + g.bg + ';border:1px solid ' + g.border + ';display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">' + g.emoji + '</div>'
-          +   '<div class="min-w-0">'
-          +     '<div class="font-bold text-base" style="color:' + g.color + ';">' + g.label + '</div>'
-          +     '<div class="text-xs text-gray-400 mt-0.5 leading-relaxed">' + g.desc + '</div>'
-          +   '</div>'
-          + '</div>'
-          + '<a href="subscriberstask.html" class="start-task-btn" style="background:' + g.bg + ';border:1px solid ' + g.border + ';color:' + g.color + ';">▶ Start Task</a>'
-          + '</div>';
-      }).join("");
-    }
-    show("groupsSection");
-  } else {
-    show("noGroupsMsg");
-  }
+  const tabsContainer = document.getElementById('groupTabs');
+  if (!tabsContainer) return;
+  tabsContainer.innerHTML = '';
 
-  // Generate the responsive functional tabs now that global structures are ready
-  renderGroupTabs(m, sp, vp, ep, pp); 
+  activeGroups.forEach(function(group, i) {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn flex items-center gap-2 ' + (i === 0 ? 'active' : '');
+    btn.innerHTML = group.emoji + ' ' + group.label;
+    btn.onclick = function() {
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tabContent').innerHTML = group.render();
+      initTabStats(group.id, sp, vp, ep, pp);
+    };
+    tabsContainer.appendChild(btn);
+  });
 
-  hide("loadingState"); 
-  show("dashContent");
+  document.getElementById('tabContent').innerHTML = activeGroups[0].render();
+  initTabStats(activeGroups[0].id, sp, vp, ep, pp);
+  show("groupsTabSection");
 }
 
-// Global updater function passed safely to individual tabs
+/* ══════════════════ CHART HELPERS ══════════════════ */
+function setRing(id, pct, circ) {
+  var el = document.getElementById(id);
+  if (el) el.style.strokeDashoffset = circ - (pct / 100) * circ;
+}
+
+function setProg(id, pct) {
+  var el = document.getElementById(id);
+  if (el) el.style.width = Math.min(Math.max(pct, 0), 100) + "%";
+}
+
+function after(ms, fn) { setTimeout(fn, ms); }
+
+/* ══════════════════ DOM HELPERS ══════════════════ */
+function show(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove("hidden");
+  if (el.style.display === "none") el.style.display = "";
+}
+
+function hide(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add("hidden");
+}
+
+function setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* ══════════════════ UTILS ══════════════════ */
+function fmt(n) {
+  var num = parseFloat(n);
+  return isNaN(num) ? "0" : num.toLocaleString();
+}
+
+function fmtDate(d) {
+  if (!d) return "";
+  var dt = new Date(d);
+  if (isNaN(dt.getTime())) return String(d);
+  return dt.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+}
+
+/* ══════════════════ GLOBAL UPDATER ══════════════════ */
 function initTabStats(type, sp, vp, ep, pp) {
   if (type === "subs") {
     var gained      = +(sp.totalSubscribersGet        || 0);
@@ -866,45 +1448,6 @@ function initTabStats(type, sp, vp, ep, pp) {
     });
   }
 }
-/* ══════════════════ CHART HELPERS ══════════════════ */
-function setRing(id, pct, circ) {
-  var el = document.getElementById(id);
-  if (el) el.style.strokeDashoffset = circ - (pct / 100) * circ;
-}
-function setProg(id, pct) {
-  var el = document.getElementById(id);
-  if (el) el.style.width = Math.min(Math.max(pct, 0), 100) + "%";
-}
-function after(ms, fn) { setTimeout(fn, ms); }
-
-/* ══════════════════ DOM HELPERS ══════════════════ */
-function show(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove("hidden");
-  if (el.style.display === "none") el.style.display = "";
-}
-function hide(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add("hidden");
-}
-function setText(id, val) {
-  var el = document.getElementById(id);
-  if (el) el.textContent = val;
-}
-
-/* ══════════════════ UTILS ══════════════════ */
-function fmt(n) {
-  var num = parseFloat(n);
-  return isNaN(num) ? "0" : num.toLocaleString();
-}
-function fmtDate(d) {
-  if (!d) return "";
-  var dt = new Date(d);
-  if (isNaN(dt.getTime())) return String(d);
-  return dt.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
-}
 
 /* ══════════════════ LOGOUT ══════════════════ */
 function logoutUser() {
@@ -915,102 +1458,6 @@ function logoutUser() {
 
 /* ── KICK OFF ── */
 loadDashboard();
-</script>
-<script>
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
-  });
-})();
-</script>
-
-
-<script>
-// ================== EXTENSION STATUS ==================
-// ================== EXTENSION STATUS ==================
-function renderExtensionStatus(isReady) {
-  const card = document.getElementById('extensionStatus');
-  const icon = document.getElementById('extIcon');
-  const title = document.getElementById('extTitle');
-  const badge = document.getElementById('extBadge');
-  const cta = document.getElementById('extCTA');
-
-  if (isReady === "Yes") {
-    icon.textContent = '✅';
-    title.textContent = 'Extension';
-    badge.textContent = 'ACTIVE';
-    badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300';
-    cta.style.display = 'none';
-  } else {
-    icon.textContent = '🔌';
-    title.textContent = 'Extension';
-    badge.textContent = 'PENDING';
-    badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-300';
-    cta.style.display = 'block';
-  }
-}
-// ================== GROUP TABS ==================
-
-  // ================== GROUP TABS WITH FULL ANALYTICS ==================
-// ================== GROUP TABS WITH FULL ANALYTICS ==================
-function renderGroupTabs(m, sp, vp, ep, pp) {
-  const configs = [
-    { 
-      key: "inSubscribersWork", 
-      id: "subs",
-      label: "Subscribers", 
-      emoji: "👥", 
-      render: () => renderSubscribersTab(sp)
-    },
-    { 
-      key: "inVideoTaskWork", 
-      id: "video",
-      label: "Video Watch", 
-      emoji: "🎬", 
-      render: () => renderVideoTab(vp)
-    },
-    { 
-      key: "inWatchtimeWork", 
-      id: "playlist",
-      label: "Playlist", 
-      emoji: "⏱", 
-      render: () => renderPlaylistTab(pp)
-    },
-    { 
-      key: "inLikeAndCommentWork", 
-      id: "engage",
-      label: "Engagement", 
-      emoji: "💬", 
-      render: () => renderEngagementTab(ep)
-    }
-  ];
-
-  const activeGroups = configs.filter(g => m[g.key] === "Yes");
-  if (activeGroups.length === 0) return;
-
-  const tabsContainer = document.getElementById('groupTabs');
-  if (!tabsContainer) return;
-  tabsContainer.innerHTML = '';
-
-  activeGroups.forEach((group, i) => {
-    const btn = document.createElement('button');
-    btn.className = `tab-btn flex items-center gap-2 ${i === 0 ? 'active' : ''}`;
-    btn.innerHTML = `${group.emoji} ${group.label}`;
-    btn.onclick = () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tabContent').innerHTML = group.render();
-      initTabStats(group.id, sp, vp, ep, pp);
-    };
-    tabsContainer.appendChild(btn);
-  });
-
-  // Load first active tab element into view and run metric calculations safely
-  document.getElementById('tabContent').innerHTML = activeGroups[0].render();
-  initTabStats(activeGroups[0].id, sp, vp, ep, pp);
-  show("groupsTabSection");
-}
 </script>
 </body>
 </html>

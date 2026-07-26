@@ -2178,3 +2178,189 @@ btnssssss */
   .settings-type-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .settings-panel { padding: 18px; }
 }
+
+
+/* ── ACCOUNT COMPLETION STEPS ── */
+.account-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 2px solid #211F1F;
+  border-radius: 14px;
+  background: #F5F4EB;
+  transition: all 0.3s ease;
+  min-height: 70px;
+}
+
+.account-step.account-step-done {
+  background: #ACD1C0;
+  border-color: #211F1F;
+}
+
+.account-step.account-step-pending {
+  background: #F5F4EB;
+  border-color: #211F1F;
+}
+
+.account-step .step-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 2px solid #211F1F;
+  background: white;
+}
+
+.account-step .step-icon.done {
+  background: #211F1F;
+  color: #ACD1C0;
+  border-color: #211F1F;
+}
+
+.account-step .step-icon.pending {
+  background: white;
+  color: #211F1F;
+  border-color: #211F1F;
+}
+
+.account-step .step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-step .step-label {
+  font-weight: 700;
+  font-size: 13px;
+  color: #211F1F;
+}
+
+.account-step .step-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.account-step.account-step-done .step-status {
+  color: #166534;
+}
+
+.account-step .step-action {
+  flex-shrink: 0;
+}
+
+.account-step .step-btn {
+  background: #211F1F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.account-step .step-btn:hover {
+  transform: scale(1.05);
+}
+
+.account-step.account-step-done .step-btn {
+  display: none;
+}
+
+.account-step .step-check {
+  display: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #211F1F;
+  color: #ACD1C0;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.account-step.account-step-done .step-check {
+  display: flex;
+}
+
+/* ── SWEETALERT2 NEO-BRUTALIST OVERRIDES ── */
+.swal-promo-popup {
+  border-radius: 24px !important;
+  border: 2px solid #211F1F !important;
+  box-shadow: 6px 6px 0px 0px #211F1F !important;
+  /* padding: 1.5rem !important; */
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+.swal-promo-popup .swal2-title {
+  color: #211F1F !important;
+  font-weight: 900 !important;
+  font-size: 1.5rem !important;
+}
+
+.swal-promo-popup .swal2-html-container {
+  color: #211F1F !important;
+  font-weight: 500 !important;
+}
+
+.swal-promo-popup .swal2-confirm {
+  background: #ACD1C0 !important;
+  color: #211F1F !important;
+  border: 2px solid #211F1F !important;
+  border-radius: 20px !important;
+  box-shadow: 4px 4px 0px 0px #211F1F !important;
+  font-weight: 800 !important;
+  transition: 0.15s ease !important;
+}
+
+.swal-promo-popup .swal2-confirm:hover {
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+  transform: translate(4px, 4px) !important;
+}
+
+.swal-promo-popup .swal2-cancel {
+  background: #DBD4B7 !important;
+  color: #211F1F !important;
+  border: 2px solid #211F1F !important;
+  border-radius: 20px !important;
+  box-shadow: 4px 4px 0px 0px #211F1F !important;
+  font-weight: 700 !important;
+  transition: 0.15s ease !important;
+}
+
+.swal-promo-popup .swal2-cancel:hover {
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+  transform: translate(4px, 4px) !important;
+}
+
+.swal-promo-popup .swal2-validation-message {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 2px solid #dc2626 !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* ── PROMOCHANNEL FIELD INPUTS (already in style.css, but ensuring compatibility) ── */
+.promochannel-field-input:focus {
+  box-shadow: 3px 3px 0px 0px #211F1F !important;
+  transform: translate(-1px, -1px) !important;
+}
+
+.promochannel-type-search:focus {
+  box-shadow: 3px 3px 0px 0px #211F1F !important;
+  transform: translate(-1px, -1px) !important;
+}
+
+.promochannel-type-opt:hover {
+  box-shadow: 3px 3px 0px 0px #211F1F !important;
+  transform: translate(-1px, -1px) !important;
+}
