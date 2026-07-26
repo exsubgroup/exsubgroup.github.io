@@ -900,7 +900,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFE8ORwsAgGvtNcSz5d__szJnK9f6wXS27IH9SO3qjcLYvxHd8riYEqPD0W4EeN-px/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexwvz_y2I_JDq9ViNtEuevH3Pv_9gylRzP9giD5b42atUBqqq4em4EEeOCJoWgBdU/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -1539,16 +1539,31 @@ async function openDetailModal(taskId) {
     }
 
     // ── 2. FETCH WATCH PROGRESS ──
-    let progressData = { progress: [] };
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${taskId}&userCode=${USER_CODE}`);
-        const data = await res.json();
-        if (data.success) {
-            progressData = data;
+  // ── 2. FETCH WATCH PROGRESS ──
+let progressData = { progress: [] };
+try {
+    console.log("🔍 Fetching watch progress...");
+    console.log("  TaskID:", taskId);
+    console.log("  UserCode:", USER_CODE);
+    
+    const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${taskId}&userCode=${USER_CODE}`);
+    const data = await res.json();
+    console.log("📥 Raw response:", data);
+    
+    if (data.success) {
+        progressData = data;
+        console.log("✅ Progress entries found:", progressData.progress.length);
+        if (progressData.progress.length > 0) {
+            console.log("📋 First entry:", JSON.stringify(progressData.progress[0], null, 2));
+        } else {
+            console.warn("⚠️ No progress entries found for this task");
         }
-    } catch (e) {
-        console.error('Error fetching progress:', e);
+    } else {
+        console.error("❌ Error from server:", data.message);
     }
+} catch (e) {
+    console.error('❌ Error fetching progress:', e);
+}
 
     // ── 3. BUILD VIDEOS PANEL ──
     const videosPanel = document.getElementById('detailPanelVideos');
@@ -1602,6 +1617,7 @@ if (totalHours > 0 && totalMins > 0) {
     // ── 4. BUILD PROGRESS PANEL ──
     // ── 4. BUILD PROGRESS PANEL ──
     // ── 4. BUILD PROGRESS PANEL ──
+    // ── 4. BUILD PROGRESS PANEL ──
 let progressHtml = `
     <div class="text-xs text-muted mb-3">
         <strong>Watch Progress</strong> — Track which videos you've watched (Need <strong>90%</strong> to complete)
@@ -1612,16 +1628,21 @@ if (!progressData.progress || progressData.progress.length === 0) {
     progressHtml += `<p class="text-muted text-sm">No progress data available. Start watching to track your progress.</p>`;
 } else {
     let totalWatched = 0;
+    let totalPercentage = 0;
     const totalVideos = progressData.progress.length;
     const WATCH_THRESHOLD = 90;
 
+    // Sort progress by video order (or by timestamp if available)
     progressData.progress.forEach((p, idx) => {
-        const isWatched = p.Percentage >= WATCH_THRESHOLD;
-        const isPartial = p.Percentage > 0 && p.Percentage < WATCH_THRESHOLD;
+        // Use the percentage from the sheet directly
+        const percentage = p.Percentage || 0;
+        const isWatched = percentage >= WATCH_THRESHOLD;
+        const isPartial = percentage > 0 && percentage < WATCH_THRESHOLD;
         const statusClass = isWatched ? 'ok' : (isPartial ? 'partial' : 'fail');
         const label = isWatched ? '✅ Watched' : (isPartial ? '⏳ Partial' : '❌ Not Started');
 
-        if (p.Percentage >= WATCH_THRESHOLD) totalWatched++;
+        if (percentage >= WATCH_THRESHOLD) totalWatched++;
+        totalPercentage += percentage;
 
         // Format duration from seconds to minutes:seconds
         const durationSecs = p.VideoDuration || 0;
@@ -1641,15 +1662,15 @@ if (!progressData.progress || progressData.progress.length === 0) {
                 <span class="num">#${idx + 1}</span>
                 <span class="title" title="${p.VideoTitle || ''}">${displayTitle}</span>
                 <span class="duration">${durationDisplay}</span>
-                <span class="progress ${statusClass}">${p.Percentage}%</span>
+                <span class="progress ${statusClass}">${percentage}%</span>
                 <span style="font-size:9px;min-width:60px;text-align:right;">${label}</span>
                 <div class="progress-bar-mini" style="width:60px;">
-                    <div class="fill ${statusClass}" style="width:${p.Percentage}%;"></div>
+                    <div class="fill ${statusClass}" style="width:${Math.min(100, percentage)}%;"></div>
                 </div>
             </div>`;
     });
 
-    const overallPercent = totalVideos > 0 ? Math.round((totalWatched / totalVideos) * 100) : 0;
+    const overallPercent = totalVideos > 0 ? Math.round(totalPercentage / totalVideos) : 0;
     const overallStatus = overallPercent >= 90 ? '✅ Complete' : (overallPercent > 0 ? '⏳ In Progress' : '❌ Not Started');
 
     progressHtml += `
@@ -1661,6 +1682,7 @@ if (!progressData.progress || progressData.progress.length === 0) {
 
 progressHtml += `</div>`;
 progressPanel.innerHTML = progressHtml;
+
 }
 
 function closeDetailModal() {

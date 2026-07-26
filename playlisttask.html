@@ -821,19 +821,21 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
         <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
 
-        <div class="flex flex-wrap gap-2 mb-4">
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist not found')">📭 Playlist not found</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist is private')">🔒 Playlist private</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Videos not available')">📹 Videos not available</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist empty')">📭 Playlist empty</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Video count mismatch')">📊 Video count mismatch</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Watching not working')">⚡ Watch not working</button>
-        </div>
-
-        <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
-        <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
-            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
+<div class="flex flex-wrap gap-2 mb-4">
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist not found')">📭 Playlist not found</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist is private')">🔒 Playlist private</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Videos not available')">📹 Videos not available</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist empty')">📭 Playlist empty</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist duration mismatch')">⏱ Playlist duration mismatch</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Video count mismatch')">📊 Video count mismatch</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Watching not working')">⚡ Watch not working</button>
+</div>
+<label class="block text-xs text-muted mb-1.5">Additional details (optional): <span id="charCount" class="text-xs text-muted">0/160</span></label>
+<textarea id="issueCustomText" rows="3" maxlength="160" placeholder="Describe the issue in more detail…"
+    class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"
+    oninput="updateCharCount()"></textarea>
 
         <input type="hidden" id="issueTaskId">
         <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
@@ -867,6 +869,16 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
 <!-- SCRIPTS -->
 <script>
+    function updateCharCount() {
+    const textarea = document.getElementById('issueCustomText');
+    const count = textarea.value.length;
+    document.getElementById('charCount').textContent = `${count}/160`;
+    if (count >= 160) {
+        document.getElementById('charCount').style.color = '#ef4444';
+    } else {
+        document.getElementById('charCount').style.color = '#6b7280';
+    }
+}
 /* ────────────────────────────────────────
    AUTH
 ──────────────────────────────────────── */
@@ -888,7 +900,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdmKuTPg9EI83WBN1pw2m3UConOrAx66v66vb_9cdoK6XTq29rHeYYhJMPS6A_scO-/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwexwvz_y2I_JDq9ViNtEuevH3Pv_9gylRzP9giD5b42atUBqqq4em4EEeOCJoWgBdU/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -1231,10 +1243,12 @@ function getChannelKey(t) {
     return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
 }
 
-function formatMinutes(minutes) {
-    if (!minutes || minutes === 0) return '0 min';
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+function formatMinutes(seconds) {
+    if (!seconds || seconds === 0) return '0 min';
+    // Convert seconds to minutes
+    const totalMinutes = Math.round(seconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
     if (hours > 0 && mins > 0) {
         return `${hours}h ${mins}min`;
     } else if (hours > 0) {
@@ -1316,11 +1330,12 @@ function taskCard(t) {
     const chanImage  = getChannelImage(t);
     const channelUrl = buildChannelUrl(t);
 
-    const playlistName = t.PlaylistName || 'Playlist';
-    const playlistId = t.PlaylistId || '';
-    const videoCount = t.VideoCount || 0;
-    const requiredMinutes = t.RequiredMinutes || 0;
-    const playlistCategory = t.PlaylistCategory || '';
+  // ── 4. Get Playlist Info ──
+const playlistName = t.PlaylistName || 'Playlist';
+const playlistId = t.PlaylistId || '';
+const videoCount = t.VideoCount || 0;
+const requiredMinutes = t.RequiredMinutes || 0;
+const playlistCategory = t.PlaylistCategory || '';
 
     const chanDisplay = chanName
         ? `<span class="font-semibold text-[#211F1F]">${chanName}</span>`
@@ -1409,23 +1424,40 @@ function taskCard(t) {
 
     const cardClass = isCheating ? 'playlist-task-card cheating-card' : 
                      (isWatched ? 'playlist-task-card watched-card' : 'playlist-task-card');
+
+
+                     // ── PLAYLIST INFO DISPLAY ──
 const playlistDisplay = `
-    <div class="flex items-center gap-2 flex-wrap">
-        <span class="playlist-name-display">
-            🎵 ${playlistName}
-            <button class="copy-btn" onclick="copyText('${playlistName.replace(/'/g, "\\'")}',this)" title="Copy playlist name">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-            </button>
-        </span>
-        ${playlistCategory ? getCategoryBadge(playlistCategory) : ''}
-    </div>
-    <div class="flex gap-4 text-xs text-muted mt-0.5">
-        ${videoCount ? `<span>📹 ${videoCount} videos</span>` : ''}
-        ${requiredMinutes ? `<span>⏱ ${formatMinutes(requiredMinutes)}</span>` : ''}
-        ${playlistId ? `<span class="font-mono text-[10px]">ID: ${playlistId}</span>` : ''}
+    <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="playlist-name-display" style="font-size:16px;">
+                🎵 ${playlistName}
+                <button class="copy-btn" onclick="copyText('${playlistName.replace(/'/g, "\\'")}',this)" title="Copy playlist name">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </span>
+            ${playlistCategory ? getCategoryBadge(playlistCategory) : ''}
+        </div>
+        <div class="flex gap-4 text-xs text-muted">
+            ${videoCount ? `<span>📹 ${videoCount} videos</span>` : ''}
+            ${requiredMinutes ? `<span>⏱ ${formatMinutes(requiredMinutes)}</span>` : ''}
+            ${playlistId ? `<span class="font-mono text-[10px]">ID: ${playlistId}</span>` : ''}
+        </div>
+    </div>`;
+
+// ── CHANNEL INFO DISPLAY ──
+const channelDisplay = `
+    <div class="flex items-center gap-3">
+        ${chanImage
+            ? `<img src="${chanImage}" alt="" class="w-14 h-14 rounded-xl object-cover bg-white border-2 border-[#211F1F] flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-14 h-14 rounded-xl bg-white flex items-center justify-center text-2xl flex-shrink-0 border-2 border-[#211F1F]&quot;>?</div>'">`
+            : `<div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-2xl flex-shrink-0 border-2 border-[#211F1F]">?</div>`}
+        <div class="min-w-0 flex-1">
+            <div class="text-sm font-semibold text-[#211F1F]">${chanDisplay}</div>
+            ${handleRow}
+        </div>
     </div>`;
 
     return `
@@ -1441,19 +1473,17 @@ const playlistDisplay = `
 
         <div class="flex flex-col xl:flex-row gap-5">
             <div class="flex-1 min-w-0">
-                <div class="playlist-info-box mb-3">
-                    <p class="text-xs text-purple-700 font-semibold mb-2">${isCheating ? '⚠️ Issue with this playlist:' : '🎵 Target Playlist:'}</p>
-                    <div class="flex items-center gap-3">
-                        ${chanImage
-                            ? `<img src="${chanImage}" alt="" class="w-11 h-11 rounded-xl object-cover bg-white border border-[#211F1F]/15 flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-11 h-11 rounded-xl bg-white flex items-center justify-center text-lg flex-shrink-0&quot;>?</div>'">`
-                            : `<div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-lg flex-shrink-0">?</div>`}
-                        <div class="min-w-0 flex-1">
-                            <div class="text-sm">${chanDisplay}</div>
-                            ${handleRow}
-                        </div>
-                    </div>
-                    ${playlistDisplay}
-                </div>
+               <div class="playlist-info-box mb-3">
+    <p class="text-xs text-purple-700 font-semibold mb-2">${isCheating ? '⚠️ Issue with this playlist:' : '🎵 Target Playlist:'}</p>
+    
+    <!-- CHANNEL SECTION -->
+    <div class="mb-3 pb-3 border-b border-[#211F1F]/15">
+        ${channelDisplay}
+    </div>
+    
+    <!-- PLAYLIST SECTION -->
+    ${playlistDisplay}
+</div>
 
                 ${cheatingBlock}
                 ${issueSection}
@@ -1509,32 +1539,50 @@ async function openDetailModal(taskId) {
     }
 
     // ── 2. FETCH WATCH PROGRESS ──
-    let progressData = { progress: [] };
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${taskId}&userCode=${USER_CODE}`);
-        const data = await res.json();
-        if (data.success) {
-            progressData = data;
+  // ── 2. FETCH WATCH PROGRESS ──
+let progressData = { progress: [] };
+try {
+    console.log("🔍 Fetching watch progress...");
+    console.log("  TaskID:", taskId);
+    console.log("  UserCode:", USER_CODE);
+    
+    const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${taskId}&userCode=${USER_CODE}`);
+    const data = await res.json();
+    console.log("📥 Raw response:", data);
+    
+    if (data.success) {
+        progressData = data;
+        console.log("✅ Progress entries found:", progressData.progress.length);
+        if (progressData.progress.length > 0) {
+            console.log("📋 First entry:", JSON.stringify(progressData.progress[0], null, 2));
+        } else {
+            console.warn("⚠️ No progress entries found for this task");
         }
-    } catch (e) {
-        console.error('Error fetching progress:', e);
+    } else {
+        console.error("❌ Error from server:", data.message);
     }
+} catch (e) {
+    console.error('❌ Error fetching progress:', e);
+}
 
     // ── 3. BUILD VIDEOS PANEL ──
     const videosPanel = document.getElementById('detailPanelVideos');
     const progressPanel = document.getElementById('detailPanelProgress');
 
     // Format total minutes to hours
-    const totalHours = Math.floor(videoData.totalMinutes / 60);
-    const totalMins = videoData.totalMinutes % 60;
-    let timeDisplay = '';
-    if (totalHours > 0 && totalMins > 0) {
-        timeDisplay = `${totalHours}h ${totalMins}min`;
-    } else if (totalHours > 0) {
-        timeDisplay = `${totalHours}h`;
-    } else {
-        timeDisplay = `${videoData.totalMinutes}min`;
-    }
+// Instead of using videoData.totalMinutes directly, format it
+const totalSeconds = videoData.totalMinutes; // This is actually seconds from sheet
+const totalMinutes = Math.round(totalSeconds / 60);
+const totalHours = Math.floor(totalMinutes / 60);
+const totalMins = totalMinutes % 60;
+let timeDisplay = '';
+if (totalHours > 0 && totalMins > 0) {
+    timeDisplay = `${totalHours}h ${totalMins}min`;
+} else if (totalHours > 0) {
+    timeDisplay = `${totalHours}h`;
+} else {
+    timeDisplay = `${totalMinutes}min`;
+}
 
     // Videos Panel
     let videosHtml = `
@@ -1568,6 +1616,8 @@ async function openDetailModal(taskId) {
 
     // ── 4. BUILD PROGRESS PANEL ──
     // ── 4. BUILD PROGRESS PANEL ──
+    // ── 4. BUILD PROGRESS PANEL ──
+    // ── 4. BUILD PROGRESS PANEL ──
 let progressHtml = `
     <div class="text-xs text-muted mb-3">
         <strong>Watch Progress</strong> — Track which videos you've watched (Need <strong>90%</strong> to complete)
@@ -1578,21 +1628,49 @@ if (!progressData.progress || progressData.progress.length === 0) {
     progressHtml += `<p class="text-muted text-sm">No progress data available. Start watching to track your progress.</p>`;
 } else {
     let totalWatched = 0;
+    let totalPercentage = 0;
     const totalVideos = progressData.progress.length;
-    const WATCH_THRESHOLD = 90; // ← Changed from 80 to 90
+    const WATCH_THRESHOLD = 90;
 
+    // Sort progress by video order (or by timestamp if available)
     progressData.progress.forEach((p, idx) => {
-        const isWatched = p.Percentage >= WATCH_THRESHOLD; // 90%
-        const isPartial = p.Percentage > 0 && p.Percentage < WATCH_THRESHOLD;
+        // Use the percentage from the sheet directly
+        const percentage = p.Percentage || 0;
+        const isWatched = percentage >= WATCH_THRESHOLD;
+        const isPartial = percentage > 0 && percentage < WATCH_THRESHOLD;
         const statusClass = isWatched ? 'ok' : (isPartial ? 'partial' : 'fail');
         const label = isWatched ? '✅ Watched' : (isPartial ? '⏳ Partial' : '❌ Not Started');
 
-        if (p.Percentage >= WATCH_THRESHOLD) totalWatched++;
+        if (percentage >= WATCH_THRESHOLD) totalWatched++;
+        totalPercentage += percentage;
 
-        // ... rest of the code
+        // Format duration from seconds to minutes:seconds
+        const durationSecs = p.VideoDuration || 0;
+        const durMins = Math.floor(durationSecs / 60);
+        const durSecs = Math.round(durationSecs % 60);
+        let durationDisplay = '';
+        if (durMins > 0) {
+            durationDisplay = `${durMins}:${durSecs.toString().padStart(2, '0')}`;
+        } else {
+            durationDisplay = `${durSecs}s`;
+        }
+        
+        const displayTitle = p.VideoTitle && p.VideoTitle.length > 35 ? p.VideoTitle.substring(0, 32) + '...' : (p.VideoTitle || `Video ${idx + 1}`);
+
+        progressHtml += `
+            <div class="video-list-item">
+                <span class="num">#${idx + 1}</span>
+                <span class="title" title="${p.VideoTitle || ''}">${displayTitle}</span>
+                <span class="duration">${durationDisplay}</span>
+                <span class="progress ${statusClass}">${percentage}%</span>
+                <span style="font-size:9px;min-width:60px;text-align:right;">${label}</span>
+                <div class="progress-bar-mini" style="width:60px;">
+                    <div class="fill ${statusClass}" style="width:${Math.min(100, percentage)}%;"></div>
+                </div>
+            </div>`;
     });
 
-    const overallPercent = totalVideos > 0 ? Math.round((totalWatched / totalVideos) * 100) : 0;
+    const overallPercent = totalVideos > 0 ? Math.round(totalPercentage / totalVideos) : 0;
     const overallStatus = overallPercent >= 90 ? '✅ Complete' : (overallPercent > 0 ? '⏳ In Progress' : '❌ Not Started');
 
     progressHtml += `
@@ -1602,8 +1680,9 @@ if (!progressData.progress || progressData.progress.length === 0) {
         </div>`;
 }
 
-    progressHtml += `</div>`;
-    progressPanel.innerHTML = progressHtml;
+progressHtml += `</div>`;
+progressPanel.innerHTML = progressHtml;
+
 }
 
 function closeDetailModal() {
@@ -1831,8 +1910,8 @@ function toggleIssuePill(btn, label) {
 async function doSubmitIssue() {
     const taskId     = document.getElementById('issueTaskId').value;
     const customText = (document.getElementById('issueCustomText').value || '').trim();
-    const issueTitle = selectedIssuePill || customText;
-    const issueDescription = selectedIssuePill ? customText : '';
+  const issueTitle = selectedIssuePill || customText;
+const issueDescription = customText; // Always send custom text as description
 
     if (!issueTitle) {
         showToast('Please select an issue type or write a description.', true);
