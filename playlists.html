@@ -3,427 +3,882 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playlist Watch Time — Exsub Group</title>
+<title>Playlist Tasks — Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-
-/* ══════════════════════════════════════════════════════════════
-   PLAYLIST WATCH TIME — LIGHT THEME (matches Analytics / Videos)
-   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
-   ══════════════════════════════════════════════════════════════ */
-
 :root {
     --bg: #F5F4EB;
     --ink: #211F1F;
     --mint: #ACD1C0;
     --sand: #DBD4B7;
+    --card: #F5F4EB;
     --muted: #6b7280;
-    --border: #211F1F;
+    --playlist-purple: #7c3aed;
+    --playlist-orange: #f59e0b;
 }
 
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
+body {
+    background: var(--bg);
+    color: var(--ink);
+    overflow-x: hidden;
+}
 
-.mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+body::before { content: none; }
 
 .card {
+    background: #F5F4EB;
+    border-radius: 20px;
+    font-family: system-ui, -apple-system, sans-serif;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+}
+
+.playlist-task-card {
     background: #F5F4EB;
     border: 2px solid #211F1F;
     border-radius: 20px;
     box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.2s ease;
+}
+.playlist-task-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #211F1F;
+}
+
+.playlist-task-card.cheating-card {
+    border-color: #dc2626;
+    background: #fef2f2;
+    box-shadow: 4px 4px 0px 0px #dc2626;
+}
+.playlist-task-card.cheating-card:hover {
+    box-shadow: 6px 6px 0px 0px #dc2626;
+}
+
+.playlist-task-card.watched-card {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    box-shadow: 4px 4px 0px 0px #16a34a;
+}
+.playlist-task-card.watched-card:hover {
+    box-shadow: 6px 6px 0px 0px #16a34a;
 }
 
 .text-muted { color: var(--muted); }
 
-.btn-purple {
-    background: #211F1F; color: #ffffff; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
+.btn-playlist {
+    background: #211F1F;
+    color: #DBD4B7;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
+    cursor: pointer;
+    font-weight: 700;
 }
-.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-playlist:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-playlist:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
 
 .btn-outline {
-    background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F;
-    border-radius: 14px; transition: 0.15s; cursor: pointer;
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    color: #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
+    cursor: pointer;
+    font-weight: 700;
 }
-.btn-outline:hover:not(:disabled) { background: var(--sand); }
-.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
 
 .btn-teal {
-    background: var(--mint); color: #211F1F; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
+    background: #ACD1C0;
+    color: #211F1F;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
+    cursor: pointer;
+    font-weight: 700;
 }
-.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-teal:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
 .btn-red {
-    background: #ef4444; color: white; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
+    background: #ef4444;
+    color: #ffffff;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
+    cursor: pointer;
+    font-weight: 700;
 }
-.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-red:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-red:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+
+.btn-watched {
+    background: #16a34a;
+    color: #ffffff;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btn-watched:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+
+.btn-details {
+    background: #DBD4B7;
+    color: #211F1F;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px #211F1F;
+    transition: 0.15s;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btn-details:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
 .filter-tab {
-    background: #ffffff; border: 2px solid #211F1F; transition: 0.2s;
-    color: var(--ink); cursor: pointer; white-space: nowrap;
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    transition: 0.15s;
+    color: #211F1F;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 700;
 }
-.filter-tab:hover { background: var(--sand); }
-.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
-
-.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-
-.spinner{
-  width:40px; height:40px; border-radius:50%;
-  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
-  animation:spin 0.7s linear infinite;
+.filter-tab:hover { background: #DBD4B7; }
+.filter-tab.active {
+    background: #211F1F;
+    border-color: #211F1F;
+    color: #DBD4B7;
 }
-@keyframes spin{ to{ transform:rotate(360deg); } }
-
-#toast {
-    position: fixed; bottom: 24px; right: 24px; z-index: 999;
-    background: #211F1F; color: white; padding: 13px 22px; border-radius: 14px;
-    font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0;
-    transition: 0.3s; pointer-events: none; max-width: 320px; border: 2px solid #211F1F;
+.filter-tab:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
 }
-#toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: #b91c1c; }
+.filter-tab:disabled:hover {
+    background: #F5F4EB;
+    color: #211F1F;
+}
+.filter-tab.active:disabled {
+    opacity: 1;
+    background: #211F1F;
+    color: #DBD4B7;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    border: 1px solid #211F1F;
+}
+
+.dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.playlist-info-box {
+    background: #DBD4B7;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+
+.instructions-box {
+    background: #ACD1C0;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+
+.issue-box {
+    background: #fee2e2;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+
+.cheating-box {
+    background: #fecaca;
+    border: 2px solid #dc2626;
+    border-radius: 14px;
+    padding: 10px 14px;
+}
+
+.modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(33,31,31,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s;
+}
+.modal-bg.open { opacity: 1; visibility: visible; }
+
+.modal-box {
+    background: #F5F4EB;
+    border: 2px solid #211F1F;
+    border-radius: 24px;
+    box-shadow: 6px 6px 0px 0px #211F1F;
+    padding: 28px;
+    width: 100%;
+    max-width: 600px;
+    transform: scale(0.95);
+    transition: 0.25s;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-bg.open .modal-box { transform: scale(1); }
 
 .skeleton {
-    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
-    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px;
+    background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 20px;
+    border: 2px solid #211F1F;
 }
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
-/* ── CATEGORY TAB STRIP ── */
-.cat-tabs-wrap {
-    display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px;
-    -ms-overflow-style: none; scrollbar-width: none;
+#toast {
+    position: fixed; bottom: 24px; right: 24px;
+    z-index: 999;
+    background: #211F1F;
+    color: #DBD4B7;
+    padding: 13px 22px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid #211F1F;
+    box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+    max-width: 320px;
 }
-.cat-tabs-wrap::-webkit-scrollbar { display: none; }
-.cat-tab {
-    flex-shrink: 0; display: flex; align-items: center; gap: 8px;
-    background: #ffffff; border: 2px solid #211F1F; border-radius: 16px;
-    padding: 10px 16px; cursor: pointer; transition: 0.15s;
-    box-shadow: 3px 3px 0px 0px #211F1F;
-}
-.cat-tab:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.cat-tab.active { background: #211F1F; color: #F5F4EB; }
-.cat-tab-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #211F1F; flex-shrink: 0; }
-.cat-tab-label { font-weight: 800; font-size: 13px; }
-.cat-tab-range { font-size: 10.5px; opacity: 0.7; font-weight: 600; white-space: nowrap; }
-.cat-tab-status { font-size: 13px; margin-left: 2px; }
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: #ef4444; color: #ffffff; }
 
-/* ── PROGRESS METER (dynamic band per category) ── */
-.meter-track {
-    position: relative; height: 22px; border-radius: 999px;
-    background: #ffffff; border: 2px solid #211F1F; overflow: hidden;
+#pageLoader {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    transition: opacity 0.4s ease;
 }
-.meter-fill { height: 100%; border-radius: 999px 0 0 999px; transition: width 0.5s cubic-bezier(.4,0,.2,1), background 0.3s; }
-.meter-band {
-    position: absolute; top: -2px; bottom: -2px;
-    border-left: 2px dashed rgba(33,31,31,0.55);
-    border-right: 2px dashed rgba(33,31,31,0.55);
+#pageLoader.hidden { opacity: 0; pointer-events: none; }
+#pageLoader .spin {
+    width: 44px; height: 44px;
+    border: 3px solid rgba(33,31,31,0.15);
+    border-top-color: #211F1F;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+input, textarea { color: #211F1F; }
+input::placeholder, textarea::placeholder { color: #8a8f9e; }
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ACD1C0;
+    border: 1px solid #211F1F;
+    color: #211F1F;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
 }
 
-/* ── VIDEO PICK CARD ── */
-.pick-card {
-    background: #ffffff; border: 2px solid #211F1F; border-radius: 18px;
-    box-shadow: 4px 4px 0px 0px #211F1F; overflow: hidden; transition: 0.2s ease;
-    cursor: pointer; position: relative;
+.paired-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+    border: 1px solid #211F1F;
 }
-.pick-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px 0px #211F1F; }
-.pick-card.selected { background: #ACD1C0; }
-.pick-card.locked { cursor: default; }
-.pick-card.locked:hover { transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
 
-.pick-thumb-wrap {
-    position: relative; width: 100%; aspect-ratio: 16/9;
-    background: #e8e5d8; border-bottom: 2px solid #211F1F; overflow: hidden;
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    border: 2px solid #211F1F;
 }
-.pick-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
-.pick-thumb-wrap .play-badge {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: rgba(33,31,31,0.08); font-size: 26px;
-}
-.duration-chip {
-    position: absolute; bottom: 8px; right: 8px; background: #211F1F; color: white;
-    font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
-}
-.type-chip {
-    position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.92); color: #211F1F;
-    font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; border: 1px solid #211F1F;
-    text-transform: uppercase; letter-spacing: 0.03em;
-}
-.pick-check {
-    position: absolute; top: 8px; left: 8px; width: 26px; height: 26px; border-radius: 8px;
-    background: #ffffff; border: 2px solid #211F1F; display: flex; align-items: center;
-    justify-content: center; font-size: 14px; font-weight: 900; color: transparent;
-    transition: 0.15s;
-}
-.pick-card.selected .pick-check { background: #211F1F; color: #ACD1C0; }
+.category-badge.cat-a { background: #fcd34d; color: #211F1F; }
+.category-badge.cat-b { background: #60a5fa; color: #211F1F; }
+.category-badge.cat-c { background: #34d399; color: #211F1F; }
+.category-badge.cat-d { background: #f472b6; color: #211F1F; }
+.category-badge.cat-e { background: #a78bfa; color: #211F1F; }
+.category-badge.cat-f { background: #f87171; color: #211F1F; }
 
-.also-in-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.also-in-chip {
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px;
-    border: 1px solid #211F1F; background: #F5F4EB;
+.issue-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 2px solid #211F1F;
+    background: #F5F4EB;
+    color: #b91c1c;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+    font-weight: 600;
 }
-.also-in-chip .dot { width: 6px; height: 6px; }
+.issue-pill:hover { background: #fee2e2; }
+.issue-pill.selected { background: #ef4444; border-color: #211F1F; color: #ffffff; }
 
-/* ── PLAYLIST NAME PLATE ── */
-.name-plate {
-    background: #211F1F; color: #F5F4EB; border-radius: 16px; padding: 16px 18px;
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    flex-wrap: wrap;
+.match-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #ACD1C0;
+    border: 1px solid #211F1F;
+    color: #211F1F;
+    font-weight: 700;
+    white-space: nowrap;
 }
-.name-plate .plate-name { font-family:'JetBrains Mono',monospace; font-size: 18px; font-weight: 700; letter-spacing: 0.02em; color:#ACD1C0; }
+
 .copy-btn {
-    background: #ACD1C0; color:#211F1F; border: none; border-radius: 10px;
-    padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #ACD1C0;
+    border: 2px solid #211F1F;
+    cursor: pointer;
+    transition: 0.2s;
+    flex-shrink: 0;
 }
 .copy-btn:hover { background: #9bc2b1; }
+.copy-btn svg { width: 14px; height: 14px; }
 
-/* ── STEP LIST ── */
-.step-row { display:flex; gap: 12px; align-items:flex-start; }
-.step-num {
-    width: 26px; height: 26px; border-radius: 50%; background:#211F1F; color:#F5F4EB;
-    font-size: 12px; font-weight: 800; display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; margin-top:1px;
-}
-
-/* ── ESTIMATE BOX ── */
-.estimate-box {
-    background: #F5F4EB; border: 1.5px dashed #211F1F; border-radius: 14px;
-    padding: 10px 12px; font-size: 11.5px; color: #4b5563; line-height: 1.5; font-weight: 600;
-}
-
-/* SweetAlert2 light theme overrides */
 .swal2-popup {
-    background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important;
-    border-radius: 24px !important; font-family: 'Inter', sans-serif !important;
+    background: #F5F4EB !important;
+    border: 2px solid #211F1F !important;
+    color: #211F1F !important;
+    border-radius: 20px !important;
     box-shadow: 6px 6px 0px 0px #211F1F !important;
+    font-family: 'Inter', sans-serif !important;
 }
 .swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
-.swal2-confirm { background: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
-.swal2-cancel {
-    background: transparent !important; border: 2px solid #211F1F !important; color: #211F1F !important;
-    border-radius: 14px !important;
+.swal2-confirm {
+    background: #211F1F !important;
+    color: #DBD4B7 !important;
+    border-radius: 12px !important;
+    border: 2px solid #211F1F !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
 }
-.swal2-deny { background: var(--mint) !important; color: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+.swal2-cancel {
+    background: #F5F4EB !important;
+    border: 2px solid #211F1F !important;
+    color: #211F1F !important;
+    border-radius: 12px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+}
+.swal2-deny {
+    background: #ACD1C0 !important;
+    color: #211F1F !important;
+    border: 2px solid #211F1F !important;
+    border-radius: 12px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+}
 
-/* ── MOBILE STICKY BOTTOM TRACKER INDICATOR ── */
-.mobile-tracker {
-    position: fixed;
-    bottom: 22px;
-    left: 20px;
-    right: 20px;
-    z-index: 50;
-    background: #ACD1C0;
-    border: 3px solid #211F1F;
-    box-shadow: 0 -4px 20px rgba(33, 31, 31, 0.15);
-    padding: 10px 10px 10px 10px;
-    border-radius: 20px;
+/* Detail Modal Tabs */
+.detail-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #211F1F;
+    padding-bottom: 2px;
+}
+.detail-tab {
+    padding: 8px 18px;
+    border-radius: 12px 12px 0 0;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-bottom: none;
+    transition: 0.2s;
+    background: transparent;
+    color: var(--muted);
+}
+.detail-tab:hover { background: #DBD4B7; color: #211F1F; }
+.detail-tab.active {
+    background: #211F1F;
+    color: #DBD4B7;
+    border-color: #211F1F;
+}
+
+.detail-panel { display: none; }
+.detail-panel.active { display: block; }
+
+.video-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #211F1F;
+    margin-bottom: 6px;
+    background: #ffffff;
+}
+.video-list-item .num {
+    font-weight: 800;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 24px;
+}
+.video-list-item .title {
+    flex: 1;
+    font-size: 12px;
+    font-weight: 600;
+    color: #211F1F;
+}
+.video-list-item .duration {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 600;
+}
+.video-list-item .progress {
+    font-size: 10px;
+    font-weight: 800;
+    min-width: 40px;
+    text-align: right;
+}
+.video-list-item .progress.ok { color: #16a34a; }
+.video-list-item .progress.partial { color: #f59e0b; }
+.video-list-item .progress.fail { color: #ef4444; }
+
+.progress-bar-mini {
+    width: 100%;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 2px;
+}
+.progress-bar-mini .fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+.progress-bar-mini .fill.ok { background: #16a34a; }      /* 90%+ */
+.progress-bar-mini .fill.partial { background: #f59e0b; } /* 1% - 89% */
+.progress-bar-mini .fill.fail { background: #ef4444; }    /* 0% */
+
+.playlist-name-display {
+    font-size: 15px;
+    font-weight: 800;
+    color: #211F1F;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 </style>
 </head>
-<body class="pb-24 lg:pb-0">
+<body>
 
+<!-- FULL-PAGE LOADER -->
+<div id="pageLoader">
+    <div class="spin"></div>
+    <p style="color: var(--muted); font-size: 14px;">Loading your playlist tasks…</p>
+</div>
+
+<!-- TOAST -->
 <div id="toast"></div>
 
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 
+<!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
-<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
-    <div class="spinner"></div>
-    <div class="text-gray-500 text-sm">Loading your playlists…</div>
-  </div>
-
-  <div id="errorState" class="hidden text-center py-32">
-    <div class="text-5xl mb-4">⚠️</div>
-    <div class="text-xl font-bold mb-2">Could not load data</div>
-    <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
-    <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
-  </div>
-
-  <div id="dashContent" class="hidden">
-
+    <!-- PAGE HEADER -->
     <div class="nb-dashboard-header">
-      <div class="nb-badge-container">
-        <div class="nb-status-card nb-status-static">
-          <span class="nb-card-icon">⏱️</span>
-          <span class="nb-card-title">Playlist Watch Time</span>
+        <div class="nb-badge-container">
+            <div class="nb-status-card nb-status-static" style="background:#DBD4B7;">
+                <span class="nb-card-title">🎵 Playlist Tasks</span>
+            </div>
+            <a href="workingproofs.html" class="nb-status-card nb-status-link">
+                <span class="nb-card-icon">🎥</span>
+                <span class="nb-card-title">View Proofs</span>
+            </a>
         </div>
-        <a href="channels.html?view=promotional" class="nb-status-card nb-status-link">
-          <span class="nb-card-icon">📢</span>
-          <span class="nb-card-title">Channel Settings</span>
-        </a>
-      </div>
-      <h1 class="text-4xl font-black text-[#211F1F]">Playlists</h1>
-      <div class="text-gray-500 text-sm mt-1 leading-6" style="width: 100%;">
-        Build up to <strong class="text-[#211F1F]">5 playlists</strong> — one per duration category — from your
-        promotional videos (long or shorts, mixed freely). The same video can be reused across different
-        categories. Other members watch the whole playlist to earn you real watchtime toward monetization.
-      </div>
+        <h1 class="text-4xl font-black text-[#211F1F]">Playlist Tasks</h1>
+        <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
+            Watch member playlists and earn playlist watches back. Watch videos, complete playlists, and grow your channel's watch time together with creators worldwide.
+        </div>
     </div>
 
-    <!-- ── CATEGORY TAB STRIP ── -->
-    <div class="cat-tabs-wrap mb-6" id="categoryTabs"></div>
+    <div class="flex flex-col lg:flex-row gap-6">
 
-    <div id="noChannelWrap" class="hidden card rounded-3xl p-14 text-center">
-        <div class="text-5xl mb-4">📺</div>
-        <h3 class="text-xl font-semibold mb-2">No Promotional Channel</h3>
-        <p class="text-muted text-sm mb-7 leading-relaxed">Add a promotional channel first, then come back here to build your watch-time playlists.</p>
-        <a href="channels.html?view=promotional" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Add Channel</a>
-    </div>
+    <!-- SIDEBAR - PROFILE CARD REMOVED -->
+    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
 
-    <div id="mainLayout" class="hidden flex flex-col lg:flex-row gap-6">
-
-    <aside class="w-full lg:w-[300px] xl:w-[320px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
-
-        <div id="channelCard" class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-3">Channel</h2>
-            <div class="flex items-center gap-3 mb-3">
-                <img id="chanImage" src="" alt="" class="w-11 h-11 rounded-full object-cover border-2 border-[#211F1F]" onerror="this.style.display='none'">
-                <div class="min-w-0">
-                    <div id="chanName" class="font-bold text-sm truncate">—</div>
-                    <div id="chanHandle" class="text-xs text-muted font-mono truncate">—</div>
+        <!-- TASK STATS ONLY -->
+        <div class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-4">📊 My Playlist Stats</h2>
+            <div class="space-y-3 text-sm">
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
+                    <span id="st-nowork" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                    <span id="st-pending" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
+                    <span id="st-watched" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
+                    <span id="st-cheating" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
+                    <span id="st-rejected" class="font-bold">—</span>
+                </div>
+                <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
+                    <span class="text-muted">Total Tasks</span>
+                    <span id="st-total" class="font-bold text-purple-700">—</span>
                 </div>
             </div>
-            <a id="chanLink" href="#" target="_blank" rel="noopener" class="text-xs text-[#211F1F] underline font-semibold">Open Channel →</a>
-        </div>
 
-        <div id="progressCard" class="card rounded-3xl p-5">
-            <h2 id="progressCatLabel" class="font-semibold text-base mb-1">Total Duration</h2>
-            <div class="flex items-end justify-between mb-3">
-                <span id="totalDurationTxt" class="text-2xl font-black mono">0:00</span>
-                <span id="targetRangeTxt" class="text-[11px] text-muted font-semibold">Target: —</span>
-            </div>
-            <div class="meter-track mb-2">
-                <div id="meterBand" class="meter-band"></div>
-                <div id="meterFill" class="meter-fill" style="width:0%;background:#fbbf24;"></div>
-            </div>
-            <div id="meterHint" class="text-[11px] font-semibold text-amber-700 leading-relaxed mb-3">Select videos to reach the target.</div>
-            <div id="estimateBox" class="estimate-box mb-3">Add some videos to your channel to see an estimate.</div>
-            <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between text-sm">
-                <span class="text-muted">Videos selected</span>
-                <span id="selectedCountTxt" class="font-bold">0</span>
-            </div>
-        </div>
-
-        <div id="actionsCard" class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-3">Actions</h2>
-            <div class="space-y-2.5">
-                <button id="createPlaylistBtn" onclick="doCreatePlaylist()" class="btn-teal w-full py-2.5 rounded-2xl text-xs font-semibold" disabled>🎬 Create Playlist Name</button>
-                <button id="verifyPlaylistBtn" onclick="doVerifyPlaylist()" class="btn-purple w-full py-2.5 rounded-2xl text-xs font-semibold hidden">✅ Verify &amp; Set For Group</button>
-                <button id="deletePlaylistBtn" onclick="doDeletePlaylist()" class="btn-red w-full py-2.5 rounded-2xl text-xs font-semibold hidden">🗑️ Delete &amp; Start Over</button>
+            <!-- Exchange status counts -->
+            <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
+                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Their Watch</span>
+                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
+                    <span id="st-both" class="font-bold text-teal-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
+                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
+                </div>
             </div>
         </div>
 
     </aside>
 
-    <main class="flex-1 min-w-0 space-y-6">
+    <!-- CONTENT -->
+    <main class="flex-1 min-w-0">
 
-        <div id="namePlateWrap" class="hidden">
-          <div class="name-plate">
-            <div>
-              <div class="text-[11px] font-bold uppercase tracking-wider text-[#DBD4B7] mb-1">Your Playlist Name</div>
-              <div id="plateName" class="plate-name">—</div>
-            </div>
-            <button class="copy-btn" onclick="copyPlaylistName()">📋 Copy Name</button>
-          </div>
-          <div class="card rounded-2xl p-5 mt-4 space-y-3">
-            <div class="step-row"><div class="step-num">1</div><div class="text-sm leading-relaxed">On YouTube Studio, create a new playlist and name it <strong class="mono">exactly</strong> as shown above (case-sensitive).</div></div>
-             <div class="step-row"><div class="step-num">2</div><div class="text-sm leading-relaxed">Make sure this playlist must be <strong class="mono" style="color:#4ADE80;">Public</strong> otherwise your playlist work distub.</div></div>
-            <div class="step-row"><div class="step-num">3</div><div class="text-sm leading-relaxed">Add the same videos you selected below into that YouTube playlist, in any order.</div></div>
-            <div class="step-row"><div class="step-num">4</div><div class="text-sm leading-relaxed">Come back here and click <strong>Verify &amp; Set For Group</strong> — we'll pull the real playlist from YouTube and confirm it.</div></div>
-          </div>
-        </div>
-
-        <div id="confirmedBanner" class="hidden card rounded-3xl p-6" style="background:#ACD1C0;">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="text-3xl">✅</span>
+        <!-- BLOCKED BANNER -->
+        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0" id="blockedIcon">🚫</div>
                 <div>
-                    <div class="font-black text-lg">Playlist Confirmed</div>
-                    <div id="confirmedSub" class="text-xs font-semibold text-[#211F1F]/70">This playlist is live for the group.</div>
+                    <h3 class="font-semibold text-red-600 mb-1" id="blockedTitle">Group Access Restricted</h3>
+                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Playlist Group.</p>
                 </div>
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <h2 id="pickerTitle" class="text-2xl font-bold">Choose Videos</h2>
-                <p id="pickerSub" class="text-muted mt-1 text-sm">Tap videos from your promotional channel to add or remove them from this category's playlist.</p>
+        <!-- CHEATING WARNING BANNER -->
+        <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-red-600 mb-1">You Have Cheating Flags!</h3>
+                    <p class="text-red-600/80 text-sm leading-relaxed mb-3">
+                        You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged as cheating.
+                        You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
+                        These tasks are pinned at the top.
+                    </p>
+                    <div class="flex gap-3 flex-wrap">
+                        <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
+                            class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+                            View Cheating Tasks
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-wrap gap-2">
-            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setVideoTab('All',this)">All</button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Selected" onclick="setVideoTab('Selected',this)">
-                <span class="dot bg-green-500 mr-1" style="display:inline-block;"></span>Selected
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Available" onclick="setVideoTab('Available',this)">Not Selected</button>
+        <!-- TOP BAR -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+            <div>
+                <h2 class="text-2xl font-bold">My Playlist Tasks</h2>
+                <p class="text-muted mt-1 text-sm">Watch playlists and earn watches back</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="prefsBtn" onclick="openPreferencesModal()"
+                    class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    🎯 Match Preferences
+                </button>
+                <button id="createBtn" onclick="openCreateModal()"
+                    class="btn-playlist px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Create Tasks
+                </button>
+            </div>
         </div>
 
-        <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-            <div class="skeleton h-[220px]"></div>
-            <div class="skeleton h-[220px]"></div>
-            <div class="skeleton h-[220px]"></div>
+        <!-- HOW IT WORKS BANNER -->
+   <!-- HOW IT WORKS BANNER -->
+<div class="card rounded-3xl p-5 mb-6">
+    <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Playlist Tasks Work</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="step-item">
+            <div class="step-num">1</div>
+            <div>Open the target <strong class="text-[#211F1F]">channel</strong>, go to their <strong class="text-[#211F1F]">Playlist</strong> section</div>
         </div>
-
-        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
-    <div class="text-5xl mb-4">🎞️</div>
-    <h3 class="text-xl font-semibold mb-2">No Long Videos Available</h3>
-    <p class="text-muted text-sm mb-7 leading-relaxed">
-        Only <strong>LONG videos</strong> (not Shorts) can be added to playlists. 
-        Import long videos from your promotional channel first, then come back to build your playlists.
-    </p>
-    <a href="videos.html" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">Go To Videos →</a>
+        <div class="step-item">
+            <div class="step-num">2</div>
+            <div>Watch at least <strong class="text-[#211F1F]">90% of each video</strong> in the playlist</div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">3</div>
+            <div><strong class="text-[#211F1F]">Complete the playlist</strong>, then click <em>Mark Watched</em></div>
+        </div>
+    </div>
 </div>
+
+        <!-- FILTER TABS -->
+        <div class="flex flex-wrap gap-2 mb-6">
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
+                <span class="dot bg-yellow-400 mr-1"></span>Not Started
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
+                <span class="dot bg-orange-400 mr-1"></span>Pending
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Watched" onclick="setTab('Watched',this)">
+                <span class="dot bg-green-400 mr-1"></span>Watched
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Cheating" onclick="setTab('Cheating',this)">
+                <span class="dot bg-red-400 mr-1"></span>Cheating
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
+                <span class="dot bg-gray-400 mr-1"></span>Rejected
+            </button>
+            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
+        </div>
+
+        <!-- TASK LIST -->
+        <div id="taskList" class="space-y-4">
+            <div class="skeleton h-[220px]"></div>
+            <div class="skeleton h-[220px]"></div>
+            <div class="skeleton h-[220px]"></div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">📋</div>
+            <h3 class="text-xl font-semibold mb-2">No Playlist Tasks Yet</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                You don't have any playlist tasks here yet.<br>
+                Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new playlist tasks and start growing!
+            </p>
+            <button onclick="openCreateModal()" class="btn-playlist px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
+        </div>
+
+        <!-- PAGINATION -->
+        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
+        </div>
 
     </main>
-    </div>
+</div>
 
-  </div>
 </div>
 </main>
 </main>
 
-<div id="mobileTrackerWidget" class="mobile-tracker lg:hidden hidden">
-    <div class="flex items-center justify-between gap-3 mb-1.5">
-        <div class="flex items-baseline gap-1.5">
-            <span id="mobileCatLabel" class="text-xs font-bold uppercase tracking-wider text-gray-500">Duration:</span>
-            <span id="mobileDurationTxt" class="text-lg font-black mono text-[#211F1F]">0:00</span>
+<!-- CREATE TASKS MODAL -->
+<div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">Create Playlist Tasks</h2>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
-        <div id="mobileHintBadge" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-[#211F1F]">
-            0 mins
+        <p class="text-muted text-sm mb-5 leading-relaxed">
+            The system will find up to <strong class="text-[#211F1F]">20 members</strong> you haven't worked with yet and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to watch their playlist, and one for them to watch yours. Tasks are only generated when your pending count is below 5.
+        </p>
+        <div class="instructions-box mb-5">
+            <p class="text-xs text-purple-700 leading-relaxed">
+                🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first. Set your preferences beforehand for better-targeted matches — the rest of the slots are filled with random untouched members as usual.
+            </p>
         </div>
-    </div>
-    <div class="meter-track h-3">
-        <div id="mobileMeterBand" class="meter-band"></div>
-        <div id="mobileMeterFill" class="meter-fill" style="width:0%;"></div>
+        <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 mb-5 space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Your Pending (Not Started) Tasks</span>
+                <span id="modalPendingCount" class="font-bold text-lg">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Can Create Tasks</span>
+                <span id="modalCanCreate" class="font-semibold">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Available Playlists</span>
+                <span id="modalPlaylistCount" class="font-bold text-purple-700">—</span>
+            </div>
+        </div>
+        <div id="createResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
+        <div class="flex gap-3">
+            <button onclick="closeCreateModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doCreateBtn" onclick="doCreateTasks()" class="btn-playlist flex-1 py-3 rounded-2xl text-sm font-semibold">Generate Tasks</button>
+        </div>
     </div>
 </div>
 
+<!-- TASK DETAIL MODAL -->
+<div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
+    <div class="modal-box max-w-[620px]">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Playlist Task Details</h2>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="detail-tabs">
+            <button class="detail-tab active" data-tab="videos" onclick="switchDetailTab('videos', this)">📹 Videos</button>
+            <button class="detail-tab" data-tab="progress" onclick="switchDetailTab('progress', this)">📊 Watch Progress</button>
+        </div>
+
+        <!-- Panel: Videos -->
+        <div id="detailPanelVideos" class="detail-panel active"></div>
+
+        <!-- Panel: Watch Progress -->
+        <div id="detailPanelProgress" class="detail-panel"></div>
+    </div>
+</div>
+
+<!-- REPORT ISSUE MODAL -->
+<div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
+    <div class="modal-box max-w-[480px]">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-bold text-red-600">⚠ Report Issue</h2>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+        </div>
+
+        <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
+
+<div class="flex flex-wrap gap-2 mb-4">
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist not found')">📭 Playlist not found</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist is private')">🔒 Playlist private</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Videos not available')">📹 Videos not available</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist empty')">📭 Playlist empty</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist duration mismatch')">⏱ Playlist duration mismatch</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Video count mismatch')">📊 Video count mismatch</button>
+    <button class="issue-pill" onclick="toggleIssuePill(this,'Watching not working')">⚡ Watch not working</button>
+</div>
+<label class="block text-xs text-muted mb-1.5">Additional details (optional): <span id="charCount" class="text-xs text-muted">0/160</span></label>
+<textarea id="issueCustomText" rows="3" maxlength="160" placeholder="Describe the issue in more detail…"
+    class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"
+    oninput="updateCharCount()"></textarea>
+
+        <input type="hidden" id="issueTaskId">
+        <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
+
+        <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
+
+        <div class="flex gap-3">
+            <button onclick="closeIssueModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doIssueBtn" onclick="doSubmitIssue()" class="btn-red flex-1 py-3 rounded-2xl text-sm font-semibold">Submit Issue</button>
+        </div>
+    </div>
+</div>
+
+<!-- MATCH PREFERENCES MODAL -->
+<div id="prefsModal" class="modal-bg" onclick="if(event.target===this)closePreferencesModal()">
+    <div class="modal-box max-w-[560px]">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">🎯 Match Preferences</h2>
+            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+        <p class="text-muted text-sm mb-5 leading-relaxed">
+            Tell us what kind of playlists you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get 20 tasks even if your preferences are rare.
+        </p>
+        <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
+        <div class="flex gap-3">
+            <button onclick="closePreferencesModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doSavePrefsBtn" onclick="doSavePreferences()" class="btn-playlist flex-1 py-3 rounded-2xl text-sm font-semibold">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
 <script>
-
+    function updateCharCount() {
+    const textarea = document.getElementById('issueCustomText');
+    const count = textarea.value.length;
+    document.getElementById('charCount').textContent = `${count}/160`;
+    if (count >= 160) {
+        document.getElementById('charCount').style.color = '#ef4444';
+    } else {
+        document.getElementById('charCount').style.color = '#6b7280';
+    }
+}
 /* ────────────────────────────────────────
    AUTH
 ──────────────────────────────────────── */
@@ -432,76 +887,408 @@ function logoutUser() {
     window.location.href = "signin.html";
 }
 
-const USERNAME = localStorage.getItem("username") || "";
-const PASSWORD = localStorage.getItem("password") || "";
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
 
-if (!USERNAME || !PASSWORD) {
+if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
+</script>
 
+<script>
 /* ────────────────────────────────────────
-   CONFIG — same backend deployment as channels.html / videotask.html
+   CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyr86cwvi2vuDgn4Fzl9fsGXUGSIyXbqlrXpSfoXhTBs6eh80OVxPMyDYp4g4nOWruLxA/exec';
-
-/* ────────────────────────────────────────
-   CATEGORY DEFINITIONS (must mirror Apps Script PLAYLIST_CATEGORIES)
-──────────────────────────────────────── */
-const CATEGORY_ORDER = ['E', 'D', 'C', 'B', 'A'];
-const CATEGORY_META = {
-    E: { emoji: '🟢', color: '#4ade80' },
-    D: { emoji: '🔵', color: '#38bdf8' },
-    C: { emoji: '🟣', color: '#a78bfa' },
-    B: { emoji: '🟠', color: '#fb923c' },
-    A: { emoji: '🔴', color: '#f87171' }
-};
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFE8ORwsAgGvtNcSz5d__szJnK9f6wXS27IH9SO3qjcLYvxHd8riYEqPD0W4EeN-px/exec';
+const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
    STATE
 ──────────────────────────────────────── */
-let myChannel      = null;   // { ChannelId, ChannelName, ... }
-let allVideos      = [];     // candidate videos (non-deleted) with computed .Seconds
-let catMap         = {};     // id -> { id, label, rangeText, minSeconds, maxSeconds, playlist, selectedUrls:Set, totalSeconds }
-let activeCategory = 'E';
-let activeVideoFilter = 'All';
+let allTasks    = [];
+let filtered    = [];
+let activeTab   = 'All';
+let currentPage = 1;
+const PER_PAGE  = 10;
+let member      = null;
+let perfStats   = null;
+let isBlocked   = false;
+let hasCheating = false;
+let forcedTaskTab = null;
+let myPlaylists = [];
+let detailTaskId = null;
+
+let channelNameCache   = {};
+let channelHandleCache = {};
+let channelImageCache  = {};
+let channelIdCache     = {};
+
+let myPreferences     = { interests: [], countries: [] };
+let selectedInterests  = [];
+let selectedCountries  = [];
+let interestOptions    = [];
+let countryOptions     = [];
+const MAX_PREF_EACH    = 5;
 
 /* ────────────────────────────────────────
-   DOM SHOW/HIDE HELPERS
+   BOOT
 ──────────────────────────────────────── */
-function show(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
-function hide(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+window.addEventListener('DOMContentLoaded', init);
 
-function showToast(msg, isError = false) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className   = isError ? 'error show' : 'show';
-    setTimeout(() => { t.className = ''; }, 3200);
+async function init() {
+    try {
+        const res  = await fetch(`${SCRIPT_URL}?action=getPlaylistMemberAndTasks&userCode=${USER_CODE}`);
+        const data = await res.json();
+
+        hideLoader();
+
+        if (!data.success) {
+            showToast(data.message || 'Error loading data', true);
+            clearSkeletons();
+            return;
+        }
+
+        member    = data.member;
+        perfStats = data.perfStats || null;
+        allTasks  = data.tasks || [];
+        myPlaylists = data.playlists || [];
+
+        if (data.channelNames)   channelNameCache   = data.channelNames;
+        if (data.channelHandles) channelHandleCache = data.channelHandles;
+        if (data.channelImages)  channelImageCache  = data.channelImages;
+        if (data.channelIds)     channelIdCache     = data.channelIds;
+
+        checkBlock();
+        checkCheating();
+        calcStats();
+        enforceTaskPriorityTabs();
+        applyFilter();
+
+    } catch (e) {
+        hideLoader();
+        clearSkeletons();
+        showToast('Could not connect to server.', true);
+    }
+}
+
+function hideLoader() {
+    const loader = document.getElementById('pageLoader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.style.display = 'none', 400);
 }
 
 /* ────────────────────────────────────────
-   API HELPER
+   BLOCK CHECK - THREE SEPARATE CONDITIONS
 ──────────────────────────────────────── */
-async function callApi(action, params = {}) {
-    const qs = new URLSearchParams({ action, username: USERNAME, password: PASSWORD, ...params });
-    const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
-    return res.json();
+function checkBlock() {
+    if (!member) return;
+    
+    const suspended = member.ViolationFlag === 'Suspended';
+    const promotionDisabled = member.PlaylistPromotionActive === 'No';
+    const notEnrolled = member.InWatchtimeWork !== 'Yes';
+
+    const isBlocked = suspended || promotionDisabled || notEnrolled;
+
+    if (isBlocked) {
+        document.getElementById('blockedBanner').classList.remove('hidden');
+        
+        let message = '';
+        
+        if (suspended) {
+            message = `🚫 Your account is suspended until ${member.SuspendedUntil || 'further notice'}.<br>`;
+            message += `Reason: ${member.ViolationReason || 'Policy violation.'}<br>`;
+            message += `Contact support to resolve this issue.`;
+        } else if (notEnrolled) {
+            message = `📋 You are not enrolled in the Watchtime Group. Please join the Watchtime Group first to access playlist tasks.<br>`;
+            message += `Go to <a href="groups.html" style="color:#7c3aed;text-decoration:underline;">Groups</a> to join.`;
+        } else if (promotionDisabled) {
+            message = `⚠️ Playlist group promotion is currently disabled for your account.<br>`;
+            message += `This usually happens when:<br>`;
+            message += `• You have <strong>5 or more pending tasks</strong> — complete them first<br>`;
+            message += `• You have <strong>cheating flags</strong> — resolve them first<br>`;
+            message += `• You submitted a <strong>group removal request</strong><br><br>`;
+        }
+
+        document.getElementById('blockedMsg').innerHTML = message;
+
+        const btn = document.getElementById('createBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-40', 'cursor-not-allowed');
+        
+        if (suspended) {
+            btn.title = 'Your account is suspended.';
+        } else if (notEnrolled) {
+            btn.title = 'Join the Watchtime Group first.';
+        } else {
+            btn.title = 'Playlist promotion is disabled. Complete pending tasks first.';
+        }
+    } else {
+        document.getElementById('blockedBanner').classList.add('hidden');
+        const btn = document.getElementById('createBtn');
+        btn.disabled = false;
+        btn.classList.remove('opacity-40', 'cursor-not-allowed');
+        btn.title = '';
+    }
 }
 
 /* ────────────────────────────────────────
-   DURATION HELPERS
+   CHECK CHEATING
 ──────────────────────────────────────── */
-function parseVideoSeconds(v) {
-    const n = Number(v.VideoDurationSeconds);
-    return isNaN(n) ? 0 : Math.max(0, Math.floor(n));
+function checkCheating() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+    const cheatTasks = myTasks.filter(t => t.Status === 'Cheating');
+    hasCheating = cheatTasks.length > 0;
+
+    const banner = document.getElementById('cheatingBanner');
+    if (hasCheating) {
+        banner.classList.remove('hidden');
+        document.getElementById('cheatCount').textContent = cheatTasks.length;
+        const btn = document.getElementById('createBtn');
+        btn.disabled = true;
+        btn.classList.add('opacity-40', 'cursor-not-allowed');
+        btn.title = 'You must resolve your cheating flags first.';
+    } else {
+        banner.classList.add('hidden');
+    }
 }
 
-function formatSecs(totalSeconds) {
-    const s = Math.max(0, Math.round(totalSeconds || 0));
-    const h = Math.floor(s / 3600);
-    const mins = Math.floor((s % 3600) / 60);
-    const secs = s % 60;
-    if (h > 0) return h + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-    return mins + ':' + String(secs).padStart(2, '0');
+/* ────────────────────────────────────────
+   STATS
+──────────────────────────────────────── */
+function calcStats() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+
+    document.getElementById('st-nowork').textContent     = myTasks.filter(t => t.Status === 'NotWorkYet').length;
+    document.getElementById('st-pending').textContent    = myTasks.filter(t => t.Status === 'Pending').length;
+    document.getElementById('st-watched').textContent    = myTasks.filter(t => t.Status === 'Watched').length;
+    document.getElementById('st-cheating').textContent   = myTasks.filter(t => t.Status === 'Cheating').length;
+    document.getElementById('st-rejected').textContent   = myTasks.filter(t => t.Status === 'Rejected').length;
+    document.getElementById('st-total').textContent      = myTasks.length;
+
+    const awaitingCount = myTasks.filter(t =>
+        t.Status === 'Watched' && t.PairedStatus !== 'Watched'
+    ).length;
+    const bothCount = myTasks.filter(t =>
+        t.Status === 'Watched' && t.PairedStatus === 'Watched'
+    ).length;
+    const theirPendingCount = myTasks.filter(t =>
+        t.Status === 'Watched' && (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending')
+    ).length;
+
+    document.getElementById('st-awaiting').textContent    = awaitingCount;
+    document.getElementById('st-both').textContent        = bothCount;
+    document.getElementById('st-theirpending').textContent = theirPendingCount;
+}
+
+/* ────────────────────────────────────────
+   FILTER
+──────────────────────────────────────── */
+function enforceTaskPriorityTabs() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+    const hasCheatTasks = myTasks.some(t => t.Status === 'Cheating');
+    const hasPendingTasks = myTasks.some(t => t.Status === 'Pending');
+
+    forcedTaskTab = hasCheatTasks ? 'Cheating' : (hasPendingTasks ? 'Pending' : null);
+    if (!forcedTaskTab && forcedTaskTab !== null) {
+        activeTab = 'All';
+        currentPage = 1;
+    }
+
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        const tabName = tab.dataset.tab;
+        const shouldDisable = !!forcedTaskTab && tabName !== forcedTaskTab;
+        tab.disabled = shouldDisable;
+        tab.classList.toggle('active', tabName === (forcedTaskTab || activeTab));
+        if (shouldDisable) {
+            tab.title = forcedTaskTab === 'Cheating'
+                ? 'Complete cheating tasks first.'
+                : 'Complete pending watch-back tasks first.';
+        } else {
+            tab.removeAttribute('title');
+        }
+    });
+
+    if (forcedTaskTab) {
+        activeTab = forcedTaskTab;
+        currentPage = 1;
+    }
+}
+
+function setTab(tab, btn) {
+    if (forcedTaskTab && tab !== forcedTaskTab) return;
+    activeTab   = tab;
+    currentPage = 1;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyFilter();
+}
+
+function applyFilter() {
+    enforceTaskPriorityTabs();
+
+    let base = allTasks.filter(t => {
+        if (t.UserCode !== USER_CODE) return false;
+
+        const tabMatch =
+            activeTab === 'All'          ? true :
+            activeTab === 'NotWorkYet'   ? t.Status === 'NotWorkYet' :
+            activeTab === 'Pending'      ? t.Status === 'Pending' :
+            activeTab === 'Watched'      ? t.Status === 'Watched' :
+            activeTab === 'Cheating'     ? t.Status === 'Cheating' :
+            activeTab === 'Rejected'     ? t.Status === 'Rejected' :
+            true;
+
+        return tabMatch;
+    });
+
+    base.sort((a, b) => {
+        const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2, 'Watched': 3, 'Rejected': 4 };
+        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
+    });
+
+    filtered    = base;
+    currentPage = 1;
+    renderList();
+}
+
+/* ────────────────────────────────────────
+   RENDER LIST
+──────────────────────────────────────── */
+function renderList() {
+    const list  = document.getElementById('taskList');
+    const empty = document.getElementById('emptyState');
+    const pages = document.getElementById('paginationBar');
+
+    if (filtered.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        pages.classList.add('hidden');
+        return;
+    }
+
+    empty.classList.add('hidden');
+
+    const total = Math.ceil(filtered.length / PER_PAGE);
+    currentPage = Math.min(currentPage, total);
+    const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+    list.innerHTML = slice.map(taskCard).join('');
+
+    if (filtered.length > PER_PAGE) {
+        pages.classList.remove('hidden');
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${total}`;
+        document.getElementById('prevBtn').disabled     = currentPage === 1;
+        document.getElementById('nextBtn').disabled     = currentPage === total;
+    } else {
+        pages.classList.add('hidden');
+    }
+}
+
+function changePage(d) {
+    currentPage += d;
+    renderList();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function clearSkeletons() {
+    document.getElementById('taskList').innerHTML = '';
+    document.getElementById('emptyState').classList.remove('hidden');
+}
+
+/* ────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────── */
+const STATUS_CFG = {
+    'NotWorkYet':   { bg: 'bg-yellow-500/15', text: 'text-yellow-700', dot: 'bg-yellow-400', label: 'Not Started'  },
+    'Pending':      { bg: 'bg-orange-500/15', text: 'text-orange-600', dot: 'bg-orange-400', label: 'Pending'      },
+    'Watched':      { bg: 'bg-green-500/15',  text: 'text-green-600',  dot: 'bg-green-400',  label: 'Watched'    },
+    'Cheating':     { bg: 'bg-red-500/15',    text: 'text-red-600',    dot: 'bg-red-400',    label: 'Cheating'    },
+    'Rejected':     { bg: 'bg-gray-500/15',   text: 'text-gray-600',   dot: 'bg-gray-400',   label: 'Rejected'     },
+};
+
+function pairedBadge(t) {
+    if (t.Status !== 'Watched') return '';
+    if (t.PairedStatus === 'Watched') {
+        return `<span class="paired-badge bg-teal-500/15 text-teal-600">✓ They Watched Back</span>`;
+    } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+        return `<span class="paired-badge bg-orange-500/15 text-orange-600">⏳ Their Watch: Pending</span>`;
+    } else {
+        return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Watch</span>`;
+    }
+}
+
+function matchBadge(t) {
+    const interests = t.MatchedInterests || [];
+    const countries = t.MatchedCountries || [];
+    if (interests.length === 0 && countries.length === 0) return '';
+    const parts = [...interests, ...countries].join(', ');
+    return `<span class="match-badge" title="Matched your preferences">🎯 Matched: ${parts}</span>`;
+}
+
+function getCategoryBadge(category) {
+    if (!category) return '';
+    const cat = category.toUpperCase();
+    const colors = {
+        'A': 'cat-a',
+        'B': 'cat-b',
+        'C': 'cat-c',
+        'D': 'cat-d',
+        'E': 'cat-e',
+        'F': 'cat-f'
+    };
+    return `<span class="category-badge ${colors[cat] || 'cat-a'}">📂 CAT-${cat}</span>`;
+}
+function getChannelKey(t) {
+    return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
+}
+
+function formatMinutes(seconds) {
+    if (!seconds || seconds === 0) return '0 min';
+    // Convert seconds to minutes
+    const totalMinutes = Math.round(seconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    if (hours > 0 && mins > 0) {
+        return `${hours}h ${mins}min`;
+    } else if (hours > 0) {
+        return `${hours}h`;
+    } else {
+        return `${mins}min`;
+    }
+}
+
+function getChannelId(t) {
+    const key = getChannelKey(t);
+    return (t && t.TargetChannelId) || channelIdCache[key] || '';
+}
+
+function getChannelName(t) {
+    const key = getChannelKey(t);
+    const id  = getChannelId(t);
+    return (t && t.TargetChannelName) || channelNameCache[key] || channelNameCache[id] || null;
+}
+
+function getChannelHandle(t) {
+    const key = getChannelKey(t);
+    const id  = getChannelId(t);
+    return (t && t.TargetChannelHandle) || channelHandleCache[key] || channelHandleCache[id] || null;
+}
+
+function getChannelImage(t) {
+    const key = getChannelKey(t);
+    const id  = getChannelId(t);
+    return (t && t.TargetChannelImage) || channelImageCache[key] || channelImageCache[id] || '';
+}
+
+function buildChannelUrl(t) {
+    const channelId = getChannelId(t);
+    const handle = getChannelHandle(t);
+    if (handle) {
+        const h = handle.startsWith('@') ? handle : '@' + handle;
+        return `https://www.youtube.com/results?search_query=${encodeURIComponent(h)}`;
+    }
+    return `https://www.youtube.com/channel/${channelId}`;
 }
 
 function fmtDate(v) {
@@ -511,908 +1298,756 @@ function fmtDate(v) {
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-function escapeAttr(s) {
-    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = isError ? 'error show' : 'show';
+    // Reset after 30 seconds (instead of 3.2s)
+    setTimeout(() => { t.className = ''; }, 30000);
+}
+
+function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+    }).catch(() => showToast('Could not copy.', true));
 }
 
 /* ────────────────────────────────────────
-   BOOT
+   TASK CARD
 ──────────────────────────────────────── */
-window.addEventListener('DOMContentLoaded', init);
+function taskCard(t) {
+    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
 
-async function init() {
-    show('loadingState'); hide('errorState'); hide('dashContent'); hide('mobileTrackerWidget');
+    const isCheating = t.Status === 'Cheating';
+    const isWatched = t.Status === 'Watched';
+    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isBlocked && !hasCheating;
 
-    try {
-        const chanData = await callApi('getMyChannel');
-        if (chanData.status !== 'success') throw new Error(chanData.message || 'Could not load channel data');
+    const chanId     = getChannelId(t);
+    const chanName   = getChannelName(t);
+    const chanHandle = getChannelHandle(t);
+    const chanImage  = getChannelImage(t);
+    const channelUrl = buildChannelUrl(t);
 
-        myChannel = (chanData.channels && chanData.channels[0]) || null;
+  // ── 4. Get Playlist Info ──
+const playlistName = t.PlaylistName || 'Playlist';
+const playlistId = t.PlaylistId || '';
+const videoCount = t.VideoCount || 0;
+const requiredMinutes = t.RequiredMinutes || 0;
+const playlistCategory = t.PlaylistCategory || '';
 
-        show('dashContent');
+    const chanDisplay = chanName
+        ? `<span class="font-semibold text-[#211F1F]">${chanName}</span>`
+        : `<span class="font-mono text-purple-700 text-sm">${chanId || '—'}</span>`;
 
-        if (!myChannel) {
-            show('noChannelWrap');
-            hide('mainLayout'); hide('mobileTrackerWidget');
-            document.getElementById('categoryTabs').innerHTML = '';
-            hide('loadingState');
-            return;
-        }
+    const handleRow = chanHandle
+        ? (() => {
+            const h = chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle;
+            const escaped = h.replace(/'/g, "\\'");
+            return `
+            <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="text-xs text-purple-700 font-mono">${h}</span>
+                <button class="copy-btn" onclick="copyText('${escaped}',this)" title="Copy handle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>`;
+        })()
+        : (chanId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${chanId}</div>` : '');
 
-        hide('noChannelWrap'); show('mainLayout');
-        renderChannelCard();
-
-        await loadEverything();
-
-        hide('loadingState');
-    } catch (e) {
-        hide('loadingState'); show('errorState'); hide('mobileTrackerWidget');
-        document.getElementById('errorMsg').textContent = e.message || 'Network error. Please try again.';
-    }
-}
-async function loadEverything() {
-    const [vidData, plData] = await Promise.all([
-        callApi('getMyVideos'),
-        callApi('getMyPlaylist')
-    ]);
-
-    if (vidData.status !== 'success') throw new Error(vidData.message || 'Could not load videos');
-    if (plData.status !== 'success') throw new Error(plData.message || 'Could not load playlists');
-
-    console.log('📊 Playlist Data:', plData);
-    console.log('📹 Video Data:', vidData);
-
-    // 🔥 Get all video URLs from the videos sheet (for validation)
-    const videoUrlsInSheet = new Set();
-    (vidData.videos || []).forEach(function(v) {
-        videoUrlsInSheet.add(v.VideoUrl);
-    });
-
-    // 🔥 Only include LONG videos (not Shorts) for playlist selection
-    allVideos = (vidData.videos || [])
-        .filter(function (v) { 
-            // Filter out deleted videos
-            if (String(v.VideoStatus || '').toLowerCase() === 'deleted') return false;
-            
-            // 🔥 FILTER: Only include LONG videos
-            const videoType = String(v.VideoType || '').toLowerCase();
-            return videoType === 'long' || videoType === 'long video' || videoType === '';
-        })
-        .map(function (v) { 
-            v.Seconds = parseVideoSeconds(v); 
-            return v; 
-        });
-
-    console.log('📹 Long videos available for playlists:', allVideos.length);
-
-    let categories = plData.categories || [];
-    let videosRemovedFromPlaylists = 0;
-    
-    // 🔥 Clean up playlist data: remove videos that no longer exist in the video sheet
-    categories = categories.map(function(c) {
-        const urls = c.selectedVideoUrls || [];
-        // Filter out URLs that no longer exist in the videos sheet
-        const validUrls = urls.filter(function(url) {
-            return videoUrlsInSheet.has(url);
-        });
-        const removed = urls.length - validUrls.length;
-        if (removed > 0) {
-            videosRemovedFromPlaylists += removed;
-            console.log('⚠️ Removed ' + removed + ' video(s) from ' + c.id + ' playlist (no longer in videos sheet)');
-            // Also update totalSeconds to reflect the removal
-            c.totalSeconds = Math.max(0, c.totalSeconds - calculateRemovedSeconds(urls, validUrls, vidData.videos || []));
-        }
-        c.selectedVideoUrls = validUrls;
-        return c;
-    });
-
-    // Helper function to calculate seconds of removed videos
-    function calculateRemovedSeconds(allUrls, validUrls, videos) {
-        const removedUrls = allUrls.filter(function(url) {
-            return !validUrls.includes(url);
-        });
-        let totalRemovedSeconds = 0;
-        removedUrls.forEach(function(url) {
-            const video = videos.find(function(v) { return v.VideoUrl === url; });
-            if (video) {
-                totalRemovedSeconds += parseVideoSeconds(video);
-            }
-        });
-        return totalRemovedSeconds;
-    }
-
-    // Show toast notification if videos were removed
-    if (videosRemovedFromPlaylists > 0) {
-        setTimeout(function() {
-            showToast('⚠️ ' + videosRemovedFromPlaylists + ' video(s) were removed from playlists because they no longer exist in your video library.', true);
-        }, 500);
-    }
-
-    // Handle old format if needed
-    if (!plData.categories && plData.playlist) {
-        const total = plData.totalSeconds || 0;
-        const min = plData.minSeconds || 0;
-        const max = plData.maxSeconds || 1500;
-        const rangeText = (min === 0) ? '0–25 min' : Math.floor(min/60) + '–' + Math.floor(max/60) + ' min';
-        
-        categories = CATEGORY_ORDER.map(function(id) {
-            const isActive = (id === 'E');
-            return {
-                id: id,
-                label: id,
-                rangeText: rangeText,
-                minSeconds: min,
-                maxSeconds: max,
-                playlist: isActive ? plData.playlist : null,
-                selectedVideoUrls: isActive ? (plData.selectedVideoUrls || []) : [],
-                totalSeconds: isActive ? total : 0,
-                isUnlocked: (id === 'E'),
-                isConfirmed: false
-            };
-        });
-    }
-
-    catMap = {};
-    categories.forEach(function(c) {
-        const urls = c.selectedVideoUrls || [];
-        const urlSet = new Set(urls);
-        
-        console.log('📂 Category ' + c.id + ' has ' + urlSet.size + ' selected videos:', urls);
-        
-        // Get playlist status
-        const playlist = c.playlist || null;
-        const isConfirmed = playlist && String(playlist.HasPlaylistReady).toLowerCase() === 'yes';
-        
-        // Check if playlist is still valid after removals
-        const meta = {
-            E: { minSeconds: 1800, maxSeconds: 2400 },
-            D: { minSeconds: 2460, maxSeconds: 3600 },
-            C: { minSeconds: 5400, maxSeconds: 7200 },
-            B: { minSeconds: 9000, maxSeconds: 10800 },
-            A: { minSeconds: 16200, maxSeconds: 18000 }
-        }[c.id] || { minSeconds: 1800, maxSeconds: 2400 };
-        
-        const totalSeconds = c.totalSeconds || 0;
-        const isValid = totalSeconds >= meta.minSeconds && totalSeconds <= meta.maxSeconds;
-        
-        // If playlist was confirmed but now invalid, mark it as not confirmed in the data
-        if (isConfirmed && !isValid && playlist) {
-            console.log('⚠️ Category ' + c.id + ' playlist is no longer valid (duration: ' + totalSeconds + 's)');
-            // We'll update this in the frontend state but the backend will handle the actual update
-            playlist.HasPlaylistReady = 'No';
-            // Show a toast notification
-            setTimeout(function() {
-                showToast('⚠️ ' + c.label + ' playlist was unconfirmed because video(s) were removed and duration is now ' + formatSecs(totalSeconds), true);
-            }, 1000);
-        }
-        
-        catMap[c.id] = {
-            id: c.id,
-            label: c.label || c.id,
-            rangeText: c.rangeText || '30–40 min',
-            minSeconds: meta.minSeconds,
-            maxSeconds: meta.maxSeconds,
-            playlist: playlist,
-            selectedUrls: urlSet,
-            totalSeconds: totalSeconds,
-            isUnlocked: c.isUnlocked !== undefined ? c.isUnlocked : (c.id === 'E'),
-            isConfirmed: isConfirmed && isValid
-        };
-    });
-
-    // Ensure all categories exist
-    CATEGORY_ORDER.forEach(function(id) {
-        if (!catMap[id]) {
-            const meta = getCategoryMeta(id);
-            catMap[id] = {
-                id: id,
-                label: id,
-                rangeText: meta ? meta.rangeText : '30–40 min',
-                minSeconds: meta ? meta.minSeconds : 1800,
-                maxSeconds: meta ? meta.maxSeconds : 2400,
-                playlist: null,
-                selectedUrls: new Set(),
-                totalSeconds: 0,
-                isUnlocked: (id === 'E'),
-                isConfirmed: false
-            };
-        }
-    });
-
-    // Find the first unlocked category to set as active
-    let firstUnlocked = CATEGORY_ORDER.find(function(id) {
-        return catMap[id].isUnlocked;
-    });
-    
-    if (firstUnlocked) {
-        activeCategory = firstUnlocked;
-    } else {
-        activeCategory = 'E';
-    }
-
-    // Check if the currently active category is still valid
-    const activeState = catMap[activeCategory];
-    if (activeState && activeState.isConfirmed && activeState.totalSeconds < activeState.minSeconds) {
-        // The active category was confirmed but is now invalid
-        // We should show a warning
-        setTimeout(function() {
-            showToast('⚠️ ' + activeState.label + ' playlist duration is now ' + formatSecs(activeState.totalSeconds) + ' (below minimum). Please fix it or delete it.', true);
-        }, 1500);
-    }
-
-    renderCategoryTabs();
-    renderState();
-}
-
-
-function getCategoryMeta(id) {
-    // You can define this in the frontend as well
-    const meta = {
-        E: { rangeText: '30–40 min', minSeconds: 1800, maxSeconds: 2400 },
-        D: { rangeText: '41–60 min', minSeconds: 2460, maxSeconds: 3600 },
-        C: { rangeText: '90–120 min', minSeconds: 5400, maxSeconds: 7200 },
-        B: { rangeText: '150–180 min', minSeconds: 9000, maxSeconds: 10800 },
-        A: { rangeText: '270–300 min', minSeconds: 16200, maxSeconds: 18000 }
-    };
-    return meta[id] || null;
-}
-
-
-function renderChannelCard() {
-    document.getElementById('chanImage').src        = myChannel.ChannelImage || '';
-    document.getElementById('chanName').textContent = myChannel.ChannelName || '—';
-    document.getElementById('chanHandle').textContent = myChannel.ChannelHandle || '—';
-    document.getElementById('chanLink').href = myChannel.ChannelLink || '#';
-}
-
-/* ────────────────────────────────────────
-   CATEGORY STATE MACHINE
-──────────────────────────────────────── */
-function categoryMode(id) {
-    const c = catMap[id];
-    if (!c || !c.playlist) return 'NONE';
-    return String(c.playlist.HasPlaylistReady).toLowerCase() === 'yes' ? 'CONFIRMED' : 'PENDING';
-}
-
-function switchCategory(id) {
-    if (!catMap[id]) return;
-    
-    // Check if category is unlocked
-    const isUnlocked = catMap[id].isUnlocked !== undefined ? catMap[id].isUnlocked : true;
-    if (!isUnlocked) {
-        showToast('🔒 Category ' + id + ' is locked. Complete ' + getPreviousCategory(id) + ' first!', true);
-        return;
-    }
-    
-    activeCategory = id;
-    activeVideoFilter = 'All';
-    document.querySelectorAll('.filter-tab').forEach(function (b) { b.classList.remove('active'); });
-    const allBtn = document.getElementById('tab-all');
-    if (allBtn) allBtn.classList.add('active');
-    renderCategoryTabs();
-    renderState();
-}
-
-/* ────────────────────────────────────────
-   RENDER CATEGORY TAB STRIP
-──────────────────────────────────────── */
-function renderCategoryTabs() {
-    const wrap = document.getElementById('categoryTabs');
-    wrap.innerHTML = CATEGORY_ORDER.map(function(id) {
-        const c = catMap[id];
-        if (!c) return '';
-        const meta = CATEGORY_META[id];
-        const mode = categoryMode(id);
-        const isUnlocked = c.isUnlocked !== undefined ? c.isUnlocked : true;
-        const isConfirmed = mode === 'CONFIRMED';
-        
-        // Determine icon and style
-        let icon = '🔒';
-        let statusText = 'Locked';
-        let style = '';
-        let clickHandler = `showToast('Complete ${getPreviousCategory(id)} first to unlock ${id}!', true)`;
-        let isActive = false;
-        
-        if (isConfirmed) {
-            icon = '✅';
-            statusText = 'Done';
-            style = '';
-            clickHandler = `switchCategory('${id}')`;
-            isActive = (id === activeCategory);
-        } else if (isUnlocked) {
-            icon = '🟢';
-            statusText = 'Available';
-            style = '';
-            clickHandler = `switchCategory('${id}')`;
-            isActive = (id === activeCategory);
-        } else {
-            icon = '🔒';
-            statusText = 'Locked';
-            style = 'opacity:0.5; cursor:not-allowed;';
-            clickHandler = `showToast('Complete ${getPreviousCategory(id)} first to unlock ${id}!', true)`;
-            isActive = false;
-        }
-        
-        return `<button class="cat-tab ${isActive ? 'active' : ''}" 
-                        onclick="${clickHandler}" 
-                        style="${style}"
-                        title="${statusText}">
-            <span class="cat-tab-dot" style="background:${meta.color}"></span>
-            <span class="flex flex-col items-start leading-tight">
-                <span class="cat-tab-label">${c.label}</span>
-                <span class="cat-tab-range">${c.rangeText}</span>
-            </span>
-            <span class="cat-tab-status">${icon}</span>
-        </button>`;
-    }).join('');
-}
-/* ────────────────────────────────────────
-   RENDER MAIN STATE (scoped to activeCategory)
-──────────────────────────────────────── */
-function renderState() {
-    const cState = catMap[activeCategory];
-    if (!cState) return;
-
-    const mode = categoryMode(activeCategory);
-    const totalSeconds = cState.totalSeconds;
-    const minSeconds = cState.minSeconds;
-    const maxSeconds = cState.maxSeconds;
-    const inBand = totalSeconds >= minSeconds && totalSeconds <= maxSeconds;
-    const isUnlocked = cState.isUnlocked !== undefined ? cState.isUnlocked : true;
-
-    // ─── CHECK IF CATEGORY IS LOCKED ───
-    if (!isUnlocked) {
-        // Hide everything and show locked message
-        document.getElementById('progressCatLabel').textContent = cState.label + ' — 🔒 Locked';
-        document.getElementById('targetRangeTxt').textContent = 'Target: ' + cState.rangeText;
-        document.getElementById('totalDurationTxt').textContent = '🔒';
-        document.getElementById('selectedCountTxt').textContent = '—';
-        
-        // Disable meter
-        const fill = document.getElementById('meterFill');
-        fill.style.width = '0%';
-        fill.style.background = '#94a3b8';
-        const band = document.getElementById('meterBand');
-        band.style.left = '0%';
-        band.style.right = '0%';
-        
-        const hint = document.getElementById('meterHint');
-        hint.className = 'text-[11px] font-semibold text-gray-500 leading-relaxed mb-3';
-        const prevCat = getPreviousCategory(activeCategory);
-        hint.textContent = '🔒 Complete and confirm Category ' + prevCat + ' first to unlock this category.';
-        
-        document.getElementById('estimateBox').textContent = '🔒 This category is locked. Complete the previous category first.';
-        
-        // Hide mobile tracker
-        document.getElementById('mobileTrackerWidget').classList.add('hidden');
-        
-        // Hide all action buttons
-        hide('createPlaylistBtn');
-        hide('verifyPlaylistBtn');
-        hide('deletePlaylistBtn');
-        hide('namePlateWrap');
-        hide('confirmedBanner');
-        
-        // Show locked picker message
-        document.getElementById('pickerTitle').textContent = '🔒 ' + cState.label + ' — Locked';
-        document.getElementById('pickerSub').textContent = 'Complete and confirm Category ' + getPreviousCategory(activeCategory) + ' first to unlock this category.';
-        
-        // Show locked grid message
-        document.getElementById('videoGrid').innerHTML = 
-            '<div class="col-span-full text-center py-20"><div class="text-6xl mb-4">🔒</div><div class="text-xl font-bold mb-2">Category Locked</div><div class="text-muted text-sm">Complete and confirm Category ' + getPreviousCategory(activeCategory) + ' first to unlock ' + cState.label + '.</div></div>';
-        
-        // Hide empty state if visible
-        document.getElementById('emptyState').classList.add('hidden');
-        return;
-    }
-
-    // ─── CATEGORY IS UNLOCKED — NORMAL RENDERING ───
-
-    /* Progress card header */
-    document.getElementById('progressCatLabel').textContent = cState.label + ' — Total Duration';
-    document.getElementById('targetRangeTxt').textContent = 'Target: ' + cState.rangeText;
-    document.getElementById('totalDurationTxt').textContent = formatSecs(totalSeconds);
-    document.getElementById('selectedCountTxt').textContent = cState.selectedUrls.size;
-
-    /* Meter — scaled 0..maxSeconds */
-    const pct = Math.min(100, Math.round((totalSeconds / maxSeconds) * 100));
-    const fill = document.getElementById('meterFill');
-    fill.style.width = pct + '%';
-    fill.style.background = inBand ? '#4ade80' : (totalSeconds > maxSeconds ? '#ef4444' : '#fbbf24');
-
-    const bandStartPct = (minSeconds / maxSeconds) * 100;
-    const band = document.getElementById('meterBand');
-    band.style.left = bandStartPct + '%';
-    band.style.right = '0%';
-
-    const hint = document.getElementById('meterHint');
-    if (mode === 'CONFIRMED') {
-        hint.className = 'text-[11px] font-semibold text-emerald-700 leading-relaxed mb-3';
-        hint.textContent = '✅ Confirmed from your live YouTube playlist.';
-    } else if (inBand) {
-        hint.className = 'text-[11px] font-semibold text-emerald-700 leading-relaxed mb-3';
-        hint.textContent = '✅ Within the ' + cState.rangeText + ' target — ready to create.';
-    } else if (totalSeconds > maxSeconds) {
-        hint.className = 'text-[11px] font-semibold text-red-600 leading-relaxed mb-3';
-        hint.textContent = '⚠️ Over the max — remove a video to get back in range.';
-    } else {
-        hint.className = 'text-[11px] font-semibold text-amber-700 leading-relaxed mb-3';
-        hint.textContent = 'Select videos to reach the ' + cState.rangeText + ' target.';
-    }
-
-    /* Estimate box — how many more videos are needed to reach the band */
-    renderEstimateBox(cState, totalSeconds, minSeconds, maxSeconds, mode);
-
-    /* Mobile sticky tracker */
-    const mobileTracker = document.getElementById('mobileTrackerWidget');
-    if (mode === 'CONFIRMED' || !myChannel) {
-        mobileTracker.classList.add('hidden');
-    } else {
-        mobileTracker.classList.remove('hidden');
-        document.getElementById('mobileCatLabel').textContent = cState.label + ':';
-        document.getElementById('mobileDurationTxt').textContent = formatSecs(totalSeconds);
-
-        const mobFill = document.getElementById('mobileMeterFill');
-        mobFill.style.width = pct + '%';
-        mobFill.style.background = inBand ? '#4ade80' : (totalSeconds > maxSeconds ? '#ef4444' : '#fbbf24');
-
-        const mobBand = document.getElementById('mobileMeterBand');
-        mobBand.style.left = bandStartPct + '%';
-        mobBand.style.right = '0%';
-
-        const mobHintBadge = document.getElementById('mobileHintBadge');
-        if (inBand) {
-            mobHintBadge.textContent = 'Target Reached ✅';
-            mobHintBadge.style.background = '#dcfce7';
-            mobHintBadge.style.color = '#166534';
-        } else if (totalSeconds > maxSeconds) {
-            mobHintBadge.textContent = 'Over limit ⚠️';
-            mobHintBadge.style.background = '#fee2e2';
-            mobHintBadge.style.color = '#991b1b';
-        } else {
-            const needMin = Math.max(0, Math.ceil((minSeconds - totalSeconds) / 60));
-            mobHintBadge.textContent = 'Need ' + needMin + ' min more';
-            mobHintBadge.style.background = '#fef3c7';
-            mobHintBadge.style.color = '#92400e';
-        }
-    }
-
-    /* Actions */
-    if (mode === 'NONE') {
-        show('createPlaylistBtn'); 
-        hide('verifyPlaylistBtn'); 
-        hide('deletePlaylistBtn');
-        document.getElementById('createPlaylistBtn').disabled = !inBand;
-        // Update button text to show category
-        document.getElementById('createPlaylistBtn').textContent = '🎬 Create ' + cState.label + ' Playlist';
-        hide('namePlateWrap'); 
-        hide('confirmedBanner');
-    } else if (mode === 'PENDING') {
-        hide('createPlaylistBtn'); 
-        show('verifyPlaylistBtn'); 
-        show('deletePlaylistBtn');
-        document.getElementById('verifyPlaylistBtn').textContent = '✅ Verify & Set ' + cState.label + ' For Group';
-        document.getElementById('deletePlaylistBtn').textContent = '🗑️ Delete ' + cState.label + ' & Start Over';
-        show('namePlateWrap'); 
-        hide('confirmedBanner');
-        document.getElementById('plateName').textContent = cState.playlist.PlaylistName || '—';
-    } else { // CONFIRMED
-        hide('createPlaylistBtn'); 
-        hide('verifyPlaylistBtn'); 
-        show('deletePlaylistBtn');
-        document.getElementById('deletePlaylistBtn').textContent = '🗑️ Delete ' + cState.label + ' & Start Over';
-        hide('namePlateWrap'); 
-        show('confirmedBanner');
-        document.getElementById('confirmedSub').textContent =
-            '✅ ' + cState.label + ' locked in at ' + formatSecs(cState.playlist.PlaylistSize) + ' of watch time (' + (cState.playlist.VideoCount || 0) + ' videos) · Name: ' + (cState.playlist.PlaylistName || '—');
-    }
-
-    /* Picker copy + lock */
-    const isNextCategory = isCategoryNext(cState.id);
-    document.getElementById('pickerTitle').textContent = 'Choose Videos — ' + cState.label;
-    const pickerSub = document.getElementById('pickerSub');
-    if (mode === 'CONFIRMED') {
-        pickerSub.textContent = '✅ ' + cState.label + ' is confirmed! Complete the next category (' + getNextCategoryInOrder(cState.id) + ') to continue.';
-    } else if (isNextCategory && mode === 'NONE') {
-        pickerSub.textContent = '🎯 Start building your ' + cState.label + ' playlist! Select videos from your promotional channel to reach ' + cState.rangeText + '.';
-    } else {
-        pickerSub.textContent = 'Tap videos from your promotional channel to add or remove them from ' + cState.label + '\'s playlist. Videos already used in other categories can be reused here too.';
-    }
-
-    renderGrid();
-}
-
-// ─── HELPER FUNCTIONS FOR PROGRESSIVE UNLOCK ───
-
-function getPreviousCategory(catId) {
-    const index = CATEGORY_ORDER.indexOf(catId);
-    if (index > 0) return CATEGORY_ORDER[index - 1];
-    return null;
-}
-
-function getNextCategoryInOrder(catId) {
-    const index = CATEGORY_ORDER.indexOf(catId);
-    if (index < CATEGORY_ORDER.length - 1) return CATEGORY_ORDER[index + 1];
-    return null;
-}
-
-function isCategoryNext(catId) {
-    // Check if this is the next category to be completed
-    const index = CATEGORY_ORDER.indexOf(catId);
-    if (index === 0) return true; // E is always first
-    
-    const prevCat = CATEGORY_ORDER[index - 1];
-    const prevState = catMap[prevCat];
-    if (!prevState) return false;
-    
-    // Check if previous category is confirmed
-    const prevMode = categoryMode(prevCat);
-    return prevMode === 'CONFIRMED';
-}
-
-function getCategoryStatusSummary() {
-    // Returns a summary of all categories for display
-    let summary = '';
-    CATEGORY_ORDER.forEach(function(id) {
-        const c = catMap[id];
-        if (!c) return;
-        const mode = categoryMode(id);
-        const isUnlocked = c.isUnlocked !== undefined ? c.isUnlocked : true;
-        let icon = '🔒';
-        if (mode === 'CONFIRMED') icon = '✅';
-        else if (isUnlocked) icon = '🟢';
-        summary += icon + ' ' + id + ' ';
-    });
-    return summary;
-}
-/* Estimate how many more (average-length) videos are needed to reach
-   the minimum of this category's band, based on the member's own
-   average video duration across their available catalog. */
-function renderEstimateBox(cState, totalSeconds, minSeconds, maxSeconds, mode) {
-    const box = document.getElementById('estimateBox');
-    if (mode === 'CONFIRMED') {
-        box.textContent = '✅ Confirmed with ' + (cState.playlist.VideoCount || cState.selectedUrls.size) + ' video(s).';
-        return;
-    }
-    if (!allVideos.length) {
-        box.textContent = 'Add some videos to your channel to see an estimate.';
-        return;
-    }
-    const avgSeconds = allVideos.reduce(function (s, v) { return s + v.Seconds; }, 0) / allVideos.length;
-    if (avgSeconds <= 0) {
-        box.textContent = 'Add some videos with a valid duration to see an estimate.';
-        return;
-    }
-    if (totalSeconds >= minSeconds && totalSeconds <= maxSeconds) {
-        box.textContent = '✅ You have enough — ' + cState.selectedUrls.size + ' video(s) selected, based on your ~' + formatSecs(avgSeconds) + ' average video length.';
-        return;
-    }
-    if (totalSeconds > maxSeconds) {
-        box.textContent = '⚠️ Over the max for this category — remove some videos.';
-        return;
-    }
-    const remaining = minSeconds - totalSeconds;
-    const neededCount = Math.max(1, Math.ceil(remaining / avgSeconds));
-    box.textContent = '📊 Based on your ~' + formatSecs(avgSeconds) + ' average video length, you need about ' +
-        neededCount + ' more video(s) (~' + formatSecs(remaining) + ') to reach the minimum for ' + cState.label + '.';
-}
-
-/* ────────────────────────────────────────
-   VIDEO FILTER TABS
-──────────────────────────────────────── */
-function setVideoTab(tab, btn) {
-    activeVideoFilter = tab;
-    document.querySelectorAll('.filter-tab').forEach(function (b) { b.classList.remove('active'); });
-    if (btn) btn.classList.add('active');
-    console.log('🔄 Tab switched to:', tab);
-    renderGrid();
-}
-
-/* ────────────────────────────────────────
-   RENDER VIDEO GRID
-──────────────────────────────────────── */
-function renderGrid() {
-    const grid  = document.getElementById('videoGrid');
-    const empty = document.getElementById('emptyState');
-    const cState = catMap[activeCategory];
-
-    // Check if category is locked
-    const isUnlocked = cState.isUnlocked !== undefined ? cState.isUnlocked : true;
-    if (!isUnlocked) {
-        grid.innerHTML = '';
-        empty.classList.add('hidden');
-        return;
-    }
-
-    // Check if there are any Long videos at all
-    const longVideosCount = allVideos.length;
-    
-    if (allVideos.length === 0) {
-        grid.innerHTML = '';
-        empty.classList.remove('hidden');
-        // Update empty state message to explain about Long videos
-        document.querySelector('#emptyState h3').textContent = 'No Long Videos Available';
-        document.querySelector('#emptyState p').textContent = 
-            'Only LONG videos (not Shorts) can be added to playlists. Import long videos from your promotional channel first, then come back to build your playlists.';
-        return;
-    }
-    empty.classList.add('hidden');
-
-    let list = allVideos;
-    
-    console.log('🔍 Active Category:', activeCategory);
-    console.log('📋 Selected URLs for ' + activeCategory + ':', cState.selectedUrls);
-    
-    // Filter based on active tab
-    if (activeVideoFilter === 'Selected') {
-        list = allVideos.filter(function (v) { 
-            const isSelected = cState.selectedUrls.has(v.VideoUrl);
-            return isSelected; 
-        });
-        console.log('✅ Selected videos found:', list.length);
-    } else if (activeVideoFilter === 'Available') {
-        list = allVideos.filter(function (v) { 
-            return !cState.selectedUrls.has(v.VideoUrl); 
-        });
-    }
-    // 'All' tab shows everything
-
-    if (list.length === 0) {
-        let msg = 'Nothing to show in this tab.';
-        if (activeVideoFilter === 'Selected') {
-            msg = 'No videos selected for ' + cState.label + ' yet. Switch to "All" or "Not Selected" to add videos.';
-        } else if (activeVideoFilter === 'All' && allVideos.length > 0) {
-            msg = 'All your long videos are already selected. Switch to "Not Selected" to see available videos.';
-        }
-        grid.innerHTML = '<div class="col-span-full text-center py-10 text-muted text-sm">' + msg + '</div>';
-        return;
-    }
-
-    grid.innerHTML = list.map(pickCard).join('');
-}
-function otherCategoriesFor(videoUrl) {
-    return CATEGORY_ORDER.filter(function (id) {
-        return id !== activeCategory && catMap[id] && catMap[id].selectedUrls.has(videoUrl);
-    });
-}
-
-function pickCard(v) {
-    const cState = catMap[activeCategory];
-    const isSelected = cState.selectedUrls.has(v.VideoUrl);
-    const locked = categoryMode(activeCategory) === 'CONFIRMED';
-    const url = escapeAttr(v.VideoUrl);
-    
-    // Get all categories where this video is selected (including current if selected)
-    const allSelectedCats = CATEGORY_ORDER.filter(function(id) {
-        return catMap[id] && catMap[id].selectedUrls.has(v.VideoUrl);
-    });
-    
-    const otherCats = allSelectedCats.filter(function(id) {
-        return id !== activeCategory;
-    });
-    
-    const usageCount = allSelectedCats.length;
-    
-    const otherChips = otherCats.map(function(id) {
-        const meta = CATEGORY_META[id];
-        return `<span class="also-in-chip"><span class="dot" style="background:${meta.color}"></span>${catMap[id].label}</span>`;
-    }).join('');
-    
-    // Show usage badge if video is selected in multiple playlists
-    const usageBadge = usageCount > 1 
-        ? `<span class="also-in-chip" style="background:#211F1F;color:white;border-color:#211F1F;">📊 Used in ${usageCount} playlist${usageCount > 1 ? 's' : ''}</span>` 
+    const issueRow = t.Issue
+        ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
 
-    // Show video type badge
-    const videoType = v.VideoType || 'Long';
-    const isShort = videoType.toLowerCase() === 'short' || videoType.toLowerCase() === 'short video';
-    const typeBadge = isShort 
-        ? `<span class="also-in-chip" style="background:#fef3c7;border-color:#d97706;">📱 Short</span>`
-        : `<span class="also-in-chip" style="background:#d1fae5;border-color:#059669;">🎬 Long</span>`;
+    const cheatingBlock = isCheating ? `
+        <div class="cheating-box mt-3">
+            <p class="text-xs text-red-600 font-semibold mb-1">🚫 Cheating Detected</p>
+            <p class="text-xs text-red-600/80 leading-relaxed">
+                This task has been flagged for cheating. You <strong class="text-red-600">must resolve</strong> this issue before you can continue.
+                Contact support for assistance.
+            </p>
+        </div>` : '';
+
+    const issueSection = !isCheating ? `
+        <div class="issue-box mt-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-red-600/80 font-medium">⚠ Report Issue with this task</span>
+                <button onclick="openIssueModal('${t.TaskID}')"
+                    class="text-xs text-red-600 hover:text-red-600 underline transition">
+                    ${t.Issue ? 'Update Issue' : 'Report'}
+                </button>
+            </div>
+            ${t.Issue ? `<p class="text-xs text-red-600/70 mt-1">Current: ${t.Issue}</p>` : ''}
+        </div>` : '';
+
+    let actionButtons = '';
+    if (isCheating) {
+        actionButtons = `
+            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-600">
+                🔒 Actions Locked
+            </div>`;
+    } else if (canMark) {
+        actionButtons = `
+            <a href="${channelUrl}" target="_blank" rel="noopener"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                ▶ Open Channel
+            </a>
+            <button onclick="openDetailModal('${t.TaskID}')"
+                class="btn-details px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                📋 View Details
+            </button>
+            <button onclick="doMarkWatched('${t.TaskID}', this)"
+                class="btn-watched px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                ✓ Mark Watched
+            </button>`;
+    } else {
+        actionButtons = `
+            <a href="${channelUrl}" target="_blank" rel="noopener"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                ▶ Open Channel
+            </a>
+            <button onclick="openDetailModal('${t.TaskID}')"
+                class="btn-details px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                📋 View Details
+            </button>
+            <button class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none opacity-60" disabled>
+                ✓ Done
+            </button>`;
+    }
+
+    const pinnedBadge = isCheating
+        ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
+        : '';
+
+    const cardClass = isCheating ? 'playlist-task-card cheating-card' : 
+                     (isWatched ? 'playlist-task-card watched-card' : 'playlist-task-card');
+
+
+                     // ── PLAYLIST INFO DISPLAY ──
+const playlistDisplay = `
+    <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="playlist-name-display" style="font-size:16px;">
+                🎵 ${playlistName}
+                <button class="copy-btn" onclick="copyText('${playlistName.replace(/'/g, "\\'")}',this)" title="Copy playlist name">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </span>
+            ${playlistCategory ? getCategoryBadge(playlistCategory) : ''}
+        </div>
+        <div class="flex gap-4 text-xs text-muted">
+            ${videoCount ? `<span>📹 ${videoCount} videos</span>` : ''}
+            ${requiredMinutes ? `<span>⏱ ${formatMinutes(requiredMinutes)}</span>` : ''}
+            ${playlistId ? `<span class="font-mono text-[10px]">ID: ${playlistId}</span>` : ''}
+        </div>
+    </div>`;
+
+// ── CHANNEL INFO DISPLAY ──
+const channelDisplay = `
+    <div class="flex items-center gap-3">
+        ${chanImage
+            ? `<img src="${chanImage}" alt="" class="w-14 h-14 rounded-xl object-cover bg-white border-2 border-[#211F1F] flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-14 h-14 rounded-xl bg-white flex items-center justify-center text-2xl flex-shrink-0 border-2 border-[#211F1F]&quot;>?</div>'">`
+            : `<div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-2xl flex-shrink-0 border-2 border-[#211F1F]">?</div>`}
+        <div class="min-w-0 flex-1">
+            <div class="text-sm font-semibold text-[#211F1F]">${chanDisplay}</div>
+            ${handleRow}
+        </div>
+    </div>`;
 
     return `
-    <div class="pick-card rounded-[18px] ${isSelected ? 'selected' : ''} ${locked ? 'locked' : ''}" ${locked ? '' : `onclick="toggleVideo('${url}')"`}>
-        <div class="pick-thumb-wrap">
-            ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">🎬</div>`}
-            <span class="type-chip">${v.VideoType || 'Long'}</span>
-            <span class="duration-chip">${formatSecs(v.Seconds)}</span>
-            <div class="pick-check">${isSelected ? '✓' : ''}</div>
+    <div class="${cardClass} rounded-3xl p-5">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+            <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
+            <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
+            ${pairedBadge(t)}
+            ${matchBadge(t)}
+            ${issueRow}
+            ${pinnedBadge}
         </div>
-        <div class="p-3">
-            <div class="text-sm font-semibold text-[#211F1F] leading-snug mb-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.VideoTitle || 'Untitled video'}</div>
-            <div class="text-[11px] text-muted">Added: ${fmtDate(v.CreatedDate)}</div>
-            <div class="flex flex-wrap gap-1 mt-1">
-                ${typeBadge}
-                ${usageBadge}
+
+        <div class="flex flex-col xl:flex-row gap-5">
+            <div class="flex-1 min-w-0">
+               <div class="playlist-info-box mb-3">
+    <p class="text-xs text-purple-700 font-semibold mb-2">${isCheating ? '⚠️ Issue with this playlist:' : '🎵 Target Playlist:'}</p>
+    
+    <!-- CHANNEL SECTION -->
+    <div class="mb-3 pb-3 border-b border-[#211F1F]/15">
+        ${channelDisplay}
+    </div>
+    
+    <!-- PLAYLIST SECTION -->
+    ${playlistDisplay}
+</div>
+
+                ${cheatingBlock}
+                ${issueSection}
+
+                <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
+                    <span>Member: <span class="text-[#211F1F]/70">${t.TargetUserCode || '—'}</span></span>
+                    <span>Created: <span class="text-[#211F1F]/70">${fmtDate(t.CreatedDate)}</span></span>
+                    ${t.WorkedDate  ? `<span>Worked: <span class="text-[#211F1F]/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
+                    ${t.CheckedDate ? `<span>Checked: <span class="text-[#211F1F]/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
+                </div>
             </div>
-            ${otherChips ? `<div class="also-in-row">${otherChips}</div>` : ''}
+
+            <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[160px] flex-shrink-0">
+                ${actionButtons}
+            </div>
         </div>
     </div>`;
 }
+
 /* ────────────────────────────────────────
-   TOGGLE VIDEO SELECTION (WITH LOADING DIALOG)
+   DETAIL MODAL - Videos + Watch Progress
 ──────────────────────────────────────── */
-async function toggleVideo(videoUrl) {
-    const catId = activeCategory;
-    if (categoryMode(catId) === 'CONFIRMED') {
-        showToast('This playlist is confirmed. Delete it to make changes.', true);
+async function openDetailModal(taskId) {
+    detailTaskId = taskId;
+    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (!t) { showToast('Task not found.', true); return; }
+
+    // Show loading state
+    document.getElementById('detailPanelVideos').innerHTML = `
+        <div class="text-center py-8 text-muted text-sm">
+            <div class="spin mx-auto mb-3" style="width:30px;height:30px;"></div>
+            Loading videos...
+        </div>`;
+    document.getElementById('detailPanelProgress').innerHTML = `
+        <div class="text-center py-8 text-muted text-sm">
+            <div class="spin mx-auto mb-3" style="width:30px;height:30px;"></div>
+            Loading progress...
+        </div>`;
+
+    switchDetailTab('videos', document.querySelector('.detail-tab[data-tab="videos"]'));
+    document.getElementById('detailModal').classList.add('open');
+
+    // ── 1. FETCH VIDEOS ──
+    let videoData = { videos: [], totalMinutes: 0, videoCount: 0 };
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getPlaylistVideos&userCode=${t.TargetUserCode}&playlistCategory=${t.PlaylistCategory || ''}`);
+        const data = await res.json();
+        if (data.success) {
+            videoData = data;
+        }
+    } catch (e) {
+        console.error('Error fetching videos:', e);
+    }
+
+    // ── 2. FETCH WATCH PROGRESS ──
+    let progressData = { progress: [] };
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${taskId}&userCode=${USER_CODE}`);
+        const data = await res.json();
+        if (data.success) {
+            progressData = data;
+        }
+    } catch (e) {
+        console.error('Error fetching progress:', e);
+    }
+
+    // ── 3. BUILD VIDEOS PANEL ──
+    const videosPanel = document.getElementById('detailPanelVideos');
+    const progressPanel = document.getElementById('detailPanelProgress');
+
+    // Format total minutes to hours
+// Instead of using videoData.totalMinutes directly, format it
+const totalSeconds = videoData.totalMinutes; // This is actually seconds from sheet
+const totalMinutes = Math.round(totalSeconds / 60);
+const totalHours = Math.floor(totalMinutes / 60);
+const totalMins = totalMinutes % 60;
+let timeDisplay = '';
+if (totalHours > 0 && totalMins > 0) {
+    timeDisplay = `${totalHours}h ${totalMins}min`;
+} else if (totalHours > 0) {
+    timeDisplay = `${totalHours}h`;
+} else {
+    timeDisplay = `${totalMinutes}min`;
+}
+
+    // Videos Panel
+    let videosHtml = `
+        <div class="text-xs text-muted mb-3">
+            <strong>Playlist:</strong> ${t.PlaylistName || 'Playlist'} 
+            ${t.PlaylistCategory ? getCategoryBadge(t.PlaylistCategory) : ''}
+            <span class="ml-2">📹 ${videoData.videoCount || 0} videos</span>
+            <span class="ml-2">⏱ ${timeDisplay} total</span>
+        </div>
+        <div style="max-height:400px;overflow-y:auto;">`;
+
+    if (!videoData.videos || videoData.videos.length === 0) {
+        videosHtml += `<p class="text-muted text-sm">No videos found in this playlist.</p>`;
+    } else {
+        videoData.videos.forEach((v, idx) => {
+            const duration = v.VideoMinutes ? formatMinutes(v.VideoMinutes) : '—';
+            // Truncate long titles
+            const displayTitle = v.VideoTitle.length > 45 ? v.VideoTitle.substring(0, 42) + '...' : v.VideoTitle;
+            videosHtml += `
+                <div class="video-list-item">
+                    <span class="num">#${idx + 1}</span>
+                    <span class="title" title="${v.VideoTitle}">${displayTitle}</span>
+                    <span class="duration">${duration}</span>
+                    ${v.VideoId ? `<a href="https://www.youtube.com/watch?v=${v.VideoId}" target="_blank" class="text-xs text-purple-700 hover:underline">▶</a>` : ''}
+                </div>`;
+        });
+    }
+
+    videosHtml += `</div>`;
+    videosPanel.innerHTML = videosHtml;
+
+    // ── 4. BUILD PROGRESS PANEL ──
+    // ── 4. BUILD PROGRESS PANEL ──
+    // ── 4. BUILD PROGRESS PANEL ──
+let progressHtml = `
+    <div class="text-xs text-muted mb-3">
+        <strong>Watch Progress</strong> — Track which videos you've watched (Need <strong>90%</strong> to complete)
+    </div>
+    <div style="max-height:400px;overflow-y:auto;">`;
+
+if (!progressData.progress || progressData.progress.length === 0) {
+    progressHtml += `<p class="text-muted text-sm">No progress data available. Start watching to track your progress.</p>`;
+} else {
+    let totalWatched = 0;
+    const totalVideos = progressData.progress.length;
+    const WATCH_THRESHOLD = 90;
+
+    progressData.progress.forEach((p, idx) => {
+        const isWatched = p.Percentage >= WATCH_THRESHOLD;
+        const isPartial = p.Percentage > 0 && p.Percentage < WATCH_THRESHOLD;
+        const statusClass = isWatched ? 'ok' : (isPartial ? 'partial' : 'fail');
+        const label = isWatched ? '✅ Watched' : (isPartial ? '⏳ Partial' : '❌ Not Started');
+
+        if (p.Percentage >= WATCH_THRESHOLD) totalWatched++;
+
+        // Format duration from seconds to minutes:seconds
+        const durationSecs = p.VideoDuration || 0;
+        const durMins = Math.floor(durationSecs / 60);
+        const durSecs = Math.round(durationSecs % 60);
+        let durationDisplay = '';
+        if (durMins > 0) {
+            durationDisplay = `${durMins}:${durSecs.toString().padStart(2, '0')}`;
+        } else {
+            durationDisplay = `${durSecs}s`;
+        }
+        
+        const displayTitle = p.VideoTitle && p.VideoTitle.length > 35 ? p.VideoTitle.substring(0, 32) + '...' : (p.VideoTitle || `Video ${idx + 1}`);
+
+        progressHtml += `
+            <div class="video-list-item">
+                <span class="num">#${idx + 1}</span>
+                <span class="title" title="${p.VideoTitle || ''}">${displayTitle}</span>
+                <span class="duration">${durationDisplay}</span>
+                <span class="progress ${statusClass}">${p.Percentage}%</span>
+                <span style="font-size:9px;min-width:60px;text-align:right;">${label}</span>
+                <div class="progress-bar-mini" style="width:60px;">
+                    <div class="fill ${statusClass}" style="width:${p.Percentage}%;"></div>
+                </div>
+            </div>`;
+    });
+
+    const overallPercent = totalVideos > 0 ? Math.round((totalWatched / totalVideos) * 100) : 0;
+    const overallStatus = overallPercent >= 90 ? '✅ Complete' : (overallPercent > 0 ? '⏳ In Progress' : '❌ Not Started');
+
+    progressHtml += `
+        <div style="margin-top:12px;padding:12px;border-top:2px solid #211F1F;display:flex;justify-content:space-between;font-weight:700;font-size:13px;">
+            <span>Overall Progress</span>
+            <span>${overallPercent}% — ${overallStatus} (Need 90%)</span>
+        </div>`;
+}
+
+progressHtml += `</div>`;
+progressPanel.innerHTML = progressHtml;
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+}
+
+function switchDetailTab(tab, btn) {
+    document.querySelectorAll('.detail-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`detailPanel${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+}
+
+/* ────────────────────────────────────────
+   MARK WATCHED
+──────────────────────────────────────── */
+async function doMarkWatched(taskId, btnEl) {
+    if (hasCheating) {
+        showToast('You must resolve your cheating tasks first.', true);
         return;
     }
 
-    const v = allVideos.find(function (x) { return x.VideoUrl === videoUrl; });
-    if (!v) return;
-
-    const cState = catMap[catId];
-    const isSelected = cState.selectedUrls.has(videoUrl);
-
-    Swal.fire({
-        title: 'Loading, please wait...',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
+    const originalHTML = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = `
+        <span class="inline-flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Checking...
+        </span>`;
 
     try {
-        let data;
-        if (isSelected) {
-            data = await callApi('removeVideoFromPlaylist', { videoUrl, category: catId });
-        } else {
-            data = await callApi('addVideoToPlaylist', { videoUrl, videoSeconds: v.Seconds, category: catId });
-        }
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'markPlaylistWatched', taskId, userCode: USER_CODE })
+        });
+        const data = await res.json();
 
-        Swal.close();
-
-        if (data.status === 'success') {
-            // Update the Set
-            if (isSelected) {
-                cState.selectedUrls.delete(videoUrl);
-                console.log('🗑️ Removed video from', catId);
-            } else {
-                cState.selectedUrls.add(videoUrl);
-                console.log('✅ Added video to', catId);
+        if (data.success) {
+            const now = new Date().toISOString();
+            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+            if (myTask) {
+                myTask.Status       = 'Watched';
+                myTask.WorkedDate   = now;
+                myTask.PairedStatus = data.pairedStatus || (data.bothWatched ? 'Watched' : 'NotWorkYet');
             }
-            cState.totalSeconds = data.totalSeconds;
-            
-            // Re-render everything
-            renderCategoryTabs();
-            renderState();
+            showToast(data.bothWatched ? '🎉 Both watched! Exchange complete!' : '✅ Playlist marked as Watched!');
+            calcStats();
+            applyFilter();
+        } else if (data.proofMissing) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Proof Not Found',
+                text: 'Please watch the playlist using the Exsub Extension first. Your task is not complete yet.',
+                background: '#F5F4EB',
+                color: '#211F1F',
+                confirmButtonColor: '#7c3aed',
+                confirmButtonText: 'Got it'
+            });
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+        } else if (data.cheatingDetected) {
+            Swal.fire({
+                icon: 'error',
+                title: '⚠️ Cheating Detected',
+                text: 'The system detected that you did not watch the playlist properly. Please watch all videos properly.',
+                background: '#F5F4EB',
+                color: '#211F1F',
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'Understood'
+            });
+            setTimeout(() => location.reload(), 1500);
         } else {
-            showToast(data.message || 'Could not update playlist selection.', true);
+            showToast(data.message || 'Update failed.', true);
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
         }
     } catch (e) {
-        Swal.close();
         showToast('Connection error.', true);
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalHTML;
     }
 }
+
 /* ────────────────────────────────────────
-   CREATE PLAYLIST NAME
+   CREATE TASKS MODAL
 ──────────────────────────────────────── */
-async function doCreatePlaylist() {
-    const cState = catMap[activeCategory];
-    const totalSeconds = cState.totalSeconds;
-    if (totalSeconds < cState.minSeconds || totalSeconds > cState.maxSeconds) {
-        showToast('Selected videos must total within ' + cState.rangeText + '.', true);
+function openCreateModal() {
+    if (member && member.ViolationFlag === 'Suspended') {
+        showToast('Your account is suspended. Contact support.', true);
         return;
     }
 
-    const result = await Swal.fire({
-        icon: 'question',
-        title: 'Generate your ' + cState.label + ' playlist name?',
-        html: 'We\'ll give you a unique playlist name to create on YouTube with your selected videos (' + formatSecs(totalSeconds) + ').',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, generate name',
-        cancelButtonText: 'Cancel',
-        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
-    });
-    if (!result.isConfirmed) return;
+    if (member && member.InWatchtimeWork !== 'Yes') {
+        showToast('You are not enrolled in the Watchtime Group. Please join first.', true);
+        return;
+    }
 
-    const btn = document.getElementById('createPlaylistBtn');
-    const originalText = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Generating…';
+    if (member && member.PlaylistPromotionActive === 'No') {
+        showToast('Playlist promotion is disabled. Complete your pending tasks first.', true);
+        return;
+    }
+
+    if (hasCheating) {
+        showToast('Resolve your cheating tasks first.', true);
+        return;
+    }
+
+    const pending = allTasks.filter(t => (t.Status === 'NotWorkYet' || t.Status === 'Pending') && t.UserCode === USER_CODE).length;
+    document.getElementById('modalPendingCount').textContent = pending;
+
+    const playlistCount = myPlaylists.length;
+    document.getElementById('modalPlaylistCount').textContent = playlistCount;
+
+    const canCreate = pending < 5 && playlistCount > 0;
+    const canEl = document.getElementById('modalCanCreate');
+    
+    if (playlistCount === 0) {
+        canEl.textContent = 'No — create a playlist first in your channel settings';
+        canEl.className   = 'font-semibold text-red-600';
+    } else if (pending >= 5) {
+        canEl.textContent = 'No — complete your pending tasks first';
+        canEl.className   = 'font-semibold text-red-600';
+    } else {
+        canEl.textContent = 'Yes — tasks will be created';
+        canEl.className   = 'font-semibold text-green-600';
+    }
+
+    const btn = document.getElementById('doCreateBtn');
+    btn.disabled = !canCreate;
+    btn.classList.toggle('opacity-40', !canCreate);
+
+    document.getElementById('createResultBox').classList.add('hidden');
+    document.getElementById('createModal').classList.add('open');
+}
+
+function closeCreateModal() {
+    document.getElementById('createModal').classList.remove('open');
+}
+
+async function doCreateTasks() {
+    const btn = document.getElementById('doCreateBtn');
+    btn.textContent = 'Creating…';
+    btn.disabled    = true;
 
     try {
-        const data = await callApi('createPlaylistRow', { category: activeCategory });
-        if (data.status === 'success') {
-            showToast(cState.label + ' playlist name generated: ' + data.playlistName);
-            await loadEverything();
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'createPlaylistTasks', userCode: USER_CODE })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('createResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            box.textContent = `✅ ${data.created} new playlist task(s) created! (${data.pairs} paired tasks created for other members too)`;
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            if (data.newTasks?.length) {
+                allTasks = [...allTasks, ...data.newTasks];
+                if (data.channelNames)   Object.assign(channelNameCache,   data.channelNames);
+                if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+                if (data.channelImages)  Object.assign(channelImageCache,  data.channelImages);
+                if (data.channelIds)     Object.assign(channelIdCache,     data.channelIds);
+                calcStats();
+                enforceTaskPriorityTabs();
+                applyFilter();
+            }
+            showToast(`${data.created} playlist task(s) created!`);
         } else {
-            showToast(data.message || 'Could not create playlist.', true);
+            box.textContent = data.message || 'Could not create tasks.';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.disabled = false; btn.textContent = originalText;
+    btn.textContent = 'Generate Tasks';
+    btn.disabled    = false;
 }
 
 /* ────────────────────────────────────────
-   VERIFY & SET FOR GROUP
+   REPORT ISSUE MODAL
 ──────────────────────────────────────── */
-async function doVerifyPlaylist() {
-    if (!myChannel) { showToast('No promotional channel found.', true); return; }
-    const cState = catMap[activeCategory];
+let selectedIssuePill = '';
 
-    const result = await Swal.fire({
-        icon: 'question',
-        title: 'Verify your YouTube playlist?',
-        html: 'Make sure you\'ve created a playlist on YouTube named exactly <strong class="mono">' + (cState.playlist ? cState.playlist.PlaylistName : '') + '</strong> with your selected videos before continuing.',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, verify now',
-        cancelButtonText: 'Not yet',
-        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
-    });
-    if (!result.isConfirmed) return;
+function openIssueModal(taskId) {
+    selectedIssuePill = '';
+    document.getElementById('issueTaskId').value     = taskId;
+    document.getElementById('issueCustomText').value = '';
+    document.getElementById('issuePillSelected').textContent = '';
+    document.getElementById('issueResultBox').classList.add('hidden');
+    document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
 
-    const btn = document.getElementById('verifyPlaylistBtn');
-    const originalText = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Verifying…';
+    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (t && t.Issue) {
+        document.getElementById('issueCustomText').value = t.Issue;
+    }
+
+    document.getElementById('issueModal').classList.add('open');
+}
+
+function closeIssueModal() {
+    document.getElementById('issueModal').classList.remove('open');
+}
+
+function toggleIssuePill(btn, label) {
+    const wasSelected = btn.classList.contains('selected');
+    document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
+
+    if (wasSelected) {
+        selectedIssuePill = '';
+        document.getElementById('issuePillSelected').textContent = '';
+    } else {
+        btn.classList.add('selected');
+        selectedIssuePill = label;
+        document.getElementById('issuePillSelected').textContent = `Selected: ${label}`;
+    }
+}
+
+async function doSubmitIssue() {
+    const taskId     = document.getElementById('issueTaskId').value;
+    const customText = (document.getElementById('issueCustomText').value || '').trim();
+  const issueTitle = selectedIssuePill || customText;
+const issueDescription = customText; // Always send custom text as description
+
+    if (!issueTitle) {
+        showToast('Please select an issue type or write a description.', true);
+        return;
+    }
+
+    const task = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (!task) { showToast('Task not found.', true); return; }
+
+    const targetUserCode = task.TargetUserCode;
+    const btn = document.getElementById('doIssueBtn');
+    btn.textContent = 'Submitting…';
+    btn.disabled    = true;
 
     try {
-        const data = await callApi('setPlaylistForGroup', { channelId: myChannel.ChannelId, category: activeCategory });
-        if (data.status === 'success') {
-            showToast(data.message || 'Playlist confirmed!');
-            await loadEverything();
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'reportPlaylistIssue',
+                taskId,
+                reporterCode:    USER_CODE,
+                targetUserCode,
+                issueTitle,
+                issueDescription,
+                issueType: selectedIssuePill || 'Custom'
+            })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('issueResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            box.textContent = `✅ Issue reported: "${issueTitle}"`;
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            task.Issue = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
+            showToast('Issue reported successfully.');
+            applyFilter();
+            setTimeout(closeIssueModal, 1600);
         } else {
-            showToast(data.message || 'Could not verify playlist.', true);
-            await loadEverything();
+            box.textContent = data.message || 'Could not submit issue.';
+            box.className   = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.disabled = false; btn.textContent = originalText;
+    btn.textContent = 'Submit Issue';
+    btn.disabled    = false;
 }
 
 /* ────────────────────────────────────────
-   DELETE & START OVER (this category only)
+   PREFERENCES
 ──────────────────────────────────────── */
-async function doDeletePlaylist() {
-    const cState = catMap[activeCategory];
-    const mode = categoryMode(activeCategory);
-    const result = await Swal.fire({
-        icon: 'warning',
-        title: 'Delete this playlist?',
-        text: mode === 'CONFIRMED'
-            ? 'This removes your confirmed ' + cState.label + ' playlist from the group. You will need to build and verify a new one.'
-            : 'This clears your video selection and playlist name for ' + cState.label + ' so you can start over.',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it',
-        cancelButtonText: 'Cancel',
-        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#dc2626'
-    });
-    if (!result.isConfirmed) return;
+async function loadPreferenceOptions() {
+    if (interestOptions.length && countryOptions.length) return;
+    try {
+        const res  = await fetch(`${SCRIPT_URL}?action=getPreferenceOptions`);
+        const data = await res.json();
+        if (data.success) {
+            interestOptions = data.interests || [];
+            countryOptions  = data.countries || [];
+        }
+    } catch (e) {}
+}
 
-    const btn = document.getElementById('deletePlaylistBtn');
-    const originalText = btn.textContent;
-    btn.disabled = true; btn.textContent = 'Deleting…';
+function openPreferencesModal() {
+    selectedInterests = [...myPreferences.interests];
+    selectedCountries = [...myPreferences.countries];
+
+    document.getElementById('prefsResultBox').classList.add('hidden');
+    renderPrefPills();
+    document.getElementById('prefsModal').classList.add('open');
+
+    if (!interestOptions.length || !countryOptions.length) {
+        loadPreferenceOptions().then(renderPrefPills);
+    }
+}
+
+function closePreferencesModal() {
+    document.getElementById('prefsModal').classList.remove('open');
+}
+
+function renderPrefPills() {
+    const interestBox = document.getElementById('prefInterestPills') || document.createElement('div');
+    const countryBox  = document.getElementById('prefCountryPills') || document.createElement('div');
+
+    if (!document.getElementById('prefInterestPills')) return;
+
+    interestBox.innerHTML = interestOptions.map(opt => {
+        const isSel = selectedInterests.includes(opt);
+        const atCap = !isSel && selectedInterests.length >= MAX_PREF_EACH;
+        const escaped = opt.replace(/'/g, "\\'");
+        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''}
+            onclick="togglePrefPill('interest','${escaped}')">${isSel ? '✓ ' : ''}${opt}</button>`;
+    }).join('');
+
+    countryBox.innerHTML = countryOptions.map(opt => {
+        const isSel = selectedCountries.includes(opt);
+        const atCap = !isSel && selectedCountries.length >= MAX_PREF_EACH;
+        const escaped = opt.replace(/'/g, "\\'");
+        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''}
+            onclick="togglePrefPill('country','${escaped}')">${isSel ? '✓ ' : ''}${opt}</button>`;
+    }).join('');
+}
+
+function togglePrefPill(kind, value) {
+    const arr = kind === 'interest' ? selectedInterests : selectedCountries;
+    const idx = arr.indexOf(value);
+    if (idx !== -1) {
+        arr.splice(idx, 1);
+    } else {
+        if (arr.length >= MAX_PREF_EACH) {
+            showToast(`You can pick up to ${MAX_PREF_EACH} ${kind === 'interest' ? 'interests' : 'countries'}.`, true);
+            return;
+        }
+        arr.push(value);
+    }
+    renderPrefPills();
+}
+
+async function doSavePreferences() {
+    const btn = document.getElementById('doSavePrefsBtn');
+    btn.textContent = 'Saving…';
+    btn.disabled    = true;
 
     try {
-        const data = await callApi('deletePlaylist', { category: activeCategory });
-        if (data.status === 'success') {
-            showToast(cState.label + ' playlist deleted. Start fresh whenever you\'re ready.');
-            await loadEverything();
+        const res  = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'savePreferences',
+                userCode: USER_CODE,
+                interests: selectedInterests,
+                countries: selectedCountries
+            })
+        });
+        const data = await res.json();
+        const box  = document.getElementById('prefsResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            myPreferences = { interests: data.interests || [], countries: data.countries || [] };
+            box.textContent = '✅ Preferences saved! New tasks will now prioritize matching members.';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            showToast('Match preferences saved!');
+            setTimeout(closePreferencesModal, 1400);
         } else {
-            showToast(data.message || 'Could not delete playlist.', true);
+            box.textContent = data.message || 'Could not save preferences.';
+            box.className   = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.disabled = false; btn.textContent = originalText;
+    btn.textContent = 'Save Preferences';
+    btn.disabled    = false;
 }
-
-/* ────────────────────────────────────────
-   COPY NAME
-──────────────────────────────────────── */
-function copyPlaylistName() {
-    const cState = catMap[activeCategory];
-    if (!cState || !cState.playlist || !cState.playlist.PlaylistName) return;
-    navigator.clipboard.writeText(cState.playlist.PlaylistName).then(function () {
-        showToast('Playlist name copied.');
-    }).catch(function () {
-        showToast('Could not copy — select and copy manually.', true);
-    });
-}
-
 </script>
 
 </body>
