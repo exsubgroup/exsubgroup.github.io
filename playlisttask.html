@@ -530,6 +530,32 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     gap: 8px;
     flex-wrap: wrap;
 }
+
+/* Preference Pills */
+.pref-pill {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid #211F1F;
+    background: #F5F4EB;
+    color: #211F1F;
+    cursor: pointer;
+    transition: 0.15s;
+    margin: 3px 4px 3px 0;
+}
+.pref-pill:hover { background: #DBD4B7; }
+.pref-pill.selected {
+    background: #211F1F;
+    color: #DBD4B7;
+}
+.pref-pill:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+.pref-pill:disabled:hover { background: #F5F4EB; }
 </style>
 </head>
 <body>
@@ -681,24 +707,23 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         </div>
 
         <!-- HOW IT WORKS BANNER -->
-   <!-- HOW IT WORKS BANNER -->
-<div class="card rounded-3xl p-5 mb-6">
-    <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Playlist Tasks Work</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="step-item">
-            <div class="step-num">1</div>
-            <div>Open the target <strong class="text-[#211F1F]">channel</strong>, go to their <strong class="text-[#211F1F]">Playlist</strong> section</div>
+        <div class="card rounded-3xl p-5 mb-6">
+            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Playlist Tasks Work</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div>Open the target <strong class="text-[#211F1F]">channel</strong>, go to their <strong class="text-[#211F1F]">Playlist</strong> section</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div>Watch at least <strong class="text-[#211F1F]">90% of each video</strong> in the playlist</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div><strong class="text-[#211F1F]">Complete the playlist</strong>, then click <em>Mark Watched</em></div>
+                </div>
+            </div>
         </div>
-        <div class="step-item">
-            <div class="step-num">2</div>
-            <div>Watch at least <strong class="text-[#211F1F]">90% of each video</strong> in the playlist</div>
-        </div>
-        <div class="step-item">
-            <div class="step-num">3</div>
-            <div><strong class="text-[#211F1F]">Complete the playlist</strong>, then click <em>Mark Watched</em></div>
-        </div>
-    </div>
-</div>
 
         <!-- FILTER TABS -->
         <div class="flex flex-wrap gap-2 mb-6">
@@ -821,21 +846,21 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
         <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
 
-<div class="flex flex-wrap gap-2 mb-4">
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist not found')">📭 Playlist not found</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist is private')">🔒 Playlist private</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Videos not available')">📹 Videos not available</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist empty')">📭 Playlist empty</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist duration mismatch')">⏱ Playlist duration mismatch</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Video count mismatch')">📊 Video count mismatch</button>
-    <button class="issue-pill" onclick="toggleIssuePill(this,'Watching not working')">⚡ Watch not working</button>
-</div>
-<label class="block text-xs text-muted mb-1.5">Additional details (optional): <span id="charCount" class="text-xs text-muted">0/160</span></label>
-<textarea id="issueCustomText" rows="3" maxlength="160" placeholder="Describe the issue in more detail…"
-    class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"
-    oninput="updateCharCount()"></textarea>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist not found')">📭 Playlist not found</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist is private')">🔒 Playlist private</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Videos not available')">📹 Videos not available</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist empty')">📭 Playlist empty</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Playlist duration mismatch')">⏱ Playlist duration mismatch</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Video count mismatch')">📊 Video count mismatch</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Watching not working')">⚡ Watch not working</button>
+        </div>
+        <label class="block text-xs text-muted mb-1.5">Additional details (optional): <span id="charCount" class="text-xs text-muted">0/160</span></label>
+        <textarea id="issueCustomText" rows="3" maxlength="160" placeholder="Describe the issue in more detail…"
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"
+            oninput="updateCharCount()"></textarea>
 
         <input type="hidden" id="issueTaskId">
         <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
@@ -859,6 +884,8 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         <p class="text-muted text-sm mb-5 leading-relaxed">
             Tell us what kind of playlists you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get 20 tasks even if your preferences are rare.
         </p>
+        <div id="prefInterestPills" class="mb-3"></div>
+        <div id="prefCountryPills" class="mb-4"></div>
         <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
         <div class="flex gap-3">
             <button onclick="closePreferencesModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
@@ -869,7 +896,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
 <!-- SCRIPTS -->
 <script>
-    function updateCharCount() {
+function updateCharCount() {
     const textarea = document.getElementById('issueCustomText');
     const count = textarea.value.length;
     document.getElementById('charCount').textContent = `${count}/160`;
@@ -879,6 +906,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         document.getElementById('charCount').style.color = '#6b7280';
     }
 }
+
 /* ────────────────────────────────────────
    AUTH
 ──────────────────────────────────────── */
@@ -897,10 +925,61 @@ if (!savedUsername || !savedPassword) {
 </script>
 
 <script>
+
+    // ── ADD: Function to check if target user should be shown based on task status ──
+
+// ── UPDATED: Function to check if target user should be shown based on task status ──
+function shouldShowTargetTask(targetUserCode, taskStatus) {
+    // Get target user status from cache
+    const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
+    
+    if (!status) {
+        // If not in cache, assume valid
+        return true;
+    }
+    
+    // ── RULE 1: Status = "Blocked" → HIDE in ALL tabs ──
+    if (status.status === 'Blocked' || status.hideInAllTabs) {
+        return false;
+    }
+    
+    // ── RULE 2: InWatchtimeWork = "No" → HIDE in ALL tabs ──
+    if (status.inWatchtimeWork !== 'Yes') {
+        return false;
+    }
+    
+    // ── RULE 3: PlaylistPromotionActive = "No" → HIDE except Pending and Watched ──
+    if (status.playlistPromotionActive === 'No') {
+        // ✅ SHOW if task is Pending or Watched (Ex800's case - Watched)
+        if (taskStatus !== 'Pending' && taskStatus !== 'Watched') {
+            return false;
+        }
+    }
+    
+    // ── RULE 4: ViolationFlag = "Yes" or "Suspended" → HIDE except Watched ──
+    if (status.violationFlag === 'Suspended' || status.violationFlag === 'Yes') {
+        // ✅ SHOW if task is Watched (Ex800's case - Watched)
+        if (taskStatus !== 'Watched') {
+            return false;
+        }
+    }
+    
+    // ── RULE 5: GroupRemovalRequest = "Yes" → HIDE except Pending and Watched ──
+    if (status.groupRemovalRequest === 'Yes') {
+        // ✅ SHOW if task is Pending or Watched (Ex800's case - Watched)
+        if (taskStatus !== 'Pending' && taskStatus !== 'Watched') {
+            return false;
+        }
+    }
+    
+    // All checks passed
+    return true;
+}
+
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwk-d7A7YUPZQpRupeZ6EjG-bq0ppezqgMMsvfZbAg3PArAF9KDeLMHUiz_1awIb136/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySgXggD7lEIemUenMJUzLiu4bumvyV_eKDf1HwJEztRzv0gu9eW5HEnVtxvRyhY6Pk/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -936,6 +1015,7 @@ const MAX_PREF_EACH    = 5;
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', init);
 
+// ── MODIFY: init() function ──
 async function init() {
     try {
         const res  = await fetch(`${SCRIPT_URL}?action=getPlaylistMemberAndTasks&userCode=${USER_CODE}`);
@@ -951,7 +1031,30 @@ async function init() {
 
         member    = data.member;
         perfStats = data.perfStats || null;
-        allTasks  = data.tasks || [];
+        
+        // ── Build target user status cache ──
+        window.targetUserStatusCache = {};
+        if (data.targetUsersStatus) {
+            Object.keys(data.targetUsersStatus).forEach(code => {
+                window.targetUserStatusCache[code] = data.targetUsersStatus[code];
+            });
+        }
+        
+        // ── Filter tasks using all rules ──
+        const allTasksRaw = data.tasks || [];
+        allTasks = allTasksRaw.filter(t => {
+            // Only process tasks where current user is the worker
+            if (t.UserCode !== USER_CODE) {
+                return false;
+            }
+            
+            const targetCode = t.TargetUserCode;
+            const taskStatus = t.Status;
+            
+            // Check if target user should be shown
+            return shouldShowTargetTask(targetCode, taskStatus);
+        });
+        
         myPlaylists = data.playlists || [];
 
         if (data.channelNames)   channelNameCache   = data.channelNames;
@@ -971,6 +1074,23 @@ async function init() {
         showToast('Could not connect to server.', true);
     }
 }
+// ── ADD: Function to refresh target user status ──
+async function refreshTargetUserStatus() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getTargetUsersStatus&userCode=${USER_CODE}`);
+        const data = await res.json();
+        if (data.success && data.targetUsersStatus) {
+            window.targetUserStatusCache = data.targetUsersStatus;
+            // Re-filter tasks
+            applyFilter();
+            return true;
+        }
+    } catch (e) {
+        console.error('Error refreshing target status:', e);
+    }
+    return false;
+}
+
 
 function hideLoader() {
     const loader = document.getElementById('pageLoader');
@@ -981,6 +1101,11 @@ function hideLoader() {
 /* ────────────────────────────────────────
    BLOCK CHECK - THREE SEPARATE CONDITIONS
 ──────────────────────────────────────── */
+// ── UPDATED: checkBlock() - Allows pending/cheating/rejected tasks even when promotion is disabled ──
+
+
+
+// ── UPDATED: checkBlock() - Fix for Create Tasks button ──
 function checkBlock() {
     if (!member) return;
     
@@ -988,7 +1113,7 @@ function checkBlock() {
     const promotionDisabled = member.PlaylistPromotionActive === 'No';
     const notEnrolled = member.InWatchtimeWork !== 'Yes';
 
-    const isBlocked = suspended || promotionDisabled || notEnrolled;
+    const isBlocked = suspended || notEnrolled;
 
     if (isBlocked) {
         document.getElementById('blockedBanner').classList.remove('hidden');
@@ -1002,12 +1127,6 @@ function checkBlock() {
         } else if (notEnrolled) {
             message = `📋 You are not enrolled in the Watchtime Group. Please join the Watchtime Group first to access playlist tasks.<br>`;
             message += `Go to <a href="groups.html" style="color:#7c3aed;text-decoration:underline;">Groups</a> to join.`;
-        } else if (promotionDisabled) {
-            message = `⚠️ Playlist group promotion is currently disabled for your account.<br>`;
-            message += `This usually happens when:<br>`;
-            message += `• You have <strong>5 or more pending tasks</strong> — complete them first<br>`;
-            message += `• You have <strong>cheating flags</strong> — resolve them first<br>`;
-            message += `• You submitted a <strong>group removal request</strong><br><br>`;
         }
 
         document.getElementById('blockedMsg').innerHTML = message;
@@ -1020,18 +1139,89 @@ function checkBlock() {
             btn.title = 'Your account is suspended.';
         } else if (notEnrolled) {
             btn.title = 'Join the Watchtime Group first.';
-        } else {
-            btn.title = 'Playlist promotion is disabled. Complete pending tasks first.';
         }
     } else {
         document.getElementById('blockedBanner').classList.add('hidden');
+        
+        // ── Show/hide promotion disabled banner ──
+        if (promotionDisabled) {
+            showPromotionDisabledBanner();
+        } else {
+            hidePromotionDisabledBanner();
+        }
+        
         const btn = document.getElementById('createBtn');
-        btn.disabled = false;
-        btn.classList.remove('opacity-40', 'cursor-not-allowed');
-        btn.title = '';
+        
+        // ── FIX: Only disable button if promotion is actually disabled ──
+        if (promotionDisabled) {
+            btn.disabled = true;
+            btn.classList.add('opacity-40', 'cursor-not-allowed');
+            btn.title = 'Complete your pending tasks first to re-enable promotion.';
+        } else {
+            // ── ENABLE button when promotion is active ──
+            btn.disabled = false;
+            btn.classList.remove('opacity-40', 'cursor-not-allowed');
+            btn.title = '';
+        }
     }
 }
 
+
+// ── NEW: Show promotion disabled banner ──
+function showPromotionDisabledBanner() {
+    const banner = document.getElementById('promotionDisabledBanner');
+    if (!banner) {
+        // Create banner if it doesn't exist
+        createPromotionDisabledBanner();
+    } else {
+        banner.classList.remove('hidden');
+    }
+}
+
+function hidePromotionDisabledBanner() {
+    const banner = document.getElementById('promotionDisabledBanner');
+    if (banner) {
+        banner.classList.add('hidden');
+    }
+}
+
+function createPromotionDisabledBanner() {
+    const banner = document.createElement('div');
+    banner.id = 'promotionDisabledBanner';
+    banner.className = 'mb-6 rounded-3xl p-5';
+    banner.style.cssText = 'background:#fffbeb;border:2px solid #f59e0b;box-shadow:4px 4px 0px 0px #f59e0b;';
+    banner.innerHTML = `
+        <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-2xl bg-orange-500/20 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+            <div class="flex-1">
+                <h3 class="font-semibold text-orange-600 mb-1">Playlist Promotion Disabled</h3>
+                <p class="text-orange-600/80 text-sm leading-relaxed">
+                    You have <strong>pending tasks</strong> that need to be completed. 
+                    Please complete your <strong>Pending, Cheating, and Rejected</strong> tasks to re-enable playlist promotion.
+                    <br><br>
+                    <strong>Note:</strong> You can still work on existing tasks, but cannot create new ones until promotion is re-enabled.
+                </p>
+                <div class="flex gap-3 flex-wrap mt-3">
+                    <button onclick="setTab('Pending', document.querySelector('.filter-tab[data-tab=Pending]'))"
+                        class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold" style="border-color:#f59e0b;color:#f59e0b;">
+                        View Pending Tasks
+                    </button>
+                    <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
+                        class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+                        View Cheating Tasks
+                    </button>
+                    <button onclick="setTab('Rejected', document.querySelector('.filter-tab[data-tab=Rejected]'))"
+                        class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold" style="border-color:#6b7280;color:#6b7280;">
+                        View Rejected Tasks
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const blockedBanner = document.getElementById('blockedBanner');
+    blockedBanner.parentNode.insertBefore(banner, blockedBanner.nextSibling);
+}
 /* ────────────────────────────────────────
    CHECK CHEATING
 ──────────────────────────────────────── */
@@ -1124,11 +1314,17 @@ function setTab(tab, btn) {
     applyFilter();
 }
 
+// ── MODIFY: applyFilter() to use filtered tasks ──
 function applyFilter() {
     enforceTaskPriorityTabs();
 
     let base = allTasks.filter(t => {
         if (t.UserCode !== USER_CODE) return false;
+
+        // Additional filter for target user status
+        if (!shouldShowTargetTask(t.TargetUserCode, t.Status)) {
+            return false;
+        }
 
         const tabMatch =
             activeTab === 'All'          ? true :
@@ -1151,7 +1347,6 @@ function applyFilter() {
     currentPage = 1;
     renderList();
 }
-
 /* ────────────────────────────────────────
    RENDER LIST
 ──────────────────────────────────────── */
@@ -1239,22 +1434,26 @@ function getCategoryBadge(category) {
     };
     return `<span class="category-badge ${colors[cat] || 'cat-a'}">📂 CAT-${cat}</span>`;
 }
+
 function getChannelKey(t) {
     return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
 }
 
+// ── UPDATED: formatMinutes() - Properly converts seconds to minutes ──
 function formatMinutes(seconds) {
     if (!seconds || seconds === 0) return '0 min';
+    
     // Convert seconds to minutes
-    const totalMinutes = Math.round(seconds / 60);
-    const hours = Math.floor(totalMinutes / 60);
-    const mins = totalMinutes % 60;
-    if (hours > 0 && mins > 0) {
-        return `${hours}h ${mins}min`;
-    } else if (hours > 0) {
-        return `${hours}h`;
+    const totalSeconds = parseFloat(seconds);
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const remainingSeconds = Math.round(totalSeconds % 60);
+    
+    if (totalMinutes > 0 && remainingSeconds > 0) {
+        return `${totalMinutes} min ${remainingSeconds} sec`;
+    } else if (totalMinutes > 0) {
+        return `${totalMinutes} min`;
     } else {
-        return `${mins}min`;
+        return `${remainingSeconds} sec`;
     }
 }
 
@@ -1302,7 +1501,6 @@ function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className   = isError ? 'error show' : 'show';
-    // Reset after 30 seconds (instead of 3.2s)
     setTimeout(() => { t.className = ''; }, 30000);
 }
 
@@ -1313,10 +1511,58 @@ function copyText(text, btn) {
         setTimeout(() => { btn.innerHTML = orig; }, 1500);
     }).catch(() => showToast('Could not copy.', true));
 }
+// ── NEW: Get Target User Status Badge ──
+function getTargetUserStatusBadge(targetUserCode) {
+    const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
+    
+    if (!status) {
+        return `<span class="text-xs bg-green-500/10 text-green-600 border border-green-500/30 px-2 py-0.5 rounded-lg">✅ Active</span>`;
+    }
+    
+    if (!status.isValid) {
+        let badgeText = '⚠️ ';
+        let badgeColor = 'bg-red-500/10 text-red-600 border-red-500/30';
+        
+        if (status.status === 'Blocked') {
+            badgeText += 'Blocked';
+        } else if (status.violationFlag === 'Suspended' || status.violationFlag === 'Yes') {
+            badgeText += 'Suspended';
+        } else if (status.inWatchtimeWork !== 'Yes') {
+            badgeText += 'Not Enrolled';
+        } else if (status.playlistPromotionActive === 'No') {
+            badgeText += 'Promotion Disabled';
+            badgeColor = 'bg-orange-500/10 text-orange-600 border-orange-500/30';
+        } else if (status.groupRemovalRequest === 'Yes') {
+            badgeText += 'Removal Requested';
+            badgeColor = 'bg-orange-500/10 text-orange-600 border-orange-500/30';
+        } else {
+            badgeText += 'Inactive';
+        }
+        
+        return `<span class="text-xs ${badgeColor} border px-2 py-0.5 rounded-lg">${badgeText}</span>`;
+    }
+    
+    return `<span class="text-xs bg-green-500/10 text-green-600 border border-green-500/30 px-2 py-0.5 rounded-lg">✅ Active</span>`;
+}
 
+// ── NEW: Get detailed target user status for tooltip ──
+function getTargetUserStatusDetails(targetUserCode) {
+    const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
+    
+    if (!status) {
+        return 'Target user status unknown';
+    }
+    
+    if (!status.isValid) {
+        return `⚠️ ${status.reasons.join(', ')}`;
+    }
+    
+    return `✅ Active - ${status.status}`;
+}
 /* ────────────────────────────────────────
    TASK CARD
 ──────────────────────────────────────── */
+// ── MODIFY: taskCard() to show target user status badge ──
 function taskCard(t) {
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
 
@@ -1330,12 +1576,11 @@ function taskCard(t) {
     const chanImage  = getChannelImage(t);
     const channelUrl = buildChannelUrl(t);
 
-  // ── 4. Get Playlist Info ──
-const playlistName = t.PlaylistName || 'Playlist';
-const playlistId = t.PlaylistId || '';
-const videoCount = t.VideoCount || 0;
-const requiredMinutes = t.RequiredMinutes || 0;
-const playlistCategory = t.PlaylistCategory || '';
+    const playlistName = t.PlaylistName || 'Playlist';
+    const playlistId = t.PlaylistId || '';
+    const videoCount = t.VideoCount || 0;
+    const requiredMinutes = t.RequiredMinutes || 0;
+    const playlistCategory = t.PlaylistCategory || '';
 
     const chanDisplay = chanName
         ? `<span class="font-semibold text-[#211F1F]">${chanName}</span>`
@@ -1361,6 +1606,9 @@ const playlistCategory = t.PlaylistCategory || '';
     const issueRow = t.Issue
         ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
+
+    // ── NEW: Target User Status Badge ──
+    const targetStatusBadge = getTargetUserStatusBadge(t.TargetUserCode);
 
     const cheatingBlock = isCheating ? `
         <div class="cheating-box mt-3">
@@ -1425,9 +1673,7 @@ const playlistCategory = t.PlaylistCategory || '';
     const cardClass = isCheating ? 'playlist-task-card cheating-card' : 
                      (isWatched ? 'playlist-task-card watched-card' : 'playlist-task-card');
 
-
-                     // ── PLAYLIST INFO DISPLAY ──
-const playlistDisplay = `
+    const playlistDisplay = `
     <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2 flex-wrap">
             <span class="playlist-name-display" style="font-size:16px;">
@@ -1440,6 +1686,7 @@ const playlistDisplay = `
                 </button>
             </span>
             ${playlistCategory ? getCategoryBadge(playlistCategory) : ''}
+            ${targetStatusBadge}
         </div>
         <div class="flex gap-4 text-xs text-muted">
             ${videoCount ? `<span>📹 ${videoCount} videos</span>` : ''}
@@ -1448,8 +1695,7 @@ const playlistDisplay = `
         </div>
     </div>`;
 
-// ── CHANNEL INFO DISPLAY ──
-const channelDisplay = `
+    const channelDisplay = `
     <div class="flex items-center gap-3">
         ${chanImage
             ? `<img src="${chanImage}" alt="" class="w-14 h-14 rounded-xl object-cover bg-white border-2 border-[#211F1F] flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-14 h-14 rounded-xl bg-white flex items-center justify-center text-2xl flex-shrink-0 border-2 border-[#211F1F]&quot;>?</div>'">`
@@ -1474,16 +1720,16 @@ const channelDisplay = `
         <div class="flex flex-col xl:flex-row gap-5">
             <div class="flex-1 min-w-0">
                <div class="playlist-info-box mb-3">
-    <p class="text-xs text-purple-700 font-semibold mb-2">${isCheating ? '⚠️ Issue with this playlist:' : '🎵 Target Playlist:'}</p>
-    
-    <!-- CHANNEL SECTION -->
-    <div class="mb-3 pb-3 border-b border-[#211F1F]/15">
-        ${channelDisplay}
-    </div>
-    
-    <!-- PLAYLIST SECTION -->
-    ${playlistDisplay}
-</div>
+                    <p class="text-xs text-purple-700 font-semibold mb-2">${isCheating ? '⚠️ Issue with this playlist:' : '🎵 Target Playlist:'}</p>
+                    
+                    <!-- CHANNEL SECTION -->
+                    <div class="mb-3 pb-3 border-b border-[#211F1F]/15">
+                        ${channelDisplay}
+                    </div>
+                    
+                    <!-- PLAYLIST SECTION -->
+                    ${playlistDisplay}
+                </div>
 
                 ${cheatingBlock}
                 ${issueSection}
@@ -1504,8 +1750,9 @@ const channelDisplay = `
 }
 
 /* ────────────────────────────────────────
-   DETAIL MODAL - Videos + Watch Progress
+   DETAIL MODAL - Videos + Watch Progress (UPDATED for New Record Sheet)
 ──────────────────────────────────────── */
+
 async function openDetailModal(taskId) {
     detailTaskId = taskId;
     const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
@@ -1526,7 +1773,7 @@ async function openDetailModal(taskId) {
     switchDetailTab('videos', document.querySelector('.detail-tab[data-tab="videos"]'));
     document.getElementById('detailModal').classList.add('open');
 
-    // ── 1. FETCH VIDEOS ──
+    // ── 1. FETCH VIDEOS WITH WATCH STATUS ──
     let videoData = { videos: [], totalMinutes: 0, videoCount: 0 };
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getPlaylistVideos&userCode=${t.TargetUserCode}&playlistCategory=${t.PlaylistCategory || ''}`);
@@ -1539,150 +1786,232 @@ async function openDetailModal(taskId) {
     }
 
     // ── 2. FETCH WATCH PROGRESS ──
-  // ── 2. FETCH WATCH PROGRESS ──
-let progressData = { progress: [] };
-try {
-    console.log("🔍 Fetching watch progress...");
-    console.log("  TaskID:", taskId);
-    console.log("  UserCode:", USER_CODE);
-    
-    const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${taskId}&userCode=${USER_CODE}`);
-    const data = await res.json();
-    console.log("📥 Raw response:", data);
-    
-    if (data.success) {
-        progressData = data;
-        console.log("✅ Progress entries found:", progressData.progress.length);
-        if (progressData.progress.length > 0) {
-            console.log("📋 First entry:", JSON.stringify(progressData.progress[0], null, 2));
-        } else {
-            console.warn("⚠️ No progress entries found for this task");
+    let progressData = { records: [], allVideos: [], totalVideos: 0, expectedVideoCount: 0 };
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getHighestPercentageRecords&taskId=${taskId}&userCode=${USER_CODE}`);
+        const data = await res.json();
+        if (data.success) {
+            progressData = data;
+            console.log('✅ Progress records:', progressData.records.length);
+            console.log('✅ All videos with status:', progressData.allVideos);
         }
-    } else {
-        console.error("❌ Error from server:", data.message);
+    } catch (e) {
+        console.error('Error fetching progress:', e);
     }
-} catch (e) {
-    console.error('❌ Error fetching progress:', e);
-}
 
-    // ── 3. BUILD VIDEOS PANEL ──
+    // ── 3. BUILD VIDEOS PANEL WITH WATCH STATUS ──
     const videosPanel = document.getElementById('detailPanelVideos');
     const progressPanel = document.getElementById('detailPanelProgress');
 
-    // Format total minutes to hours
-// Instead of using videoData.totalMinutes directly, format it
-const totalSeconds = videoData.totalMinutes; // This is actually seconds from sheet
-const totalMinutes = Math.round(totalSeconds / 60);
-const totalHours = Math.floor(totalMinutes / 60);
-const totalMins = totalMinutes % 60;
-let timeDisplay = '';
-if (totalHours > 0 && totalMins > 0) {
-    timeDisplay = `${totalHours}h ${totalMins}min`;
-} else if (totalHours > 0) {
-    timeDisplay = `${totalHours}h`;
-} else {
-    timeDisplay = `${totalMinutes}min`;
-}
+    const totalSeconds = videoData.totalMinutes;
+    const totalMinutes = Math.round(totalSeconds / 60);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const totalMins = totalMinutes % 60;
+    let timeDisplay = '';
+    if (totalHours > 0 && totalMins > 0) {
+        timeDisplay = `${totalHours}h ${totalMins}min`;
+    } else if (totalHours > 0) {
+        timeDisplay = `${totalHours}h`;
+    } else {
+        timeDisplay = `${totalMinutes}min`;
+    }
 
-    // Videos Panel
+    // ── VIDEOS PANEL WITH WATCH STATUS ──
+    const WATCH_THRESHOLD = 85;
+    const allVideos = progressData.allVideos || videoData.videos || [];
+    const watchedCount = allVideos.filter(v => v.isWatched === true && v.Percentage >= WATCH_THRESHOLD).length;
+    const totalVideosInPlaylist = allVideos.length || videoData.videoCount || 0;
+
     let videosHtml = `
         <div class="text-xs text-muted mb-3">
             <strong>Playlist:</strong> ${t.PlaylistName || 'Playlist'} 
             ${t.PlaylistCategory ? getCategoryBadge(t.PlaylistCategory) : ''}
-            <span class="ml-2">📹 ${videoData.videoCount || 0} videos</span>
+            <span class="ml-2">📹 ${totalVideosInPlaylist} videos total</span>
             <span class="ml-2">⏱ ${timeDisplay} total</span>
+            <div class="mt-2 flex gap-3 flex-wrap">
+                <span class="text-green-600">✅ Watched: ${watchedCount}</span>
+                <span class="text-red-600">❌ Not Watched: ${totalVideosInPlaylist - watchedCount}</span>
+                <span class="text-blue-600">📊 ${totalVideosInPlaylist > 0 ? Math.round((watchedCount / totalVideosInPlaylist) * 100) : 0}% Complete</span>
+            </div>
         </div>
-        <div style="max-height:400px;overflow-y:auto;">`;
+        <div style="max-height:400px;overflow-y:auto;border:1px solid #211F1F;border-radius:12px;padding:8px;">`;
 
-    if (!videoData.videos || videoData.videos.length === 0) {
-        videosHtml += `<p class="text-muted text-sm">No videos found in this playlist.</p>`;
+    if (!allVideos || allVideos.length === 0) {
+        videosHtml += `<p class="text-muted text-sm text-center py-4">No videos found in this playlist.</p>`;
     } else {
-        videoData.videos.forEach((v, idx) => {
-            const duration = v.VideoMinutes ? formatMinutes(v.VideoMinutes) : '—';
-            // Truncate long titles
+        allVideos.forEach((v, idx) => {
+            // ── FIX: Convert seconds to minutes using formatMinutes() ──
+            const duration = v.VideoMinutes ? formatMinutes(v.VideoMinutes) : (v.VideoDuration ? formatMinutes(v.VideoDuration) : '—');
+            const percentage = v.Percentage || 0;
+            const isWatched = v.isWatched === true && percentage >= WATCH_THRESHOLD;
+            const isPartial = v.isWatched === true && percentage > 0 && percentage < WATCH_THRESHOLD;
+            
+            // Status badge
+            let statusBadge = '';
+            let statusColor = '';
+            if (isWatched) {
+                statusBadge = '✅ Watched';
+                statusColor = '#16a34a';
+            } else if (isPartial) {
+                statusBadge = `⏳ ${percentage}%`;
+                statusColor = '#f59e0b';
+            } else if (v.hasRecord === true && percentage < WATCH_THRESHOLD) {
+                statusBadge = `⏳ ${percentage}%`;
+                statusColor = '#f59e0b';
+            } else {
+                statusBadge = '❌ Not Watched';
+                statusColor = '#ef4444';
+            }
+            
             const displayTitle = v.VideoTitle.length > 45 ? v.VideoTitle.substring(0, 42) + '...' : v.VideoTitle;
+            const rowBg = isWatched ? '#f0fdf4' : (v.hasRecord ? '#fffbeb' : '#fef2f2');
+            const borderColor = isWatched ? '#16a34a' : (v.hasRecord ? '#f59e0b' : '#ef4444');
+            
             videosHtml += `
-                <div class="video-list-item">
-                    <span class="num">#${idx + 1}</span>
-                    <span class="title" title="${v.VideoTitle}">${displayTitle}</span>
-                    <span class="duration">${duration}</span>
-                    ${v.VideoId ? `<a href="https://www.youtube.com/watch?v=${v.VideoId}" target="_blank" class="text-xs text-purple-700 hover:underline">▶</a>` : ''}
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;border:2px solid ${borderColor};margin-bottom:6px;background:${rowBg};">
+                    <span style="font-weight:800;font-size:11px;color:var(--muted);min-width:28px;">#${idx + 1}</span>
+                    <span style="flex:1;font-size:12px;font-weight:600;color:#211F1F;" title="${v.VideoTitle}">${displayTitle}</span>
+                    <span style="font-size:10px;color:var(--muted);font-weight:600;min-width:50px;">${duration}</span>
+                    <span style="font-size:10px;font-weight:800;color:${statusColor};min-width:90px;text-align:right;">${statusBadge}</span>
+                    ${v.VideoId ? `<a href="https://www.youtube.com/watch?v=${v.VideoId}" target="_blank" style="font-size:12px;color:#7c3aed;text-decoration:none;font-weight:700;padding:4px 8px;border:1px solid #7c3aed;border-radius:6px;">▶</a>` : ''}
                 </div>`;
         });
     }
-
     videosHtml += `</div>`;
     videosPanel.innerHTML = videosHtml;
 
     // ── 4. BUILD PROGRESS PANEL ──
-    // ── 4. BUILD PROGRESS PANEL ──
-    // ── 4. BUILD PROGRESS PANEL ──
-    // ── 4. BUILD PROGRESS PANEL ──
-let progressHtml = `
-    <div class="text-xs text-muted mb-3">
-        <strong>Watch Progress</strong> — Track which videos you've watched (Need <strong>90%</strong> to complete)
-    </div>
-    <div style="max-height:400px;overflow-y:auto;">`;
+    const records = progressData.records || [];
 
-if (!progressData.progress || progressData.progress.length === 0) {
-    progressHtml += `<p class="text-muted text-sm">No progress data available. Start watching to track your progress.</p>`;
-} else {
-    let totalWatched = 0;
-    let totalPercentage = 0;
-    const totalVideos = progressData.progress.length;
-    const WATCH_THRESHOLD = 90;
+    let progressHtml = `
+        <div class="text-xs text-muted mb-3">
+            <strong>Watch Progress</strong> — Highest percentage records (Need <strong>${WATCH_THRESHOLD}%</strong> to complete)
+            ${totalVideosInPlaylist > 0 ? `<span class="ml-2">📹 ${totalVideosInPlaylist} total videos in this playlist</span>` : ''}
+            <span class="ml-2 text-green-600">✓ ${records.length} videos have watch records</span>
+            <span class="ml-2 text-red-600">✗ ${totalVideosInPlaylist - records.length} videos missing</span>
+        </div>
+        <div style="max-height:500px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;">`;
 
-    // Sort progress by video order (or by timestamp if available)
-    progressData.progress.forEach((p, idx) => {
-        // Use the percentage from the sheet directly
-        const percentage = p.Percentage || 0;
-        const isWatched = percentage >= WATCH_THRESHOLD;
-        const isPartial = percentage > 0 && percentage < WATCH_THRESHOLD;
-        const statusClass = isWatched ? 'ok' : (isPartial ? 'partial' : 'fail');
-        const label = isWatched ? '✅ Watched' : (isPartial ? '⏳ Partial' : '❌ Not Started');
+    if (records.length === 0) {
+        progressHtml += `<div class="text-muted text-sm text-center py-8">No progress data available. Start watching to track your progress.</div>`;
+    } else {
+        records.forEach((p, idx) => {
+            const percentage = p.Percentage || 0;
+            const isWatched = percentage >= WATCH_THRESHOLD;
+            const isPartial = percentage > 0 && percentage < WATCH_THRESHOLD;
+            const statusIcon = isWatched ? '✅' : (isPartial ? '⏳' : '❌');
+            const statusLabel = isWatched ? 'Watched' : (isPartial ? 'Partial' : 'Not Started');
+            const statusColor = isWatched ? '#16a34a' : (isPartial ? '#f59e0b' : '#ef4444');
+            
+            // ── FIX: Convert seconds to minutes using formatMinutes() ──
+            const durationDisplay = p.VideoDuration ? formatMinutes(p.VideoDuration) : '0 sec';
+            const playDisplay = p.PlaySeconds ? formatMinutes(p.PlaySeconds) : '0 sec';
+            const fullTitle = p.VideoTitle || `Video ${idx + 1}`;
+            
+            let cardBg = '#ffffff';
+            let borderColor = '#211F1F';
+            if (isWatched) {
+                cardBg = '#f0fdf4';
+                borderColor = '#16a34a';
+            } else if (isPartial) {
+                cardBg = '#fffbeb';
+                borderColor = '#f59e0b';
+            } else {
+                cardBg = '#ffffff';
+                borderColor = '#ef4444';
+            }
+            
+            const isRewatchNeeded = !isWatched;
 
-        if (percentage >= WATCH_THRESHOLD) totalWatched++;
-        totalPercentage += percentage;
+            progressHtml += `
+                <div style="display:flex;flex-direction:column;gap:8px;padding:14px 18px;border-radius:14px;border:2px solid ${borderColor};background:${cardBg};box-shadow:3px 3px 0px 0px #211F1F;transition:0.2s ease;width:100%;height:auto;"
+                     onmouseover="this.style.transform='translate(-1px, -1px)';this.style.boxShadow='5px 5px 0px 0px #211F1F';"
+                     onmouseout="this.style.transform='none';this.style.boxShadow='3px 3px 0px 0px #211F1F';">
+                    
+                    <!-- Header Row -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="font-weight:800;font-size:14px;color:var(--muted);min-width:32px;">#${idx + 1}</span>
+                            <span style="font-size:11px;font-weight:700;display:flex;align-items:center;gap:4px;color:${statusColor};background:${statusColor}15;padding:2px 10px;border-radius:999px;border:1px solid ${statusColor}30;">
+                                ${statusIcon} ${statusLabel}
+                            </span>
+                        </div>
+                        <span style="font-size:13px;font-weight:800;color:${statusColor};">
+                            ${percentage}%
+                        </span>
+                    </div>
+                    
+                    <!-- Video Title -->
+                    <div style="font-size:14px;font-weight:600;color:#211F1F;line-height:1.4;padding:4px 0;word-break:break-word;">
+                        ${fullTitle}
+                    </div>
+                    
+                    <!-- Details Row -->
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);padding:8px 12px;background:#f8f8f0;border-radius:8px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-weight:600;min-width:110px;">⏱ Video Duration:</span>
+                            <strong style="color:#211F1F;">${durationDisplay}</strong>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-weight:600;min-width:110px;">▶ Played:</span>
+                            <strong style="color:#211F1F;">${playDisplay}</strong>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-weight:600;min-width:110px;">📹 Watched:</span>
+                            <strong style="color:${isWatched ? '#16a34a' : (isPartial ? '#f59e0b' : '#ef4444')};">${percentage}%</strong>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div style="width:100%;height:6px;background:#e5e7eb;border-radius:999px;overflow:hidden;border:1px solid #211F1F;">
+                        <div style="width:${Math.min(100, percentage)}%;height:100%;border-radius:999px;background:${isWatched ? '#16a34a' : (isPartial ? '#f59e0b' : '#ef4444')};transition:width 0.4s ease;"></div>
+                    </div>
+                    
+                    <!-- Check Status -->
+                    ${p.Checked && p.Checked !== 'Pending' ? `
+                        <div style="font-size:10px;color:var(--muted);text-align:right;margin-top:2px;">
+                            ✓ Checked: ${p.Checked} ${p.CheckRemarks ? '— ' + p.CheckRemarks : ''}
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Action Button -->
+                    <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+                        ${isRewatchNeeded ? `
+                            <button onclick="openVideoForRewatch('${p.VideoId}')" 
+                                    style="background:#f59e0b;color:#ffffff;border:2px solid #211F1F;border-radius:10px;padding:6px 16px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:2px 2px 0px 0px #211F1F;transition:0.15s;display:flex;align-items:center;gap:6px;"
+                                    onmouseover="this.style.transform='translate(1px, 1px)';this.style.boxShadow='1px 1px 0px 0px #211F1F';"
+                                    onmouseout="this.style.transform='none';this.style.boxShadow='2px 2px 0px 0px #211F1F';">
+                                🔄 Rewatch Video
+                            </button>
+                        ` : `
+                            <span style="font-size:11px;color:#16a34a;font-weight:700;display:flex;align-items:center;gap:4px;background:#dcfce7;padding:4px 12px;border-radius:999px;border:1px solid #16a34a30;">
+                                ✓ Complete
+                            </span>
+                        `}
+                    </div>
+                </div>`;
+        });
 
-        // Format duration from seconds to minutes:seconds
-        const durationSecs = p.VideoDuration || 0;
-        const durMins = Math.floor(durationSecs / 60);
-        const durSecs = Math.round(durationSecs % 60);
-        let durationDisplay = '';
-        if (durMins > 0) {
-            durationDisplay = `${durMins}:${durSecs.toString().padStart(2, '0')}`;
-        } else {
-            durationDisplay = `${durSecs}s`;
-        }
-        
-        const displayTitle = p.VideoTitle && p.VideoTitle.length > 35 ? p.VideoTitle.substring(0, 32) + '...' : (p.VideoTitle || `Video ${idx + 1}`);
+        // ── Overall Progress Summary ──
+        const watchedCountSummary = records.filter(p => p.Percentage >= WATCH_THRESHOLD).length;
+        const overallPercent = totalVideosInPlaylist > 0 ? Math.round((watchedCountSummary / totalVideosInPlaylist) * 100) : 0;
+        const overallStatus = overallPercent >= 100 ? '✅ Complete' : (overallPercent > 0 ? '⏳ In Progress' : '❌ Not Started');
+        const isReady = overallPercent >= 100 && watchedCountSummary === totalVideosInPlaylist;
 
         progressHtml += `
-            <div class="video-list-item">
-                <span class="num">#${idx + 1}</span>
-                <span class="title" title="${p.VideoTitle || ''}">${displayTitle}</span>
-                <span class="duration">${durationDisplay}</span>
-                <span class="progress ${statusClass}">${percentage}%</span>
-                <span style="font-size:9px;min-width:60px;text-align:right;">${label}</span>
-                <div class="progress-bar-mini" style="width:60px;">
-                    <div class="fill ${statusClass}" style="width:${Math.min(100, percentage)}%;"></div>
-                </div>
+            <div style="margin-top:8px;padding:16px 20px;border-top:2px solid #211F1F;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;background:#DBD4B7;border-radius:12px;border:2px solid #211F1F;box-shadow:3px 3px 0px 0px #211F1F;gap:10px;">
+                <span style="display:flex;align-items:center;gap:8px;">📊 Overall Progress</span>
+                <span style="font-size:13px;">${watchedCountSummary}/${totalVideosInPlaylist} videos watched — <strong>${overallPercent}%</strong></span>
+                <span style="font-size:13px;">${overallStatus}</span>
+                ${isReady ? 
+                    `<span style="background:#16a34a;color:#ffffff;padding:4px 16px;border-radius:999px;font-size:12px;border:2px solid #211F1F;box-shadow:2px 2px 0px 0px #211F1F;">✅ Ready to Mark Watched</span>` : 
+                    `<span style="background:#f59e0b;color:#ffffff;padding:4px 16px;border-radius:999px;font-size:12px;border:2px solid #211F1F;box-shadow:2px 2px 0px 0px #211F1F;">⏳ Watch ${totalVideosInPlaylist - watchedCountSummary} more video(s)</span>`
+                }
             </div>`;
-    });
+    }
 
-    const overallPercent = totalVideos > 0 ? Math.round(totalPercentage / totalVideos) : 0;
-    const overallStatus = overallPercent >= 90 ? '✅ Complete' : (overallPercent > 0 ? '⏳ In Progress' : '❌ Not Started');
-
-    progressHtml += `
-        <div style="margin-top:12px;padding:12px;border-top:2px solid #211F1F;display:flex;justify-content:space-between;font-weight:700;font-size:13px;">
-            <span>Overall Progress</span>
-            <span>${overallPercent}% — ${overallStatus} (Need 90%)</span>
-        </div>`;
-}
-
-progressHtml += `</div>`;
-progressPanel.innerHTML = progressHtml;
-
+    progressHtml += `</div>`;
+    progressPanel.innerHTML = progressHtml;
 }
 
 function closeDetailModal() {
@@ -1697,8 +2026,16 @@ function switchDetailTab(tab, btn) {
     document.getElementById(`detailPanel${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
 }
 
+function openVideoForRewatch(videoId) {
+    if (!videoId) {
+        showToast('Video ID not found.', true);
+        return;
+    }
+    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+}
+
 /* ────────────────────────────────────────
-   MARK WATCHED
+   MARK WATCHED - UPDATED for New Record Sheet
 ──────────────────────────────────────── */
 async function doMarkWatched(taskId, btnEl) {
     if (hasCheating) {
@@ -1740,7 +2077,7 @@ async function doMarkWatched(taskId, btnEl) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Proof Not Found',
-                text: 'Please watch the playlist using the Exsub Extension first. Your task is not complete yet.',
+                text: data.message || 'Please watch the playlist using the Exsub Extension first. Your task is not complete yet.',
                 background: '#F5F4EB',
                 color: '#211F1F',
                 confirmButtonColor: '#7c3aed',
@@ -1910,8 +2247,8 @@ function toggleIssuePill(btn, label) {
 async function doSubmitIssue() {
     const taskId     = document.getElementById('issueTaskId').value;
     const customText = (document.getElementById('issueCustomText').value || '').trim();
-  const issueTitle = selectedIssuePill || customText;
-const issueDescription = customText; // Always send custom text as description
+    const issueTitle = selectedIssuePill || customText;
+    const issueDescription = customText;
 
     if (!issueTitle) {
         showToast('Please select an issue type or write a description.', true);
@@ -1996,10 +2333,10 @@ function closePreferencesModal() {
 }
 
 function renderPrefPills() {
-    const interestBox = document.getElementById('prefInterestPills') || document.createElement('div');
-    const countryBox  = document.getElementById('prefCountryPills') || document.createElement('div');
+    const interestBox = document.getElementById('prefInterestPills');
+    const countryBox = document.getElementById('prefCountryPills');
 
-    if (!document.getElementById('prefInterestPills')) return;
+    if (!interestBox || !countryBox) return;
 
     interestBox.innerHTML = interestOptions.map(opt => {
         const isSel = selectedInterests.includes(opt);
@@ -2069,6 +2406,141 @@ async function doSavePreferences() {
 
     btn.textContent = 'Save Preferences';
     btn.disabled    = false;
+}
+
+/* ────────────────────────────────────────
+   FUNCTION: Record Watching Proof
+   Called by the extension when a video is watched
+──────────────────────────────────────── */
+
+async function recordWatchingProof(proofData) {
+    /**
+     * proofData should contain:
+     *   userCode, channelName, videoTitle, videoDuration, videoId,
+     *   playlistId, playSeconds, stopSeconds, proofScreenshot,
+     *   taskType, taskId, targetUserCode
+     */
+    
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'syncProofToRecordSheet',
+                proofData: proofData
+            })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            console.log(`✅ Recorded: ${data.videoId} - ${data.percentage}% (${data.action})`);
+            return data;
+        } else {
+            console.error('❌ Error recording proof:', data.message);
+            return null;
+        }
+    } catch (e) {
+        console.error('❌ Connection error:', e);
+        return null;
+    }
+}
+
+/* ────────────────────────────────────────
+   FUNCTION: Migrate Existing Proofs
+   Run this once to migrate old data to the new sheet
+──────────────────────────────────────── */
+
+async function migrateProofsToRecordSheet() {
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'migrateProofsToRecordSheet'
+            })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast(`✅ Migration complete: ${data.migrated} records migrated, ${data.skipped} skipped`);
+            return data;
+        } else {
+            showToast('❌ Migration failed: ' + data.message, true);
+            return null;
+        }
+    } catch (e) {
+        showToast('❌ Connection error during migration', true);
+        return null;
+    }
+}
+
+/* ────────────────────────────────────────
+   FUNCTION: Get Playlist Watch Summary
+──────────────────────────────────────── */
+
+async function getPlaylistWatchSummary(taskId) {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchSummary&taskId=${taskId}&userCode=${USER_CODE}`);
+        const data = await res.json();
+        if (data.success) {
+            return data;
+        } else {
+            showToast('Error getting summary: ' + data.message, true);
+            return null;
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+        return null;
+    }
+}
+
+/* ────────────────────────────────────────
+   FUNCTION: Validate Watch Records
+──────────────────────────────────────── */
+
+async function validateWatchRecords(taskId) {
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'validateWatchRecords',
+                taskId: taskId,
+                userCode: USER_CODE
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(`✅ Validated ${data.total} records`);
+            return data;
+        } else {
+            showToast('Error: ' + data.message, true);
+            return null;
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+        return null;
+    }
+}
+
+/* ────────────────────────────────────────
+   FUNCTION: Get User Watch Records
+──────────────────────────────────────── */
+
+async function getUserWatchRecords() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getUserWatchRecords&userCode=${USER_CODE}`);
+        const data = await res.json();
+        if (data.success) {
+            return data;
+        } else {
+            showToast('Error: ' + data.message, true);
+            return null;
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+        return null;
+    }
 }
 </script>
 
