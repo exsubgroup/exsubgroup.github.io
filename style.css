@@ -88,42 +88,6 @@
     transform:translateX(5px);
 }
 
-#mobileBottomNav{
-  display:none;
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:999;
-  background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    color: white;
-  border-radius:999px;
-  padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.08);
-  backdrop-filter:blur(16px);
-}
-#mobileBottomNav .bn-inner{ display:flex; align-items:center; gap:6px; }
-#mobileBottomNav a{
-  position:relative;
-  width:52px; height:52px;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:50%;
-  color:#ffffff;
-  transition:0.25s ease;
-  text-decoration:none;
-}
-#mobileBottomNav a svg{
-  width:22px; height:22px;
-  stroke:currentColor; fill:none;
-  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
-  transition:0.25s ease;
-}
-#mobileBottomNav a:active{ transform:scale(0.92); }
-#mobileBottomNav a.active{ background:#fff; color:#0f1118; }
-#mobileBottomNav a.active svg{ stroke:#0f1118; }
-
 @media (max-width: 767px){
   #mobileBottomNav{ display:block; }
   body{ padding-bottom: 90px; } /* stops content hiding behind the bar */
@@ -139,7 +103,62 @@
 
 :root{ --bg:#F5F4EB; --card:#12141c; --border:#232938; --purple:#7c3aed; }
 *{ font-family:'Inter',sans-serif; box-sizing:border-box; }
-body{ background:#F5F4EB; color:#262123; overflow-x:hidden; }
+/* body{ background:#F5F4EB; color:#262123; overflow-x:hidden; } */
+
+/* ── DYNAMIC NEO-BRUTALIST GRADIENT ── */
+:root {
+  --cream: #F5F4EB;
+  --mint: #ACD1C0;
+  --sand: #DBD4B7;
+  --ink: #211F1F;
+}
+
+body {
+  background: var(--cream);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Floating blobs - neo-brutalist style */
+.blob-mint {
+  position: fixed;
+  width: 340px;
+  height: 340px;
+  background: var(--mint);
+  border-radius: 50%;
+  left: -80px;
+  top: 200px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.blob-sand {
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  background: var(--sand);
+  border-radius: 40% 60% 55% 45%;
+  right: -180px;
+  bottom: -160px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.blob-mint-small {
+  position: fixed;
+  width: 180px;
+  height: 180px;
+  background: var(--mint);
+  border-radius: 50%;
+  right: 100px;
+  top: 100px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+}
 
 body::before{
   content:''; position:fixed; top:-50%; left:-50%;
@@ -2363,4 +2382,305 @@ btnssssss */
 .promochannel-type-opt:hover {
   box-shadow: 3px 3px 0px 0px #211F1F !important;
   transform: translate(-1px, -1px) !important;
+}
+
+
+/* Progress Card View Styles */
+.video-list-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #211F1F;
+    background: #ffffff;
+    transition: 0.2s ease;
+    box-shadow: 2px 2px 0px 0px #211F1F;
+}
+
+.video-list-item:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px 0px #211F1F;
+}
+
+.video-list-item .num {
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 28px;
+}
+
+.video-list-item .title {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: #211F1F;
+    min-width: 120px;
+}
+
+.video-list-item .duration {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.video-list-item .progress {
+    font-size: 13px;
+    font-weight: 800;
+    min-width: 50px;
+    text-align: right;
+}
+
+.video-list-item .progress.ok { color: #16a34a; }
+.video-list-item .progress.partial { color: #f59e0b; }
+.video-list-item .progress.fail { color: #ef4444; }
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .video-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .video-list-item .title {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    .video-list-item .progress-bar-mini {
+        width: 100% !important;
+    }
+}
+
+
+/* Target User Status Badge */
+.target-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    border: 1px solid #211F1F;
+    cursor: help;
+}
+.target-status-badge.active {
+    background: #dcfce7;
+    color: #16a34a;
+    border-color: #16a34a;
+}
+.target-status-badge.blocked {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #dc2626;
+}
+.target-status-badge.suspended {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #dc2626;
+}
+.target-status-badge.not-enrolled {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #dc2626;
+}
+.target-status-badge.promotion-disabled {
+    background: #fffbeb;
+    color: #f59e0b;
+    border-color: #f59e0b;
+}
+.target-status-badge.removal-requested {
+    background: #fffbeb;
+    color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+/* ── ACCOUNT COMPLETION BANNER ── */
+.account-banner {
+  background: #F5F4EB;
+  border: 2px solid #211F1F;
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  text-align: center;
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+.account-banner .banner-icon {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+.account-banner .banner-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #211F1F;
+  margin-bottom: 0.5rem;
+}
+
+.account-banner .banner-desc {
+  font-size: 0.95rem;
+  color: #4b5563;
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+.account-banner .banner-btn {
+  background: #211F1F;
+  color: white;
+  border: 2px solid #211F1F;
+  border-radius: 20px;
+  padding: 0.75rem 2.5rem;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  transition: 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.account-banner .banner-btn:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px 0px #211F1F;
+}
+
+.account-banner .banner-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #211F1F;
+}
+
+/* ── SWEETALERT NEO-BRUTALIST OVERRIDES ── */
+.swal-setup-popup {
+  border-radius: 24px !important;
+  border: 2px solid #211F1F !important;
+  box-shadow: 6px 6px 0px 0px #211F1F !important;
+  background: #F5F4EB !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+.swal-setup-popup .swal2-title {
+  color: #211F1F !important;
+  font-weight: 900 !important;
+  font-size: 1.3rem !important;
+}
+
+.swal-setup-popup .swal2-html-container {
+  color: #211F1F !important;
+  font-weight: 500 !important;
+}
+
+.swal-setup-popup .swal2-confirm {
+  background: #211F1F !important;
+  color: white !important;
+  border: 2px solid #211F1F !important;
+  border-radius: 20px !important;
+  box-shadow: 4px 4px 0px 0px #211F1F !important;
+  font-weight: 800 !important;
+  padding: 0.75rem 2rem !important;
+  transition: 0.15s ease !important;
+}
+
+.swal-setup-popup .swal2-confirm:hover {
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+  transform: translate(4px, 4px) !important;
+}
+
+.swal-setup-popup .swal2-cancel {
+  background: #DBD4B7 !important;
+  color: #211F1F !important;
+  border: 2px solid #211F1F !important;
+  border-radius: 20px !important;
+  box-shadow: 4px 4px 0px 0px #211F1F !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 2rem !important;
+  transition: 0.15s ease !important;
+}
+
+.swal-setup-popup .swal2-cancel:hover {
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+  transform: translate(4px, 4px) !important;
+}
+
+.setup-steps-list {
+  text-align: left;
+  padding: 0.5rem 0;
+}
+
+.setup-step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #211F1F;
+  margin-bottom: 8px;
+  background: white;
+  transition: 0.15s ease;
+}
+
+.setup-step-item .step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #211F1F;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.setup-step-item .step-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #211F1F;
+}
+
+.setup-step-item .step-icon {
+  font-size: 16px;
+}
+
+/* Hover effects for neo-brutalist buttons */
+#blockedBanner a:hover,
+#blockedBanner button:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px 0px #211F1F !important;
+}
+
+#blockedBanner a:active,
+#blockedBanner button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+}
+
+/* Appeal button specific hover */
+#blockedBanner a[href="support.html"]:hover {
+  background: #b91c1c;
+}
+
+/* Logout button specific hover */
+#blockedBanner button[onclick="logoutUser()"]:hover {
+  background: #c9c2a3;
+}
+
+.tinygroupbills{
+  font-size: 12px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 2px solid var(--ink);
+    background: #4ADE80;
 }

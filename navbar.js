@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════
    NAVBAR.JS — Left sidebar (Exsub Group)
-   Updated: Autoloads Username & Profile Picture from Google Sheets
+   Updated: Full Session Management with Absolute Timeout
    ══════════════════════════════════════════════ */
 'use strict';
 
@@ -39,6 +39,10 @@ const NAVBAR_TEMPLATE = `
       <a href="profile.html" target="_self" class="dropdown-item">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         Open Profile
+      </a>
+      <a href="#" onclick="showSessionInfo()" class="dropdown-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        Session Info
       </a>
       <hr class="dropdown-divider">
       <button id="lnkLogout" class="dropdown-item logout-btn">
@@ -172,7 +176,7 @@ const NAVBAR_TEMPLATE = `
 `;
 
 // Google Apps Script Web App URL
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZuCba1p86eD743gKa4eb8YnjcBspnO46OFORuDQrvElzoucxrri8mka-sdmt7-Xou/exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxqKJ2sSttvg4pFxdd6SpUokDCAdSRwT-1Y-gTHeIxySf5puZoDiIwMZNx4xrmPuHA/exec";
 
 /* ── PROFILE DROPDOWN TOGGLE ── */
 window.toggleProfileDropdown = function() {
@@ -247,32 +251,29 @@ function wireSidebarDrawer() {
 }
 
 /* ── DYNAMIC SESSION SYNC WITH GOOGLE SHEETS ── */
+/* ── DYNAMIC SESSION SYNC WITH GOOGLE SHEETS ── */
 async function syncNavbarUserSession() {
   const txtUser = document.getElementById("navUsername");
   const imgProfile = document.getElementById("navProfilePic");
 
-  // Get user code from localStorage — session convention across the app
-  // stores this as lowercase "usercode" (see analytics.html / channels.html /
-  // members.html). Previously this read "userCode" (never set), which fell
-  // through to "username" and sent the wrong value to the API — that's why
-  // the ProfilePicture never loaded and the default avatar always showed.
+  // Check if we're on signin page
+  const currentPage = window.location.pathname.split('/').pop() || '';
+  if (currentPage === 'signin.html') {
+    if (txtUser) txtUser.textContent = 'Guest';
+    if (imgProfile) imgProfile.src = "images/default-avatar.png";
+    return;
+  }
+
   const userCode = (localStorage.getItem("usercode") || "").trim();
   
-  console.log("User Code from localStorage:", userCode);
-  
   if (!userCode) {
-    console.log("No userCode found, using fallback");
     const storedName = localStorage.getItem("username") || "ExUser";
     if (txtUser) {
       let cleanName = storedName.trim();
-      if (cleanName.length > 5) {
-        cleanName = cleanName.substring(0, 8) + "..";
-      }
+      if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
       txtUser.textContent = cleanName;
     }
-    if (imgProfile) {
-      imgProfile.src = "images/default-avatar.png";
-    }
+    if (imgProfile) imgProfile.src = "images/default-avatar.png";
     return;
   }
 
@@ -281,40 +282,52 @@ async function syncNavbarUserSession() {
     console.log("Fetching profile from:", url);
     
     const response = await fetch(url);
-    const data = await response.json();
+    
+    // Check if response is OK
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const text = await response.text();
+    console.log("Raw response:", text.substring(0, 200));
+    
+    // Try to parse JSON
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("Failed to parse JSON. Response starts with:", text.substring(0, 100));
+      // If response is HTML, it means the URL is wrong
+      if (text.trim().startsWith('<!DOCTYPE')) {
+        throw new Error("The API URL is returning HTML. Please check the script deployment URL.");
+      }
+      throw new Error("Invalid response format");
+    }
     
     console.log("Profile API Response:", data);
 
     if (data.success) {
-      // Update username
       if (txtUser) {
         let cleanName = data.userName || "ExUser";
-        if (cleanName.length > 6) {
-          cleanName = cleanName.substring(0, 5) + "..";
-        }
+        if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
         txtUser.textContent = cleanName;
         console.log("Username set to:", cleanName);
       }
 
-      // Update profile picture
       if (imgProfile) {
         const profilePic = data.profilePicture || data.rawProfilePicture;
         console.log("Profile picture URL from API:", profilePic);
         
         if (profilePic && profilePic !== "images/default-avatar.png") {
-          // Set the image src
           imgProfile.src = profilePic;
           console.log("Setting profile image to:", profilePic);
           
-          // Handle image loading errors — disarm after the first failure so a
-          // missing/broken fallback file can't retrigger onerror in a loop
           imgProfile.onerror = function() {
             console.warn("Failed to load profile image:", this.src);
             this.onerror = null;
             this.src = "images/default-avatar.png";
           };
           
-          // Image loaded successfully
           imgProfile.onload = function() {
             console.log("Profile image loaded successfully:", this.src);
           };
@@ -325,35 +338,51 @@ async function syncNavbarUserSession() {
       }
     } else {
       console.warn("Profile API returned error:", data.message || data.error);
-      // Fallback to default
+      const storedName = localStorage.getItem("username") || "ExUser";
       if (txtUser) {
-        const storedName = localStorage.getItem("username") || "ExUser";
         let cleanName = storedName.trim();
-        if (cleanName.length > 6) {
-          cleanName = cleanName.substring(0, 5) + "..";
-        }
+        if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
         txtUser.textContent = cleanName;
       }
-      if (imgProfile) {
-        imgProfile.src = "images/default-avatar.png";
-      }
+      if (imgProfile) imgProfile.src = "images/default-avatar.png";
     }
   } catch (error) {
     console.error("Error fetching profile data:", error);
-    // Fallback to local data
     const storedName = localStorage.getItem("username") || "ExUser";
     if (txtUser) {
       let cleanName = storedName.trim();
-      if (cleanName.length > 6) {
-        cleanName = cleanName.substring(0, 5) + "..";
-      }
+      if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
       txtUser.textContent = cleanName;
     }
-    if (imgProfile) {
-      imgProfile.src = "images/default-avatar.png";
-    }
+    if (imgProfile) imgProfile.src = "images/default-avatar.png";
   }
 }
+
+/* ── SESSION INFO DISPLAY ── */
+window.showSessionInfo = function() {
+  const validation = sessionManager.validateSession();
+  
+  if (!validation.valid) {
+    alert('No active session found. Please log in.');
+    return;
+  }
+  
+  const timeRemaining = sessionManager.getTimeRemaining();
+  const sessionData = validation.sessionData;
+  
+  const info = `Session Information
+═══════════════════════════════════════
+User:      ${sessionData.username}
+User Code: ${sessionData.userCode}
+Login Time: ${new Date(sessionData.loginTime).toLocaleString()}
+Expires At: ${new Date(sessionData.expiresAt).toLocaleString()}
+Time Left:  ${timeRemaining ? timeRemaining.formatted : 'Expired'}
+Session ID: ${sessionData.sessionId}
+═══════════════════════════════════════`;
+  
+  alert(info);
+};
+
 
 /* ── INITIALIZATION ── */
 function initNavbar() {
@@ -367,19 +396,22 @@ function initNavbar() {
   wireSidebarDrawer();
   highlightActiveNavLinks();
   
-  // Async load profile data
-  syncNavbarUserSession();
+  // Initialize session manager
+  sessionManager.init().then(() => {
+    // Load profile data
+    syncNavbarUserSession();
+  });
 
-  // Setup dynamic clear-session routine on Logout hit
+  // Setup logout handler
   const logoutBtn = document.getElementById("lnkLogout");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("usercode");
-      localStorage.removeItem("username");
-      localStorage.removeItem("password");
+      sessionManager.clearSession();
       window.location.href = "signin.html"; 
     });
   }
 }
+
+window.syncNavbarUserSession = syncNavbarUserSession;
 
 document.addEventListener("DOMContentLoaded", initNavbar);

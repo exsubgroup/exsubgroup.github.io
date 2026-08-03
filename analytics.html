@@ -5,13 +5,132 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analytics – Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 
 <style>
+/* ── NEO-BRUTALIST TAB SYSTEM ── */
+:root {
+  --ink: #211F1F;
+  --cream: #F5F4EB;
+  --mint: #ACD1C0;
+  --sand: #DBD4B7;
+  --shadow-off: 6px;
+}
+
+.tabbar-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  margin-top: 20px;
+}
+.tabbar-label h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.tabbar-hint {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.tabbar {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 8px 4px 20px;
+  scroll-snap-type: x proximity;
+}
+.tabbar::-webkit-scrollbar {
+  height: 8px;
+}
+.tabbar::-webkit-scrollbar-thumb {
+  background: var(--ink);
+  border-radius: 8px;
+}
+.tabbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tab {
+  position: relative;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  cursor: pointer;
+  padding-top: 10px;
+}
+.tab .flap {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 14px;
+  height: 16px;
+  border: 3px solid var(--ink);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+.tab .card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  padding: 10px 16px;
+  box-shadow: var(--shadow-off) var(--shadow-off) 0 var(--ink);
+  transition: transform .12s ease, box-shadow .12s ease;
+  white-space: nowrap;
+}
+.tab .swatch {
+  width: 36px;
+  height: 36px;
+  border: 2.5px solid var(--ink);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: 16px;
+}
+.tab .meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.tab .name {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink);
+}
+.tab .count {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.tab:hover .card {
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--shadow-off) + 2px) calc(var(--shadow-off) + 2px) 0 var(--ink);
+}
+.tab.active .card {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--ink);
+  background: var(--mint);
+}
+.tab.active .flap {
+  background: var(--mint) !important;
+}
+
 /* ── ACCOUNT COMPLETION STEPS ── */
 .account-step {
   display: flex;
@@ -24,17 +143,14 @@
   transition: all 0.3s ease;
   min-height: 70px;
 }
-
 .account-step.account-step-done {
   background: #ACD1C0;
   border-color: #211F1F;
 }
-
 .account-step.account-step-pending {
   background: #F5F4EB;
   border-color: #211F1F;
 }
-
 .account-step .step-icon {
   width: 36px;
   height: 36px;
@@ -47,44 +163,36 @@
   border: 2px solid #211F1F;
   background: white;
 }
-
 .account-step .step-icon.done {
   background: #211F1F;
   color: #ACD1C0;
   border-color: #211F1F;
 }
-
 .account-step .step-icon.pending {
   background: white;
   color: #211F1F;
   border-color: #211F1F;
 }
-
 .account-step .step-content {
   flex: 1;
   min-width: 0;
 }
-
 .account-step .step-label {
   font-weight: 700;
   font-size: 13px;
   color: #211F1F;
 }
-
 .account-step .step-status {
   font-size: 11px;
   font-weight: 600;
   color: #6b7280;
 }
-
 .account-step.account-step-done .step-status {
   color: #166534;
 }
-
 .account-step .step-action {
   flex-shrink: 0;
 }
-
 .account-step .step-btn {
   background: #211F1F;
   color: white;
@@ -96,15 +204,12 @@
   cursor: pointer;
   transition: 0.15s;
 }
-
 .account-step .step-btn:hover {
   transform: scale(1.05);
 }
-
 .account-step.account-step-done .step-btn {
   display: none;
 }
-
 .account-step .step-check {
   display: none;
   width: 24px;
@@ -118,9 +223,92 @@
   font-weight: 900;
   flex-shrink: 0;
 }
-
 .account-step.account-step-done .step-check {
   display: flex;
+}
+
+/* ── SWEETALERT OVERRIDES ── */
+.swal-setup-popup {
+  border-radius: 24px !important;
+  border: 2px solid #211F1F !important;
+  box-shadow: 6px 6px 0px 0px #211F1F !important;
+  background: #F5F4EB !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+.swal-setup-popup .swal2-title {
+  color: #211F1F !important;
+  font-weight: 900 !important;
+  font-size: 1.3rem !important;
+}
+.swal-setup-popup .swal2-html-container {
+  color: #211F1F !important;
+  font-weight: 500 !important;
+}
+.swal-setup-popup .swal2-confirm {
+  background: #211F1F !important;
+  color: white !important;
+  border: 2px solid #211F1F !important;
+  border-radius: 20px !important;
+  box-shadow: 4px 4px 0px 0px #211F1F !important;
+  font-weight: 800 !important;
+  padding: 0.75rem 2rem !important;
+  transition: 0.15s ease !important;
+}
+.swal-setup-popup .swal2-confirm:hover {
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+  transform: translate(4px, 4px) !important;
+}
+.swal-setup-popup .swal2-cancel {
+  background: #DBD4B7 !important;
+  color: #211F1F !important;
+  border: 2px solid #211F1F !important;
+  border-radius: 20px !important;
+  box-shadow: 4px 4px 0px 0px #211F1F !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 2rem !important;
+  transition: 0.15s ease !important;
+}
+.swal-setup-popup .swal2-cancel:hover {
+  box-shadow: 0px 0px 0px 0px #211F1F !important;
+  transform: translate(4px, 4px) !important;
+}
+
+.setup-steps-list {
+  text-align: left;
+  padding: 0.5rem 0;
+}
+.setup-step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #211F1F;
+  margin-bottom: 8px;
+  background: white;
+  transition: 0.15s ease;
+}
+.setup-step-item .step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #211F1F;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.setup-step-item .step-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #211F1F;
+}
+.setup-step-item .step-icon {
+  font-size: 16px;
 }
 </style>
 </head>
@@ -128,6 +316,7 @@
 
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
+<script src="session-manager.js"></script>
 
 <!-- ══════════════════ MAIN ══════════════════ -->
 
@@ -177,29 +366,16 @@
       <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Welcome back, mazhar · Joined 7 Sept 2026</div>
     </div>
 
-    <!-- ── BLOCKED BANNER ── -->
-    <div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; font-family: system-ui, -apple-system, sans-serif; border: 2px solid #211F1F; border-radius: 10px; max-width: 100%;">
-      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-        <span style="font-size: 1.75rem; line-height: 1;">⛔</span>
-        <h1 style="font-size: 1.25rem; font-weight: 800; color: #1f2937; margin: 0; letter-spacing: -0.025em;">Account Blocked</h1>
-      </div>
-      <p style="font-size: 0.9rem; color: #4b5563; margin: 0 0 1rem 0; line-height: 1.4;">
-        Your account has been suspended by an administrator. All platform features, task submissions, and channel groups are disabled immediately.
+    <!-- ── ACCOUNT COMPLETION BANNER ── -->
+    <div id="accountBanner" class="hidden" style="background: #F5F4EB; border: 3px solid #211F1F; border-radius: 20px; padding: 2rem 2.5rem; box-shadow: 6px 6px 0px 0px #211F1F; text-align: center; max-width: 100%; margin-top: 10px;">
+      <div style="font-size: 4rem; margin-bottom: 0.5rem;">🚀</div>
+      <h2 style="font-size: 1.5rem; font-weight: 900; color: #211F1F; margin-bottom: 0.5rem;">Account Setup Incomplete</h2>
+      <p style="font-size: 0.95rem; color: #4b5563; max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.6;">
+        To access all platform features, groups, and start earning, you need to complete your account setup.
       </p>
-      <div id="blockedReasonBox" class="hidden" style="background-color: #fee2e2; border-left: 3px solid #ef4444; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
-        <span style="font-size: 1rem;">📋</span>
-        <div style="font-size: 0.85rem; color: #7f1d1d; line-height: 1.4;">
-          <strong style="color: #991b1b; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; display: inline-block; margin-right: 0.5rem;">Reason:</strong>
-          <span id="blockedReasonText"></span>
-        </div>
-      </div>
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid #EAE9DF;">
-        <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Please provide your User Code when appealing.</span>
-        <div style="display: flex; gap: 0.5rem; width: auto;">
-          <a href="support.html" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #dc2626; color: #ffffff; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-radius: 6px; white-space: nowrap;">Appeal Block</a>
-          <button onclick="logoutUser()" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #d1d5db; color: #4b5563; font-weight: 600; font-size: 0.85rem; border-radius: 6px; cursor: pointer;">Logout</button>
-        </div>
-      </div>
+      <button onclick="showSetupGuide()" style="background: #211F1F; color: white; border: 2px solid #211F1F; border-radius: 20px; padding: 0.75rem 2.5rem; font-weight: 800; font-size: 0.9rem; cursor: pointer; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s ease; display: inline-flex; align-items: center; gap: 0.5rem;">
+        📘 View Setup Details →
+      </button>
     </div>
 
     <!-- ── MEMBER INFO ROW ── -->
@@ -228,95 +404,6 @@
       </div>
     </div>
 
-    <!-- ── ACCOUNT COMPLETION STATUS ── -->
-    <div id="accountCompletionContainer" class="hidden fade-in delay-1 mb-6">
-      <div class="card p-6 mt-10">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 class="text-xl font-black text-[#211F1F]">🚀 Account Setup</h2>
-            <p id="accountStatusText" class="text-sm text-muted mt-0.5">Complete the steps below to unlock all features.</p>
-          </div>
-          <div>
-            <span id="accountStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border-2 border-[#211F1F] bg-amber-100 text-amber-800">⚠️ Incomplete</span>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <!-- Step 1: Promotional Channel -->
-          <div id="stepPromoChannel" class="account-step account-step-pending">
-            <div class="step-icon pending">📺</div>
-            <div class="step-content">
-              <div class="step-label">Add Promotional Channel</div>
-              <div class="step-status">Pending</div>
-            </div>
-            <div class="step-action">
-              <button onclick="showStepGuide('stepPromoChannel')" class="step-btn">Start</button>
-            </div>
-          </div>
-          
-          <!-- Step 2: Add Videos -->
-          <div id="stepAddVideos" class="account-step account-step-pending">
-            <div class="step-icon pending">🎬</div>
-            <div class="step-content">
-              <div class="step-label">Add Videos</div>
-              <div class="step-status">Pending</div>
-            </div>
-            <div class="step-action">
-              <button onclick="showStepGuide('stepAddVideos')" class="step-btn">Start</button>
-            </div>
-          </div>
-          
-          <!-- Step 3: Create Playlist -->
-          <div id="stepCreatePlaylist" class="account-step account-step-pending">
-            <div class="step-icon pending">⏱️</div>
-            <div class="step-content">
-              <div class="step-label">Create Playlist</div>
-              <div class="step-status">Pending</div>
-            </div>
-            <div class="step-action">
-              <button onclick="showStepGuide('stepCreatePlaylist')" class="step-btn">Start</button>
-            </div>
-          </div>
-          
-          <!-- Step 4: Add Working Channel -->
-          <div id="stepWorkingChannel" class="account-step account-step-pending">
-            <div class="step-icon pending">🔧</div>
-            <div class="step-content">
-              <div class="step-label">Add Working Channel</div>
-              <div class="step-status">Pending</div>
-            </div>
-            <div class="step-action">
-              <button onclick="showStepGuide('stepWorkingChannel')" class="step-btn">Start</button>
-            </div>
-          </div>
-          
-          <!-- Step 5: Join a Group -->
-          <div id="stepJoinGroup" class="account-step account-step-pending">
-            <div class="step-icon pending">👥</div>
-            <div class="step-content">
-              <div class="step-label">Join a Group</div>
-              <div class="step-status">Pending</div>
-            </div>
-            <div class="step-action">
-              <button onclick="showStepGuide('stepJoinGroup')" class="step-btn">Start</button>
-            </div>
-          </div>
-          
-          <!-- Step 6: Extension -->
-          <div id="stepExtension" class="account-step account-step-pending">
-            <div class="step-icon pending">🔌</div>
-            <div class="step-content">
-              <div class="step-label">Install & Login Extension</div>
-              <div class="step-status">Pending</div>
-            </div>
-            <div class="step-action">
-              <button onclick="showStepGuide('stepExtension')" class="step-btn">Start</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- ══════════════════ ACTIVE CONTENT ══════════════════ -->
     <div id="activeContent">
 
@@ -329,10 +416,14 @@
           style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
       </div>
 
-      <!-- Group Analytics Tabs -->
-      <div id="groupsTabSection" class="mb-10; mt-10">
-        <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-2 mb-6" id="groupTabs"></div>
-        <div id="tabContent" class="space-y-8"></div>
+      <!-- Group Analytics Tabs - NEO-BRUTALIST STYLE -->
+      <div id="groupsTabSection" class="mb-10 mt-10">
+        <div class="tabbar-label">
+          <h2>📊 Performance Groups</h2>
+          <span class="tabbar-hint">scroll for more →</span>
+        </div>
+        <div class="tabbar" id="groupTabs"></div>
+        <div id="tabContent" class="mt-6"></div>
       </div>
 
     </div><!-- /activeContent -->
@@ -346,34 +437,87 @@
 
 <!-- ══════════════════ JAVASCRIPT ══════════════════ -->
 <script>
-
 'use strict';
 
 /* ── CONFIG ── */
-var API = "https://script.google.com/macros/s/AKfycbyVCwph1wPUdOi4SKWCCJbqqFscxNyYY2DgOe5NVmvNdreehX2m-Md3yTJumK0FMj-5XA/exec";
+var API = "https://script.google.com/macros/s/AKfycbxNWAp79IJUu61FZGSrvriisMxmcZmqqFXzxd-wOhZ7KpjF5t7_qRLOEGLxiwnxWHWObw/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
 var username = localStorage.getItem("username") || "";
+var userpassword = localStorage.getItem("password") || "";
 
-if (!usercode || !username) { window.location.replace("signin.html"); }
-
-setText("navUserName",      username || "Member");
-setText("dropdownUserName", username || "Member");
-setText("dropdownUserCode", usercode ? "#" + usercode : "");
+// CREDENTIAL CHECK: Must have all three
+if (!usercode || !username || !userpassword) { 
+  window.location.replace("signin.html"); 
+}
 
 /* ══════════════════ LOAD ══════════════════ */
 async function loadDashboard() {
-  show("loadingState"); hide("errorState"); hide("dashContent");
+  show("loadingState"); 
+  hide("errorState"); 
+  hide("dashContent");
+  hide("accountBanner");
+  
   try {
-    var res  = await fetch(API + "?action=dashboard&usercode=" + encodeURIComponent(usercode));
+    // Directly fetch dashboard data - no signin check needed
+    var res = await fetch(API + "?action=dashboard&usercode=" + encodeURIComponent(usercode));
     var data = await res.json();
+    
     if (data.error) throw new Error(data.error);
+    
     renderDashboard(data);
+    
   } catch(err) {
-    hide("loadingState"); show("errorState");
+    hide("loadingState"); 
+    show("errorState");
     setText("errorMsg", err.message || "Network error. Please try again.");
+    console.error("Dashboard error:", err);
   }
+}
+
+/* ══════════════════ SETUP GUIDE ══════════════════ */
+function showSetupGuide() {
+  const steps = [
+    { icon: '📺', text: 'Add a Promotional Channel' },
+    { icon: '🎬', text: 'Add Videos to your channel' },
+    { icon: '⏱️', text: 'Create a Playlist' },
+    { icon: '🔧', text: 'Add a Working Channel' },
+    { icon: '👥', text: 'Join a Work Group' },
+    { icon: '🔌', text: 'Install & Login Extension' }
+  ];
+
+  const stepsHtml = steps.map(function(step, index) {
+    return `
+      <div class="setup-step-item">
+        <span class="step-num">${index + 1}</span>
+        <span class="step-icon">${step.icon}</span>
+        <span class="step-text">${step.text}</span>
+      </div>
+    `;
+  }).join('');
+
+  Swal.fire({
+    title: '🚀 Complete Your Account Setup',
+    html: `
+      <div class="setup-steps-list">
+        ${stepsHtml}
+      </div>
+      <p style="font-size:0.9rem;color:#4b5563;text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #EAE9DF;">
+        Complete all steps to unlock groups and start earning with Exsub Group!
+      </p>
+    `,
+    confirmButtonText: 'Got it!',
+    showCancelButton: true,
+    cancelButtonText: 'Close',
+    allowOutsideClick: true,
+    width: '520px',
+    customClass: {
+      popup: 'swal-setup-popup',
+      confirmButton: 'swal2-confirm',
+      cancelButton: 'swal2-cancel'
+    }
+  });
 }
 
 /* ══════════════════ EXTENSION STATUS ══════════════════ */
@@ -401,308 +545,6 @@ function renderExtensionStatus(isReady) {
   }
 }
 
-/* ══════════════════ ACCOUNT COMPLETION STATUS ══════════════════ */
-function renderAccountCompletionStatus(member, data) {
-  // Check account completion status
-  const isAccountCompleted = member.accountCompleted === "Yes";
-  const container = document.getElementById('accountCompletionContainer');
-  const statusBadge = document.getElementById('accountStatusBadge');
-  const statusText = document.getElementById('accountStatusText');
-  
-  if (!container) return;
-  
-  // Check each step status using actual data
-  const hasPromoChannel = (data.promotionalAccountsCount || 0) > 0;
-  const hasWorkingChannel = (data.workingAccountsCount || 0) > 0;
-  const inAnyGroup = member.inSubscribersWork === "Yes" || 
-                      member.inVideoTaskWork === "Yes" || 
-                      member.inWatchtimeWork === "Yes" || 
-                      member.inLikeAndCommentWork === "Yes";
-  
-  // We need to check videos and playlist from other sources
-  // For now, we'll use the videoPerformance and playlistPerformance data
-  // but we need to pass these from the main render function
-  
-  // Store the computed values in the member object for later use
-  member.promoChannelExists = hasPromoChannel;
-  member.workingChannelExists = hasWorkingChannel;
-  member.inAnyGroup = inAnyGroup;
-  
-  // Update status badge
-  if (statusBadge) {
-    if (isAccountCompleted) {
-      statusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border-2 border-[#211F1F] bg-emerald-100 text-emerald-800';
-      statusBadge.innerHTML = '✅ Complete';
-    } else {
-      statusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border-2 border-[#211F1F] bg-amber-100 text-amber-800';
-      statusBadge.innerHTML = '⚠️ Incomplete';
-    }
-  }
-  
-  if (statusText) {
-    statusText.textContent = isAccountCompleted ? 'Your account is fully set up!' : 'Complete the steps below to unlock all features.';
-  }
-
-  // Show container
-  container.classList.remove('hidden');
-  
-  // Define steps with actual check values
-  const steps = [
-    { id: 'stepPromoChannel', label: 'Add Promotional Channel', icon: '📺', check: hasPromoChannel },
-    { id: 'stepAddVideos', label: 'Add Videos', icon: '🎬', check: member.hasVideos || false },
-    { id: 'stepCreatePlaylist', label: 'Create Playlist', icon: '⏱️', check: member.hasPlaylist || false },
-    { id: 'stepWorkingChannel', label: 'Add Working Channel', icon: '🔧', check: hasWorkingChannel },
-    { id: 'stepJoinGroup', label: 'Join a Group', icon: '👥', check: inAnyGroup },
-    { id: 'stepExtension', label: 'Install & Login Extension', icon: '🔌', check: member.extensionReady === "Yes" }
-  ];
-  
-  // Update each step
-  steps.forEach(function(step) {
-    const stepEl = document.getElementById(step.id);
-    if (!stepEl) return;
-    
-    if (step.check) {
-      stepEl.className = 'account-step account-step-done';
-      stepEl.innerHTML = `
-        <div class="step-icon done">✅</div>
-        <div class="step-content">
-          <div class="step-label">${step.label}</div>
-          <div class="step-status">Completed</div>
-        </div>
-        <div class="step-check">✓</div>
-      `;
-    } else {
-      stepEl.className = 'account-step account-step-pending';
-      stepEl.innerHTML = `
-        <div class="step-icon pending">${step.icon}</div>
-        <div class="step-content">
-          <div class="step-label">${step.label}</div>
-          <div class="step-status">Pending</div>
-        </div>
-        <div class="step-action">
-          <button onclick="showStepGuide('${step.id}')" class="step-btn">Start</button>
-        </div>
-      `;
-    }
-  });
-  
-  // If account is not completed, show the completion modal after a delay
-  if (!isAccountCompleted) {
-    setTimeout(function() {
-      showAccountCompletionGuide(steps);
-    }, 1500);
-  }
-}
-
-/* ══════════════════ ACCOUNT COMPLETION GUIDE (SweetAlert2) ══════════════════ */
-function showAccountCompletionGuide(steps) {
-  // Only show if account is not completed and user hasn't dismissed it
-  if (sessionStorage.getItem('accountGuideDismissed') === 'true') return;
-  
-  // Check which steps are completed
-  const completed = steps.filter(s => s.check).length;
-  const total = steps.length;
-  const progress = Math.round((completed / total) * 100);
-  
-  // Build step HTML
-  const stepsHtml = steps.map(function(step, index) {
-    const isDone = step.check;
-    const line = index < steps.length - 1 ? `<div class="step-line ${isDone ? 'done' : ''}"></div>` : '';
-    return `
-      <div class="swal-step-item">
-        <div class="flex items-start gap-3">
-          <div class="swal-step-icon ${isDone ? 'done' : 'pending'}">
-            ${isDone ? '✓' : index + 1}
-          </div>
-          <div class="flex-1">
-            <div class="swal-step-label ${isDone ? 'text-emerald-600' : 'text-gray-500'} font-semibold">${step.icon} ${step.label}</div>
-            <div class="swal-step-status ${isDone ? 'text-emerald-600' : 'text-amber-600'} text-sm">
-              ${isDone ? '✅ Completed' : '⏳ Pending'}
-            </div>
-          </div>
-        </div>
-        ${line}
-      </div>
-    `;
-  }).join('');
-  
-  Swal.fire({
-    title: '🚀 Welcome to Exsub Group!',
-    html: `
-      <div class="swal-account-guide">
-        <div class="swal-progress-container">
-          <div class="swal-progress-bar">
-            <div class="swal-progress-fill" style="width: ${progress}%"></div>
-          </div>
-          <div class="swal-progress-text">${completed} of ${total} steps completed</div>
-        </div>
-        <div class="swal-steps-container">
-          ${stepsHtml}
-        </div>
-        <p class="swal-footer-text">Complete all steps to start earning with Exsub Group!</p>
-      </div>
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'Continue Setup',
-    cancelButtonText: 'Dismiss',
-    allowOutsideClick: false,
-    width: '600px',
-    background: '#F5F4EB',
-    customClass: {
-      popup: 'swal-account-popup',
-      confirmButton: 'swal-confirm-btn',
-      cancelButton: 'swal-cancel-btn'
-    },
-    preConfirm: function() {
-      // User clicked continue - redirect to first incomplete step
-      const firstIncomplete = steps.find(s => !s.check);
-      if (firstIncomplete) {
-        const redirectMap = {
-          'stepPromoChannel': 'channels.html?view=promotional',
-          'stepAddVideos': 'videotask.html',
-          'stepCreatePlaylist': 'playlists.html',
-          'stepWorkingChannel': 'channels.html?view=working',
-          'stepJoinGroup': 'groups.html',
-          'stepExtension': 'exsubextension.html'
-        };
-        const url = redirectMap[firstIncomplete.id] || 'channels.html';
-        window.location.href = url;
-      }
-    },
-    didOpen: function() {
-      const style = document.createElement('style');
-      style.textContent = `
-        .swal-account-popup {
-          border-radius: 24px !important;
-          border: 2px solid #211F1F !important;
-          box-shadow: 6px 6px 0px 0px #211F1F !important;
-          padding: 1.5rem !important;
-        }
-        .swal-account-guide {
-          font-family: 'Inter', system-ui, sans-serif;
-          text-align: left;
-          padding: 0.5rem 0;
-        }
-        .swal-progress-container {
-          background: #EAE9DF;
-          border-radius: 12px;
-          padding: 0.75rem 1rem;
-          margin-bottom: 1.5rem;
-          border: 1px solid #211F1F;
-        }
-        .swal-progress-bar {
-          background: #F5F4EB;
-          border-radius: 999px;
-          height: 8px;
-          overflow: hidden;
-          border: 1px solid #211F1F;
-        }
-        .swal-progress-fill {
-          height: 100%;
-          background: #ACD1C0;
-          border-radius: 999px;
-          transition: width 0.8s ease;
-        }
-        .swal-progress-text {
-          font-size: 12px;
-          font-weight: 700;
-          color: #211F1F;
-          margin-top: 0.5rem;
-          text-align: center;
-        }
-        .swal-steps-container {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          padding: 0.5rem 0;
-        }
-        .swal-step-item {
-          padding: 0.25rem 0;
-        }
-        .swal-step-icon {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 800;
-          font-size: 13px;
-          flex-shrink: 0;
-          border: 2px solid #211F1F;
-        }
-        .swal-step-icon.done {
-          background: #ACD1C0;
-          color: #211F1F;
-        }
-        .swal-step-icon.pending {
-          background: #F5F4EB;
-          color: #211F1F;
-        }
-        .swal-step-line {
-          margin: 0.25rem 0 0.25rem 14px;
-          width: 2px;
-          height: 12px;
-          background: #EAE9DF;
-        }
-        .swal-step-line.done {
-          background: #ACD1C0;
-        }
-        .swal-step-label {
-          font-size: 14px;
-          line-height: 1.3;
-        }
-        .swal-step-status {
-          font-size: 12px;
-        }
-        .swal-footer-text {
-          font-size: 13px;
-          color: #6b7280;
-          text-align: center;
-          margin-top: 1rem;
-          padding-top: 1rem;
-          border-top: 1px solid #EAE9DF;
-        }
-        .swal-confirm-btn {
-          background: #211F1F !important;
-          color: white !important;
-          border-radius: 12px !important;
-          font-weight: 700 !important;
-          padding: 0.75rem 1.5rem !important;
-          border: 2px solid #211F1F !important;
-        }
-        .swal-cancel-btn {
-          background: #F5F4EB !important;
-          color: #211F1F !important;
-          border-radius: 12px !important;
-          font-weight: 600 !important;
-          padding: 0.75rem 1.5rem !important;
-          border: 2px solid #211F1F !important;
-        }
-        .swal-cancel-btn:hover {
-          background: #EAE9DF !important;
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  });
-}
-
-/* ══════════════════ STEP GUIDE HANDLER ══════════════════ */
-function showStepGuide(stepId) {
-  const redirectMap = {
-    'stepPromoChannel': 'channels.html?view=promotional',
-    'stepAddVideos': 'videotask.html',
-    'stepCreatePlaylist': 'playlists.html',
-    'stepWorkingChannel': 'channels.html?view=working',
-    'stepJoinGroup': 'groups.html',
-    'stepExtension': 'exsubextension.html'
-  };
-  
-  const url = redirectMap[stepId] || 'channels.html';
-  window.location.href = url;
-}
-
 /* ══════════════════ MAIN RENDER DASHBOARD ══════════════════ */
 function renderDashboard(data) {
   var m  = data.member               || {};
@@ -711,35 +553,13 @@ function renderDashboard(data) {
   var ep = data.engagementPerformance|| {};
   var pp = data.playlistPerformance  || {};
   
-  // ── ADD CHECKS FOR ACCOUNT COMPLETION ──
-  var hasPromoChannel = (data.promotionalAccountsCount || 0) > 0;
-  var hasWorkingChannel = (data.workingAccountsCount || 0) > 0;
-  var inAnyGroup = m.inSubscribersWork === "Yes" || 
-                    m.inVideoTaskWork === "Yes" || 
-                    m.inWatchtimeWork === "Yes" || 
-                    m.inLikeAndCommentWork === "Yes";
-  
-  // Check if member has videos (from videoPerformance)
-  var hasVideos = (vp.totalVideoWatched || 0) > 0 || (data.videoCount || 0) > 0;
-  // Check if member has playlist (from playlistPerformance)
-  var hasPlaylist = (pp.totalPlaylistWatched || 0) > 0 || (data.playlistCount || 0) > 0;
-  
-  // Enhance member object
-  m.hasVideos = hasVideos;
-  m.hasPlaylist = hasPlaylist;
-  m.promoChannelExists = hasPromoChannel;
-  m.workingChannelExists = hasWorkingChannel;
-  m.inAnyGroup = inAnyGroup;
-  
   renderExtensionStatus(m.extensionReady);
   renderIssues(data.issues || []);
-  
-  // ── RENDER ACCOUNT COMPLETION STATUS ──
-  renderAccountCompletionStatus(m, data);
 
   if (m.status) localStorage.setItem("status", m.status);
 
-  var isBlocked  = (m.status || "").toLowerCase() === "blocked";
+  var isAccountCompleted = m.accountCompleted === "Yes";
+
   /* Header */
   setText("welcomeSubtitle", "Welcome back, " + (m.userName || username) + " · Joined " + fmtDate(m.dateOfJoin));
 
@@ -766,24 +586,28 @@ function renderDashboard(data) {
   }
   show("memberInfoRow");
 
-  /* ── BLOCKED ── */
-  if (isBlocked) {
-    show("blockedBanner"); hide("memberInfoRow");
-    if (m.blockedReason && m.blockedReason.trim()) {
-      setText("blockedReasonText", m.blockedReason.trim());
-      var rb = document.getElementById("blockedReasonBox");
-      if (rb) { rb.classList.remove("hidden"); rb.style.display = "flex"; }
+  /* ── ACCOUNT COMPLETION BANNER ── */
+  if (!isAccountCompleted) {
+    show("accountBanner");
+    hide("groupsSection");
+    hide("groupsTabSection");
+    
+    var noGroups = document.getElementById("noGroupsMsg");
+    if (noGroups) {
+      noGroups.classList.remove("hidden");
+      noGroups.innerHTML = `
+        <div class="text-5xl mb-4">🚀</div>
+        <div class="text-xl font-bold mb-2">Complete Your Account Setup</div>
+        <div class="text-gray-400 text-sm mb-5 leading-relaxed max-w-md mx-auto">
+          Complete all 6 steps in the setup guide to unlock groups and start earning.
+        </div>
+        <button onclick="showSetupGuide()" style="margin:0 auto;display:inline-flex;align-items:center;gap:0.5rem;background:#211F1F;color:white;border:2px solid #211F1F;border-radius:20px;padding:0.75rem 2.5rem;font-weight:800;font-size:0.9rem;cursor:pointer;box-shadow:4px 4px 0px 0px #211F1F;transition:0.15s ease;">
+          📘 View Setup Details →
+        </button>
+      `;
     }
-    ["lnkDashboard","lnkChannels","lnkGroups","lnkHowTo","lnkExtension",
-     "mLnkDashboard","mLnkChannels","mLnkGroups","mLnkHowTo","mLnkExtension","ddProfile"]
-    .forEach(function(id){
-      var el = document.getElementById(id);
-      if (el){ el.classList.add("nav-disabled"); el.removeAttribute("href"); }
-    });
-    var ac = document.getElementById("activeContent");
-    if (ac) ac.style.display = "none";
-    hide("loadingState"); show("dashContent");
-    return;
+  } else {
+    hide("accountBanner");
   }
 
   /* ── GROUPS (task cards) ── */
@@ -797,7 +621,7 @@ function renderDashboard(data) {
   var activeGroups = groupDefs.filter(function(g){ return m[g.key] === "Yes"; });
 
   // ── ONLY SHOW GROUPS IF ACCOUNT IS COMPLETED ──
-  if (m.accountCompleted === "Yes") {
+  if (isAccountCompleted) {
     if (activeGroups.length > 0) {
       var cardsEl = document.getElementById("groupTaskCards");
       if (cardsEl) {
@@ -819,58 +643,133 @@ function renderDashboard(data) {
     } else {
       show("noGroupsMsg");
       hide("groupsSection");
+      var noGroupsMsg = document.getElementById("noGroupsMsg");
+      if (noGroupsMsg) {
+        noGroupsMsg.classList.remove("hidden");
+        noGroupsMsg.innerHTML = `
+          <div class="text-5xl mb-4">📭</div>
+          <div class="text-xl font-bold mb-2">Not in any group yet</div>
+          <div class="text-gray-400 text-sm mb-5">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
+          <a href="groups.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
+            style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
+        `;
+      }
     }
     
-    // Render group tabs
+    // Render group tabs using neo-brutalist style
     renderGroupTabs(m, sp, vp, ep, pp);
-  } else {
-    // Account not completed - show message but hide groups
-    hide("groupsSection");
-    hide("groupsTabSection");
-    // Show a custom message in the noGroupsMsg area
-    var noGroups = document.getElementById("noGroupsMsg");
-    if (noGroups) {
-      noGroups.classList.remove("hidden");
-      noGroups.innerHTML = `
-        <div class="text-5xl mb-4">🚀</div>
-        <div class="text-xl font-bold mb-2">Complete Your Account Setup</div>
-        <div class="text-gray-400 text-sm mb-5 leading-relaxed max-w-md mx-auto">
-          Complete all 6 steps in the account setup guide above to unlock groups and start earning.
-        </div>
-        <button onclick="showAccountCompletionGuide(getAccountSteps())" class="nb-status-card">
-          📘 View Setup Guide
-        </button>
-      `;
-    }
   }
 
   hide("loadingState"); 
   show("dashContent");
 }
 
-// Helper function to get current account steps
-function getAccountSteps() {
-  const container = document.getElementById('accountCompletionContainer');
-  if (!container) return [];
-  
-  const steps = [];
-  ['stepPromoChannel', 'stepAddVideos', 'stepCreatePlaylist', 'stepWorkingChannel', 'stepJoinGroup', 'stepExtension'].forEach(function(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      const isDone = el.classList.contains('account-step-done');
-      const label = el.querySelector('.step-label')?.textContent || id;
-      const icon = el.querySelector('.step-icon')?.textContent || '📌';
-      steps.push({ id: id, label: label, icon: icon, check: isDone });
+/* ══════════════════ NEO-BRUTALIST GROUP TABS ══════════════════ */
+function renderGroupTabs(m, sp, vp, ep, pp) {
+  const TABS = [
+    { 
+      key: "inSubscribersWork", 
+      id: "subs",
+      name: "Subscribers", 
+      emoji: "👥",
+      color: "#b3a1f5",
+      flap: "#b3a1f5",
+      count: "subscribers",
+      desc: "Exchange subscriptions with other members and grow your channel.",
+      render: function() { return renderSubscribersTab(sp); }
+    },
+    { 
+      key: "inVideoTaskWork", 
+      id: "video",
+      name: "Video Watch", 
+      emoji: "🎬",
+      color: "#7fc7e8",
+      flap: "#7fc7e8",
+      count: "videos",
+      desc: "Watch videos from other members and earn watch-time for yours.",
+      render: function() { return renderVideoTab(vp); }
+    },
+    { 
+      key: "inWatchtimeWork", 
+      id: "playlist",
+      name: "Playlist", 
+      emoji: "⏱",
+      color: "#e0bd7a",
+      flap: "#e0bd7a",
+      count: "playlists",
+      desc: "Complete playlist watch tasks and boost your channel watchtime.",
+      render: function() { return renderPlaylistTab(pp); }
+    },
+    { 
+      key: "inLikeAndCommentWork", 
+      id: "engage",
+      name: "Engagement", 
+      emoji: "💬",
+      color: "#79cdc0",
+      flap: "#79cdc0",
+      count: "interactions",
+      desc: "Give and receive likes and comments to boost engagement.",
+      render: function() { return renderEngagementTab(ep); }
     }
-  });
-  return steps.length > 0 ? steps : [
-    { id: 'stepPromoChannel', label: 'Add Promotional Channel', icon: '📺', check: false },
-    { id: 'stepAddVideos', label: 'Add Videos', icon: '🎬', check: false },
-    { id: 'stepCreatePlaylist', label: 'Create Playlist', icon: '⏱️', check: false },
-    { id: 'stepWorkingChannel', label: 'Add Working Channel', icon: '🔧', check: false },
-    { id: 'stepJoinGroup', label: 'Join a Group', icon: '👥', check: false },
-    { id: 'stepExtension', label: 'Install & Login Extension', icon: '🔌', check: false }
   ];
+
+  // Filter active groups
+  const activeGroups = TABS.filter(function(tab) { 
+    return m[tab.key] === "Yes"; 
+  });
+  
+  if (activeGroups.length === 0) return;
+
+  const tabsContainer = document.getElementById('groupTabs');
+  if (!tabsContainer) return;
+  tabsContainer.innerHTML = '';
+
+  activeGroups.forEach(function(tab, i) {
+    const tabDiv = document.createElement('div');
+    tabDiv.className = 'tab' + (i === 0 ? ' active' : '');
+    tabDiv.dataset.index = i;
+    tabDiv.innerHTML = `
+      <div class="flap" style="background:${tab.flap}"></div>
+      <div class="card">
+        <div class="swatch" style="background:${tab.color}">${tab.emoji}</div>
+        <div class="meta">
+          <span class="name">${tab.name}</span>
+          <span class="count">${tab.count}</span>
+        </div>
+      </div>
+    `;
+    
+    tabDiv.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      tabDiv.classList.add('active');
+      
+      const content = tab.render();
+      const panel = document.getElementById('tabContent');
+      
+      panel.innerHTML = `
+        <div style="background:${tab.color}; border:3px solid #211F1F; border-radius:14px; padding:1rem; margin-bottom:1rem; box-shadow:4px 4px 0px 0px #211F1F;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:2rem;">${tab.emoji}</span>
+            <div>
+              <h3 style="font-weight:800; font-size:1.2rem; color:#211F1F;">${tab.name}</h3>
+              <p style="font-size:0.85rem; color:#4b5563;">${tab.desc}</p>
+            </div>
+          </div>
+        </div>
+        ${content}
+      `;
+      
+      initTabStats(tab.id, sp, vp, ep, pp);
+      tabDiv.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    });
+    
+    tabsContainer.appendChild(tabDiv);
+  });
+
+  // Render first tab content
+  document.getElementById('tabContent').innerHTML = activeGroups[0].render();
+  initTabStats(activeGroups[0].id, sp, vp, ep, pp);
+  show("groupsTabSection");
 }
 
 /* ══════════════════ ISSUES ══════════════════ */
@@ -957,8 +856,204 @@ function renderIssues(rawIssues) {
   }
 }
 
-/* ══════════════════ TAB COMPONENT RENDERERS ══════════════════ */
+/* ══════════════════ CHART HELPERS ══════════════════ */
+function setRing(id, pct, circ) {
+  var el = document.getElementById(id);
+  if (el) el.style.strokeDashoffset = circ - (pct / 100) * circ;
+}
 
+function setProg(id, pct) {
+  var el = document.getElementById(id);
+  if (el) el.style.width = Math.min(Math.max(pct, 0), 100) + "%";
+}
+
+function after(ms, fn) { setTimeout(fn, ms); }
+
+/* ══════════════════ DOM HELPERS ══════════════════ */
+function show(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove("hidden");
+  if (el.style.display === "none") el.style.display = "";
+}
+
+function hide(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add("hidden");
+}
+
+function setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* ══════════════════ UTILS ══════════════════ */
+function fmt(n) {
+  var num = parseFloat(n);
+  return isNaN(num) ? "0" : num.toLocaleString();
+}
+
+function fmtDate(d) {
+  if (!d) return "";
+  var dt = new Date(d);
+  if (isNaN(dt.getTime())) return String(d);
+  return dt.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+}
+
+/* ══════════════════ GLOBAL UPDATER ══════════════════ */
+function initTabStats(type, sp, vp, ep, pp) {
+  if (type === "subs") {
+    var gained      = +(sp.totalSubscribersGet        || 0);
+    var lostByOth   = +(sp.totalUnsubscribeByOthers   || 0);
+    var pendIn      = +(sp.pendingSubscribeFromOthers  || 0);
+    var unsubByYou  = +(sp.totalUnsubscribeByYou       || 0);
+    var total       = Math.max(gained + lostByOth + pendIn, 1);
+    var netPct      = Math.round((gained / total) * 100);
+    var limitPct    = sp.subscribersLimit > 0 ? Math.min(Math.round((gained / sp.subscribersLimit) * 100), 100) : 0;
+
+    setText("subsTotal",         fmt(gained));
+    setText("subsDone",          fmt(sp.totalSubscribeChannels));
+    setText("subsUnsubByYou",    fmt(unsubByYou));
+    setText("subsPendOut",       fmt(sp.pendingSubscribeToOthers));
+    setText("subsUnsubByOthers", fmt(lostByOth));
+    setText("subsPendIn",        fmt(pendIn));
+    setText("subsLimitUsed",     fmt(gained));
+    setText("subsLimitMax",      fmt(sp.subscribersLimit));
+    setText("subsLastWorkTxt",   sp.lastTimeWork ? "Last active: " + fmtDate(sp.lastTimeWork) : "No activity yet");
+    setText("subsRingPct",       netPct + "%");
+    setText("subsLegGained",     fmt(gained));
+    setText("subsLegLost",       fmt(lostByOth));
+    setText("subsLegPendIn",     fmt(pendIn));
+    setText("subsLimitMsg",      sp.limitReached === "Yes" ? "⚠️ Subscriber limit reached — you cannot earn more until it's raised." : limitPct + "% of your subscriber limit used.");
+
+    after(200, function(){
+      setRing("subsRingGained", netPct, 276.5);
+      setProg("subsProgGained", Math.round((gained    / total) * 100));
+      setProg("subsProgLost",   Math.round((lostByOth / total) * 100));
+      setProg("subsProgPendIn", Math.round((pendIn    / total) * 100));
+      setProg("subsLimitBar",   limitPct);
+    });
+  }
+  
+  if (type === "video") {
+    var vw         = +(vp.totalVideoWatched                       || 0);
+    var vpf        = +(vp.totalVideoWatchedPendingFromOthers      || 0);
+    var vpb        = +(vp.totalVideoWatchedPendingByOthers        || 0);
+    var vYourRej   = +(vp.totalYourVideoWatchingRejects           || 0);
+    var vOthRej    = +(vp.totalVideoWatchingRejectsOfOthers       || 0);
+    var vtot       = Math.max(vw + vpf + vpb + vYourRej + vOthRej, 1);
+    var vSucc      = Math.round((vw / vtot) * 100);
+
+    setText("videoWatched",       fmt(vw));
+    setText("videoPendIn",        fmt(vpf));
+    setText("videoPendOut",       fmt(vpb));
+    setText("videoYourRejects",   fmt(vYourRej));
+    setText("videoOthersRejects", fmt(vOthRej));
+    setText("videoLastWorkTxt",   vp.lastTimeWork ? "Last active: " + fmtDate(vp.lastTimeWork) : "No activity yet");
+    setText("videoSuccessDesc",   fmt(vw) + " videos");
+    setText("videoRingPct",       vSucc + "%");
+
+    var bars = [
+      { val:vw,       color:"#ef4444" },
+      { val:vpf,      color:"#fbbf24" },
+      { val:vpb,      color:"#38bdf8" },
+      { val:vYourRej, color:"#dc2626" },
+      { val:vOthRej,  color:"#f97316" }
+    ];
+    var maxBar = Math.max.apply(null, bars.map(function(b){ return b.val; })) || 1;
+    var chartEl = document.getElementById("videoBarChart");
+    if (chartEl) {
+      chartEl.innerHTML = bars.map(function(b){
+        var h = Math.max(Math.round((b.val / maxBar) * 76), 4);
+        return '<div class="bar" style="height:' + h + 'px;background:' + b.color + ';" data-val="' + b.val + '"></div>';
+      }).join("");
+    }
+    after(200, function(){ setRing("videoRing", vSucc, 276.5); });
+  }
+
+  if (type === "engage") {
+    var edone      = +(ep.totalCommentLikeDone          || 0);
+    var eg         = +(ep.totalCommentLikeGet           || 0);
+    var edByYou    = +(ep.totalCommentLikeDeletedByYou  || 0);
+    var edByOth    = +(ep.totalCommentLikeDeleteByOthers|| 0);
+    var epo        = +(ep.pendingCommentLikeToOthers    || 0);
+    var epi        = +(ep.pendingCommentLikeFromOthers  || 0);
+    var etot       = Math.max(edone + eg + edByYou + edByOth + epo + epi, 1);
+    var totalDel   = edByYou + edByOth;
+    var eret       = eg > 0 ? Math.max(Math.round(((eg - totalDel) / eg) * 100), 0) : 0;
+
+    setText("engageTotal",            fmt(eg));
+    setText("engageDone",             fmt(edone));
+    setText("engageDeletedByYou",     fmt(edByYou));
+    setText("engageDeletedByOthers",  fmt(edByOth));
+    setText("engagePendOut",          fmt(epo));
+    setText("engagePendIn",           fmt(epi));
+    setText("engageLastWorkTxt",      ep.lastTimeWork ? "Last active: " + fmtDate(ep.lastTimeWork) : "No activity yet");
+    setText("engNetValue",            fmt(Math.max(eg - totalDel, 0)));
+    setText("engRingPct",             eret + "%");
+    setText("engProgGainedLbl",       fmt(eg));
+    setText("engProgDelByYouLbl",     fmt(edByYou));
+    setText("engProgDelByOthersLbl",  fmt(edByOth));
+    setText("engProgOutLbl",          fmt(epo));
+    setText("engProgInLbl",           fmt(epi));
+
+    after(200, function(){
+      setProg("engProgGained",      Math.round((eg       / etot) * 100));
+      setProg("engProgDelByYou",    Math.round((edByYou  / etot) * 100));
+      setProg("engProgDelByOthers", Math.round((edByOth  / etot) * 100));
+      setProg("engProgOut",         Math.round((epo      / etot) * 100));
+      setProg("engProgIn",          Math.round((epi      / etot) * 100));
+      setRing("engRing", eret, 326.7);
+    });
+  }
+
+  if (type === "playlist") {
+    var pw         = +(pp.totalPlaylistWatched                        || 0);
+    var ppo        = +(pp.totalPlaylistWatchedPendingToOthers         || 0);
+    var ppi        = +(pp.totalPlaylistWatchedPendingFromOthers       || 0);
+    var pCheatYou  = +(pp.totalPlaylistWatchingCheatingByYou          || 0);
+    var pCheatOth  = +(pp.totalPlaylistWatchingCheatingByOthers       || 0);
+    var ptot       = Math.max(pw + ppo + ppi + pCheatYou + pCheatOth, 1);
+
+    setText("playlistWatched",               fmt(pw));
+    setText("playlistPendOut",               fmt(ppo));
+    setText("playlistPendIn",                fmt(ppi));
+    setText("playlistCheatByYou",            fmt(pCheatYou));
+    setText("playlistCheatByOthers",         fmt(pCheatOth));
+    setText("playlistLastWorkTxt",           pp.lastTimeWork ? "Last active: " + fmtDate(pp.lastTimeWork) : "No activity yet");
+    setText("playlistProgWatchedLbl",        fmt(pw));
+    setText("playlistProgOutLbl",            fmt(ppo));
+    setText("playlistProgInLbl",             fmt(ppi));
+    setText("playlistProgCheatByYouLbl",     fmt(pCheatYou));
+    setText("playlistProgCheatByOthersLbl",  fmt(pCheatOth));
+
+    if (pCheatYou > 0) { show("playlistCheatWarning"); }
+
+    after(200, function(){
+      setProg("playlistProgWatched",        Math.round((pw        / ptot) * 100));
+      setProg("playlistProgOut",            Math.round((ppo       / ptot) * 100));
+      setProg("playlistProgIn",             Math.round((ppi       / ptot) * 100));
+      setProg("playlistProgCheatByYou",     Math.round((pCheatYou / ptot) * 100));
+      setProg("playlistProgCheatByOthers",  Math.round((pCheatOth / ptot) * 100));
+    });
+  }
+}
+
+/* ══════════════════ LOGOUT ══════════════════ */
+function logoutUser() {
+  if (!confirm("Are you sure you want to logout?")) return;
+  localStorage.clear(); 
+  sessionStorage.clear();
+  window.location.replace("signin.html");
+}
+
+/* ── KICK OFF ── */
+loadDashboard();
+</script>
+
+<!-- ── TAB RENDERER FUNCTIONS ── -->
+<script>
 function renderSubscribersTab(sp) {
   return `
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
@@ -1206,258 +1301,6 @@ function renderEngagementTab(ep) {
       </div>
     </div>`;
 }
-
-/* ══════════════════ GROUP TABS ══════════════════ */
-function renderGroupTabs(m, sp, vp, ep, pp) {
-  const configs = [
-    { 
-      key: "inSubscribersWork", 
-      id: "subs",
-      label: "Subscribers", 
-      emoji: "👥", 
-      render: function() { return renderSubscribersTab(sp); }
-    },
-    { 
-      key: "inVideoTaskWork", 
-      id: "video",
-      label: "Video Watch", 
-      emoji: "🎬", 
-      render: function() { return renderVideoTab(vp); }
-    },
-    { 
-      key: "inWatchtimeWork", 
-      id: "playlist",
-      label: "Playlist", 
-      emoji: "⏱", 
-      render: function() { return renderPlaylistTab(pp); }
-    },
-    { 
-      key: "inLikeAndCommentWork", 
-      id: "engage",
-      label: "Engagement", 
-      emoji: "💬", 
-      render: function() { return renderEngagementTab(ep); }
-    }
-  ];
-
-  const activeGroups = configs.filter(function(g) { return m[g.key] === "Yes"; });
-  if (activeGroups.length === 0) return;
-
-  const tabsContainer = document.getElementById('groupTabs');
-  if (!tabsContainer) return;
-  tabsContainer.innerHTML = '';
-
-  activeGroups.forEach(function(group, i) {
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn flex items-center gap-2 ' + (i === 0 ? 'active' : '');
-    btn.innerHTML = group.emoji + ' ' + group.label;
-    btn.onclick = function() {
-      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      document.getElementById('tabContent').innerHTML = group.render();
-      initTabStats(group.id, sp, vp, ep, pp);
-    };
-    tabsContainer.appendChild(btn);
-  });
-
-  document.getElementById('tabContent').innerHTML = activeGroups[0].render();
-  initTabStats(activeGroups[0].id, sp, vp, ep, pp);
-  show("groupsTabSection");
-}
-
-/* ══════════════════ CHART HELPERS ══════════════════ */
-function setRing(id, pct, circ) {
-  var el = document.getElementById(id);
-  if (el) el.style.strokeDashoffset = circ - (pct / 100) * circ;
-}
-
-function setProg(id, pct) {
-  var el = document.getElementById(id);
-  if (el) el.style.width = Math.min(Math.max(pct, 0), 100) + "%";
-}
-
-function after(ms, fn) { setTimeout(fn, ms); }
-
-/* ══════════════════ DOM HELPERS ══════════════════ */
-function show(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove("hidden");
-  if (el.style.display === "none") el.style.display = "";
-}
-
-function hide(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add("hidden");
-}
-
-function setText(id, val) {
-  var el = document.getElementById(id);
-  if (el) el.textContent = val;
-}
-
-/* ══════════════════ UTILS ══════════════════ */
-function fmt(n) {
-  var num = parseFloat(n);
-  return isNaN(num) ? "0" : num.toLocaleString();
-}
-
-function fmtDate(d) {
-  if (!d) return "";
-  var dt = new Date(d);
-  if (isNaN(dt.getTime())) return String(d);
-  return dt.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
-}
-
-/* ══════════════════ GLOBAL UPDATER ══════════════════ */
-function initTabStats(type, sp, vp, ep, pp) {
-  if (type === "subs") {
-    var gained      = +(sp.totalSubscribersGet        || 0);
-    var lostByOth   = +(sp.totalUnsubscribeByOthers   || 0);
-    var pendIn      = +(sp.pendingSubscribeFromOthers  || 0);
-    var unsubByYou  = +(sp.totalUnsubscribeByYou       || 0);
-    var total       = Math.max(gained + lostByOth + pendIn, 1);
-    var netPct      = Math.round((gained / total) * 100);
-    var limitPct    = sp.subscribersLimit > 0 ? Math.min(Math.round((gained / sp.subscribersLimit) * 100), 100) : 0;
-
-    setText("subsTotal",         fmt(gained));
-    setText("subsDone",          fmt(sp.totalSubscribeChannels));
-    setText("subsUnsubByYou",    fmt(unsubByYou));
-    setText("subsPendOut",       fmt(sp.pendingSubscribeToOthers));
-    setText("subsUnsubByOthers", fmt(lostByOth));
-    setText("subsPendIn",        fmt(pendIn));
-    setText("subsLimitUsed",     fmt(gained));
-    setText("subsLimitMax",      fmt(sp.subscribersLimit));
-    setText("subsLastWorkTxt",   sp.lastTimeWork ? "Last active: " + fmtDate(sp.lastTimeWork) : "No activity yet");
-    setText("subsRingPct",       netPct + "%");
-    setText("subsLegGained",     fmt(gained));
-    setText("subsLegLost",       fmt(lostByOth));
-    setText("subsLegPendIn",     fmt(pendIn));
-    setText("subsLimitMsg",      sp.limitReached === "Yes" ? "⚠️ Subscriber limit reached — you cannot earn more until it's raised." : limitPct + "% of your subscriber limit used.");
-
-    after(200, function(){
-      setRing("subsRingGained", netPct, 276.5);
-      setProg("subsProgGained", Math.round((gained    / total) * 100));
-      setProg("subsProgLost",   Math.round((lostByOth / total) * 100));
-      setProg("subsProgPendIn", Math.round((pendIn    / total) * 100));
-      setProg("subsLimitBar",   limitPct);
-    });
-  }
-  
-  if (type === "video") {
-    var vw         = +(vp.totalVideoWatched                       || 0);
-    var vpf        = +(vp.totalVideoWatchedPendingFromOthers      || 0);
-    var vpb        = +(vp.totalVideoWatchedPendingByOthers        || 0);
-    var vYourRej   = +(vp.totalYourVideoWatchingRejects           || 0);
-    var vOthRej    = +(vp.totalVideoWatchingRejectsOfOthers       || 0);
-    var vtot       = Math.max(vw + vpf + vpb + vYourRej + vOthRej, 1);
-    var vSucc      = Math.round((vw / vtot) * 100);
-
-    setText("videoWatched",       fmt(vw));
-    setText("videoPendIn",        fmt(vpf));
-    setText("videoPendOut",       fmt(vpb));
-    setText("videoYourRejects",   fmt(vYourRej));
-    setText("videoOthersRejects", fmt(vOthRej));
-    setText("videoLastWorkTxt",   vp.lastTimeWork ? "Last active: " + fmtDate(vp.lastTimeWork) : "No activity yet");
-    setText("videoSuccessDesc",   fmt(vw) + " videos");
-    setText("videoRingPct",       vSucc + "%");
-
-    var bars = [
-      { val:vw,       color:"#ef4444" },
-      { val:vpf,      color:"#fbbf24" },
-      { val:vpb,      color:"#38bdf8" },
-      { val:vYourRej, color:"#dc2626" },
-      { val:vOthRej,  color:"#f97316" }
-    ];
-    var maxBar = Math.max.apply(null, bars.map(function(b){ return b.val; })) || 1;
-    var chartEl = document.getElementById("videoBarChart");
-    if (chartEl) {
-      chartEl.innerHTML = bars.map(function(b){
-        var h = Math.max(Math.round((b.val / maxBar) * 76), 4);
-        return '<div class="bar" style="height:' + h + 'px;background:' + b.color + ';" data-val="' + b.val + '"></div>';
-      }).join("");
-    }
-    after(200, function(){ setRing("videoRing", vSucc, 276.5); });
-  }
-
-  if (type === "engage") {
-    var edone      = +(ep.totalCommentLikeDone          || 0);
-    var eg         = +(ep.totalCommentLikeGet           || 0);
-    var edByYou    = +(ep.totalCommentLikeDeletedByYou  || 0);
-    var edByOth    = +(ep.totalCommentLikeDeleteByOthers|| 0);
-    var epo        = +(ep.pendingCommentLikeToOthers    || 0);
-    var epi        = +(ep.pendingCommentLikeFromOthers  || 0);
-    var etot       = Math.max(edone + eg + edByYou + edByOth + epo + epi, 1);
-    var totalDel   = edByYou + edByOth;
-    var eret       = eg > 0 ? Math.max(Math.round(((eg - totalDel) / eg) * 100), 0) : 0;
-
-    setText("engageTotal",            fmt(eg));
-    setText("engageDone",             fmt(edone));
-    setText("engageDeletedByYou",     fmt(edByYou));
-    setText("engageDeletedByOthers",  fmt(edByOth));
-    setText("engagePendOut",          fmt(epo));
-    setText("engagePendIn",           fmt(epi));
-    setText("engageLastWorkTxt",      ep.lastTimeWork ? "Last active: " + fmtDate(ep.lastTimeWork) : "No activity yet");
-    setText("engNetValue",            fmt(Math.max(eg - totalDel, 0)));
-    setText("engRingPct",             eret + "%");
-    setText("engProgGainedLbl",       fmt(eg));
-    setText("engProgDelByYouLbl",     fmt(edByYou));
-    setText("engProgDelByOthersLbl",  fmt(edByOth));
-    setText("engProgOutLbl",          fmt(epo));
-    setText("engProgInLbl",           fmt(epi));
-
-    after(200, function(){
-      setProg("engProgGained",      Math.round((eg       / etot) * 100));
-      setProg("engProgDelByYou",    Math.round((edByYou  / etot) * 100));
-      setProg("engProgDelByOthers", Math.round((edByOth  / etot) * 100));
-      setProg("engProgOut",         Math.round((epo      / etot) * 100));
-      setProg("engProgIn",          Math.round((epi      / etot) * 100));
-      setRing("engRing", eret, 326.7);
-    });
-  }
-
-  if (type === "playlist") {
-    var pw         = +(pp.totalPlaylistWatched                        || 0);
-    var ppo        = +(pp.totalPlaylistWatchedPendingToOthers         || 0);
-    var ppi        = +(pp.totalPlaylistWatchedPendingFromOthers       || 0);
-    var pCheatYou  = +(pp.totalPlaylistWatchingCheatingByYou          || 0);
-    var pCheatOth  = +(pp.totalPlaylistWatchingCheatingByOthers       || 0);
-    var ptot       = Math.max(pw + ppo + ppi + pCheatYou + pCheatOth, 1);
-
-    setText("playlistWatched",               fmt(pw));
-    setText("playlistPendOut",               fmt(ppo));
-    setText("playlistPendIn",                fmt(ppi));
-    setText("playlistCheatByYou",            fmt(pCheatYou));
-    setText("playlistCheatByOthers",         fmt(pCheatOth));
-    setText("playlistLastWorkTxt",           pp.lastTimeWork ? "Last active: " + fmtDate(pp.lastTimeWork) : "No activity yet");
-    setText("playlistProgWatchedLbl",        fmt(pw));
-    setText("playlistProgOutLbl",            fmt(ppo));
-    setText("playlistProgInLbl",             fmt(ppi));
-    setText("playlistProgCheatByYouLbl",     fmt(pCheatYou));
-    setText("playlistProgCheatByOthersLbl",  fmt(pCheatOth));
-
-    if (pCheatYou > 0) { show("playlistCheatWarning"); }
-
-    after(200, function(){
-      setProg("playlistProgWatched",        Math.round((pw        / ptot) * 100));
-      setProg("playlistProgOut",            Math.round((ppo       / ptot) * 100));
-      setProg("playlistProgIn",             Math.round((ppi       / ptot) * 100));
-      setProg("playlistProgCheatByYou",     Math.round((pCheatYou / ptot) * 100));
-      setProg("playlistProgCheatByOthers",  Math.round((pCheatOth / ptot) * 100));
-    });
-  }
-}
-
-/* ══════════════════ LOGOUT ══════════════════ */
-function logoutUser() {
-  if (!confirm("Are you sure you want to logout?")) return;
-  localStorage.clear(); sessionStorage.clear();
-  window.location.replace("signin.html");
-}
-
-/* ── KICK OFF ── */
-loadDashboard();
 </script>
 </body>
 </html>

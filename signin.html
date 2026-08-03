@@ -8,67 +8,60 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="session-manager.js"></script>
 <style>
 :root{--bg:#F7F6EE;--card:#12141c;}
 *{font-family:Inter,sans-serif}
 body{background:var(--bg);color:white;overflow-x:hidden}
 .glass-nav{background-image:linear-gradient(180deg,#211F1E 0 100%);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06)}
 .card{
-  
-  
  box-shadow: 4px 4px 0px 0px #211F1F;
  border: 2px solid #211F1F;
-    border-radius: 20px;
+ border-radius: 20px;
 background: #ffffff;
-    padding: 0px 0.8rem;
-    height: auto;
+ padding: 0px 0.8rem;
+ height: auto;
 }
 .input{width:100%;padding:13px 15px;
-    box-shadow: 4px 4px 0px 0px #211F1F;
+ box-shadow: 4px 4px 0px 0px #211F1F;
  border: 2px solid #211F1F;
-    border-radius: 20px;
+ border-radius: 20px;
 background: #f9fafa;
-    height: auto;
-  outline:none;transition:.2s;
+ height: auto;
+ outline:none;transition:.2s;
 color: black;}
 .input:focus{
  box-shadow: 4px 4px 0px 0px #111111;
-
 }
 .btn-purple{
-
  box-shadow: 4px 4px 0px 0px #211F1F;
  border: 2px solid #211F1F;
-    border-radius: 20px;
+ border-radius: 20px;
 background: #ACD1C0;
-    padding: 0px 0.8rem;
-    height: auto;
-
+ padding: 0px 0.8rem;
+ height: auto;
 }
 .btn-purple:hover{transform:translateY(-1px)}
 .text-muted{color:#070707}
 .password-box {
-  position: relative;
-  width: 100%;
+ position: relative;
+ width: 100%;
 }
-
 .eye-btn {
-  position: absolute;
-  right: 16px;
-  top: calc(50% - 2px); /* Offsets downward layout alignment to visually center with flat shadow */
-  transform: translateY(-50%);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  z-index: 10;
-  transition: transform 0.15s ease-in-out;
+ position: absolute;
+ right: 16px;
+ top: calc(50% - 2px);
+ transform: translateY(-50%);
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ user-select: none;
+ z-index: 10;
+ transition: transform 0.15s ease-in-out;
 }
-
-/* Subtle feedback when interacting with the toggle icon */
 .eye-btn:hover {
-  transform: translateY(-50%) scale(1.1);
+ transform: translateY(-50%) scale(1.1);
 }.rounded-popup{border-radius:15px}
 </style>
 </head>
@@ -187,11 +180,11 @@ document.getElementById("menuBtn").addEventListener("click", () => {
 });
 
 /* ===== PASSWORD TOGGLE ===== */
-/* ===== PASSWORD TOGGLE ===== */
 const togglePassword = document.getElementById("togglePassword");
 const eyeOpen  = document.getElementById("eyeOpen");
 const eyeClose = document.getElementById("eyeClose");
-/* ===== PASSWORD TOGGLE FUNCTIONALITY ===== */
+const passwordInput = document.getElementById("password");
+
 togglePassword.addEventListener("click", () => {
   if (passwordInput.type === "password") {
     passwordInput.type = "text"; 
@@ -203,10 +196,9 @@ togglePassword.addEventListener("click", () => {
     eyeClose.classList.add("hidden");
   }
 });
+
 /* ===== INPUTS ===== */
-/* ===== INPUTS & ELEMENTS DEFINITION ===== */
 const usernameInput = document.getElementById("username");
-const passwordInput = document.getElementById("password"); // <-- Added this missing definition
 const loginForm     = document.getElementById("loginForm");
 const loginBtn      = document.getElementById("loginBtn");
 
@@ -222,6 +214,7 @@ function saveMember(member, password, remember) {
   if (remember) {
     localStorage.setItem("username", member.username);
     localStorage.setItem("password", password);
+    localStorage.setItem("usercode", member.usercode);
   }
   localStorage.setItem("usercode",                    member.usercode);
   localStorage.setItem("status",                      member.accountStatus);
@@ -299,6 +292,10 @@ window.addEventListener("load", async () => {
       if (data.status === "success") {
         if (data.accountStatus === "Active") {
           saveMember(data.member, savedPassword, true);
+          // Create session with proper variables
+          if (data.member && data.member.usercode) {
+            sessionManager.createSession(data.member.usercode, data.member.username);
+          }
           window.location.href = "analytics.html";
         } else {
           clearSession();
@@ -356,6 +353,11 @@ loginForm.addEventListener("submit", async e => {
       }
 
       saveMember(data.member, password, rememberMe);
+      
+      // Create session with proper variables
+      if (data.member && data.member.usercode) {
+        sessionManager.createSession(data.member.usercode, data.member.username);
+      }
 
       Swal.fire({
         icon: "success",
@@ -373,7 +375,8 @@ loginForm.addEventListener("submit", async e => {
     }
 
   } catch (error) {
-    err("Server Error", "Something went wrong. Please try again.");
+    console.error("Login error:", error);
+    err("Server Error", "Something went wrong. Please check your connection and try again.");
   }
 
   loginBtn.innerText = "Log In";

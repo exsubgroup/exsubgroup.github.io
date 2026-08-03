@@ -47,7 +47,10 @@
 </style>
 </head>
 <body>
-
+<!-- Neo-Brutalist Background Blobs -->
+<div class="blob-mint"></div>
+<div class="blob-sand"></div>
+<div class="blob-mint-small"></div>
 <!-- NAVBAR -->
 <!-- NAVBAR -->
 <!-- NAVBAR -->
@@ -58,7 +61,7 @@
 
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
-
+<script src="session-manager.js"></script>
 
 <!-- NAVBAR -->
 <!-- NAVBAR -->
@@ -114,7 +117,7 @@
 
 
             </div>
-            <div class="bg-red-500/10 border border-red-500/20 text-red-300 px-3 py-1 rounded-full text-xs font-semibold">Popular</div>
+            <div class="tinygroupbills">Popular</div>
           </div>
           <h2 class="text-2xl font-bold mt-6">Subscribers Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
@@ -141,7 +144,7 @@
   
 
             </div>
-            <div class="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">Trending</div>
+            <div class="tinygroupbills">Trending</div>
           </div>
           <h2 class="text-2xl font-bold mt-6">Video Boost Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
@@ -169,7 +172,7 @@
 </svg> 
 
             </div>
-            <div class="bg-green-500/10 border border-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs font-semibold">Recommended</div>
+            <div class="tinygroupbills">Recommended</div>
           </div>
           <h2 class="text-2xl font-bold mt-6">Watch Time Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
@@ -196,7 +199,7 @@
 
 
             </div>
-            <div class="bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-xs font-semibold">Active</div>
+            <div class="tinygroupbills">Active</div>
           </div>
           <h2 class="text-2xl font-bold mt-6">Engagement Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
@@ -216,7 +219,7 @@
         <!-- GROUP: AD WATCHING — COMING SOON -->
         <div class="card rounded-3xl p-6 opacity-60 relative overflow-hidden">
           <div class="absolute top-4 right-4">
-            <div class="bg-blue-500/15 border border-blue-500/30 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold">Coming Soon</div>
+            <div class="tinygroupbills">Coming Soon</div>
           </div>
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -247,7 +250,7 @@
 <!-- GROUP: SHORTS VIDEO VIRAL — COMING SOON -->
 <div class="card rounded-3xl p-6 opacity-60 relative overflow-hidden">
   <div class="absolute top-4 right-4">
-    <div class="bg-blue-500/15 border border-blue-500/30 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold">Coming Soon</div>
+    <div class="tinygroupbills">Coming Soon</div>
   </div>
   <div class="flex items-start justify-between gap-4">
     <div class="group-icon">
@@ -284,51 +287,25 @@
 
 <script>
 /* =========================================================
-   LOGOUT + MENUS
-========================================================= */
-function logoutUser() { localStorage.clear(); window.location.href = "index.html"; }
-
-document.getElementById("mobileMenuBtn").addEventListener("click", e => {
-  e.stopPropagation();
-  document.getElementById("mobileMenu").classList.toggle("hidden");
-});
-document.getElementById("profileBtn").addEventListener("click", e => {
-  e.stopPropagation();
-  document.getElementById("profileDropdown").classList.toggle("hidden");
-});
-document.getElementById("notifBtn").addEventListener("click", e => {
-  e.stopPropagation();
-  document.getElementById("notifDropdown").classList.toggle("hidden");
-});
-document.addEventListener("click", () => {
-  document.getElementById("mobileMenu").classList.add("hidden");
-  document.getElementById("profileDropdown").classList.add("hidden");
-  document.getElementById("notifDropdown").classList.add("hidden");
-});
-</script>
-
-<script>
-/* =========================================================
    AUTH CHECK + NAVBAR POPULATE
 ========================================================= */
-const savedUsername = localStorage.getItem("username") || "";
-const savedPassword = localStorage.getItem("password") || "";
-const savedUserCode = localStorage.getItem("usercode") || "";
+/* ── SESSION ── */
+var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
+var username = localStorage.getItem("username") || "";
+var userpassword = localStorage.getItem("password") || "";
 
-if (!savedUsername || !savedPassword) {
-  window.location.href = "signin.html";
+// CREDENTIAL CHECK: Must have all three
+if (!usercode || !username || !userpassword) { 
+  window.location.replace("signin.html"); 
 }
 
-document.getElementById("navUserName").innerText      = savedUsername || "Member";
-document.getElementById("dropdownUserName").innerText = savedUsername || "Member";
-document.getElementById("dropdownUserCode").innerText = "ID #" + (savedUserCode || "0000");
 </script>
 
 <script>
 /* =========================================================
    GROUPS BACKEND WIRING
 ========================================================= */
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyZMZ0uLqt99oITRNHijQvzeA5RG7UQlnRBcXGp5dldk6V2F20TGY7hA8OOa_-7Kn7_/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwGM2uT4jv_wwQHgBSr2ed53cp33kOxhaYhrcgcg9I8lUYxLnHy2PONZcjz-oTigg9k/exec";
 
 const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement"];
 
@@ -412,47 +389,67 @@ function setLeaveButtonState(groupKey, groupData) {
     leaveBtn.textContent = "Leave Group";
   }
 }
-
 function showGroupsGrid() {
-  document.getElementById("groupsLoading").classList.add("hidden");
-  document.getElementById("groupsGrid").classList.remove("hidden");
+  const loading = document.getElementById("groupsLoading");
+  const grid = document.getElementById("groupsGrid");
+  if (loading) loading.classList.add("hidden");
+  if (grid) grid.classList.remove("hidden");
 }
 
 function showGroupsError(message) {
   const loading = document.getElementById("groupsLoading");
   if (!loading) return;
-  loading.innerHTML =
-    '<p class="text-red-400 text-sm text-center max-w-sm">' +
-    (message || "Couldn't load group status. Please refresh the page.") +
-    '</p>';
+  loading.innerHTML = `
+    <div class="text-center">
+      <div class="text-4xl mb-4">⚠️</div>
+      <p class="text-red-500 text-sm max-w-sm mx-auto">${message || "Couldn't load group status. Please refresh the page."}</p>
+      <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-[#211F1F] text-white rounded-xl border-2 border-[#211F1F] font-bold shadow-[4px_4px_0px_0px_#211F1F] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#211F1F] transition-all">
+        🔄 Retry
+      </button>
+    </div>
+  `;
+  loading.classList.remove("hidden");
 }
 
 async function loadGroupsStatus() {
-  if (!savedUserCode) {
+  if (!usercode) {
     console.warn("[groups] No usercode found, showing grid without status.");
     showGroupsGrid();
     return;
   }
 
   try {
-    const res = await callBackend("getGroupsStatus", { usercode: savedUserCode });
+    console.log("[groups] Fetching status for usercode:", usercode);
+    const res = await callBackend("getGroupsStatus", { usercode: usercode });
     console.log("[groups] status response:", res);
 
     if (!res.success) {
-      showGroupsError(res.message);
+      // Check if it's a "member not found" error
+      if (res.message && res.message.includes("Member not found")) {
+        showGroupsError("Your account (" + usercode + ") was not found in the system. Please contact support.");
+      } else {
+        showGroupsError(res.message || "Failed to load group status.");
+      }
+      return;
+    }
+
+    // Check if data exists
+    if (!res.data || !res.data.groups) {
+      showGroupsError("Invalid response from server. Please refresh.");
       return;
     }
 
     GROUP_KEYS.forEach(key => {
       const btn = document.getElementById("btn-" + key);
-      const g = res.data.groups[key];
+      const g = res.data.groups ? res.data.groups[key] : null;
+      
       if (btn && g) {
         if (g.joined) {
           setButtonState(btn, "joined", null, key);
         } else if (g.eligible) {
           setButtonState(btn, "eligible", null, key);
         } else {
-          setButtonState(btn, "ineligible", g.reason, key);
+          setButtonState(btn, "ineligible", g.reason || "Requirements not met", key);
         }
       }
 
@@ -460,7 +457,7 @@ async function loadGroupsStatus() {
 
       const countEl = document.getElementById("count-" + key);
       if (countEl && res.data.counts) {
-        countEl.textContent = formatMemberCount(res.data.counts[key]);
+        countEl.textContent = formatMemberCount(res.data.counts[key] || 0);
       }
     });
 
@@ -470,7 +467,6 @@ async function loadGroupsStatus() {
     showGroupsError("Couldn't connect to the server. Please refresh the page.");
   }
 }
-
 async function handleJoinClick(e) {
   const btn = e.currentTarget;
   const groupKey = btn.dataset.group;
@@ -481,7 +477,7 @@ async function handleJoinClick(e) {
   btn.textContent = "Joining…";
 
   try {
-    const res = await callBackend("joinGroup", { usercode: savedUserCode, group: groupKey });
+    const res = await callBackend("joinGroup", { usercode: usercode, group: groupKey });
     if (res.success) {
       setButtonState(btn, "joined", null, groupKey);
       loadGroupsStatus(); // refresh leave button + member counts
@@ -530,7 +526,7 @@ async function handleLeaveClick(e) {
   btn.textContent = "Processing…";
 
   try {
-    const res = await callBackend("removeFromGroup", { usercode: savedUserCode, group: groupKey });
+    const res = await callBackend("removeFromGroup", { usercode: usercode, group: groupKey });
 
     if (!res.success) {
       Swal.fire({ icon: "error", title: "Couldn't leave group", text: res.message || "Please try again." });
