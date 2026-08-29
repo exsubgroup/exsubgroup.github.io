@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════
    NAVBAR.JS — Left sidebar (Exsub Group)
-   Updated: Full Session Management with Absolute Timeout
+   Updated: Simple username display without profile pic
    ══════════════════════════════════════════════ */
 'use strict';
 
@@ -20,16 +20,15 @@ const NAVBAR_TEMPLATE = `
   <div class="sidebar-brand">
     <div class="sidebar-brand-left">
       <img src="images/logo.svg" alt="Logo">
-   <span style="padding-left:10px">Exsub Group</span>
+      <span style="padding-left:10px">Exsub Group</span>
     </div>
     <button id="sidebarCloseBtn" aria-label="Close menu">✕</button>
   </div>
 
   <div class="sidebar-user-panel">
     <div class="user-profile-trigger" onclick="toggleProfileDropdown()">
-      <img id="navProfilePic" src="images/default-avatar.png" alt="Profile">
-      <div class="user-info">
-        <span id="navUsername" class="username">Loading...</span>
+      <div class="user-info" style="padding: 8px 4px;">
+        <span id="navUsername" class="username" style="font-size: 16px;">Loading...</span>
         <span class="user-status">Verified Member</span>
       </div>
       <svg class="chev-profile" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -39,10 +38,6 @@ const NAVBAR_TEMPLATE = `
       <a href="profile.html" target="_self" class="dropdown-item">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         Open Profile
-      </a>
-      <a href="#" onclick="showSessionInfo()" class="dropdown-item">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        Session Info
       </a>
       <hr class="dropdown-divider">
       <button id="lnkLogout" class="dropdown-item logout-btn">
@@ -175,9 +170,6 @@ const NAVBAR_TEMPLATE = `
 </aside>
 `;
 
-// Google Apps Script Web App URL
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxqKJ2sSttvg4pFxdd6SpUokDCAdSRwT-1Y-gTHeIxySf5puZoDiIwMZNx4xrmPuHA/exec";
-
 /* ── PROFILE DROPDOWN TOGGLE ── */
 window.toggleProfileDropdown = function() {
   const dropdown = document.getElementById("profileDropdown");
@@ -250,139 +242,26 @@ function wireSidebarDrawer() {
   });
 }
 
-/* ── DYNAMIC SESSION SYNC WITH GOOGLE SHEETS ── */
-/* ── DYNAMIC SESSION SYNC WITH GOOGLE SHEETS ── */
-async function syncNavbarUserSession() {
-  const txtUser = document.getElementById("navUsername");
-  const imgProfile = document.getElementById("navProfilePic");
+/* ── SIMPLE USERNAME DISPLAY (No API call, just localStorage) ── */
+function displayUsername() {
+  const usernameEl = document.getElementById("navUsername");
+  if (!usernameEl) return;
 
-  // Check if we're on signin page
-  const currentPage = window.location.pathname.split('/').pop() || '';
-  if (currentPage === 'signin.html') {
-    if (txtUser) txtUser.textContent = 'Guest';
-    if (imgProfile) imgProfile.src = "images/default-avatar.png";
-    return;
-  }
-
-  const userCode = (localStorage.getItem("usercode") || "").trim();
+  // Get username from localStorage
+  const username = localStorage.getItem("username") || "Guest";
   
-  if (!userCode) {
-    const storedName = localStorage.getItem("username") || "ExUser";
-    if (txtUser) {
-      let cleanName = storedName.trim();
-      if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
-      txtUser.textContent = cleanName;
+  // Display: "Hi, {username}"
+  let displayName = username.trim();
+  if (displayName === "Guest") {
+    usernameEl.textContent = "Hi, Guest";
+  } else {
+    // If username is too long, truncate it
+    if (displayName.length > 20) {
+      displayName = displayName.substring(0, 18) + "..";
     }
-    if (imgProfile) imgProfile.src = "images/default-avatar.png";
-    return;
-  }
-
-  try {
-    const url = `${GAS_WEB_APP_URL}?action=getProfileContext&userCode=${encodeURIComponent(userCode)}`;
-    console.log("Fetching profile from:", url);
-    
-    const response = await fetch(url);
-    
-    // Check if response is OK
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const text = await response.text();
-    console.log("Raw response:", text.substring(0, 200));
-    
-    // Try to parse JSON
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.error("Failed to parse JSON. Response starts with:", text.substring(0, 100));
-      // If response is HTML, it means the URL is wrong
-      if (text.trim().startsWith('<!DOCTYPE')) {
-        throw new Error("The API URL is returning HTML. Please check the script deployment URL.");
-      }
-      throw new Error("Invalid response format");
-    }
-    
-    console.log("Profile API Response:", data);
-
-    if (data.success) {
-      if (txtUser) {
-        let cleanName = data.userName || "ExUser";
-        if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
-        txtUser.textContent = cleanName;
-        console.log("Username set to:", cleanName);
-      }
-
-      if (imgProfile) {
-        const profilePic = data.profilePicture || data.rawProfilePicture;
-        console.log("Profile picture URL from API:", profilePic);
-        
-        if (profilePic && profilePic !== "images/default-avatar.png") {
-          imgProfile.src = profilePic;
-          console.log("Setting profile image to:", profilePic);
-          
-          imgProfile.onerror = function() {
-            console.warn("Failed to load profile image:", this.src);
-            this.onerror = null;
-            this.src = "images/default-avatar.png";
-          };
-          
-          imgProfile.onload = function() {
-            console.log("Profile image loaded successfully:", this.src);
-          };
-        } else {
-          console.log("No valid profile picture found, using default");
-          imgProfile.src = "images/default-avatar.png";
-        }
-      }
-    } else {
-      console.warn("Profile API returned error:", data.message || data.error);
-      const storedName = localStorage.getItem("username") || "ExUser";
-      if (txtUser) {
-        let cleanName = storedName.trim();
-        if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
-        txtUser.textContent = cleanName;
-      }
-      if (imgProfile) imgProfile.src = "images/default-avatar.png";
-    }
-  } catch (error) {
-    console.error("Error fetching profile data:", error);
-    const storedName = localStorage.getItem("username") || "ExUser";
-    if (txtUser) {
-      let cleanName = storedName.trim();
-      if (cleanName.length > 6) cleanName = cleanName.substring(0, 5) + "..";
-      txtUser.textContent = cleanName;
-    }
-    if (imgProfile) imgProfile.src = "images/default-avatar.png";
+    usernameEl.textContent = `Hi, ${displayName}`;
   }
 }
-
-/* ── SESSION INFO DISPLAY ── */
-window.showSessionInfo = function() {
-  const validation = sessionManager.validateSession();
-  
-  if (!validation.valid) {
-    alert('No active session found. Please log in.');
-    return;
-  }
-  
-  const timeRemaining = sessionManager.getTimeRemaining();
-  const sessionData = validation.sessionData;
-  
-  const info = `Session Information
-═══════════════════════════════════════
-User:      ${sessionData.username}
-User Code: ${sessionData.userCode}
-Login Time: ${new Date(sessionData.loginTime).toLocaleString()}
-Expires At: ${new Date(sessionData.expiresAt).toLocaleString()}
-Time Left:  ${timeRemaining ? timeRemaining.formatted : 'Expired'}
-Session ID: ${sessionData.sessionId}
-═══════════════════════════════════════`;
-  
-  alert(info);
-};
-
 
 /* ── INITIALIZATION ── */
 function initNavbar() {
@@ -396,22 +275,33 @@ function initNavbar() {
   wireSidebarDrawer();
   highlightActiveNavLinks();
   
-  // Initialize session manager
-  sessionManager.init().then(() => {
-    // Load profile data
-    syncNavbarUserSession();
-  });
+  // Display username from localStorage
+  displayUsername();
+
+  // Initialize session manager (for logout functionality)
+  if (typeof sessionManager !== 'undefined' && sessionManager) {
+    sessionManager.init().catch(() => {
+      // Silent fail - session manager is optional for this navbar
+    });
+  }
 
   // Setup logout handler
   const logoutBtn = document.getElementById("lnkLogout");
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      sessionManager.clearSession();
-      window.location.href = "signin.html"; 
+    logoutBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      // Clear session
+      if (typeof sessionManager !== 'undefined' && sessionManager) {
+        sessionManager.clearSession();
+      }
+      // Also clear localStorage
+      localStorage.clear();
+      window.location.href = "signin.html";
     });
   }
 }
 
-window.syncNavbarUserSession = syncNavbarUserSession;
+// Make displayUsername available globally for any updates
+window.displayUsername = displayUsername;
 
 document.addEventListener("DOMContentLoaded", initNavbar);

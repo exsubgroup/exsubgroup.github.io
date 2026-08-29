@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EXSUB GROUP - Tasks</title>
+
+<link rel="icon" href="images/logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+    --bg:#050508;
+    --card:#12141c;
+    --card2:#161922;
+    --border:#232632;
+    --purple:#7c3aed;
+    --purple2:#8b5cf6;
+    --muted:#8a8f9e;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    overflow-x:hidden;
+    position:relative;
+}
+
+body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at top,
+    rgba(124,58,237,.15),
+    transparent 35%);
+    pointer-events:none;
+    z-index:0;
+}
+
+.glass-nav{
+       background-image: linear-gradient(180deg, #924ef4 0, #7b2af0 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: white;
+}
+
+.card{
+    background:linear-gradient(180deg,#151821 0%,#101219 100%);
+    border:1px solid var(--border);
+    position:relative;
+    z-index:1;
+}
+
+.text-muted{
+    color:var(--muted);
+}
+
+.btn-purple{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    transition:.25s;
+}
+
+.btn-purple:hover{
+    transform:translateY(-2px);
+    opacity:.92;
+}
+
+.task-card{
+    transition:.3s;
+}
+
+.task-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(124,58,237,.5);
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+}
+
+.group-btn{
+    background:#161922;
+    border:1px solid #232632;
+    transition:.25s;
+}
+
+.group-btn:hover{
+    border-color:#7c3aed;
+}
+
+.group-btn.active{
+    background:linear-gradient(180deg,#8b5cf6 0%,#7c3aed 100%);
+    border-color:transparent;
+}
+
+.profile-menu{
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(10px);
+    transition:.25s;
+}
+
+.profile-menu.show{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+
+input{
+    color:white;
+}
+
+input::placeholder{
+    color:#7d8395;
+}
+
+.scrollbar::-webkit-scrollbar{
+    width:6px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb{
+    background:#2a2f3a;
+    border-radius:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="fixed top-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[1250px] z-50">
+
+    <div class="glass-nav rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+
+        <!-- LEFT -->
+
+        <div class="flex items-center gap-3">
+
+            <img src="images/logo.svg" class="w-8 h-8">
+
+            <span class="font-semibold text-[18px]">
+                Exsub Group
+            </span>
+
+        </div>
+
+        <!-- MENU -->
+
+        <div class="hidden lg:flex items-center gap-8 text-[14px]">
+
+            <a href="#" class="text-white transition">
+                Dashboard
+            </a>
+
+            <a href="#" class="text-white font-medium">
+                Tasks
+            </a>
+
+            <a href="#" class="text-white transition">
+                Groups
+            </a>
+
+            <a href="#" class="text-white transition">
+                Members
+            </a>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="flex items-center gap-3">
+
+            <!-- NOTIFICATION -->
+
+            <button class="w-10 h-10 rounded-full bg-[#161922] border border-[#252936] flex items-center justify-center hover:border-purple-500 transition">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 24a2.4 2.4 0 0 0 2.4-2.4H9.6A2.4 2.4 0 0 0 12 24zm6-7.2v-6c0-3.1-1.7-5.7-4.8-6.5V3.6a1.2 1.2 0 1 0-2.4 0v.7C7.7 5.1 6 7.7 6 10.8v6L3.6 19.2v1.2h16.8v-1.2L18 16.8z"/>
+                </svg>
+
+            </button>
+
+            <!-- PROFILE -->
+
+            <div class="relative">
+
+                <button onclick="toggleProfileMenu()" class="flex items-center gap-2 bg-[#161922] border border-[#252936] hover:border-purple-500 transition px-2 py-1.5 rounded-full">
+
+                    <img src="https://i.pravatar.cc/100" class="w-8 h-8 rounded-full">
+
+                    <span class="hidden sm:block text-[13px]">
+                        Mazhar
+                    </span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="white" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+
+                </button>
+
+                <!-- DROPDOWN -->
+
+                <div id="profileDropdown" class="profile-menu absolute right-0 mt-3 w-56 rounded-2xl overflow-hidden card">
+
+                    <div class="p-4 border-b border-[#232632]">
+
+                        <div class="flex items-center gap-3">
+
+                            <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-full">
+
+                            <div>
+
+                                <h3 class="font-semibold text-sm">
+                                    Mazhar Saleem
+                                </h3>
+
+                                <p class="text-muted text-xs">
+                                    ID #EX24571
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="py-2">
+
+                        <a href="#" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            My Profile
+                        </a>
+
+                        <a href="#" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            Settings
+                        </a>
+
+                        <a href="#" class="block px-4 py-3 text-sm hover:bg-[#1a1d27] transition">
+                            My Tasks
+                        </a>
+
+                        <a href="#" class="block px-4 py-3 text-sm text-red-400 hover:bg-[#1a1d27] transition">
+                            Logout
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+
+<div class="max-w-[1300px] mx-auto px-4 pt-28 pb-10 relative z-10">
+
+    <div class="flex flex-col lg:flex-row gap-6">
+
+        <!-- SIDEBAR -->
+
+        <aside class="w-full lg:w-[300px] space-y-5">
+
+            <!-- PROFILE -->
+
+            <div class="card rounded-3xl p-5">
+
+                <div class="flex items-center gap-4">
+
+                    <img src="https://i.pravatar.cc/100"
+                    class="w-16 h-16 rounded-2xl border border-purple-500">
+
+                    <div>
+
+                        <h2 class="font-semibold text-lg">
+                            Mazhar Saleem
+                        </h2>
+
+                        <p class="text-muted text-sm">
+                            ID #EX24571
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- GROUPS -->
+
+            <div class="card rounded-3xl p-5">
+
+                <h2 class="font-semibold text-lg mb-5">
+                    Task Groups
+                </h2>
+
+                <div class="space-y-3">
+
+                    <button class="group-btn active w-full rounded-2xl px-4 py-4 text-left">
+                        🔥 Subscribers Group
+                    </button>
+
+                    <button class="group-btn w-full rounded-2xl px-4 py-4 text-left">
+                        🚀 Video Boost Group
+                    </button>
+
+                    <button class="group-btn w-full rounded-2xl px-4 py-4 text-left">
+                        ⏱️ Watch Time Group
+                    </button>
+
+                    <button class="group-btn w-full rounded-2xl px-4 py-4 text-left">
+                        ❤️ Engagement Group
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- STATS -->
+
+            <div class="card rounded-3xl p-5">
+
+                <h2 class="font-semibold text-lg mb-5">
+                    Statistics
+                </h2>
+
+                <div class="space-y-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-muted">
+                            Completed
+                        </span>
+
+                        <span class="font-semibold">
+                            342
+                        </span>
+
+                    </div>
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-muted">
+                            In Progress
+                        </span>
+
+                        <span class="font-semibold">
+                            12
+                        </span>
+
+                    </div>
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-muted">
+                            Earnings
+                        </span>
+
+                        <span class="font-semibold text-green-400">
+                            $245
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+        <!-- CONTENT -->
+
+        <main class="flex-1">
+
+            <!-- TOP -->
+
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+
+                <div>
+
+                    <h1 class="text-4xl font-bold">
+                        Subscriber Tasks
+                    </h1>
+
+                    <p class="text-muted mt-2">
+                        Complete tasks and earn rewards
+                    </p>
+
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+
+                    <input
+                    type="text"
+                    placeholder="Search tasks..."
+                    class="bg-[#12141c] border border-[#232632] rounded-2xl px-5 h-[52px] outline-none w-full sm:w-[260px]">
+
+                    <button class="btn-purple px-7 rounded-2xl font-medium h-[52px]">
+                        Create Task
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- TASKS -->
+
+            <div class="space-y-6">
+
+                <!-- CARD -->
+
+                <div class="task-card card rounded-3xl p-6">
+
+                    <div class="flex flex-col xl:flex-row gap-6 justify-between">
+
+                        <!-- LEFT -->
+
+                        <div class="flex gap-5 flex-1">
+
+                            <div class="min-w-[70px] h-[70px] rounded-2xl bg-[#1b1f2b] flex items-center justify-center text-3xl">
+
+                                ▶️
+
+                            </div>
+
+                            <div class="flex-1">
+
+                                <div class="flex flex-wrap items-center gap-3">
+
+                                    <h2 class="text-2xl font-semibold">
+                                        Subscribe YouTube Channel
+                                    </h2>
+
+                                    <span class="bg-green-500/20 text-green-400 text-xs px-3 py-1 rounded-full">
+                                        Active
+                                    </span>
+
+                                </div>
+
+                                <p class="text-muted mt-4 leading-relaxed">
+                                    Subscribe to the creator channel and watch
+                                    at least 2 minutes of the latest uploaded video.
+                                </p>
+
+                                <!-- INFO -->
+
+                                <div class="flex flex-wrap gap-6 mt-5 text-sm">
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Tasks Left:
+                                        </span>
+                                        124
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Completed:
+                                        </span>
+                                        876
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Time:
+                                        </span>
+                                        2 mins
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT -->
+
+                        <div class="w-full xl:w-[250px]">
+
+                            <div class="h-full border border-[#2a2f3a] rounded-3xl p-5 flex flex-col justify-between">
+
+                                <div>
+
+                                    <div class="text-muted text-sm">
+                                        Reward
+                                    </div>
+
+                                    <h2 class="text-5xl font-bold mt-2">
+                                        +25
+                                    </h2>
+
+                                    <p class="text-muted mt-2 text-sm">
+                                        Coins for completion
+                                    </p>
+
+                                </div>
+
+                                <button class="btn-purple mt-6 h-[50px] rounded-2xl font-semibold">
+                                    Start Task
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CARD -->
+
+                <div class="task-card card rounded-3xl p-6">
+
+                    <div class="flex flex-col xl:flex-row gap-6 justify-between">
+
+                        <div class="flex gap-5 flex-1">
+
+                            <div class="min-w-[70px] h-[70px] rounded-2xl bg-[#1b1f2b] flex items-center justify-center text-3xl">
+
+                                ❤️
+
+                            </div>
+
+                            <div class="flex-1">
+
+                                <div class="flex flex-wrap items-center gap-3">
+
+                                    <h2 class="text-2xl font-semibold">
+                                        Like & Comment Video
+                                    </h2>
+
+                                    <span class="bg-yellow-500/20 text-yellow-400 text-xs px-3 py-1 rounded-full">
+                                        Popular
+                                    </span>
+
+                                </div>
+
+                                <p class="text-muted mt-4 leading-relaxed">
+                                    Like the uploaded video and write a real comment.
+                                </p>
+
+                                <div class="flex flex-wrap gap-6 mt-5 text-sm">
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Tasks Left:
+                                        </span>
+                                        98
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Completed:
+                                        </span>
+                                        1.2K
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Time:
+                                        </span>
+                                        1 min
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="w-full xl:w-[250px]">
+
+                            <div class="h-full border border-[#2a2f3a] rounded-3xl p-5 flex flex-col justify-between">
+
+                                <div>
+
+                                    <div class="text-muted text-sm">
+                                        Reward
+                                    </div>
+
+                                    <h2 class="text-5xl font-bold mt-2">
+                                        +18
+                                    </h2>
+
+                                    <p class="text-muted mt-2 text-sm">
+                                        Coins for completion
+                                    </p>
+
+                                </div>
+
+                                <button class="btn-purple mt-6 h-[50px] rounded-2xl font-semibold">
+                                    Start Task
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CARD -->
+
+                <div class="task-card card rounded-3xl p-6">
+
+                    <div class="flex flex-col xl:flex-row gap-6 justify-between">
+
+                        <div class="flex gap-5 flex-1">
+
+                            <div class="min-w-[70px] h-[70px] rounded-2xl bg-[#1b1f2b] flex items-center justify-center text-3xl">
+
+                                ⏱️
+
+                            </div>
+
+                            <div class="flex-1">
+
+                                <div class="flex flex-wrap items-center gap-3">
+
+                                    <h2 class="text-2xl font-semibold">
+                                        Watch Time Task
+                                    </h2>
+
+                                    <span class="bg-purple-500/20 text-purple-400 text-xs px-3 py-1 rounded-full">
+                                        Premium
+                                    </span>
+
+                                </div>
+
+                                <p class="text-muted mt-4 leading-relaxed">
+                                    Watch 5 minutes of the video without skipping.
+                                </p>
+
+                                <div class="flex flex-wrap gap-6 mt-5 text-sm">
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Tasks Left:
+                                        </span>
+                                        52
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Completed:
+                                        </span>
+                                        542
+                                    </div>
+
+                                    <div>
+                                        <span class="text-muted">
+                                            Time:
+                                        </span>
+                                        5 mins
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="w-full xl:w-[250px]">
+
+                            <div class="h-full border border-[#2a2f3a] rounded-3xl p-5 flex flex-col justify-between">
+
+                                <div>
+
+                                    <div class="text-muted text-sm">
+                                        Reward
+                                    </div>
+
+                                    <h2 class="text-5xl font-bold mt-2">
+                                        +45
+                                    </h2>
+
+                                    <p class="text-muted mt-2 text-sm">
+                                        Coins for completion
+                                    </p>
+
+                                </div>
+
+                                <button class="btn-purple mt-6 h-[50px] rounded-2xl font-semibold">
+                                    Start Task
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+<script>
+
+function toggleProfileMenu(){
+
+    document
+    .getElementById("profileDropdown")
+    .classList
+    .toggle("show");
+}
+
+window.addEventListener("click",function(e){
+
+    const dropdown =
+    document.getElementById("profileDropdown");
+
+    const button =
+    e.target.closest("button");
+
+    if(
+        !e.target.closest("#profileDropdown")
+        &&
+        !button
+    ){
+        dropdown.classList.remove("show");
+    }
+
+});
+
+</script>
+
+</body>
+</html>

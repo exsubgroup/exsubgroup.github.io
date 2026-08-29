@@ -9,7 +9,7 @@ class SessionManager {
         this.USER_CODE_KEY = 'usercode';
         this.USERNAME_KEY = 'username';
         // This should point to your NAVBAR INFO SCRIPT (with getSetting and getProfileContext)
-        this.GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbynSszz31juE2yPf6iVtjMvrHPHbuXDQ5XpZ4l8ZiQPAUrAI4C6I7LlgLb4h20YWF7b/exec";
+        this.GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxb3qFF-Zg-cU2fPWrIsYL_VPrfZj-pQ_4iodtffBfkw8u52qEWpX1CMP9H_l_mn7Ahw/exec";
         this.SESSION_DURATION_HOURS = 12;
         this.SESSION_DURATION_MS = 12 * 60 * 60 * 1000;
         this.isInitialized = false;
