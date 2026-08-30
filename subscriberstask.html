@@ -411,6 +411,24 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     font-family: 'Inter', sans-serif !important;
     font-weight: 700 !important;
 }
+
+/* Proof Modal specific styles */
+.proof-screenshot {
+    cursor: pointer;
+    transition: 0.2s;
+    border: 2px solid #211F1F/15;
+    border-radius: 12px;
+}
+.proof-screenshot:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.proof-status-valid { background: #dcfce7; color: #16a34a; border-color: #16a34a; }
+.proof-status-cheating { background: #fee2e2; color: #dc2626; border-color: #dc2626; }
+.proof-status-insufficient { background: #fef3c7; color: #d97706; border-color: #d97706; }
+.proof-status-pending { background: #f3f4f6; color: #6b7280; border-color: #6b7280; }
+
 </style>
 </head>
 <body>
@@ -587,7 +605,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         </div>
 
         <!-- TOP BAR -->
-    <!-- TOP BAR -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
             <div>
                 <h2 class="text-2xl font-bold">My Tasks</h2>
@@ -753,6 +770,23 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     </div>
 </div>
 
+<!-- WATCHING PROOF MODAL -->
+<div id="proofModal" class="modal-bg" onclick="if(event.target===this)closeProofModal()">
+    <div class="modal-box max-w-[720px]">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">🎥 Watching Proof</h2>
+            <button onclick="closeProofModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+        <div id="proofModalContent" class="space-y-4">
+            <!-- Loading state -->
+            <div class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+                <p class="text-muted text-sm mt-3">Loading proof data...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- REPORT ISSUE MODAL -->
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
@@ -814,7 +848,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8zQkODeu25gaCJY4I_p91yg7AyXdsJfFx-bwbP3yguYN3Cg5TQbhQDy_v6JLmIhJBWA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwV8jJpHeLFju6S_EZHMdUw_kheYNS1vpzAR3HQn7zoGq6hLo7VIldxmF2XM7Tj0f3KPg/exec';
 const USER_CODE  = savedUserCode;
 const PER_PAGE = 10; // Tasks per page
 /* ────────────────────────────────────────
@@ -885,12 +919,11 @@ async function init() {
             stats = data.stats;
         }
         
-        // ⬇️ NEW: Use priority info from server
+        // Use priority info from server
         if (data.priorityInfo) {
             hasUnsub = data.priorityInfo.hasUnsub || false;
             forcedTaskTab = data.priorityInfo.forcedTab || null;
             
-            // Show counts in the banner
             if (data.priorityInfo.unsubCount > 0) {
                 document.getElementById('unsubCount').textContent = data.priorityInfo.unsubCount;
             }
@@ -917,10 +950,6 @@ async function init() {
         renderLimitCard();
         enforceTaskPriorityTabs();
         applyFilter();
-
-        // ⬇️ Show priority info in console for debugging
-        console.log('Priority Info:', data.priorityInfo);
-        console.log('Tasks loaded:', allTasks.length);
 
         if (perfStats && perfStats.LimitReached === 'Yes') {
             setTimeout(showLimitReachedAlert, 800);
@@ -963,9 +992,6 @@ function renderMember() {
 /* ────────────────────────────────────────
    BLOCK CHECK
 ──────────────────────────────────────── */
-/* ────────────────────────────────────────
-   BLOCK CHECK
-──────────────────────────────────────── */
 function checkBlock() {
     if (!member) return;
     const suspended = member.ViolationFlag === 'Suspended';
@@ -980,20 +1006,14 @@ function checkBlock() {
         banner.classList.remove('hidden');
         
         if (suspended) {
-            // Suspended - completely blocked
             msgEl.textContent = `Your account is suspended until ${member.SuspendedUntil || 'further notice'}. Reason: ${member.ViolationReason || 'Policy violation.'}`;
-            
-            // Disable create button
             if (createBtn) {
                 createBtn.disabled = true;
                 createBtn.classList.add('opacity-40', 'cursor-not-allowed');
                 createBtn.title = 'Your account is suspended.';
             }
         } else {
-            // Promotion is OFF - but user can still mark tasks as subscribed
             msgEl.textContent = '⚠️ Subscriber group promotion is currently disabled. To re-enable, complete your pending tasks (mark them as subscribed) or submit your subscription list via the Exsub Extension.';
-            
-            // ONLY disable create button, NOT mark subscribed
             if (createBtn) {
                 createBtn.disabled = true;
                 createBtn.classList.add('opacity-40', 'cursor-not-allowed');
@@ -1001,7 +1021,6 @@ function checkBlock() {
             }
         }
     } else {
-        // Not blocked - ensure everything is enabled
         isBlocked = false;
         banner.classList.add('hidden');
         if (createBtn) {
@@ -1011,6 +1030,7 @@ function checkBlock() {
         }
     }
 }
+
 /* ────────────────────────────────────────
    CHECK UNSUBSCRIBED
 ──────────────────────────────────────── */
@@ -1023,7 +1043,6 @@ function checkUnsubscribed() {
     if (hasUnsub) {
         banner.classList.remove('hidden');
         document.getElementById('unsubCount').textContent = unsubTasks.length;
-        // Also disable create button
         const btn = document.getElementById('createBtn');
         btn.disabled = true;
         btn.classList.add('opacity-40', 'cursor-not-allowed');
@@ -1038,7 +1057,6 @@ function checkUnsubscribed() {
 ──────────────────────────────────────── */
 
 function calcStats() {
-    // Use pre-calculated stats from server
     document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
     document.getElementById('st-pending').textContent = stats.pending || 0;
     document.getElementById('st-subscribed').textContent = stats.subscribed || 0;
@@ -1046,14 +1064,11 @@ function calcStats() {
     document.getElementById('st-rejected').textContent = stats.rejected || 0;
     document.getElementById('st-total').textContent = stats.total || 0;
 
-    // Update task counter
     document.getElementById('showingCount').textContent = allTasks.length;
     document.getElementById('totalCount').textContent = totalTasks || stats.total || 0;
 
-    // ⬇️ Update filter tab badges
     updateFilterBadges();
 
-    // Exchange status - calculate from current page tasks
     const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
     const awaitingCount = myTasks.filter(t =>
         t.Status === 'Subscribed' && t.PairedStatus !== 'Subscribed'
@@ -1070,7 +1085,6 @@ function calcStats() {
     document.getElementById('st-theirpending').textContent = theirPendingCount;
 }
 
-// ⬇️ NEW: Update filter tab badges with counts
 function updateFilterBadges() {
     const tabs = {
         'NotWorkYet': stats.notWorkYet || 0,
@@ -1083,7 +1097,8 @@ function updateFilterBadges() {
     document.querySelectorAll('.filter-tab').forEach(tab => {
         const tabName = tab.dataset.tab;
         if (tabName === 'All') {
-            tab.innerHTML = `All Tasks <span class="ml-1 text-xs opacity-60">(${stats.total || 0})</span>`;
+            const count = stats.total || 0;
+            tab.innerHTML = `All Tasks <span class="ml-1 text-xs opacity-60">(${count})</span>`;
             return;
         }
         const count = tabs[tabName] || 0;
@@ -1092,7 +1107,7 @@ function updateFilterBadges() {
 }
 
 /* ────────────────────────────────────────
-   REFRESH STATS (Helper)
+   REFRESH STATS
 ──────────────────────────────────────── */
 async function refreshStats() {
     try {
@@ -1102,16 +1117,27 @@ async function refreshStats() {
             stats = data.stats;
             totalTasks = data.totalTasks || 0;
             totalPages = data.totalPages || 1;
+            if (data.perfStats) {
+                perfStats = data.perfStats;
+            }
         }
     } catch (e) {
         console.warn('Could not refresh stats:', e);
     }
 }
+
 /* ────────────────────────────────────────
    LIMIT CARD
 ──────────────────────────────────────── */
 function renderLimitCard() {
-    if (!perfStats) return;
+    if (!perfStats) {
+        document.getElementById('lim-subscribed').textContent = '—';
+        document.getElementById('lim-limit').textContent = '—';
+        document.getElementById('lim-bar').style.width = '0%';
+        document.getElementById('lim-reached-row').classList.add('hidden');
+        document.getElementById('lim-verify-wrap').classList.add('hidden');
+        return;
+    }
 
     const subscribed  = parseInt(perfStats.TotalSubscribeChannels) || 0;
     const limit       = parseInt(perfStats.SubscribersLimit) || 50;
@@ -1128,6 +1154,39 @@ function renderLimitCard() {
         const bar = document.getElementById('lim-bar');
         bar.classList.add('bg-red-500');
         bar.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
+    } else {
+        document.getElementById('lim-reached-row').classList.add('hidden');
+        document.getElementById('lim-verify-wrap').classList.add('hidden');
+        const bar = document.getElementById('lim-bar');
+        bar.classList.remove('bg-red-500');
+        bar.classList.add('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
+    }
+}
+
+function renderLimitCardFromData(data) {
+    if (!data) return;
+    
+    const subscribed  = parseInt(data.TotalSubscribeChannels) || 0;
+    const limit       = parseInt(data.SubscribersLimit) || 50;
+    const reached     = data.LimitReached === 'Yes';
+    const pct         = Math.min(100, Math.round(subscribed / limit * 100));
+
+    document.getElementById('lim-subscribed').textContent = subscribed;
+    document.getElementById('lim-limit').textContent      = limit;
+    document.getElementById('lim-bar').style.width        = pct + '%';
+
+    if (reached) {
+        document.getElementById('lim-reached-row').classList.remove('hidden');
+        document.getElementById('lim-verify-wrap').classList.remove('hidden');
+        const bar = document.getElementById('lim-bar');
+        bar.classList.add('bg-red-500');
+        bar.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
+    } else {
+        document.getElementById('lim-reached-row').classList.add('hidden');
+        document.getElementById('lim-verify-wrap').classList.add('hidden');
+        const bar = document.getElementById('lim-bar');
+        bar.classList.remove('bg-red-500');
+        bar.classList.add('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
     }
 }
 
@@ -1175,7 +1234,7 @@ async function showLimitReachedAlert() {
 }
 
 /* ────────────────────────────────────────
-   VERIFY SUBSCRIPTIONS (check against sheet)
+   VERIFY SUBSCRIPTIONS
 ──────────────────────────────────────── */
 async function doVerifySubscriptions() {
     Swal.fire({
@@ -1204,6 +1263,20 @@ async function doVerifySubscriptions() {
                         t.CheckedDate = r.checkedDate || new Date().toISOString();
                     }
                 });
+            }
+
+            // ⬇️ UPDATE PERF STATS AND LIMIT CARD
+            if (data.updatedPerfStats) {
+                perfStats = data.updatedPerfStats;
+                renderLimitCardFromData(perfStats);
+            } else {
+                // Refresh perf stats from server
+                const refreshRes = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=${currentPage}&perPage=${PER_PAGE}`);
+                const refreshData = await refreshRes.json();
+                if (refreshData.success && refreshData.perfStats) {
+                    perfStats = refreshData.perfStats;
+                    renderLimitCard();
+                }
             }
 
             checkUnsubscribed();
@@ -1238,7 +1311,6 @@ async function doVerifySubscriptions() {
                     perfStats.LimitReached    = 'No';
                     perfStats.SubscribersLimit = String(data.newLimit);
                     renderLimitCard();
-                    document.getElementById('lim-verify-wrap').classList.add('hidden');
                 }
 
                 Swal.fire({
@@ -1336,7 +1408,6 @@ function applyFilter() {
         return tabMatch;
     });
 
-    // ⬇️ Priority Order: Unsubscribed > Pending > NotWorkYet > Others
     const ORDER = { 'Unsubscribed': 0, 'Pending': 1, 'NotWorkYet': 2, 'Subscribed': 3, 'Rejected': 4 };
     base.sort((a, b) => {
         return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
@@ -1346,6 +1417,7 @@ function applyFilter() {
     currentPage = 1;
     renderList();
 }
+
 /* ────────────────────────────────────────
    RENDER LIST
 ──────────────────────────────────────── */
@@ -1366,12 +1438,9 @@ function renderList() {
 
     empty.classList.add('hidden');
 
-    // ⬇️ Show priority count badge
     const unsubCount = tasksToShow.filter(t => t.Status === 'Unsubscribed').length;
     const pendingCount = tasksToShow.filter(t => t.Status === 'Pending').length;
-    const notWorkCount = tasksToShow.filter(t => t.Status === 'NotWorkYet').length;
     
-    // Add a priority indicator above the list
     let priorityHtml = '';
     if (unsubCount > 0) {
         priorityHtml = `<div class="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-2xl text-sm text-red-600">
@@ -1403,14 +1472,14 @@ function changePage(delta) {
     if (newPage < 1 || newPage > totalPages) return;
     loadPage(newPage);
 }
+
 /* ────────────────────────────────────────
-   LOAD PAGE - New function for pagination
+   LOAD PAGE
 ──────────────────────────────────────── */
 async function loadPage(page) {
     if (isLoading) return;
     isLoading = true;
 
-    // Show loading state
     document.getElementById('taskList').innerHTML = `
         <div class="skeleton h-[200px]"></div>
         <div class="skeleton h-[200px]"></div>
@@ -1464,12 +1533,6 @@ const STATUS_CFG = {
     'Rejected':     { bg: 'bg-gray-500/15',   text: 'text-gray-600',   dot: 'bg-gray-400',   label: 'Rejected'     },
 };
 
-/**
- * pairedBadge: shows the PARTNER's subscription status from this member's perspective.
- * - If I subscribed and partner also subscribed → "They Subbed Back"
- * - If I subscribed but partner is still pending → "Their Sub: Pending"
- * - If I haven't subscribed yet, the partner's side is irrelevant
- */
 function pairedBadge(t) {
     if (t.Status !== 'Subscribed') return '';
     if (t.PairedStatus === 'Subscribed') {
@@ -1481,11 +1544,6 @@ function pairedBadge(t) {
     }
 }
 
-/**
- * matchBadge: shows why this task was paired with you, based on your
- * saved Match Preferences overlapping the target's actual interests/
- * countries. Purely informational — computed server-side.
- */
 function matchBadge(t) {
     const interests = t.MatchedInterests || [];
     const countries = t.MatchedCountries || [];
@@ -1563,8 +1621,6 @@ function taskCard(t) {
 
     const isUnsubscribed = t.Status === 'Unsubscribed';
     
-    // FIX: Allow marking subscribed when promotion is OFF but user has pending tasks
-    // Only block if suspended or has unsubscribed tasks
     const isSuspended = member && member.ViolationFlag === 'Suspended';
     const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && 
                     !isSuspended && 
@@ -1601,7 +1657,6 @@ function taskCard(t) {
         ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
 
-    // Punishment block for unsubscribed cards
     const punishmentBlock = isUnsubscribed ? `
         <div class="punishment-box mt-3">
             <p class="text-xs text-red-600 font-semibold mb-1">🚫 Action Required — Re-Subscribe</p>
@@ -1615,7 +1670,6 @@ function taskCard(t) {
             </a>
         </div>` : '';
 
-    // Issue / report section (hidden for unsubscribed, as the punishment block already explains)
     const issueSection = !isUnsubscribed ? `
         <div class="issue-box mt-3">
             <div class="flex items-center justify-between">
@@ -1628,7 +1682,7 @@ function taskCard(t) {
             ${t.Issue ? `<p class="text-xs text-red-600/70 mt-1">Current: ${t.Issue}</p>` : ''}
         </div>` : '';
 
-    // Right-side action buttons
+    // ⬇️ UPDATED: Added "🎥 Proof" button to all task cards
     let actionButtons = '';
     if (isUnsubscribed) {
         actionButtons = `
@@ -1637,6 +1691,10 @@ function taskCard(t) {
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-60">
                 ▶ Open Channel
             </a>` : ''}
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                🎥 Proof
+            </button>
             <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-600">
                 🔒 Actions Locked
             </div>`;
@@ -1647,7 +1705,11 @@ function taskCard(t) {
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ▶ Open Channel
             </a>` : ''}
-           <button onclick="doMarkSubscribed('${t.TaskID}', this)"
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                🎥 Proof
+            </button>
+            <button onclick="doMarkSubscribed('${t.TaskID}', this)"
                 class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ✓ Mark Subscribed
             </button>`;
@@ -1658,13 +1720,16 @@ function taskCard(t) {
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ▶ Open Channel
             </a>` : ''}
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                🎥 Proof
+            </button>
             <button onclick="openDetail('${t.TaskID}')"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
                 View Details
             </button>`;
     }
 
-    // Pinned indicator for unsubscribed
     const pinnedBadge = isUnsubscribed
         ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
         : '';
@@ -1720,19 +1785,159 @@ function taskCard(t) {
 }
 
 /* ────────────────────────────────────────
-   MARK SUBSCRIBED
+   VIEW WATCHING PROOF
 ──────────────────────────────────────── */
+async function viewWatchingProof(taskId, targetUserCode, btnEl) {
+    const modal = document.getElementById('proofModal');
+    const content = document.getElementById('proofModalContent');
+    
+    content.innerHTML = `
+        <div class="text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+            <p class="text-muted text-sm mt-3">Loading proof data...</p>
+        </div>
+    `;
+    modal.classList.add('open');
+    
+    try {
+        const url = `${SCRIPT_URL}?action=getWatchingProof&taskId=${encodeURIComponent(taskId)}&userCode=${encodeURIComponent(USER_CODE)}&targetUserCode=${encodeURIComponent(targetUserCode)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (!data.success) {
+            content.innerHTML = `
+                <div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center">
+                    <p class="text-red-600">${data.message || 'Could not load proof data.'}</p>
+                </div>
+            `;
+            return;
+        }
+        
+        if (data.count === 0) {
+            content.innerHTML = `
+                <div class="bg-yellow-500/10 border border-yellow-500/25 rounded-2xl p-6 text-center">
+                    <p class="text-yellow-700">📭 No watching proof found for this task.</p>
+                    <p class="text-muted text-sm mt-2">Watch a video using the Exsub Extension to generate proof.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let proofsHtml = `<div class="space-y-4">`;
+        proofsHtml += `<p class="text-sm text-muted">Found <strong class="text-purple-700">${data.count}</strong> proof(s) for Task: <span class="font-mono">${taskId}</span></p>`;
+        
+        data.proofs.forEach((proof, index) => {
+            const timestamp = proof.Timestamp ? new Date(proof.Timestamp).toLocaleString() : '—';
+            const isSufficient = proof.PlaySeconds >= 120;
+            
+            let statusBadge = '';
+            let statusClass = '';
+            if (proof.Checked === 'Valid') {
+                statusBadge = `<span class="bg-green-500/15 text-green-600 px-2 py-1 rounded-lg text-xs font-semibold">✅ Valid</span>`;
+                statusClass = 'proof-status-valid';
+            } else if (proof.Checked === 'Cheating') {
+                statusBadge = `<span class="bg-red-500/15 text-red-600 px-2 py-1 rounded-lg text-xs font-semibold">🚫 Cheating</span>`;
+                statusClass = 'proof-status-cheating';
+            } else if (proof.Checked === 'Insufficient') {
+                statusBadge = `<span class="bg-yellow-500/15 text-yellow-700 px-2 py-1 rounded-lg text-xs font-semibold">⏱ Insufficient</span>`;
+                statusClass = 'proof-status-insufficient';
+            } else {
+                statusBadge = `<span class="bg-gray-500/15 text-gray-600 px-2 py-1 rounded-lg text-xs font-semibold">⏳ Pending</span>`;
+                statusClass = 'proof-status-pending';
+            }
+            
+            const proofUrl = proof.ProofScreenshot || '';
+            const screenshotHtml = proofUrl ? `
+                <div class="mt-3">
+                    <img src="${proofUrl}" alt="Screenshot" 
+                        class="proof-screenshot w-full rounded-xl border-2 border-[#211F1F]/15 max-h-[300px] object-contain"
+                        onclick="window.open('${proofUrl}', '_blank')"
+                        onerror="this.style.display='none'">
+                    <p class="text-xs text-muted mt-1">Click to view full size</p>
+                </div>
+            ` : `<p class="text-xs text-muted mt-1">No screenshot available</p>`;
+            
+            proofsHtml += `
+                <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <span class="font-semibold text-sm text-purple-700">Proof #${index + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                        <div>
+                            <span class="text-muted text-xs block">Video Title</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${proof.VideoTitle || '—'}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Channel</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${proof.ChannelName || '—'}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Task Type</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${proof.TaskType || '—'}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Play Seconds</span>
+                            <span class="font-semibold text-[#211F1F] text-sm ${isSufficient ? 'text-green-600' : 'text-red-600'}">${proof.PlaySeconds}s ${isSufficient ? '✅' : '⚠️'}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Stop Seconds</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${proof.StopSeconds}s</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Percentage</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${proof.Percentage || 0}%</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Video Duration</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${proof.VideoDuration || '—'}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Video ID</span>
+                            <span class="font-mono text-xs text-purple-700">${proof.VideoId || '—'}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted text-xs block">Timestamp</span>
+                            <span class="font-semibold text-[#211F1F] text-sm">${timestamp}</span>
+                        </div>
+                    </div>
+                    ${proof.CheckRemarks ? `
+                        <div class="mt-2 p-2 bg-gray-50 rounded-lg border border-[#211F1F]/10">
+                            <span class="text-muted text-xs block">Remarks</span>
+                            <span class="text-sm text-[#211F1F]">${proof.CheckRemarks}</span>
+                        </div>
+                    ` : ''}
+                    ${screenshotHtml}
+                </div>
+            `;
+        });
+        
+        proofsHtml += `</div>`;
+        content.innerHTML = proofsHtml;
+        
+    } catch (e) {
+        content.innerHTML = `
+            <div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center">
+                <p class="text-red-600">Connection error. Please try again.</p>
+            </div>
+        `;
+        console.error('Proof fetch error:', e);
+    }
+}
+
+function closeProofModal() {
+    document.getElementById('proofModal').classList.remove('open');
+}
+
 /* ────────────────────────────────────────
    MARK SUBSCRIBED
 ──────────────────────────────────────── */
 async function doMarkSubscribed(taskId, btnEl) {
-    // Block if member has unsubscribed tasks
     if (hasUnsub) {
         showToast('You must resolve your unsubscribed tasks first.', true);
         return;
     }
 
-    // Block if limit reached
     if (perfStats && perfStats.LimitReached === 'Yes') {
         showLimitReachedAlert();
         return;
@@ -1770,7 +1975,6 @@ async function doMarkSubscribed(taskId, btnEl) {
             calcStats();
             applyFilter();
         } else if (data.proofMissing) {
-            // Show proof missing modal
             Swal.fire({
                 icon: 'warning',
                 title: '⚠️ Proof Not Found',
@@ -1807,9 +2011,7 @@ async function doMarkSubscribed(taskId, btnEl) {
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
         } else {
-            // Check if the error message contains "You only watched"
             if (data.message && data.message.includes('You only watched')) {
-                // Extract the seconds from the message
                 const match = data.message.match(/You only watched (\d+) seconds/);
                 const watchedSeconds = match ? match[1] : '0';
                 
@@ -1862,6 +2064,7 @@ async function doMarkSubscribed(taskId, btnEl) {
         btnEl.innerHTML = originalHTML;
     }
 }
+
 /* ────────────────────────────────────────
    DETAIL MODAL
 ──────────────────────────────────────── */
@@ -1880,7 +2083,6 @@ function openDetail(taskId) {
         ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle)
         : null;
 
-    // Partner status label
     let partnerLabel = '—';
     let partnerClass = 'text-muted';
     if (t.Status === 'Subscribed') {
@@ -1973,7 +2175,7 @@ function closeDetailModal() {
    MATCH PREFERENCES MODAL
 ──────────────────────────────────────── */
 async function loadPreferenceOptions() {
-    if (interestOptions.length && countryOptions.length) return; // already loaded
+    if (interestOptions.length && countryOptions.length) return;
     try {
         const res  = await fetch(`${SCRIPT_URL}?action=getPreferenceOptions`);
         const data = await res.json();
@@ -1982,12 +2184,11 @@ async function loadPreferenceOptions() {
             countryOptions  = data.countries || [];
         }
     } catch (e) {
-        // silent — modal will just show nothing to pick until retried on open
+        // silent
     }
 }
 
 function openPreferencesModal() {
-    // Copy saved prefs into the "being edited" arrays
     selectedInterests = [...myPreferences.interests];
     selectedCountries = [...myPreferences.countries];
 
@@ -1995,7 +2196,6 @@ function openPreferencesModal() {
     renderPrefPills();
     document.getElementById('prefsModal').classList.add('open');
 
-    // In case options weren't ready when the page first loaded, try again
     if (!interestOptions.length || !countryOptions.length) {
         loadPreferenceOptions().then(renderPrefPills);
     }
@@ -2090,7 +2290,6 @@ function openCreateModal() {
     if (isBlocked) { showToast('Your account is restricted from this group.', true); return; }
     if (hasUnsub)  { showToast('Resolve your unsubscribed tasks first.', true); return; }
 
-    // Check limit
     if (perfStats && perfStats.LimitReached === 'Yes') {
         showLimitReachedAlert();
         return;
@@ -2131,7 +2330,6 @@ async function doCreateTasks() {
         box.classList.remove('hidden');
 
         if (data.success) {
-            // ⬇️ Show that only top 10 were created
             const msg = data.createdOnlyTop10 
                 ? `✅ ${data.created} new task(s) created (only top ${data.created} eligible members)`
                 : `✅ ${data.created} new task(s) created!`;
@@ -2167,6 +2365,7 @@ async function doCreateTasks() {
     btn.textContent = 'Generate Tasks';
     btn.disabled = false;
 }
+
 /* ────────────────────────────────────────
    REPORT ISSUE MODAL
 ──────────────────────────────────────── */
