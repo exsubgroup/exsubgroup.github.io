@@ -1874,13 +1874,13 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
                                     document.getElementById('${imgId}').style.display='none'; 
                                     document.getElementById('${imgId}-error').style.display='block';">
                         <div id="${imgId}-error" style="display:none;" class="text-center py-4">
-                            <p class="text-xs text-red-500">⚠️ Screenshot could not be loaded</p>
-                            <p class="text-xs text-muted mt-1">The image may not be publicly accessible</p>
+                      
+                            <p class="text-xs text-muted mt-1">Open Image Proof</p>
                             <button onclick="window.open('${displayUrl}', '_blank')" class="mt-2 btn-outline px-3 py-1 rounded-lg text-xs">
                                 🔗 Open Image Directly
                             </button>
                         </div>
-                        <p class="text-xs text-muted mt-2 text-center">📸 Click the image to view full size</p>
+                    
                         ${isDriveLink ? `<p class="text-xs text-blue-500 mt-1 text-center">📁 Google Drive Image</p>` : ''}
                     </div>
                 `;
