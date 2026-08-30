@@ -1750,7 +1750,7 @@ async function doMarkSubscribed(taskId, btnEl) {
         </span>`;
 
     try {
-        const res  = await fetch(SCRIPT_URL, {
+        const res = await fetch(SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ action: 'markSubscribed', taskId, userCode: USER_CODE })
@@ -1761,25 +1761,44 @@ async function doMarkSubscribed(taskId, btnEl) {
             const now = new Date().toISOString();
             const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
             if (myTask) {
-                myTask.Status       = 'Subscribed';
-                myTask.WorkedDate   = now;
+                myTask.Status = 'Subscribed';
+                myTask.WorkedDate = now;
                 myTask.PairedStatus = data.pairedStatus || (data.bothSubscribed ? 'Subscribed' : 'NotWorkYet');
             }
             showToast(data.bothSubscribed ? '🎉 Both subscribed! Exchange complete!' : '✅ Task marked as Subscribed!');
-                await refreshStats();  // <-- ADD THIS LINE
-
+            await refreshStats();
             calcStats();
             applyFilter();
-            // no need to restore the button — this card gets re-rendered by applyFilter()
         } else if (data.proofMissing) {
+            // Show proof missing modal
             Swal.fire({
                 icon: 'warning',
-                title: 'Proof Not Found',
-                text: 'Please watch the video first and than subscribe. Your task is not complete yet.',
-                background: '#F5F4EB',
-                color: '#211F1F',
-                confirmButtonColor: '#7c3aed',
-                confirmButtonText: 'Got it'
+                title: '⚠️ Proof Not Found',
+                html: `
+                    <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                        <p style="margin-bottom:12px;">No watching proof was found for this task.</p>
+                        <p style="margin-bottom:12px;">Please follow these steps:</p>
+                        <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
+                            <li style="margin-bottom:6px;">Open the target channel on YouTube</li>
+                            <li style="margin-bottom:6px;">Watch a video for at least <strong style="color:#6d28d9;">2 minutes</strong></li>
+                            <li style="margin-bottom:6px;">Click the <strong style="color:#0d9488;">Submit Proof</strong> button in the Exsub Extension</li>
+                            <li style="margin-bottom:6px;">Then click <strong style="color:#211F1F;">Mark Subscribed</strong> again</li>
+                        </ol>
+                        <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
+                            ⚠ The extension captures your watch time. You must watch at least 2 minutes of the video before subscribing.
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Got It',
+                confirmButtonColor: '#211F1F',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title',
+                    htmlContainer: 'swal2-html-container',
+                    confirmButton: 'swal2-confirm'
+                }
             });
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
@@ -1788,7 +1807,52 @@ async function doMarkSubscribed(taskId, btnEl) {
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
         } else {
-            showToast(data.message || 'Update failed.', true);
+            // Check if the error message contains "You only watched"
+            if (data.message && data.message.includes('You only watched')) {
+                // Extract the seconds from the message
+                const match = data.message.match(/You only watched (\d+) seconds/);
+                const watchedSeconds = match ? match[1] : '0';
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: '⏱️ Insufficient Watch Time',
+                    html: `
+                        <div style="text-align:left;line-height:1.8;font-size:14px;color:#4b5563;">
+                            <p style="margin-bottom:16px;font-size:16px;color:#dc2626;font-weight:600;">
+                                You only watched <strong style="font-size:20px;">${watchedSeconds}</strong> seconds
+                            </p>
+                            <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+                                <p style="font-weight:600;color:#dc2626;margin-bottom:4px;">📋 Requirements:</p>
+                                <p style="color:#4b5563;">You need to watch at least <strong style="color:#6d28d9;">2 minutes (120 seconds)</strong> of the video before subscribing.</p>
+                            </div>
+                            <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+                                <p style="font-weight:600;color:#16a34a;margin-bottom:4px;">✅ How to fix:</p>
+                                <ol style="margin-left:16px;list-style:decimal;color:#4b5563;">
+                                    <li style="margin-bottom:4px;">Open the channel on YouTube</li>
+                                    <li style="margin-bottom:4px;">Watch the video for <strong style="color:#6d28d9;">at least 2 minutes</strong></li>
+                                    <li style="margin-bottom:4px;">Make sure the Exsub Extension is running</li>
+                                    <li style="margin-bottom:4px;">Click <strong style="color:#0d9488;">Mark Subscribed</strong> again</li>
+                                </ol>
+                            </div>
+                            <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f97316;">
+                                💡 Tip: The extension tracks your watch time automatically. Make sure you're watching the video in an active tab.
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonText: 'Close',
+                    confirmButtonColor: '#211F1F',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    customClass: {
+                        popup: 'swal2-popup',
+                        title: 'swal2-title',
+                        htmlContainer: 'swal2-html-container',
+                        confirmButton: 'swal2-confirm'
+                    }
+                });
+            } else {
+                showToast(data.message || 'Update failed.', true);
+            }
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
         }
