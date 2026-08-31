@@ -1,26 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Support – Exsub Group</title>
-
 <link rel="icon" href="images/logo.svg">
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* ══════════════════════════════════════════════
-   SUP-* — Namespaced styles for the Support page
-   Neo-brutalist light theme, matches analytics.html
-   ══════════════════════════════════════════════ */
+/* ── LOADING OVERLAY ──────────────────────────────────────────── */
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: #F5F4EB;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.5s ease;
+}
+#loadingOverlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.loader-ring {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(33,31,31,0.15);
+  border-top-color: #211F1F;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loader-dots {
+  display: flex;
+  gap: 8px;
+}
+.loader-dots span {
+  width: 10px;
+  height: 10px;
+  background: #211F1F;
+  border-radius: 50%;
+  animation: dotPulse 1.4s infinite ease-in-out both;
+}
+.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
 
+/* ── MAIN STYLES ── */
 .sup-section-tag{
   display:inline-flex; align-items:center; gap:8px;
   padding:6px 16px; border-radius:999px;
@@ -33,12 +69,18 @@
 .sup-heading{ font-size:2rem; font-weight:900; color:#211F1F; letter-spacing:-0.02em; }
 .sup-sub{ color:#4b5563; font-size:14px; line-height:1.7; }
 
-/* ── QUICK INFO CARDS ── */
-.sup-info-card{
-  background:#ffffff; border:2px solid #211F1F; border-radius:20px;
-  padding:20px; box-shadow:4px 4px 0px 0px #211F1F; transition:.2s;
+/* ── NEO-BRUTALIST CARD ── */
+.card {
+  background: #FFFFFF;
+  border: 3px solid #211F1F;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px 0px #211F1F;
+  transition: all 0.15s ease;
 }
-.sup-info-card:hover{ transform:translate(-1px,-1px); box-shadow:5px 5px 0px 0px #211F1F; }
+.card-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px 0px #211F1F;
+}
 
 /* ── CATEGORY PILLS ── */
 .sup-cat-pill{
@@ -53,6 +95,11 @@
   background:#211F1F; color:#DBD4B7;
   transform:translate(2px,2px); box-shadow:1px 1px 0px 0px #211F1F;
 }
+.sup-cat-pill.disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  pointer-events:none;
+}
 
 /* ── CHAT WINDOW ── */
 .sup-chat-window{
@@ -65,6 +112,8 @@
   padding:14px 18px; border-bottom:2px solid #211F1F;
   display:flex; align-items:center; gap:12px;
   background:#ACD1C0; flex-shrink:0;
+  flex-wrap:wrap;
+  row-gap:8px;
 }
 
 .sup-admin-avatar{
@@ -102,9 +151,76 @@
 .sup-bubble{
   max-width:75%; padding:11px 15px; border-radius:16px;
   font-size:13.5px; line-height:1.55; border:2px solid #211F1F;
+  position:relative;
 }
 .sup-bubble.admin{ background:#ffffff; color:#211F1F; border-bottom-left-radius:4px; }
 .sup-bubble.member{ background:#211F1F; color:#DBD4B7; border-bottom-right-radius:4px; }
+
+/* Attachment styles */
+.sup-attachment {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.sup-bubble.admin .sup-attachment {
+  background: #F5F4EB;
+  border-color: #211F1F;
+}
+.sup-bubble.member .sup-attachment {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+}
+.sup-attachment a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 600;
+  word-break: break-all;
+}
+.sup-attachment img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 2px solid #211F1F;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.sup-bubble .msg-actions{
+  position:absolute;
+  top:-8px;
+  right:-8px;
+  display:none;
+  gap:4px;
+  background:#FFFFFF;
+  border:2px solid #211F1F;
+  border-radius:8px;
+  padding:2px 4px;
+  box-shadow:2px 2px 0px 0px #211F1F;
+}
+.sup-msg-row:hover .sup-bubble .msg-actions{
+  display:flex;
+}
+.sup-bubble .msg-actions button{
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:11px;
+  padding:2px 4px;
+  border-radius:4px;
+  color:#211F1F;
+  font-weight:700;
+  transition:.15s;
+}
+.sup-bubble .msg-actions button:hover{
+  background:#ACD1C0;
+}
+.sup-bubble .msg-actions button.danger:hover{
+  background:#fee2e2;
+  color:#dc2626;
+}
 
 .sup-msg-meta{ font-size:10px; color:#6b7280; margin-top:4px; padding:0 4px; font-weight:600; }
 .sup-msg-row.outgoing .sup-msg-meta{ text-align:right; }
@@ -125,20 +241,6 @@
 /* ── INPUT AREA ── */
 .sup-chat-input-area{ padding:14px 16px; border-top:2px solid #211F1F; background:#ffffff; flex-shrink:0; }
 
-.sup-usercode-bar{
-  display:flex; align-items:center; gap:8px; margin-bottom:10px;
-  background:#EBE492; border:2px solid #211F1F; border-radius:12px; padding:8px 12px;
-}
-.sup-usercode-bar input{
-  flex:1; background:none; border:none; outline:none;
-  color:#211F1F; font-size:13px; font-weight:700;
-}
-.sup-usercode-bar input::placeholder{ color:#6b6438; }
-.sup-usercode-confirm-btn{
-  padding:5px 14px; border-radius:8px; background:#211F1F; border:2px solid #211F1F;
-  color:#DBD4B7; font-size:12px; font-weight:800; cursor:pointer;
-}
-
 .sup-chat-input-wrap{
   display:flex; align-items:flex-end; gap:10px;
   background:#F5F4EB; border:2px solid #211F1F; border-radius:16px; padding:10px 12px;
@@ -152,6 +254,17 @@
 }
 #msgInput::placeholder{ color:#8a8a80; }
 
+/* Attachment button */
+.sup-attach-btn {
+  width:36px; height:36px; border-radius:10px;
+  background:#DBD4B7; border:2px solid #211F1F;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:.15s; font-size:16px;
+}
+.sup-attach-btn:hover{ transform:scale(1.06); background:#ACD1C0; }
+.sup-attach-btn:active{ transform:scale(0.94); }
+#fileInput { display: none; }
+
 .sup-send-btn{
   width:36px; height:36px; border-radius:10px;
   background:#211F1F; border:2px solid #211F1F;
@@ -162,12 +275,31 @@
 .sup-send-btn:active{ transform:scale(0.94); }
 .sup-send-btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
 
-.sup-icon-btn{
-  width:30px; height:30px; border-radius:8px; background:none; border:none;
-  color:#211F1F; cursor:pointer; display:flex; align-items:center; justify-content:center;
-  font-size:16px; transition:.15s; flex-shrink:0;
+/* Upload progress */
+.upload-progress {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #6b7280;
 }
-.sup-icon-btn:hover{ background:#ACD1C0; }
+.upload-progress.active {
+  display: flex;
+}
+.upload-progress .progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.upload-progress .progress-bar .fill {
+  height: 100%;
+  background: #211F1F;
+  width: 0%;
+  transition: width 0.3s ease;
+}
 
 /* ── STATUS BADGES ── */
 .sup-badge{
@@ -176,25 +308,9 @@
 }
 .sup-badge-green{ background:#ACD1C0; color:#211F1F; }
 .sup-badge-yellow{ background:#EBE492; color:#211F1F; }
+.sup-badge-red{ background:#fee2e2; color:#dc2626; border-color:#dc2626; }
 
-.sup-ticket-chip{
-  background:#DBD4B7; border:1.5px solid #211F1F; border-radius:8px;
-  padding:3px 10px; font-size:11px; color:#211F1F; font-weight:700;
-}
-
-/* ── TICKET CARD ── */
-.sup-ticket-card{
-  background:#F5F4EB; border:2px solid #211F1F; border-radius:14px;
-  padding:12px 14px; display:flex; align-items:center; gap:12px;
-  cursor:pointer; transition:.15s;
-}
-.sup-ticket-card:hover{ transform:translate(-1px,-1px); box-shadow:3px 3px 0px 0px #211F1F; }
-.sup-ticket-icon{
-  width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;
-  font-size:14px; flex-shrink:0; border:1.5px solid #211F1F;
-}
-
-/* ── SIDEBAR STAT ROW ── */
+/* ── SIDEBAR ── */
 .sup-stat-box{ background:#F5F4EB; border:2px solid #211F1F; border-radius:12px; padding:10px; }
 .sup-stat-row{ display:flex; justify-content:space-between; margin-bottom:6px; font-size:11px; }
 .sup-stat-row:last-child{ margin-bottom:0; }
@@ -207,53 +323,63 @@
   box-shadow:3px 3px 0px 0px #211F1F;
 }
 
-/* ── FLEX-SHRINK SAFETY (prevents inputs/text from forcing horizontal overflow) ── */
-.sup-chat-header,
-.sup-chat-input-wrap,
-.sup-usercode-bar{ min-width:0; }
-.sup-chat-header > div,
-.sup-chat-input-wrap > *,
-.sup-usercode-bar > *{ min-width:0; }
-#msgInput,
-.sup-usercode-bar input{ min-width:0; width:100%; }
-.sup-bubble{ word-break:break-word; overflow-wrap:anywhere; }
-.sup-msg-row > div{ min-width:0; }
-
-/* Chat header: let the badge group wrap under the name on tight widths
-   instead of forcing the row wider than its parent */
-.sup-chat-header{ flex-wrap:wrap; row-gap:8px; }
-.sup-chat-header > div:nth-child(2){ flex:1 1 120px; }
-.sup-chat-header > div:last-child{ flex-shrink:0; }
-
-/* ── RESPONSIVE — TABLET / MOBILE ── */
-@media (max-width:900px){
-  .sup-chat-window{ height:68vh; min-height:420px; max-height:600px; }
+/* ── WHATSAPP SUPPORT ── */
+.sup-whatsapp-card{
+  background:#ffffff; border:2px solid #211F1F; border-radius:16px; padding:16px;
+  box-shadow:4px 4px 0px 0px #211F1F;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  transition:.15s;
+}
+.sup-whatsapp-card:hover{
+  transform:translate(-2px,-2px);
+  box-shadow:6px 6px 0px 0px #211F1F;
+}
+.sup-whatsapp-icon{
+  width:48px; height:48px; border-radius:12px;
+  background:#25D366; border:2px solid #211F1F;
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; flex-shrink:0;
 }
 
+/* ── CHAT DISABLED OVERLAY ── */
+.sup-chat-disabled{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  padding:40px 20px;
+  text-align:center;
+  gap:12px;
+}
+.sup-chat-disabled .icon{ font-size:48px; }
+.sup-chat-disabled .title{ font-size:18px; font-weight:800; color:#211F1F; }
+.sup-chat-disabled .desc{ font-size:13px; color:#6b7280; max-width:320px; }
+
+/* ── RESPONSIVE ── */
 @media (max-width:640px){
-  .sup-info-card{ padding:14px 10px; }
-  .sup-info-card .text-3xl{ font-size:1.5rem; }
-
   .sup-cat-pill{ padding:7px 12px; font-size:11.5px; }
-
-  .sup-chat-header{ padding:12px 14px; gap:10px; }
+  .sup-chat-header{ padding:12px 14px; }
   .sup-chat-messages{ padding:14px; }
   .sup-chat-input-area{ padding:12px; }
-
   .sup-bubble{ max-width:86%; font-size:13px; }
-
-  /* hide the keyboard-shortcut hint on narrow screens, keep char count */
-  .sup-chat-input-area .sup-hint-text{ display:none; }
-}
-
-@media (max-width:400px){
-  .sup-usercode-bar{ flex-wrap:wrap; }
-  .sup-usercode-bar span{ width:100%; }
+  .sup-chat-window{ height:60vh; min-height:380px; }
+  .sup-attach-btn, .sup-send-btn { width:32px; height:32px; font-size:14px; }
 }
 </style>
-
 </head>
 <body>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p style="color:#6b7280;font-size:14px;font-weight:500;">Loading support chat…</p>
+  <div class="loader-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
 
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
@@ -263,7 +389,6 @@
 <main class="page-content relative z-10 pb-2 px-4">
 <main class="relative z-10 pt-5 pb-2 px-4">
 <div class="max-w-[1200px]">
-
 
   <!-- ── HEADER ── -->
   <div class="nb-dashboard-header">
@@ -281,37 +406,8 @@
     <div class="text-gray-500 text-sm mt-1">Have a question or issue? Send a message directly to the admin team.</div>
   </div>
 
-  <!-- ── QUICK INFO CARDS ── -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-
-    <div class="sup-info-card text-center">
-      <div class="text-3xl mb-2">⚡</div>
-      <div class="font-black text-sm text-[#211F1F]">Fast Reply</div>
-      <div class="text-gray-500 text-xs mt-1">Usually under 24h</div>
-    </div>
-
-    <div class="sup-info-card text-center">
-      <div class="text-3xl mb-2">🔒</div>
-      <div class="font-black text-sm text-[#211F1F]">Private</div>
-      <div class="text-gray-500 text-xs mt-1">Only you & admin</div>
-    </div>
-
-    <div class="sup-info-card text-center">
-      <div class="text-3xl mb-2">📋</div>
-      <div class="font-black text-sm text-[#211F1F]">Ticket ID</div>
-      <div class="text-gray-500 text-xs mt-1">Every message tracked</div>
-    </div>
-
-    <div class="sup-info-card text-center">
-      <div class="text-3xl mb-2">🌐</div>
-      <div class="font-black text-sm text-[#211F1F]">Always Open</div>
-      <div class="text-gray-500 text-xs mt-1">24 / 7 available</div>
-    </div>
-
-  </div>
-
   <!-- ── MAIN LAYOUT: Chat + Sidebar ── -->
-  <div class="grid lg:grid-cols-3 gap-6">
+  <div class="grid lg:grid-cols-3 gap-6 mt-6">
 
     <!-- ── LEFT: CHAT WINDOW ── -->
     <div class="lg:col-span-2 flex flex-col gap-5">
@@ -320,110 +416,89 @@
       <div>
         <div class="text-sm text-gray-500 mb-3 font-bold">What do you need help with?</div>
         <div class="flex flex-wrap gap-2" id="catPills">
-          <button class="sup-cat-pill active" onclick="selectCat(this)">🔧 General</button>
-          <button class="sup-cat-pill" onclick="selectCat(this)">💰 Payment Issue</button>
-          <button class="sup-cat-pill" onclick="selectCat(this)">📋 Task Problem</button>
-          <button class="sup-cat-pill" onclick="selectCat(this)">👤 Account</button>
-          <button class="sup-cat-pill" onclick="selectCat(this)">🧩 Extension</button>
-          <button class="sup-cat-pill" onclick="selectCat(this)">📢 Channel Issue</button>
-          <button class="sup-cat-pill" onclick="selectCat(this)">❓ Other</button>
+          <button class="sup-cat-pill active" onclick="selectCat(this)" data-cat="General">🔧 General</button>
+          <button class="sup-cat-pill" onclick="selectCat(this)" data-cat="Payment">💰 Payment Issue</button>
+          <button class="sup-cat-pill" onclick="selectCat(this)" data-cat="Task">📋 Task Problem</button>
+          <button class="sup-cat-pill" onclick="selectCat(this)" data-cat="Account">👤 Account</button>
+          <button class="sup-cat-pill" onclick="selectCat(this)" data-cat="Extension">🧩 Extension</button>
+          <button class="sup-cat-pill" onclick="selectCat(this)" data-cat="Channel">📢 Channel Issue</button>
+          <button class="sup-cat-pill" onclick="selectCat(this)" data-cat="Other">❓ Other</button>
         </div>
       </div>
 
       <!-- Chat window -->
-      <div class="sup-chat-window">
+      <div class="sup-chat-window" id="chatWindow">
 
         <!-- Header -->
         <div class="sup-chat-header">
-
           <div class="sup-admin-avatar">
             🛡️
             <div class="sup-online-dot"></div>
           </div>
-
           <div>
             <div class="font-black text-sm text-[#211F1F]">Exsub Admin</div>
             <div class="text-xs font-bold" style="color:#166534;">● Online — replies within 24h</div>
           </div>
-
           <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
-            <span class="sup-badge sup-badge-green">Support</span>
-            <div id="ticketBadge" class="sup-ticket-chip">
-              #SUP-<span id="ticketNum">----</span>
-            </div>
+            <span class="sup-badge sup-badge-green" id="statusBadge">Open</span>
+            <span id="msgCountBadge" class="sup-badge sup-badge-yellow">0/20</span>
           </div>
-
         </div>
 
         <!-- Messages -->
         <div class="sup-chat-messages" id="chatMessages">
-
-          <!-- Welcome message from admin -->
-          <div class="sup-msg-row">
-            <div class="sup-msg-avatar">🛡️</div>
-            <div>
-              <div class="sup-bubble admin">
-                👋 Hello! Welcome to Exsub Group Support.<br><br>
-                Please enter your <strong>User Code</strong> to get started, then describe your issue. We'll get back to you as soon as possible.
-              </div>
-              <div class="sup-msg-meta">Exsub Admin · just now</div>
-            </div>
+          <!-- Messages will be loaded here -->
+          <div id="chatLoading" style="text-align:center;padding:40px 0;color:#6b7280;font-size:14px;">
+            <div class="loader-ring" style="margin:0 auto 12px;width:32px;height:32px;border-width:3px;"></div>
+            Loading messages...
           </div>
+        </div>
 
+        <!-- Chat Disabled Overlay -->
+        <div id="chatDisabledOverlay" style="display:none;" class="sup-chat-disabled">
+          <div class="icon">🔒</div>
+          <div class="title">Chat is Currently Disabled</div>
+          <div class="desc">Support chat has been temporarily disabled. Please try again later or contact us via WhatsApp.</div>
         </div>
 
         <!-- Input area -->
-        <div class="sup-chat-input-area">
-
-          <!-- User Code bar (shown until code is entered) -->
-          <div id="userCodeBar" class="sup-usercode-bar">
-            <span style="font-size:12px;color:#6b6438;font-weight:700;white-space:nowrap;">User Code:</span>
-            <input id="userCodeInput" type="text" placeholder="Enter your ID e.g. #4821"
-            onkeydown="if(event.key==='Enter') confirmCode()">
-            <button onclick="confirmCode()" class="sup-usercode-confirm-btn">Confirm</button>
-          </div>
-
+        <div class="sup-chat-input-area" id="chatInputArea">
           <div class="sup-chat-input-wrap">
-
-            <!-- Attachment -->
-            <label class="sup-icon-btn" title="Attach screenshot">
-              📎
-              <input type="file" accept="image/*" style="display:none;" onchange="attachFile(this)">
-            </label>
-
-            <!-- Text input -->
             <textarea id="msgInput" rows="1" placeholder="Type your message…"
-            onkeydown="handleKey(event)"
-            oninput="autoResize(this)"></textarea>
-
-            <!-- Send -->
-            <button class="sup-send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+              onkeydown="handleKey(event)"
+              oninput="autoResize(this)"
+              disabled></textarea>
+            <button class="sup-attach-btn" id="attachBtn" onclick="document.getElementById('fileInput').click()" title="Attach file">
+              📎
+            </button>
+            <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleFileUpload(event)">
+            <button class="sup-send-btn" id="sendBtn" onclick="sendMessage()" disabled>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DBD4B7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"/>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"/>
               </svg>
             </button>
-
           </div>
-
-          <!-- Attachment preview -->
-          <div id="attachPreview" style="display:none;margin-top:8px;align-items:center;gap:8px;background:#F5F4EB;border:2px solid #211F1F;border-radius:10px;padding:8px 12px;">
-            <span style="font-size:14px;">🖼️</span>
-            <span id="attachName" style="font-size:12px;color:#4b5563;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;"></span>
-            <button onclick="clearAttach()" style="background:none;border:none;color:#211F1F;cursor:pointer;font-size:14px;font-weight:800;">✕</button>
-          </div>
-
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:0 2px;">
-            <div class="sup-hint-text" style="font-size:10px;color:#9ca3af;">Press <kbd style="background:#F5F4EB;border:1.5px solid #211F1F;border-radius:4px;padding:1px 5px;font-size:9px;">Enter</kbd> to send · <kbd style="background:#F5F4EB;border:1.5px solid #211F1F;border-radius:4px;padding:1px 5px;font-size:9px;">Shift+Enter</kbd> for new line</div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="font-size:10px;color:#9ca3af;">Press <kbd style="background:#F5F4EB;border:1.5px solid #211F1F;border-radius:4px;padding:1px 5px;font-size:9px;">Enter</kbd> to send</span>
+              <div class="upload-progress" id="uploadProgress">
+                <span>📤 Uploading...</span>
+                <div class="progress-bar"><div class="fill" id="uploadFill"></div></div>
+              </div>
+            </div>
             <div id="charCount" style="font-size:10px;color:#9ca3af;font-weight:600;">0 / 1000</div>
           </div>
-
+          <div id="attachmentPreview" style="display:none;margin-top:6px;padding:6px 10px;background:#F5F4EB;border:2px solid #211F1F;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:8px;">
+            <span>📎</span>
+            <span id="attachmentName"></span>
+            <button onclick="clearAttachment()" style="background:none;border:none;cursor:pointer;font-size:14px;margin-left:auto;">✕</button>
+          </div>
         </div>
 
       </div>
 
     </div>
-
 
     <!-- ── RIGHT: SIDEBAR ── -->
     <div class="flex flex-col gap-5">
@@ -434,14 +509,14 @@
         <div class="flex items-center gap-3 mb-4">
           <div style="width:42px;height:42px;border-radius:12px;background:#ACD1C0;border:2px solid #211F1F;display:flex;align-items:center;justify-content:center;font-size:18px;">👤</div>
           <div>
-            <div id="sidebarName" class="font-black text-sm text-[#211F1F]">Not confirmed</div>
-            <div id="sidebarCode" class="text-xs text-gray-500">Enter your User Code</div>
+            <div id="sidebarName" class="font-black text-sm text-[#211F1F]">Loading...</div>
+            <div id="sidebarCode" class="text-xs text-gray-500">#----</div>
           </div>
         </div>
         <div class="sup-stat-box">
-          <div class="sup-stat-row"><span class="sup-stat-label">Ticket</span><span id="sideTicket" class="sup-stat-val">#SUP-----</span></div>
           <div class="sup-stat-row"><span class="sup-stat-label">Category</span><span id="sideCat" style="color:#211F1F;font-weight:700;">🔧 General</span></div>
-          <div class="sup-stat-row" style="margin-bottom:0;"><span class="sup-stat-label">Status</span><span class="sup-badge sup-badge-green">Open</span></div>
+          <div class="sup-stat-row"><span class="sup-stat-label">Messages Today</span><span id="sideMsgCount" class="sup-stat-val">0 / 20</span></div>
+          <div class="sup-stat-row" style="margin-bottom:0;"><span class="sup-stat-label">Status</span><span id="sideStatus" class="sup-badge sup-badge-green">Active</span></div>
         </div>
       </div>
 
@@ -449,10 +524,6 @@
       <div class="card p-5">
         <div class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">Tips for faster support</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;gap:10px;align-items:flex-start;">
-            <span style="font-size:14px;flex-shrink:0;">✅</span>
-            <div style="font-size:12px;color:#4b5563;line-height:1.5;">Always include your <strong class="text-[#211F1F]">User Code</strong> in your first message.</div>
-          </div>
           <div style="display:flex;gap:10px;align-items:flex-start;">
             <span style="font-size:14px;flex-shrink:0;">📸</span>
             <div style="font-size:12px;color:#4b5563;line-height:1.5;">Attach a <strong class="text-[#211F1F]">screenshot</strong> if your issue is visual — it speeds up resolution.</div>
@@ -468,29 +539,13 @@
         </div>
       </div>
 
-      <!-- Past tickets -->
-      <div class="card p-5">
-        <div class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">Recent Tickets</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-
-          <div class="sup-ticket-card">
-            <div class="sup-ticket-icon" style="background:#ACD1C0;">✅</div>
-            <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;font-weight:800;color:#211F1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Payment not received</div>
-              <div style="font-size:10px;color:#6b7280;">#SUP-3841 · 3 days ago</div>
-            </div>
-            <span class="sup-badge sup-badge-green" style="flex-shrink:0;">Resolved</span>
-          </div>
-
-          <div class="sup-ticket-card">
-            <div class="sup-ticket-icon" style="background:#EBE492;">⏳</div>
-            <div style="flex:1;min-width:0;">
-              <div style="font-size:12px;font-weight:800;color:#211F1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Task proof rejected</div>
-              <div style="font-size:10px;color:#6b7280;">#SUP-3892 · 1 day ago</div>
-            </div>
-            <span class="sup-badge sup-badge-yellow" style="flex-shrink:0;">Pending</span>
-          </div>
-
+      <!-- WhatsApp Support -->
+      <div class="sup-whatsapp-card">
+        <div class="sup-whatsapp-icon">💬</div>
+        <div>
+          <div style="font-weight:800;color:#211F1F;font-size:14px;">WhatsApp Support</div>
+          <div style="font-size:11px;color:#4b5563;">For urgent issues, contact us on WhatsApp</div>
+          <a href="#" style="font-size:12px;font-weight:700;color:#25D366;text-decoration:underline;">Click here to chat →</a>
         </div>
       </div>
 
@@ -498,7 +553,9 @@
       <div class="sup-admin-note">
         <div style="font-size:11px;color:#211F1F;margin-bottom:6px;font-weight:800;">📌 Admin Note</div>
         <div style="font-size:12px;color:#211F1F;line-height:1.6;">
-          Support hours are <strong>9 AM – 11 PM PKT</strong>. Messages sent outside these hours will be answered on the next business day.
+          Support replies can be delayed. Please be patient — we respond to every message. For urgent help, you can also reach us on <strong>WhatsApp</strong>.
+          <br><br>
+          Support hours: <strong>9 AM – 11 PM PKT</strong>. Messages sent outside these hours will be answered on the next business day.
         </div>
       </div>
 
@@ -510,266 +567,632 @@
 </main>
 </main>
 
-
 <script>
-
 /* ══════════════════════════════════
    STATE
 ══════════════════════════════════ */
 
-let userCode     = '';
-let codeConfirmed = false;
-let selectedCat  = '🔧 General';
-let attachedFile = null;
-let msgCount     = 0;
+const API_URL = "https://script.google.com/macros/s/AKfycbz1_wUNOZ5BQr8g_rkGBJbruLnffvKMhyZWpUqrDg88kZt30UOD_1F8gmva0XNvix2tYA/exec";
 
-// Generate ticket number
-const ticketNum  = 'SUP-' + (Math.floor(Math.random()*9000)+1000);
-document.getElementById('ticketNum').textContent  = ticketNum.split('-')[1];
-document.getElementById('sideTicket').textContent = '#' + ticketNum;
-document.getElementById('ticketBadge').querySelector('span').textContent = ticketNum.split('-')[1];
+const savedUsername = localStorage.getItem("username") || "";
+const savedUserCode = localStorage.getItem("usercode") || "";
 
-/* ── CATEGORY PILLS ── */
-function selectCat(btn){
-    document.querySelectorAll('.sup-cat-pill').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    selectedCat = btn.textContent.trim();
-    document.getElementById('sideCat').textContent = selectedCat;
-}
-
-/* ── CONFIRM USER CODE ── */
-function confirmCode(){
-    const val = document.getElementById('userCodeInput').value.trim();
-    if(!val){ shake('userCodeInput'); return; }
-
-    userCode      = val.startsWith('#') ? val : '#'+val;
-    codeConfirmed = true;
-
-    // hide code bar
-    document.getElementById('userCodeBar').style.display = 'none';
-
-    // update sidebar
-    document.getElementById('sidebarName').textContent = 'Member';
-    document.getElementById('sidebarCode').textContent = userCode;
-
-    // add system message in chat
-    addSystemMsg('User Code ' + userCode + ' confirmed ✓');
-
-    // admin auto-reply
-    setTimeout(()=>{
-        showTyping();
-        setTimeout(()=>{
-            removeTyping();
-            addAdminMsg('Thank you! I can see your account (' + userCode + ').\n\nPlease go ahead and describe your issue in as much detail as possible. If you have a screenshot, you can attach it using the 📎 button.');
-        }, 2000);
-    }, 600);
-}
-
-/* ── SEND MESSAGE ── */
-function sendMessage(){
-    const input = document.getElementById('msgInput');
-    const text  = input.value.trim();
-
-    if(!text && !attachedFile) return;
-    if(!codeConfirmed){
-        shake('userCodeBar');
-        document.getElementById('userCodeInput').focus();
-        return;
-    }
-
-    msgCount++;
-
-    // add member bubble
-    addMemberMsg(text, attachedFile);
-
-    input.value   = '';
-    input.style.height = 'auto';
-    document.getElementById('charCount').textContent = '0 / 1000';
-    clearAttach();
-
-    // admin auto-responses
-    const replies = getAutoReply(text, msgCount);
-    if(replies){
-        setTimeout(()=>{
-            showTyping();
-            setTimeout(()=>{
-                removeTyping();
-                addAdminMsg(replies);
-            }, 1800 + Math.random()*800);
-        }, 800);
-    }
-}
-
-/* ── AUTO REPLIES ── */
-function getAutoReply(text, count){
-    const t = text.toLowerCase();
-
-    if(count === 1)
-        return 'Thank you for reaching out! 🙏\n\nYour message has been received under ticket #' + ticketNum + '. Our team will review your issue and get back to you shortly.\n\nIf you have any additional details or screenshots, please share them here.';
-
-    if(t.includes('payment') || t.includes('paid') || t.includes('money'))
-        return 'I can see this is a payment-related issue. Please confirm:\n\n1. The task name or task number\n2. The date you completed it\n3. Your payment method on file\n\nThis will help us locate your transaction quickly.';
-
-    if(t.includes('task') || t.includes('proof') || t.includes('submit'))
-        return 'For task issues, please share the task number and the screenshot of your completed work so we can verify it on our end.';
-
-    if(t.includes('extension') || t.includes('install'))
-        return 'For extension issues, please let us know:\n\n• Your browser name and version\n• The exact error message you see\n• Whether you have Developer Mode enabled\n\nYou can find your Chrome version at chrome://settings/help';
-
-    if(t.includes('account') || t.includes('login') || t.includes('code'))
-        return 'Account issues are usually resolved within a few hours. Our team has been notified. Please avoid submitting duplicate tickets for the same issue.';
-
-    if(count === 3)
-        return '✅ All your details have been noted. A senior admin will follow up with you soon. Your ticket #' + ticketNum + ' is now in the queue.';
-
-    return null;
-}
-
-/* ── ADD BUBBLES ── */
-function addMemberMsg(text, file){
-    const wrap = document.getElementById('chatMessages');
-    const now  = timeStr();
-
-    const row = document.createElement('div');
-    row.className = 'sup-msg-row outgoing';
-
-    let content = '';
-    if(text)
-        content += '<div class="sup-bubble member">' + escHtml(text).replace(/\n/g,'<br>') + '</div>';
-    if(file)
-        content += '<div class="sup-bubble member" style="padding:8px;margin-top:4px;">' +
-            '🖼️ <span style="font-size:12px;opacity:.85;">' + escHtml(file.name) + '</span></div>';
-
-    row.innerHTML = `
-        <div class="sup-msg-avatar">👤</div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;">
-            ${content}
-            <div class="sup-msg-meta">${escHtml(userCode)} · ${now}</div>
-        </div>`;
-
-    wrap.appendChild(row);
-    scrollBottom();
-}
-
-function addAdminMsg(text){
-    const wrap = document.getElementById('chatMessages');
-    const now  = timeStr();
-
-    const row = document.createElement('div');
-    row.className = 'sup-msg-row';
-    row.innerHTML = `
-        <div class="sup-msg-avatar">🛡️</div>
-        <div>
-            <div class="sup-bubble admin">${escHtml(text).replace(/\n/g,'<br>')}</div>
-            <div class="sup-msg-meta">Exsub Admin · ${now}</div>
-        </div>`;
-
-    wrap.appendChild(row);
-    scrollBottom();
-}
-
-function addSystemMsg(text){
-    const wrap = document.getElementById('chatMessages');
-    const div  = document.createElement('div');
-    div.style.cssText = 'text-align:center;font-size:11px;color:#6b7280;font-weight:600;padding:4px 0;';
-    div.textContent   = '— ' + text + ' —';
-    wrap.appendChild(div);
-    scrollBottom();
-}
-
-/* ── TYPING INDICATOR ── */
-function showTyping(){
-    const wrap = document.getElementById('chatMessages');
-    const row  = document.createElement('div');
-    row.className = 'sup-msg-row';
-    row.id = 'typingRow';
-    row.innerHTML = `
-        <div class="sup-msg-avatar">🛡️</div>
-        <div class="sup-typing-bubble">
-            <div class="sup-typing-dot"></div>
-            <div class="sup-typing-dot"></div>
-            <div class="sup-typing-dot"></div>
-        </div>`;
-    wrap.appendChild(row);
-    scrollBottom();
-}
-
-function removeTyping(){
-    const row = document.getElementById('typingRow');
-    if(row) row.remove();
-}
-
-/* ── HELPERS ── */
-function scrollBottom(){
-    const c = document.getElementById('chatMessages');
-    c.scrollTop = c.scrollHeight;
-}
-
-function timeStr(){
-    const d = new Date();
-    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-}
-
-function escHtml(t){
-    return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function shake(id){
-    const el = document.getElementById(id);
-    el.style.animation = 'none';
-    el.style.outline   = '2px solid #ef4444';
-    setTimeout(()=>{ el.style.outline=''; }, 1200);
-}
-
-/* ── INPUT HELPERS ── */
-function handleKey(e){
-    if(e.key==='Enter' && !e.shiftKey){
-        e.preventDefault();
-        sendMessage();
-    }
-    const len = e.target.value.length;
-    document.getElementById('charCount').textContent = len+' / 1000';
-    if(len > 1000) e.target.value = e.target.value.slice(0,1000);
-}
-
-function autoResize(el){
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
-    document.getElementById('charCount').textContent = el.value.length + ' / 1000';
-}
-
-/* ── ATTACHMENT ── */
-function attachFile(input){
-    if(!input.files[0]) return;
-    attachedFile = input.files[0];
-    document.getElementById('attachPreview').style.display = 'flex';
-    document.getElementById('attachName').textContent = attachedFile.name;
-}
-
-function clearAttach(){
-    attachedFile = null;
-    document.getElementById('attachPreview').style.display = 'none';
-}
-
-</script>
-
-<script>
-/* =========================================================
-   LOGOUT
-========================================================= */
-function logoutUser() {
-  if (!confirm("Are you sure you want to logout?")) return;
-  localStorage.clear(); sessionStorage.clear();
+if (!savedUsername || !savedUserCode) {
   window.location.replace("signin.html");
 }
 
-/* =========================================================
-   SESSION
-========================================================= */
-const savedUsername = localStorage.getItem("username") || "";
-const savedUserCode  = localStorage.getItem("usercode") || "";
+let selectedCat = 'General';
+let msgCount = 0;
+let maxMessages = 20;
+let chatEnabled = true;
+let loading = false;
+let hasMore = true;
+let lastLoadedTimestamp = null;
+let myMessages = [];
+let inactivityTimer = null;
+let inactivityTimeout = 300; // seconds
+let refreshInterval = null;
+let isFirstLoad = true;
+let pendingFile = null;
+let isUploading = false;
 
-if (!savedUsername || !savedUserCode) {
+/* ── API HELPER — Uses GET requests to avoid CORS ── */
+async function callAPI(action, data) {
+  const params = new URLSearchParams();
+  params.append('action', action);
+  
+  Object.keys(data).forEach(key => {
+    if (data[key] !== undefined && data[key] !== null) {
+      params.append(key, data[key]);
+    }
+  });
+  
+  const url = API_URL + '?' + params.toString();
+  
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json'
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error('HTTP error: ' + response.status);
+  }
+  
+  return await response.json();
+}
+
+/* ── LOADING ── */
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) {
+    overlay.classList.add('hide');
+    setTimeout(() => overlay.style.display = 'none', 500);
+  }
+}
+
+/* ── CATEGORY PILLS ── */
+function selectCat(btn){
+  document.querySelectorAll('.sup-cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  selectedCat = btn.dataset.cat || btn.textContent.trim();
+  document.getElementById('sideCat').textContent = btn.textContent.trim();
+}
+
+/* ── INACTIVITY TIMER ── */
+function resetInactivityTimer() {
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+  }
+  inactivityTimer = setTimeout(() => {
+    Swal.fire({
+      icon: 'info',
+      title: 'Session Expired',
+      text: 'You were inactive for too long. The page will reload to refresh your session.',
+      timer: 3000,
+      timerProgressBar: true,
+      showConfirmButton: false
+    }).then(() => {
+      location.reload();
+    });
+  }, inactivityTimeout * 1000);
+}
+
+/* ── LOAD CHAT STATUS ── */
+async function loadSupportStatus() {
+  try {
+    const data = await callAPI('getSupportStatus', { 
+      usercode: savedUserCode 
+    });
+    
+    if (data.success && data.data) {
+      chatEnabled = data.data.chatEnabled;
+      maxMessages = data.data.maxMessages || 20;
+      msgCount = data.data.todayCount || 0;
+      inactivityTimeout = data.data.inactivityTimeout || 300;
+      
+      document.getElementById('msgCountBadge').textContent = msgCount + '/' + maxMessages;
+      document.getElementById('sideMsgCount').textContent = msgCount + ' / ' + maxMessages;
+      
+      updateChatState();
+      resetInactivityTimer();
+    }
+  } catch (err) {
+    console.error('Error loading support status:', err);
+  }
+}
+
+function updateChatState() {
+  const canChat = chatEnabled && msgCount < maxMessages;
+  const input = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const attachBtn = document.getElementById('attachBtn');
+  const overlay = document.getElementById('chatDisabledOverlay');
+  const statusBadge = document.getElementById('statusBadge');
+  const sideStatus = document.getElementById('sideStatus');
+  
+  if (!chatEnabled) {
+    input.disabled = true;
+    sendBtn.disabled = true;
+    attachBtn.disabled = true;
+    overlay.style.display = 'flex';
+    statusBadge.textContent = 'Disabled';
+    statusBadge.className = 'sup-badge sup-badge-red';
+    sideStatus.textContent = 'Disabled';
+    sideStatus.className = 'sup-badge sup-badge-red';
+  } else if (!canChat) {
+    input.disabled = true;
+    sendBtn.disabled = true;
+    attachBtn.disabled = true;
+    overlay.style.display = 'none';
+    statusBadge.textContent = 'Limit Reached';
+    statusBadge.className = 'sup-badge sup-badge-yellow';
+    sideStatus.textContent = 'Limit Reached';
+    sideStatus.className = 'sup-badge sup-badge-yellow';
+    input.placeholder = 'Daily message limit reached. Try again tomorrow.';
+  } else {
+    input.disabled = false;
+    sendBtn.disabled = false;
+    attachBtn.disabled = false;
+    overlay.style.display = 'none';
+    statusBadge.textContent = 'Active';
+    statusBadge.className = 'sup-badge sup-badge-green';
+    sideStatus.textContent = 'Active';
+    sideStatus.className = 'sup-badge sup-badge-green';
+    input.placeholder = 'Type your message…';
+  }
+}
+
+/* ── FILE UPLOAD HANDLING ── */
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  // Check file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    Swal.fire({
+      icon: 'error',
+      title: 'File Too Large',
+      text: 'Maximum file size is 5MB. Please compress or use a smaller file.',
+      confirmButtonText: 'OK'
+    });
+    event.target.value = '';
+    return;
+  }
+  
+  pendingFile = file;
+  document.getElementById('attachmentName').textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+  document.getElementById('attachmentPreview').style.display = 'flex';
+  document.getElementById('fileInput').value = '';
+}
+
+function clearAttachment() {
+  pendingFile = null;
+  document.getElementById('attachmentPreview').style.display = 'none';
+  document.getElementById('attachmentName').textContent = '';
+}
+
+function showUploadProgress(percent) {
+  const container = document.getElementById('uploadProgress');
+  const fill = document.getElementById('uploadFill');
+  container.classList.add('active');
+  fill.style.width = percent + '%';
+}
+
+function hideUploadProgress() {
+  const container = document.getElementById('uploadProgress');
+  container.classList.remove('active');
+  document.getElementById('uploadFill').style.width = '0%';
+}
+
+/* ── UPLOAD FILE TO GOOGLE DRIVE ── */
+async function uploadFileToDrive(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      try {
+        showUploadProgress(10);
+        const base64Data = e.target.result.split(',')[1];
+        
+        // Upload to Google Drive via Apps Script
+        const data = await callAPI('uploadFile', {
+          filename: file.name,
+          fileData: base64Data,
+          fileType: file.type,
+          usercode: savedUserCode
+        });
+        
+        showUploadProgress(100);
+        
+        if (data.success) {
+          resolve(data.fileUrl);
+        } else {
+          reject(new Error(data.message || 'Upload failed'));
+        }
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ── LOAD MESSAGES ── */
+async function loadMessages() {
+  if (loading) return;
+  loading = true;
+  
+  try {
+    const params = { 
+      usercode: savedUserCode,
+      limit: 100
+    };
+    
+    const data = await callAPI('getChatMessages', params);
+    
+    if (data.success && data.data) {
+      const messages = data.data.messages || [];
+      
+      // Reverse messages to show oldest first (chronological order)
+      const reversedMessages = messages.reverse();
+      
+      // Check if we have new messages
+      const currentMessageIds = myMessages.map(m => m.timestamp + m.message);
+      const newMessages = reversedMessages.filter(msg => {
+        const msgId = msg.timestamp + msg.message;
+        return !currentMessageIds.includes(msgId);
+      });
+      
+      if (newMessages.length > 0) {
+        myMessages = reversedMessages;
+        renderMessages();
+        
+        // If new messages are from admin, scroll to show them
+        const hasNewAdminMessages = newMessages.some(msg => msg.sender === 'admin');
+        if (hasNewAdminMessages) {
+          scrollBottom();
+        }
+      } else if (isFirstLoad) {
+        myMessages = reversedMessages;
+        renderMessages();
+        isFirstLoad = false;
+      }
+      
+      const loadingEl = document.getElementById('chatLoading');
+      if (loadingEl) loadingEl.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Error loading messages:', err);
+  }
+  
+  loading = false;
+}
+
+function renderMessages() {
+  const container = document.getElementById('chatMessages');
+  
+  if (myMessages.length === 0) {
+    container.innerHTML = `
+      <div class="sup-msg-row">
+        <div class="sup-msg-avatar">🛡️</div>
+        <div>
+          <div class="sup-bubble admin">
+            👋 Welcome to Exsub Group Support!<br><br>
+            How can we help you today? Please describe your issue and we'll get back to you as soon as possible.
+          </div>
+          <div class="sup-msg-meta">Exsub Admin · just now</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  
+  // Messages are already in chronological order (oldest first)
+  myMessages.forEach((msg, index) => {
+    const isAdmin = msg.sender === 'admin';
+    const isOutgoing = msg.sender === 'member';
+    const timestamp = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+    const isEdited = msg.edited ? ' (edited)' : '';
+    const rowIndex = msg.rowIndex || index;
+    
+    // Skip if message is deleted
+    if (msg.deleted === 'yes') return;
+    
+    // Check if message has an attachment
+    const hasAttachment = msg.attachment || msg.fileUrl;
+    const attachmentHtml = hasAttachment ? `
+      <div class="sup-attachment">
+        ${msg.attachment && msg.attachment.startsWith('data:image') ? 
+          `<img src="${msg.attachment}" alt="Attachment" onclick="window.open('${msg.attachment}', '_blank')">` : 
+          `<a href="${msg.attachment || msg.fileUrl}" target="_blank">📎 ${msg.fileName || 'Attachment'}</a>`
+        }
+      </div>
+    ` : '';
+    
+    html += `
+      <div class="sup-msg-row ${isOutgoing ? 'outgoing' : ''}">
+        <div class="sup-msg-avatar">${isAdmin ? '🛡️' : '👤'}</div>
+        <div>
+          <div class="sup-bubble ${isAdmin ? 'admin' : 'member'}">
+            ${msg.message ? msg.message.replace(/\n/g, '<br>') : ''}
+            ${attachmentHtml}
+            ${!isAdmin ? `
+              <div class="msg-actions">
+                <button onclick="editMessage(${rowIndex}, '${encodeURIComponent(msg.message)}')" title="Edit">✏️</button>
+                <button class="danger" onclick="deleteMessage(${rowIndex})" title="Delete">🗑️</button>
+              </div>
+            ` : ''}
+          </div>
+          <div class="sup-msg-meta">
+            ${isAdmin ? 'Exsub Admin' : msg.userCode} · ${timestamp}${isEdited}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+  scrollBottom();
+}
+
+function scrollBottom() {
+  const container = document.getElementById('chatMessages');
+  setTimeout(() => {
+    container.scrollTop = container.scrollHeight;
+  }, 100);
+}
+
+/* ── SEND MESSAGE ── */
+async function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  
+  if (!text && !pendingFile) return;
+  if (!chatEnabled || msgCount >= maxMessages) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Cannot Send Message',
+      text: chatEnabled ? 'You have reached your daily message limit.' : 'Chat is currently disabled.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+  
+  input.disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('attachBtn').disabled = true;
+  
+  let fileUrl = null;
+  let fileName = null;
+  
+  try {
+    // Upload file if present
+    if (pendingFile) {
+      isUploading = true;
+      try {
+        fileUrl = await uploadFileToDrive(pendingFile);
+        fileName = pendingFile.name;
+        hideUploadProgress();
+      } catch (uploadErr) {
+        console.error('Upload error:', uploadErr);
+        Swal.fire({
+          icon: 'error',
+          title: 'Upload Failed',
+          text: uploadErr.message || 'Failed to upload attachment. Please try again.',
+          confirmButtonText: 'OK'
+        });
+        input.disabled = false;
+        document.getElementById('sendBtn').disabled = false;
+        document.getElementById('attachBtn').disabled = false;
+        isUploading = false;
+        return;
+      }
+      isUploading = false;
+    }
+    
+    const data = await callAPI('sendMessage', {
+      usercode: savedUserCode,
+      message: text || '[Attachment]',
+      category: selectedCat,
+      sender: 'member',
+      fileUrl: fileUrl,
+      fileName: fileName
+    });
+    
+    if (data.success) {
+      msgCount++;
+      document.getElementById('msgCountBadge').textContent = msgCount + '/' + maxMessages;
+      document.getElementById('sideMsgCount').textContent = msgCount + ' / ' + maxMessages;
+      
+      // Reload messages to show the new one
+      await loadMessages();
+      
+      input.value = '';
+      input.style.height = 'auto';
+      document.getElementById('charCount').textContent = '0 / 1000';
+      
+      // Clear attachment
+      clearAttachment();
+      
+      // Reset inactivity timer on activity
+      resetInactivityTimer();
+      
+      updateChatState();
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Send',
+        text: data.message || 'Please try again later.',
+        confirmButtonText: 'OK'
+      });
+    }
+  } catch (err) {
+    console.error('Error sending message:', err);
+    Swal.fire({
+      icon: 'error',
+      title: 'Connection Error',
+      text: 'Unable to send message. Please check your internet connection.',
+      confirmButtonText: 'OK'
+    });
+  }
+  
+  input.disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('attachBtn').disabled = false;
+  input.focus();
+}
+
+/* ── EDIT MESSAGE ── */
+async function editMessage(rowIndex, currentText) {
+  const { value: newText } = await Swal.fire({
+    title: 'Edit Message',
+    input: 'textarea',
+    inputLabel: 'Edit your message',
+    inputValue: decodeURIComponent(currentText),
+    inputPlaceholder: 'Type your updated message...',
+    showCancelButton: true,
+    confirmButtonText: 'Save',
+    cancelButtonText: 'Cancel',
+    inputAttributes: {
+      maxlength: 1000,
+      style: 'resize:vertical;min-height:80px;'
+    },
+    customClass: {
+      popup: 'swal-setup-popup',
+      confirmButton: 'swal2-confirm',
+      cancelButton: 'swal2-cancel'
+    }
+  });
+
+  if (newText && newText !== decodeURIComponent(currentText)) {
+    try {
+      const data = await callAPI('editMessage', {
+        usercode: savedUserCode,
+        rowIndex: rowIndex,
+        newMessage: newText
+      });
+      
+      if (data.success) {
+        await loadMessages();
+        Swal.fire({
+          icon: 'success',
+          title: 'Message Updated',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        resetInactivityTimer();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to Edit',
+          text: data.message || 'Please try again later.',
+          confirmButtonText: 'OK'
+        });
+      }
+    } catch (err) {
+      console.error('Error editing message:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Connection Error',
+        text: 'Unable to edit message. Please check your internet connection.',
+        confirmButtonText: 'OK'
+      });
+    }
+  }
+}
+
+/* ── DELETE MESSAGE ── */
+async function deleteMessage(rowIndex) {
+  const result = await Swal.fire({
+    title: 'Delete Message?',
+    text: 'This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#dc2626',
+    customClass: {
+      popup: 'swal-setup-popup',
+      confirmButton: 'swal2-confirm',
+      cancelButton: 'swal2-cancel'
+    }
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const data = await callAPI('deleteMessage', {
+        usercode: savedUserCode,
+        rowIndex: rowIndex
+      });
+      
+      if (data.success) {
+        await loadMessages();
+        Swal.fire({
+          icon: 'success',
+          title: 'Message Deleted',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        resetInactivityTimer();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to Delete',
+          text: data.message || 'Please try again later.',
+          confirmButtonText: 'OK'
+        });
+      }
+    } catch (err) {
+      console.error('Error deleting message:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Connection Error',
+        text: 'Unable to delete message. Please check your internet connection.',
+        confirmButtonText: 'OK'
+      });
+    }
+  }
+}
+
+/* ── INPUT HELPERS ── */
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+  const len = e.target.value.length;
+  document.getElementById('charCount').textContent = len + ' / 1000';
+  if (len > 1000) e.target.value = e.target.value.slice(0, 1000);
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  document.getElementById('charCount').textContent = el.value.length + ' / 1000';
+}
+
+/* ── INIT ── */
+async function init() {
+  // Set user info
+  document.getElementById('sidebarName').textContent = savedUsername || 'Member';
+  document.getElementById('sidebarCode').textContent = savedUserCode || '#----';
+  
+  // Load status and messages
+  await loadSupportStatus();
+  await loadMessages();
+  
+  hideLoading();
+  
+  // Auto-refresh every 10 seconds to check for new admin messages
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+  }
+  refreshInterval = setInterval(async () => {
+    await loadMessages();
+  }, 10000);
+  
+  // Set up user activity listeners to reset inactivity timer
+  document.addEventListener('click', resetInactivityTimer);
+  document.addEventListener('keydown', resetInactivityTimer);
+  document.addEventListener('scroll', resetInactivityTimer);
+  document.addEventListener('mousemove', resetInactivityTimer);
+}
+
+// Start the app
+init();
+
+/* ── LOGOUT ── */
+function logoutUser() {
+  if (!confirm("Are you sure you want to logout?")) return;
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+  }
+  localStorage.clear(); 
+  sessionStorage.clear();
   window.location.replace("signin.html");
 }
 </script>

@@ -12,13 +12,563 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="promochannel.css">
+<style>
+/* ── Neo-Brutalist Styles ──────────────────────────────────────── */
+:root {
+  --charcoal: #211F1F;
+  --sand: #DBD4B7;
+  --mint: #ACD1C0;
+  --bg: #F5F4EB;
+  --white: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Loading Overlay ──────────────────────────────────────────── */
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.5s ease;
+}
+#loadingOverlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.loader-ring {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(33,31,31,0.15);
+  border-top-color: var(--charcoal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loader-dots {
+  display: flex;
+  gap: 8px;
+}
+.loader-dots span {
+  width: 10px;
+  height: 10px;
+  background: var(--charcoal);
+  border-radius: 50%;
+  animation: dotPulse 1.4s infinite ease-in-out both;
+}
+.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Promo Channel Panel ──────────────────────────────────────── */
+.promochannel-section {
+  margin-top: 24px;
+}
+.promochannel-panel {
+  background: var(--white);
+  border: 3px solid var(--charcoal);
+  border-radius: 24px;
+  box-shadow: 8px 8px 0px 0px var(--charcoal);
+  padding: 24px;
+}
+.promochannel-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.promochannel-panel-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--charcoal);
+}
+.promochannel-panel-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.promochannel-panel-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Badges ───────────────────────────────────────────────────── */
+.promochannel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid var(--charcoal);
+}
+.promochannel-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.promochannel-badge--ok {
+  background: var(--mint);
+  color: var(--charcoal);
+}
+.promochannel-badge--ok .promochannel-badge-dot {
+  background: #16a34a;
+}
+.promochannel-badge--full {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.promochannel-badge--full .promochannel-badge-dot {
+  background: #dc2626;
+}
+
+/* ── Neo-Brutalist Buttons ────────────────────────────────────── */
+.btn-retro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 3px solid var(--charcoal);
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  box-shadow: 4px 4px 0px 0px var(--charcoal);
+  font-family: 'Inter', sans-serif;
+}
+.btn-retro:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px var(--charcoal);
+}
+.btn-retro:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--charcoal);
+}
+.btn-retro:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 4px 4px 0px 0px var(--charcoal);
+}
+
+.btn-charcoal {
+  background: var(--charcoal);
+  color: var(--sand);
+  border-color: var(--charcoal);
+}
+.btn-charcoal:hover:not(:disabled) {
+  background: #2d2a2a;
+}
+
+.btn-sand {
+  background: var(--sand);
+  color: var(--charcoal);
+  border-color: var(--charcoal);
+}
+.btn-sand:hover:not(:disabled) {
+  background: #c9c2a4;
+}
+
+.btn-mint {
+  background: var(--mint);
+  color: var(--charcoal);
+  border-color: var(--charcoal);
+}
+.btn-mint:hover:not(:disabled) {
+  background: #9bc2b1;
+}
+
+.btn-red-retro {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: var(--charcoal);
+}
+.btn-red-retro:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.promochannel-btn-add--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Channel List ─────────────────────────────────────────────── */
+.promochannel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 120px;
+}
+
+/* ── Channel Card ─────────────────────────────────────────────── */
+.promochannel-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background: var(--bg);
+  padding: 20px 24px;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+.promochannel-card:hover {
+  transform: translate(-2px, -2px);
+}
+.promochannel-card-media {
+  flex-shrink: 0;
+}
+.promochannel-avatar-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid var(--charcoal);
+  padding: 3px;
+  background: var(--white);
+  position: relative;
+}
+.promochannel-avatar-ring--live::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+}
+.promochannel-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.promochannel-card-body {
+  flex: 1;
+  min-width: 200px;
+}
+.promochannel-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--charcoal);
+}
+.promochannel-handle {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 2px;
+}
+.promochannel-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin-top: 10px;
+}
+.promochannel-stat {
+  display: flex;
+  flex-direction: column;
+}
+.promochannel-stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.promochannel-stat-value {
+  font-size: 15px;
+  font-weight: 800;
+  color: white;
+}
+.promochannel-stat-value--mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+.promochannel-visit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal);
+  text-decoration: none;
+  border-bottom: 2px solid var(--charcoal);
+  transition: all 0.15s ease;
+}
+.promochannel-visit-link:hover {
+  gap: 8px;
+}
+.promochannel-visit-arrow {
+  transition: transform 0.15s ease;
+}
+.promochannel-visit-link:hover .promochannel-visit-arrow {
+  transform: translateX(4px);
+}
+.promochannel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 220px;
+}
+.promochannel-actions .btn-retro {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 12px;
+}
+
+/* ── Notices ──────────────────────────────────────────────────── */
+.promochannel-notice {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 2px solid var(--charcoal);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.promochannel-notice--danger {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+.promochannel-notice--warning {
+  background: #fef3c7;
+  color: #d97706;
+  border-color: #d97706;
+}
+.promochannel-notice-label {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+.promochannel-notice-text {
+  font-weight: 700;
+}
+
+/* ── Empty State ──────────────────────────────────────────────── */
+.promochannel-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+.promochannel-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.promochannel-empty-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--charcoal);
+}
+.promochannel-empty-desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Form Fields ──────────────────────────────────────────────── */
+.promochannel-field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-top: 14px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.promochannel-field-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--white);
+  border: 3px solid var(--charcoal);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--charcoal);
+  outline: none;
+  transition: all 0.15s ease;
+  font-family: 'Inter', sans-serif;
+}
+.promochannel-field-input:focus {
+  box-shadow: 4px 4px 0px 0px var(--charcoal);
+}
+
+/* ── Type Grid ────────────────────────────────────────────────── */
+.promochannel-type-search-wrap {
+  margin-bottom: 10px;
+}
+.promochannel-type-search {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--white);
+  border: 3px solid var(--charcoal);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal);
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+.promochannel-type-search:focus {
+  box-shadow: 3px 3px 0px 0px var(--charcoal);
+}
+.promochannel-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+.promochannel-type-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--white);
+  border: 2px solid var(--charcoal);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.promochannel-type-opt:hover {
+  background: var(--sand);
+}
+.promochannel-type-opt--selected {
+  background: var(--charcoal);
+  color: var(--sand);
+  border-color: var(--charcoal);
+}
+.promochannel-type-opt--selected:hover {
+  background: #2d2a2a;
+}
+.promochannel-type-emoji {
+  font-size: 16px;
+}
+
+/* ── Modal Warning ────────────────────────────────────────────── */
+.promochannel-modal-warning {
+  background: #fef3c7;
+  border: 2px solid #d97706;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #78350f;
+  font-weight: 500;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .promochannel-panel {
+    padding: 16px;
+  }
+  .promochannel-panel-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .promochannel-panel-controls {
+    flex-wrap: wrap;
+  }
+  .promochannel-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+  .promochannel-actions {
+    max-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .promochannel-actions .btn-retro {
+    flex: 1;
+    min-width: 140px;
+  }
+  .promochannel-stats {
+    gap: 12px;
+  }
+  .promochannel-type-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
+
+/* ── SweetAlert2 Overrides ────────────────────────────────────── */
+.swal2-popup {
+  background: var(--bg) !important;
+  border: 3px solid var(--charcoal) !important;
+  border-radius: 24px !important;
+  box-shadow: 8px 8px 0px 0px var(--charcoal) !important;
+  font-family: 'Inter', sans-serif !important;
+  color: var(--charcoal) !important;
+}
+.swal2-title {
+  color: var(--charcoal) !important;
+  font-weight: 800 !important;
+}
+.swal2-html-container {
+  color: #4b5563 !important;
+}
+.swal2-confirm {
+  background: var(--charcoal) !important;
+  color: var(--sand) !important;
+  border-radius: 14px !important;
+  border: 3px solid var(--charcoal) !important;
+  font-weight: 700 !important;
+  box-shadow: 4px 4px 0px 0px var(--charcoal) !important;
+}
+.swal2-cancel {
+  background: var(--white) !important;
+  border: 3px solid var(--charcoal) !important;
+  color: var(--charcoal) !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  box-shadow: 4px 4px 0px 0px var(--charcoal) !important;
+}
+</style>
 </head>
 <body>
 
 <div id="loadingOverlay">
   <div class="loader-ring"></div>
-  <p style="color:#8a8f9e;font-size:14px;font-weight:500;">Loading your working channel…</p>
+  <p style="color:#6b7280;font-size:14px;font-weight:500;">Loading your working channel…</p>
   <div class="loader-dots">
     <span></span><span></span><span></span>
   </div>
@@ -70,7 +620,7 @@
 /* =========================================================
    CONFIG
 ========================================================= */
-const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxyWaLI5KD9O-imw_i_pD3htxWW-MlPsvE2eXX8Le2jGiMZ85t7R5zlYEF0h9bSY7mddw/exec";
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbxOH1QWnvUWQeLC6760tYR-8Db2zHcTU-cr7-5bY91CY2T8f95boDUvzozZ3-G_ZKR_/exec";
 
 /* =========================================================
    SESSION
@@ -89,24 +639,129 @@ if (!savedUsername || !savedPassword) {
 let workingChannelId = null;
 
 /* =========================================================
-   CHANNEL TYPES
+   CHANNEL TYPES — 60+ Categories
 ========================================================= */
 const CHANNEL_TYPES = [
-  { id:'film_animation',        emoji:'🎬', label:'Film & Animation' },
-  { id:'autos_vehicles',        emoji:'🚗', label:'Autos & Vehicles' },
-  { id:'music',                 emoji:'🎵', label:'Music' },
-  { id:'pets_animals',          emoji:'🐾', label:'Pets & Animals' },
-  { id:'sports',                emoji:'⚽', label:'Sports' },
-  { id:'travel_events',         emoji:'✈️', label:'Travel & Events' },
-  { id:'gaming',                emoji:'🎮', label:'Gaming' },
-  { id:'people_blogs',          emoji:'🙋', label:'People & Blogs' },
-  { id:'comedy',                emoji:'😂', label:'Comedy' },
-  { id:'entertainment',         emoji:'🎭', label:'Entertainment' },
-  { id:'news_politics',         emoji:'📰', label:'News & Politics' },
-  { id:'howto_style',           emoji:'💄', label:'How-to & Style' },
-  { id:'education',             emoji:'📚', label:'Education' },
-  { id:'science_tech',          emoji:'🔬', label:'Science & Technology' },
-  { id:'other',                   emoji:'🌐', label:'Other' }
+  // Arts & Entertainment
+  { id:'film_animation', emoji:'🎬', label:'Film & Animation' },
+  { id:'entertainment', emoji:'🎭', label:'Entertainment' },
+  { id:'comedy', emoji:'😂', label:'Comedy' },
+  { id:'dance', emoji:'💃', label:'Dance' },
+  { id:'music', emoji:'🎵', label:'Music' },
+  { id:'gaming', emoji:'🎮', label:'Gaming' },
+  { id:'art', emoji:'🎨', label:'Art & Design' },
+  { id:'photography', emoji:'📸', label:'Photography' },
+  
+  // Education & Knowledge
+  { id:'education', emoji:'📚', label:'Education' },
+  { id:'science_tech', emoji:'🔬', label:'Science & Technology' },
+  { id:'math', emoji:'🧮', label:'Mathematics' },
+  { id:'physics', emoji:'⚛️', label:'Physics' },
+  { id:'chemistry', emoji:'🧪', label:'Chemistry' },
+  { id:'biology', emoji:'🧬', label:'Biology' },
+  { id:'astronomy', emoji:'🪐', label:'Astronomy' },
+  { id:'history', emoji:'🏛️', label:'History' },
+  { id:'geography', emoji:'🌍', label:'Geography' },
+  { id:'languages', emoji:'🗣️', label:'Languages' },
+  { id:'philosophy', emoji:'🧠', label:'Philosophy' },
+  { id:'psychology', emoji:'🧘', label:'Psychology' },
+  
+  // Lifestyle & Personal
+  { id:'people_blogs', emoji:'🙋', label:'People & Blogs' },
+  { id:'vlogging', emoji:'📹', label:'Vlogging' },
+  { id:'lifestyle', emoji:'🌿', label:'Lifestyle' },
+  { id:'fitness', emoji:'💪', label:'Fitness & Exercise' },
+  { id:'health', emoji:'🏥', label:'Health & Wellness' },
+  { id:'nutrition', emoji:'🥗', label:'Nutrition & Diet' },
+  { id:'yoga', emoji:'🧘‍♀️', label:'Yoga & Meditation' },
+  { id:'mindfulness', emoji:'🧠', label:'Mindfulness' },
+  { id:'self_improvement', emoji:'📈', label:'Self Improvement' },
+  { id:'motivation', emoji:'🔥', label:'Motivation & Inspiration' },
+  { id:'parenting', emoji:'👨‍👩‍👦', label:'Parenting' },
+  { id:'relationships', emoji:'💕', label:'Relationships' },
+  
+  // Fashion & Beauty
+  { id:'fashion', emoji:'👗', label:'Fashion' },
+  { id:'beauty', emoji:'💄', label:'Beauty & Makeup' },
+  { id:'skincare', emoji:'🧴', label:'Skincare' },
+  { id:'hair', emoji:'💇', label:'Hair & Styling' },
+  
+  // Food & Cooking
+  { id:'food', emoji:'🍳', label:'Food & Cooking' },
+  { id:'baking', emoji:'🍰', label:'Baking' },
+  { id:'vegan', emoji:'🌱', label:'Vegan & Plant-Based' },
+  { id:'restaurant_reviews', emoji:'🍽️', label:'Restaurant Reviews' },
+  
+  // Travel & Adventure
+  { id:'travel_events', emoji:'✈️', label:'Travel & Events' },
+  { id:'adventure', emoji:'🧗', label:'Adventure' },
+  { id:'camping', emoji:'🏕️', label:'Camping & Outdoors' },
+  { id:'exploration', emoji:'🗺️', label:'Exploration' },
+  
+  // Sports & Recreation
+  { id:'sports', emoji:'⚽', label:'Sports' },
+  { id:'football', emoji:'⚽', label:'Football' },
+  { id:'cricket', emoji:'🏏', label:'Cricket' },
+  { id:'basketball', emoji:'🏀', label:'Basketball' },
+  { id:'tennis', emoji:'🎾', label:'Tennis' },
+  { id:'swimming', emoji:'🏊', label:'Swimming' },
+  { id:'running', emoji:'🏃', label:'Running & Athletics' },
+  { id:'cycling', emoji:'🚴', label:'Cycling' },
+  { id:'martial_arts', emoji:'🥋', label:'Martial Arts' },
+  { id:'yoga', emoji:'🧘', label:'Yoga' },
+  { id:'esports', emoji:'🖥️', label:'Esports' },
+  
+  // Pets & Animals
+  { id:'pets_animals', emoji:'🐾', label:'Pets & Animals' },
+  { id:'dogs', emoji:'🐕', label:'Dogs' },
+  { id:'cats', emoji:'🐈', label:'Cats' },
+  { id:'wildlife', emoji:'🦁', label:'Wildlife' },
+  { id:'aquatic', emoji:'🐠', label:'Aquatic Life' },
+  
+  // Business & Finance
+  { id:'business', emoji:'💼', label:'Business' },
+  { id:'finance', emoji:'💰', label:'Finance & Investing' },
+  { id:'entrepreneurship', emoji:'🚀', label:'Entrepreneurship' },
+  { id:'marketing', emoji:'📊', label:'Marketing & Advertising' },
+  { id:'career', emoji:'👔', label:'Career & Jobs' },
+  
+  // Technology
+  { id:'tech_reviews', emoji:'📱', label:'Tech Reviews' },
+  { id:'programming', emoji:'💻', label:'Programming & Coding' },
+  { id:'ai', emoji:'🤖', label:'Artificial Intelligence' },
+  { id:'cybersecurity', emoji:'🔒', label:'Cybersecurity' },
+  { id:'gadgets', emoji:'⌚', label:'Gadgets & Devices' },
+  { id:'software', emoji:'📦', label:'Software & Apps' },
+  
+  // Religion & Spirituality
+  { id:'islamic', emoji:'🕌', label:'Islamic' },
+  { id:'christianity', emoji:'⛪', label:'Christianity' },
+  { id:'hinduism', emoji:'🛕', label:'Hinduism' },
+  { id:'buddhism', emoji:'☸️', label:'Buddhism' },
+  { id:'judaism', emoji:'✡️', label:'Judaism' },
+  { id:'spirituality', emoji:'🔮', label:'Spirituality' },
+  { id:'religious', emoji:'🙏', label:'Religious' },
+  
+  // News & Politics
+  { id:'news_politics', emoji:'📰', label:'News & Politics' },
+  { id:'current_affairs', emoji:'🌐', label:'Current Affairs' },
+  { id:'journalism', emoji:'📝', label:'Journalism' },
+  
+  // How-to & DIY
+  { id:'howto_style', emoji:'🛠️', label:'How-to & DIY' },
+  { id:'woodworking', emoji:'🪚', label:'Woodworking' },
+  { id:'crafts', emoji:'✂️', label:'Crafts & Hobbies' },
+  { id:'electronics', emoji:'⚡', label:'Electronics' },
+  { id:'gardening', emoji:'🌻', label:'Gardening' },
+  { id:'home_improvement', emoji:'🏠', label:'Home Improvement' },
+  
+  // Cars & Vehicles
+  { id:'autos_vehicles', emoji:'🚗', label:'Autos & Vehicles' },
+  { id:'motorcycles', emoji:'🏍️', label:'Motorcycles' },
+  { id:'trucks', emoji:'🚛', label:'Trucks & Offroad' },
+  
+  // Other
+  { id:'other', emoji:'🌐', label:'Other' }
 ];
 
 /* =========================================================
@@ -182,7 +837,8 @@ async function loadWorkingChannel() {
         icon: "error",
         title: "Session Expired",
         text: pd.message || "Please sign in again.",
-        confirmButtonText: "Go to Sign In"
+        confirmButtonText: "Go to Sign In",
+        customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
       });
       localStorage.clear();
       window.location.href = "signin.html";
@@ -197,7 +853,12 @@ async function loadWorkingChannel() {
 
   } catch(err) {
     hideLoading();
-    Swal.fire({ icon:"error", title:"Error", text:"Unable to load working channel data: " + err.message });
+    Swal.fire({ 
+      icon:"error", 
+      title:"Error", 
+      text:"Unable to load working channel data: " + err.message,
+      customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
+    });
   }
 }
 
@@ -240,22 +901,16 @@ function emptyState(icon, title, desc) {
 }
 
 /* =========================================================
-   WORKING CHANNEL CARD HTML
+   WORKING CHANNEL CARD HTML (REMOVED SUBSCRIPTION STATUS)
 ========================================================= */
 function workingChannelCardHTML(ch) {
   const image = ch.ChannelImage && ch.ChannelImage.trim() ? ch.ChannelImage : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
-  const typeObj = CHANNEL_TYPES.find(t => t.id === (ch.ChannelType||'').toLowerCase()) || { emoji:'🌐', label: ch.ChannelType||'-' };
-  const lastFetched = formatNiceDate(ch.LastTimeFetch || ch.SheetUpdate || '-');
   
-  // Checking Privacy/Public Status Rules
-  const isPublic = String(ch.PublicSubscription||'').toLowerCase() === 'yes';
-  const privacyNoticeHTML = !isPublic 
-    ? `<div class="promochannel-notice promochannel-notice--warning">
-         ⚠️ Your YouTube Subscriptions are currently Private. Please set them to Public so the extension can verify your tasks.
-       </div>`
-    : `<div class="promochannel-notice" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
-         ✅ Subscriptions Visibility: Public (Verified)
-       </div>`;
+  // ChannelType handling
+  const channelType = ch.ChannelType || 'Other';
+  const typeObj = CHANNEL_TYPES.find(t => t.id === (channelType || '').toLowerCase()) || { emoji:'🌐', label: channelType || 'Other' };
+  
+  const lastFetched = formatNiceDate(ch.LastTimeFetch || ch.SheetUpdate || '-');
 
   const issueText = (ch.Issue || '').trim();
   const hasIssue = issueText && issueText.toLowerCase() !== 'no';
@@ -296,7 +951,6 @@ function workingChannelCardHTML(ch) {
       </div>
 
       ${issueBoxHTML}
-      ${privacyNoticeHTML}
 
       <a href="https://youtube.com/channel/${ch.ChannelId}" target="_blank" class="promochannel-visit-link">
         View Account Profile <span class="promochannel-visit-arrow">→</span>
@@ -315,15 +969,20 @@ function workingChannelCardHTML(ch) {
 function openAddModal() {
   Swal.fire({
     title: '🛡️ Link Working Channel',
-    width:600,
-    html:`<div style="text-align:left">
+    width: 600,
+    html: `<div style="text-align:left">
       <label class="promochannel-field-label">Working YouTube Channel Link</label>
       <input id="sw_channelLink" class="promochannel-field-input" placeholder="https://youtube.com/@yourworkingprofile">
       <label class="promochannel-field-label">Primary Account Content Focus</label>${typeSelectorHTML()}
     </div>`,
     confirmButtonText: 'Link Working Channel',
-    showCancelButton:true,
-    cancelButtonText:'Cancel',
+    showCancelButton: true,
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'swal2-popup',
+      confirmButton: 'swal2-confirm',
+      cancelButton: 'swal2-cancel'
+    },
     preConfirm: async () => {
       const channelLink = document.getElementById('sw_channelLink').value.trim();
       const channelType = getSelectedChannelTypeValue();
@@ -344,7 +1003,14 @@ function openAddModal() {
     }
   }).then(result => {
     if (result.isConfirmed) {
-      Swal.fire({ icon:'success', title:'Connected!', text: 'Working account successfully verified and attached.', timer:1800, showConfirmButton:false });
+      Swal.fire({ 
+        icon:'success', 
+        title:'Connected!', 
+        text: 'Working account successfully verified and attached.', 
+        timer: 1800, 
+        showConfirmButton: false,
+        customClass: { popup: 'swal2-popup' }
+      });
       setTimeout(() => location.reload(), 1900);
     }
   });
@@ -354,7 +1020,12 @@ function openAddModal() {
    SYNC FROM CARD
 ========================================================= */
 async function syncWorkingYT(channelId) {
-  Swal.fire({ title:'Syncing data from YouTube…', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+  Swal.fire({ 
+    title:'Syncing data from YouTube…', 
+    allowOutsideClick: false, 
+    didOpen: () => Swal.showLoading(),
+    customClass: { popup: 'swal2-popup' }
+  });
   try {
     const r = await fetch(ChannelCRUDScript
       + `?action=updateWorkingChannel`
@@ -363,10 +1034,31 @@ async function syncWorkingYT(channelId) {
       + `&channelId=${encodeURIComponent(channelId)}`
     );
     const d = await r.json();
-    if (d.status !== 'success') { Swal.fire({ icon:'error', title:'Verification Failed', text:d.message }); return; }
-    Swal.fire({ icon:'success', title:'Data Synchronized!', timer:1400, showConfirmButton:false });
+    if (d.status !== 'success') { 
+      Swal.fire({ 
+        icon:'error', 
+        title:'Verification Failed', 
+        text: d.message,
+        customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
+      }); 
+      return; 
+    }
+    Swal.fire({ 
+      icon:'success', 
+      title:'Data Synchronized!', 
+      timer: 1400, 
+      showConfirmButton: false,
+      customClass: { popup: 'swal2-popup' }
+    });
     setTimeout(() => location.reload(), 1500);
-  } catch(e) { Swal.fire({ icon:'error', title:'Error', text:'Unable to update parameters' }); }
+  } catch(e) { 
+    Swal.fire({ 
+      icon:'error', 
+      title:'Error', 
+      text:'Unable to update parameters',
+      customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
+    }); 
+  }
 }
 
 /* =========================================================
@@ -374,18 +1066,24 @@ async function syncWorkingYT(channelId) {
 ========================================================= */
 function openChangeWorkingModal(channelId) {
   Swal.fire({
-    title:'🔁 Change Working Account', width:600,
-    html:`<div style="text-align:left">
+    title:'🔁 Change Working Account',
+    width: 600,
+    html: `<div style="text-align:left">
       <label class="promochannel-field-label">New Working YouTube Channel Link</label>
       <input id="sw_newChannelLink" class="promochannel-field-input" placeholder="https://youtube.com/@alternativetaskprofile">
       <div class="promochannel-modal-warning" style="margin-top:15px;">
         ⚠️ <strong>Important:</strong> Changing your working channel requires the new channel to have its subscription settings set to public so task processing records do not get broken.
       </div>
     </div>`,
-    confirmButtonText:'🔁 Update Working Channel',
-    confirmButtonColor:'#f59e0b',
-    showCancelButton:true,
-    cancelButtonText:'Cancel',
+    confirmButtonText: '🔁 Update Working Channel',
+    confirmButtonColor: '#f59e0b',
+    showCancelButton: true,
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'swal2-popup',
+      confirmButton: 'swal2-confirm',
+      cancelButton: 'swal2-cancel'
+    },
     preConfirm: async () => {
       const link = document.getElementById('sw_newChannelLink').value.trim();
       if (!link) { Swal.showValidationMessage('Please type the new profile link'); return false; }
@@ -404,7 +1102,14 @@ function openChangeWorkingModal(channelId) {
     }
   }).then(result => {
     if (result.isConfirmed) {
-      Swal.fire({ icon:'success', title:'Account Switch Complete!', text: result.value.message || '', timer:2200, showConfirmButton:false });
+      Swal.fire({ 
+        icon:'success', 
+        title:'Account Switch Complete!', 
+        text: result.value.message || '', 
+        timer: 2200, 
+        showConfirmButton: false,
+        customClass: { popup: 'swal2-popup' }
+      });
       setTimeout(() => location.reload(), 2300);
     }
   });

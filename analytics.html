@@ -12,6 +12,50 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+/* ── LOADING OVERLAY ──────────────────────────────────────────── */
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: #F5F4EB;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.5s ease;
+}
+#loadingOverlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.loader-ring {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(33,31,31,0.15);
+  border-top-color: #211F1F;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loader-dots {
+  display: flex;
+  gap: 8px;
+}
+.loader-dots span {
+  width: 10px;
+  height: 10px;
+  background: #211F1F;
+  border-radius: 50%;
+  animation: dotPulse 1.4s infinite ease-in-out both;
+}
+.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
 /* ── NEO-BRUTALIST TAB SYSTEM ── */
 :root {
   --ink: #211F1F;
@@ -19,6 +63,116 @@
   --mint: #ACD1C0;
   --sand: #DBD4B7;
   --shadow-off: 6px;
+}
+
+/* ── NEO-BRUTALIST CARD ── */
+.card {
+  background: #FFFFFF;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px 0px var(--ink);
+  transition: all 0.15s ease;
+}
+.card-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px 0px var(--ink);
+}
+
+/* ── NEO-BRUTALIST PILLS ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 2px solid var(--ink);
+}
+.pill-mint {
+  background: var(--mint);
+  color: var(--ink);
+}
+.pill-sand {
+  background: var(--sand);
+  color: var(--ink);
+}
+.pill-charcoal {
+  background: var(--ink);
+  color: #FFFFFF;
+}
+.pill-green {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #166534;
+}
+.pill-red {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+.pill-yellow {
+  background: #fef3c7;
+  color: #d97706;
+  border-color: #d97706;
+}
+.pill-gray {
+  background: #f3f4f6;
+  color: #6b7280;
+  border-color: #6b7280;
+}
+.pill-purple {
+  background: #ede9fe;
+  color: #6d28d9;
+  border-color: #6d28d9;
+}
+.pill-blink {
+  animation: blinkPill 1.8s infinite ease-in-out;
+}
+@keyframes blinkPill {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── MEMBER INFO ROW STYLES ── */
+.member-stat-card {
+  background: #FFFFFF;
+  border: 3px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0px 0px var(--ink);
+  padding: 16px 12px;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+.member-stat-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px var(--ink);
+}
+.member-stat-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+.member-stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.member-stat-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-top: 2px;
+}
+.member-stat-value .status-active {
+  color: #16a34a;
+}
+.member-stat-value .status-blocked {
+  color: #dc2626;
+}
+.member-stat-value .status-pending {
+  color: #d97706;
 }
 
 .tabbar-label {
@@ -310,9 +464,271 @@
 .setup-step-item .step-icon {
   font-size: 16px;
 }
+
+/* ── NEO-BRUTALIST GROUP TASK CARDS ── */
+.group-task-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 3px solid #211F1F;
+  border-radius: 16px;
+  background: #F5F4EB;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  transition: all 0.15s ease;
+}
+.group-task-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #211F1F;
+}
+.start-task-btn {
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid #211F1F;
+  box-shadow: 3px 3px 0px 0px #211F1F;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #DBD4B7;
+  color: #211F1F;
+}
+.start-task-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px #211F1F;
+}
+
+/* ── ISSUE TILE ── */
+.issue-tile {
+  background: #ffffff;
+  border: 2px solid #211F1F;
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  transition: all 0.15s ease;
+}
+.issue-tile:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px 0px #211F1F;
+}
+.issue-tile .issue-tile-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.issue-tile .issue-tile-title {
+  font-weight: 700;
+  color: #211F1F;
+}
+.issue-tile .issue-tile-desc {
+  color: #1f2937;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+.issue-tile .issue-tile-desc.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.issue-tile .issue-read-more {
+  font-size: 11px;
+  color: #211F1F;
+  font-weight: 700;
+  margin-top: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.issue-tile .issue-tile-reply {
+  background-color: #EAE9DF;
+  border-left: 3px solid #211F1F;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+}
+.issue-tile .issue-tile-meta {
+  font-size: 11px;
+  color: #4b5563;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.issue-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 2px solid #211F1F;
+}
+.issue-status-pill.pill-open {
+  background: #fef3c7;
+  color: #d97706;
+  border-color: #d97706;
+}
+.issue-status-pill.pill-pending {
+  background: #ede9fe;
+  color: #6d28d9;
+  border-color: #6d28d9;
+}
+.issue-status-pill.pill-resolved {
+  background: #dcfce7;
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+/* ── BLINK ALERT ── */
+.blink-alert {
+  animation: alertPulse 2s infinite ease-in-out;
+}
+@keyframes alertPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.badge-blink-alert {
+  animation: badgeBlink 2s infinite ease-in-out;
+}
+@keyframes badgeBlink {
+  0%, 100% { background: #fee2e2; }
+  50% { background: #fecaca; }
+}
+
+/* ── TAB CONTENT ── */
+.tab-content-panel {
+  background: #FFFFFF;
+  border: 3px solid #211F1F;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 6px 6px 0px 0px #211F1F;
+}
+.tab-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1rem;
+  border: 3px solid #211F1F;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+}
+
+/* ── VIDEO BAR CHART ── */
+.video-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 1rem;
+  height: 96px;
+  background: #F5F4EB;
+  border: 2px solid #211F1F;
+  border-radius: 12px;
+  padding-top: 1rem;
+}
+.video-bar-chart .bar {
+  flex: 1;
+  margin: 0 4px;
+  min-height: 4px;
+  border: 2px solid #211F1F;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.5s ease;
+}
+
+/* ── RING PROGRESS ── */
+.ring-container {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ring-container svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ring-container .ring-pct {
+  position: absolute;
+  font-size: 24px;
+  font-weight: 900;
+  color: #211F1F;
+}
+
+/* ── NO GROUPS ── */
+.no-groups-card {
+  background: #FFFFFF;
+  border: 3px solid #211F1F;
+  border-radius: 24px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 8px 8px 0px 0px #211F1F;
+}
+.no-groups-card .icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.no-groups-card .title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #211F1F;
+}
+.no-groups-card .desc {
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 4px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .tabbar {
+    gap: 10px;
+    padding: 4px 2px 16px;
+  }
+  .tab .card {
+    padding: 8px 12px;
+  }
+  .tab .name {
+    font-size: 12px;
+  }
+  .member-stat-card {
+    padding: 12px 8px;
+  }
+  .member-stat-value {
+    font-size: 14px;
+  }
+  .group-task-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .start-task-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
 </style>
 </head>
 <body>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p style="color:#6b7280;font-size:14px;font-weight:500;">Loading analytics…</p>
+  <div class="loader-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
 
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
@@ -323,22 +739,6 @@
 <main class="page-content relative z-10 pb-5 px-4">
 <main class="relative z-10 pt-5 pb-5 px-4">
 <div class="max-w-[1200px] mx-auto">
-
-  <!-- LOADING -->
-  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
-    <div class="spinner"></div>
-    <div class="text-gray-400 text-sm">Loading your analytics…</div>
-  </div>
-
-  <!-- ERROR -->
-  <div id="errorState" class="hidden text-center py-32">
-    <div class="text-5xl mb-4">⚠️</div>
-    <div class="text-xl font-bold mb-2">Could not load data</div>
-    <div id="errorMsg" class="text-gray-400 text-sm mb-6"></div>
-    <button onclick="loadDashboard()"
-      class="px-6 py-3 rounded-xl font-semibold text-sm"
-      style="background:linear-gradient(180deg,#924ef4,#7b2af0);">Retry</button>
-  </div>
 
   <!-- DASHBOARD -->
   <div id="dashContent" class="hidden">
@@ -363,31 +763,31 @@
         </a>
       </div>
       <h1 class="text-4xl font-black text-[#211F1F]">Your Dashboard</h1>
-      <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Welcome back, mazhar · Joined 7 Sept 2026</div>
+      <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">Welcome back · Loading...</div>
     </div>
 
     <!-- ── MEMBER INFO ROW ── -->
-    <div id="memberInfoRow" class="hidden fade-in delay-1">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">🌍</div>
-          <div class="text-xs text-gray-500 mb-1">Country</div>
-          <div id="infoCountry" class="font-bold text-sm"></div>
+    <div id="memberInfoRow" class="hidden fade-in delay-1 mt-6">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="member-stat-card">
+          <div class="member-stat-icon">🌍</div>
+          <div class="member-stat-label">Country</div>
+          <div id="infoCountry" class="member-stat-value">—</div>
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">📅</div>
-          <div class="text-xs text-gray-500 mb-1">Member Since</div>
-          <div id="infoJoin" class="font-bold text-sm"></div>
+        <div class="member-stat-card">
+          <div class="member-stat-icon">📅</div>
+          <div class="member-stat-label">Member Since</div>
+          <div id="infoJoin" class="member-stat-value">—</div>
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">⚡</div>
-          <div class="text-xs text-gray-500 mb-1">Status</div>
-          <div id="infoStatus" class="font-bold text-sm"></div>
+        <div class="member-stat-card">
+          <div class="member-stat-icon">⚡</div>
+          <div class="member-stat-label">Status</div>
+          <div id="infoStatus" class="member-stat-value">—</div>
         </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">📢</div>
-          <div class="text-xs text-gray-500 mb-1">Promotional Accounts</div>
-          <div id="infoChannels" class="font-bold text-2xl text-purple-400">0</div>
+        <div class="member-stat-card">
+          <div class="member-stat-icon">📢</div>
+          <div class="member-stat-label">Promotional Accounts</div>
+          <div id="infoChannels" class="member-stat-value text-2xl">0</div>
         </div>
       </div>
     </div>
@@ -396,16 +796,19 @@
     <div id="activeContent">
 
       <!-- ── NO GROUPS ── -->
-      <div id="noGroupsMsg" class="hidden fade-in delay-2 card p-8 text-center mb-10 mt-10">
-        <div class="text-5xl mb-4">📭</div>
-        <div class="text-xl font-bold mb-2">Not in any group yet</div>
-        <div class="text-gray-400 text-sm mb-5">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
-        <a href="groups.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
-          style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
+      <div id="noGroupsMsg" class="hidden fade-in delay-2 mt-8">
+        <div class="no-groups-card">
+          <div class="icon">📭</div>
+          <div class="title">Not in any group yet</div>
+          <div class="desc">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
+          <a href="groups.html" class="start-task-btn inline-flex mt-4" style="background:#211F1F;color:#FFFFFF;border-color:#211F1F;">
+            Browse Groups →
+          </a>
+        </div>
       </div>
 
       <!-- Group Analytics Tabs - NEO-BRUTALIST STYLE -->
-      <div id="groupsTabSection" class="mb-10 mt-10">
+      <div id="groupsTabSection" class="mb-8 mt-8 hidden">
         <div class="tabbar-label">
           <h2>📊 Performance Groups</h2>
           <span class="tabbar-hint">scroll for more →</span>
@@ -440,27 +843,48 @@ if (!usercode || !username || !userpassword) {
   window.location.replace("signin.html"); 
 }
 
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) {
+    overlay.classList.add('hide');
+    setTimeout(() => overlay.style.display = 'none', 500);
+  }
+}
+
 /* ══════════════════ LOAD ══════════════════ */
 async function loadDashboard() {
-  show("loadingState"); 
-  hide("errorState"); 
-  hide("dashContent");
-  hide("accountBanner");
+  // Show loading overlay
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.classList.remove('hide');
   
   try {
-    // Directly fetch dashboard data - no signin check needed
     var res = await fetch(API + "?action=dashboard&usercode=" + encodeURIComponent(usercode));
     var data = await res.json();
     
     if (data.error) throw new Error(data.error);
     
     renderDashboard(data);
+    hideLoading();
     
   } catch(err) {
-    hide("loadingState"); 
-    show("errorState");
-    setText("errorMsg", err.message || "Network error. Please try again.");
+    hideLoading();
     console.error("Dashboard error:", err);
+    showErrorState(err.message || "Network error. Please try again.");
+  }
+}
+
+function showErrorState(message) {
+  const content = document.getElementById('dashContent');
+  if (content) {
+    content.innerHTML = `
+      <div class="text-center py-32">
+        <div class="text-5xl mb-4">⚠️</div>
+        <div class="text-xl font-bold mb-2">Could not load data</div>
+        <div class="text-gray-400 text-sm mb-6">${message}</div>
+        <button onclick="loadDashboard()" class="start-task-btn" style="background:#211F1F;color:#FFFFFF;border-color:#211F1F;padding:12px 28px;font-size:14px;">Retry</button>
+      </div>
+    `;
+    content.classList.remove('hidden');
   }
 }
 
@@ -566,7 +990,7 @@ function renderDashboard(data) {
   var statusEl = document.getElementById("infoStatus");
   if (statusEl) {
     statusEl.textContent = m.status || "—";
-    statusEl.className = "font-bold text-sm";
+    statusEl.className = "member-stat-value";
     var sl = (m.status || "").toLowerCase();
     if (sl === "active")  statusEl.classList.add("status-active");
     if (sl === "blocked") statusEl.classList.add("status-blocked");
@@ -576,26 +1000,24 @@ function renderDashboard(data) {
 
   /* ── ACCOUNT COMPLETION BANNER ── */
   if (!isAccountCompleted) {
-    show("accountBanner");
-    hide("groupsSection");
     hide("groupsTabSection");
     
     var noGroups = document.getElementById("noGroupsMsg");
     if (noGroups) {
       noGroups.classList.remove("hidden");
       noGroups.innerHTML = `
-        <div class="text-5xl mb-4">🚀</div>
-        <div class="text-xl font-bold mb-2">Complete Your Account Setup</div>
-        <div class="text-gray-400 text-sm mb-5 leading-relaxed max-w-md mx-auto">
-          Complete all 6 steps in the setup guide to unlock groups and start earning.
+        <div class="no-groups-card">
+          <div class="icon">🚀</div>
+          <div class="title">Complete Your Account Setup</div>
+          <div class="desc">Complete all 6 steps in the setup guide to unlock groups and start earning.</div>
+          <button onclick="showSetupGuide()" class="start-task-btn" style="margin:0 auto;background:#211F1F;color:#FFFFFF;border-color:#211F1F;padding:12px 28px;font-size:14px;">
+            📘 View Setup Details →
+          </button>
         </div>
-        <button onclick="showSetupGuide()" style="margin:0 auto;display:inline-flex;align-items:center;gap:0.5rem;background:#211F1F;color:white;border:2px solid #211F1F;border-radius:20px;padding:0.75rem 2.5rem;font-weight:800;font-size:0.9rem;cursor:pointer;box-shadow:4px 4px 0px 0px #211F1F;transition:0.15s ease;">
-          📘 View Setup Details →
-        </button>
       `;
     }
   } else {
-    hide("accountBanner");
+    hide("noGroupsMsg");
   }
 
   /* ── GROUPS (task cards) ── */
@@ -611,44 +1033,14 @@ function renderDashboard(data) {
   // ── ONLY SHOW GROUPS IF ACCOUNT IS COMPLETED ──
   if (isAccountCompleted) {
     if (activeGroups.length > 0) {
-      var cardsEl = document.getElementById("groupTaskCards");
-      if (cardsEl) {
-        cardsEl.innerHTML = activeGroups.map(function(g){
-          return '<div class="group-task-card" style="background:' + g.bg + ';border-color:' + g.border + ';">'
-            + '<div class="flex items-center gap-4 flex-1 min-w-0">'
-            +   '<div style="width:52px;height:52px;border-radius:14px;background:' + g.bg + ';border:1px solid ' + g.border + ';display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">' + g.emoji + '</div>'
-            +   '<div class="min-w-0">'
-            +     '<div class="font-bold text-base" style="color:' + g.color + ';">' + g.label + '</div>'
-            +     '<div class="text-xs text-gray-400 mt-0.5 leading-relaxed">' + g.desc + '</div>'
-            +   '</div>'
-            + '</div>'
-            + '<a href="subscriberstask.html" class="start-task-btn" style="background:' + g.bg + ';border:1px solid ' + g.border + ';color:' + g.color + ';">▶ Start Task</a>'
-            + '</div>';
-        }).join("");
-      }
-      show("groupsSection");
-      hide("noGroupsMsg");
+      // Render group tabs using neo-brutalist style
+      renderGroupTabs(m, sp, vp, ep, pp);
     } else {
       show("noGroupsMsg");
-      hide("groupsSection");
-      var noGroupsMsg = document.getElementById("noGroupsMsg");
-      if (noGroupsMsg) {
-        noGroupsMsg.classList.remove("hidden");
-        noGroupsMsg.innerHTML = `
-          <div class="text-5xl mb-4">📭</div>
-          <div class="text-xl font-bold mb-2">Not in any group yet</div>
-          <div class="text-gray-400 text-sm mb-5">You haven't been added to any work groups. Visit the Groups page to see available groups and request to join.</div>
-          <a href="groups.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
-            style="background:linear-gradient(180deg,#924ef4,#7b2af0);text-decoration:none;">Browse Groups →</a>
-        `;
-      }
+      hide("groupsTabSection");
     }
-    
-    // Render group tabs using neo-brutalist style
-    renderGroupTabs(m, sp, vp, ep, pp);
   }
 
-  hide("loadingState"); 
   show("dashContent");
 }
 
@@ -735,13 +1127,11 @@ function renderGroupTabs(m, sp, vp, ep, pp) {
       const panel = document.getElementById('tabContent');
       
       panel.innerHTML = `
-        <div style="background:${tab.color}; border:3px solid #211F1F; border-radius:14px; padding:1rem; margin-bottom:1rem; box-shadow:4px 4px 0px 0px #211F1F;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="font-size:2rem;">${tab.emoji}</span>
-            <div>
-              <h3 style="font-weight:800; font-size:1.2rem; color:#211F1F;">${tab.name}</h3>
-              <p style="font-size:0.85rem; color:#4b5563;">${tab.desc}</p>
-            </div>
+        <div class="tab-header" style="background:${tab.color};">
+          <span style="font-size:2rem;">${tab.emoji}</span>
+          <div>
+            <h3 style="font-weight:800; font-size:1.2rem; color:#211F1F;">${tab.name}</h3>
+            <p style="font-size:0.85rem; color:#4b5563;">${tab.desc}</p>
           </div>
         </div>
         ${content}
@@ -810,26 +1200,26 @@ function renderIssues(rawIssues) {
       var pillCls = statusKey === "resolved" ? "pill-resolved" : statusKey === "pending" ? "pill-pending" : "pill-open";
       var icon = issueTypeIcon[(i.type || "").toLowerCase()] || "⚠️";
       var countBadgeHtml = g.count > 1 ? '<span style="background:rgba(33,31,31,0.1);border-radius:999px;padding:1px 9px;font-size:10px;font-weight:700;color:#211F1F;">×' + g.count + '</span>' : "";
-      var adminBlock = i.adminReply ? '<div class="issue-tile-reply" style="background-color: #EAE9DF; border-left: 3px solid #211F1F; padding: 0.5rem; margin-top: 0.5rem; border-radius: 4px;"><span style="font-size:10px;font-weight:700;color:#211F1F;text-transform:uppercase;letter-spacing:.4px;">Admin Reply</span><div style="font-size:12.5px;color:#1f2937;margin-top:3px;line-height:1.5;">' + i.adminReply + '</div></div>' : "";
+      var adminBlock = i.adminReply ? '<div class="issue-tile-reply"><span style="font-size:10px;font-weight:700;color:#211F1F;text-transform:uppercase;letter-spacing:.4px;">Admin Reply</span><div style="font-size:12.5px;color:#1f2937;margin-top:3px;line-height:1.5;">' + i.adminReply + '</div></div>' : "";
       var metaBits = [];
       if (i.createdDate) metaBits.push('<span>🗓 Reported: ' + fmtDate(i.createdDate) + '</span>');
       if (i.updatedDate) metaBits.push('<span>🔄 Updated: ' + fmtDate(i.updatedDate) + '</span>');
-      var metaBlock = metaBits.length ? '<div class="issue-tile-meta" style="font-size:11px; color:#4b5563; display:flex; gap:1rem; margin-top:0.5rem;">' + metaBits.join("") + '</div>' : "";
+      var metaBlock = metaBits.length ? '<div class="issue-tile-meta">' + metaBits.join("") + '</div>' : "";
       var needsToggle = i.description && i.description.length > 110;
       var descBlock = i.description ? '<div class="issue-tile-desc' + (needsToggle ? ' clamped' : '') + '" id="issueDesc' + idx + '" style="color:#1f2937; font-size:0.875rem; margin-top:0.25rem;">' + i.description + '</div>' + (needsToggle ? '<button type="button" class="issue-read-more" id="issueReadBtn' + idx + '" onclick="toggleIssueDesc(' + idx + ')" style="font-size:11px; color:#211F1F; font-weight:700; margin-top:2px;">Read more ▾</button>' : '') : "";
 
-      return '<div class="issue-tile" style="background-color: #ffffff; border: 1px solid #211F1F; padding: 1rem; border-radius: 8px;">'
-        + '<div class="issue-tile-head" style="display:flex; justify-content:between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">'
+      return '<div class="issue-tile">'
+        + '<div class="issue-tile-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">'
         +   '<div class="flex items-center gap-3 min-w-0" style="flex:1;">'
         +     '<div class="issue-tile-icon">' + icon + '</div>'
         +     '<div class="min-w-0">'
         +       '<div class="flex items-center gap-2 flex-wrap">'
-        +         '<span class="issue-tile-title" style="font-weight:700; color:#211F1F;">' + i.title + '</span>' + countBadgeHtml
+        +         '<span class="issue-tile-title">' + i.title + '</span>' + countBadgeHtml
         +       '</div>'
         +       (i.type ? '<div style="font-size:11px;color:#4b5563;margin-top:2px;text-transform:capitalize;">' + i.type + '</div>' : '')
         +     '</div>'
         +   '</div>'
-        +   '<span class="issue-status-pill ' + pillCls + '" style="font-weight:700; font-size:11px; text-transform:uppercase;">' + i.status + '</span>'
+        +   '<span class="issue-status-pill ' + pillCls + '">' + i.status + '</span>'
         + '</div>'
         + descBlock
         + adminBlock
@@ -887,6 +1277,20 @@ function fmtDate(d) {
   var dt = new Date(d);
   if (isNaN(dt.getTime())) return String(d);
   return dt.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+}
+
+function toggleIssueDesc(idx) {
+  var desc = document.getElementById('issueDesc' + idx);
+  var btn = document.getElementById('issueReadBtn' + idx);
+  if (!desc || !btn) return;
+  var isClamped = desc.classList.contains('clamped');
+  if (isClamped) {
+    desc.classList.remove('clamped');
+    btn.textContent = 'Read less ▴';
+  } else {
+    desc.classList.add('clamped');
+    btn.textContent = 'Read more ▾';
+  }
 }
 
 /* ══════════════════ GLOBAL UPDATER ══════════════════ */
@@ -1046,33 +1450,35 @@ function renderSubscribersTab(sp) {
   return `
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Subscribers Gained</div>
-            <div id="subsTotal" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Channels You Subbed</div>
-            <div id="subsDone" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">You Unsubscribed</div>
-            <div id="subsUnsubByYou" class="text-3xl font-black mt-1 text-red-600">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Actions Out</div>
-            <div id="subsPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Unsubbed By Others</div>
-            <div id="subsUnsubByOthers" class="text-3xl font-black mt-1 text-red-500">0</div>
-          </div>
-          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Requests In</div>
-            <div id="subsPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+        <div class="tab-content-panel">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Subscribers Gained</div>
+              <div id="subsTotal" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Channels You Subbed</div>
+              <div id="subsDone" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">You Unsubscribed</div>
+              <div id="subsUnsubByYou" class="text-3xl font-black mt-1 text-red-600">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Actions Out</div>
+              <div id="subsPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Unsubbed By Others</div>
+              <div id="subsUnsubByOthers" class="text-3xl font-black mt-1 text-red-500">0</div>
+            </div>
+            <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Requests In</div>
+              <div id="subsPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
           </div>
         </div>
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+        <div class="tab-content-panel">
           <h4 class="font-black text-xs mb-4 tracking-wider text-[#211F1F] uppercase">Proportional Status Metrics</h4>
           <div class="space-y-4">
             <div>
@@ -1091,13 +1497,13 @@ function renderSubscribersTab(sp) {
         </div>
       </div>
       <div class="space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="relative w-32 h-32 flex items-center justify-center">
-            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        <div class="tab-content-panel flex flex-col items-center justify-center text-center min-h-[260px]">
+          <div class="ring-container">
+            <svg viewBox="0 0 100 100">
               <circle class="text-[#F5F4EB] stroke-current" stroke-width="10" fill="transparent" cx="50" cy="50" r="40"/>
               <circle id="subsRingGained" class="text-[#ACD1C0] stroke-current transition-all duration-500" stroke-width="12" stroke-linecap="round" fill="transparent" cx="50" cy="50" r="40" style="stroke-dasharray: 251.2; stroke-dashoffset: 251.2; stroke: #ACD1C0;"/>
             </svg>
-            <div id="subsRingPct" class="absolute font-black text-2xl text-[#211F1F]">0%</div>
+            <div id="subsRingPct" class="ring-pct">0%</div>
           </div>
           <div class="mt-4 font-black text-sm text-[#211F1F]">Retention Effectiveness</div>
           <p class="text-xs text-gray-600 mt-1 max-w-[200px] leading-relaxed">Percentage of valid non-dropped subscriptions out of overall interactions.</p>
@@ -1116,42 +1522,44 @@ function renderVideoTab(vp) {
   return `
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Total Watched</div>
-            <div id="videoWatched" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending From Others</div>
-            <div id="videoPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending By You</div>
-            <div id="videoPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Your Rejections</div>
-            <div id="videoYourRejects" class="text-3xl font-black mt-1 text-red-600">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl col-span-2 sm:col-span-1">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Others Rejections</div>
-            <div id="videoOthersRejects" class="text-3xl font-black mt-1 text-orange-600">0</div>
+        <div class="tab-content-panel">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Total Watched</div>
+              <div id="videoWatched" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending From Others</div>
+              <div id="videoPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending By You</div>
+              <div id="videoPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Your Rejections</div>
+              <div id="videoYourRejects" class="text-3xl font-black mt-1 text-red-600">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl col-span-2 sm:col-span-1">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Others Rejections</div>
+              <div id="videoOthersRejects" class="text-3xl font-black mt-1 text-orange-600">0</div>
+            </div>
           </div>
         </div>
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+        <div class="tab-content-panel">
           <h4 class="font-black text-xs mb-6 tracking-wide text-[#211F1F] uppercase">Task Volume Weights</h4>
-          <div class="flex items-end justify-between px-4 h-24 bg-[#F5F4EB] border-2 border-[#211F1F] rounded-xl pt-4" id="videoBarChart"></div>
+          <div class="video-bar-chart" id="videoBarChart"></div>
           <div class="flex justify-between text-[10px] font-bold text-gray-600 mt-3 px-1"><span>Watched</span><span>Pend In</span><span>Pend Out</span><span>Your Rej</span><span>Oth Rej</span></div>
         </div>
       </div>
       <div class="space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="relative w-32 h-32 flex items-center justify-center">
-            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        <div class="tab-content-panel flex flex-col items-center justify-center text-center min-h-[260px]">
+          <div class="ring-container">
+            <svg viewBox="0 0 100 100">
               <circle class="text-[#F5F4EB] stroke-current" stroke-width="10" fill="transparent" cx="50" cy="50" r="40"/>
               <circle id="videoRing" class="text-[#ACD1C0] stroke-current transition-all duration-500" stroke-width="12" stroke-linecap="round" fill="transparent" cx="50" cy="50" r="40" style="stroke-dasharray:251.2; stroke-dashoffset:251.2; stroke: #ACD1C0;"/>
             </svg>
-            <div id="videoRingPct" class="absolute font-black text-2xl text-[#211F1F]">0%</div>
+            <div id="videoRingPct" class="ring-pct">0%</div>
           </div>
           <div class="mt-4 font-black text-sm text-[#211F1F]">Success Factor</div>
           <div id="videoSuccessDesc" class="text-xs font-bold text-gray-600 mt-0.5">0 videos</div>
@@ -1168,29 +1576,31 @@ function renderPlaylistTab(pp) {
   return `
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Playlists Completed</div>
-            <div id="playlistWatched" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Outbound</div>
-            <div id="playlistPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Inbound</div>
-            <div id="playlistPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Cheating Stripped (You)</div>
-            <div id="playlistCheatByYou" class="text-3xl font-black mt-1 text-red-600">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl col-span-2 sm:col-span-1">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Cheating Flagged (Others)</div>
-            <div id="playlistCheatByOthers" class="text-3xl font-black mt-1 text-orange-600">0</div>
+        <div class="tab-content-panel">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Playlists Completed</div>
+              <div id="playlistWatched" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Outbound</div>
+              <div id="playlistPendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Inbound</div>
+              <div id="playlistPendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Cheating Stripped (You)</div>
+              <div id="playlistCheatByYou" class="text-3xl font-black mt-1 text-red-600">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl col-span-2 sm:col-span-1">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Cheating Flagged (Others)</div>
+              <div id="playlistCheatByOthers" class="text-3xl font-black mt-1 text-orange-600">0</div>
+            </div>
           </div>
         </div>
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+        <div class="tab-content-panel">
           <h4 class="font-black text-xs mb-4 tracking-wide text-[#211F1F] uppercase">Distribution Ratios</h4>
           <div class="space-y-4">
             <div>
@@ -1230,33 +1640,35 @@ function renderEngagementTab(ep) {
   return `
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Interactions Received</div>
-            <div id="engageTotal" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Interactions Given</div>
-            <div id="engageDone" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Removed By You</div>
-            <div id="engageDeletedByYou" class="text-3xl font-black mt-1 text-red-500">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Removed By Others</div>
-            <div id="engageDeletedByOthers" class="text-3xl font-black mt-1 text-red-600">0</div>
-          </div>
-          <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Outbound</div>
-            <div id="engagePendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
-          </div>
-          <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
-            <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Inbound</div>
-            <div id="engagePendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+        <div class="tab-content-panel">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Interactions Received</div>
+              <div id="engageTotal" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Interactions Given</div>
+              <div id="engageDone" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Removed By You</div>
+              <div id="engageDeletedByYou" class="text-3xl font-black mt-1 text-red-500">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Removed By Others</div>
+              <div id="engageDeletedByOthers" class="text-3xl font-black mt-1 text-red-600">0</div>
+            </div>
+            <div class="bg-[#F5F4EB] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-gray-600">Pending Outbound</div>
+              <div id="engagePendOut" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
+            <div class="bg-[#EBE492] border-2 border-[#211F1F] p-4 rounded-xl">
+              <div class="text-[11px] font-black uppercase tracking-wider text-[#211F1F]">Pending Inbound</div>
+              <div id="engagePendIn" class="text-3xl font-black mt-1 text-[#211F1F]">0</div>
+            </div>
           </div>
         </div>
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl shadow-[4px_4px_0px_0px_#211F1F]">
+        <div class="tab-content-panel">
           <h4 class="font-black text-xs mb-4 tracking-wide text-[#211F1F] uppercase">Interaction Balance</h4>
           <div class="space-y-4">
             <div>
@@ -1271,13 +1683,13 @@ function renderEngagementTab(ep) {
         </div>
       </div>
       <div class="space-y-6">
-        <div class="bg-white border-2 border-[#211F1F] p-6 rounded-2xl flex flex-col items-center justify-center text-center min-h-[260px] shadow-[4px_4px_0px_0px_#211F1F]">
-          <div class="relative w-32 h-32 flex items-center justify-center">
-            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        <div class="tab-content-panel flex flex-col items-center justify-center text-center min-h-[260px]">
+          <div class="ring-container">
+            <svg viewBox="0 0 100 100">
               <circle class="text-[#F5F4EB] stroke-current" stroke-width="10" fill="transparent" cx="50" cy="50" r="40"/>
               <circle id="engRing" class="stroke-current transition-all duration-500" stroke-width="12" stroke-linecap="round" fill="transparent" cx="50" cy="50" r="40" style="stroke-dasharray: 251.2; stroke-dashoffset: 251.2; stroke: #ACD1C0;"/>
             </svg>
-            <div id="engRingPct" class="absolute font-black text-2xl text-[#211F1F]">0%</div>
+            <div id="engRingPct" class="ring-pct">0%</div>
           </div>
           <div class="mt-4 font-black text-sm text-[#211F1F]">Net Survival Rate</div>
           <div class="text-xs font-bold text-gray-600 mt-0.5"><span id="engNetValue">0</span> active links</div>

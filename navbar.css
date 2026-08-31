@@ -26,7 +26,6 @@ svg {
   width:var(--sidebar-w);
   height:100vh;
   background: #F5F4EB; /* Neo-brutalist light bg */
-  border-right: 3px solid #211F1F; /* Thicker border */
   box-shadow: 6px 0 0 0 #211F1F; /* Hard shadow offset */
   z-index:100;
   display:flex;
