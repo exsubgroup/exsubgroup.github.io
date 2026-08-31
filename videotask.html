@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <link rel="stylesheet" href="navbar.css">
@@ -17,9 +16,81 @@
 <style>
 
 /* ══════════════════════════════════════════════════════════════
-   VIDEO TASKS — LIGHT THEME (matches Analytics page)
+   VIDEO TASKS — LIGHT THEME
    Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
    ══════════════════════════════════════════════════════════════ */
+
+/* ── Not Enrolled Banner ── */
+.not-enrolled-banner {
+  background: #F5F4EB;
+  border: 3px solid #211F1F;
+  border-radius: 24px;
+  box-shadow: 8px 8px 0px 0px #211F1F;
+  padding: 48px 32px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.not-enrolled-banner .banner-icon {
+  font-size: 72px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.not-enrolled-banner .banner-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #211F1F;
+  margin-bottom: 12px;
+}
+
+.not-enrolled-banner .banner-desc {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto 24px;
+}
+
+.not-enrolled-banner .banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 36px;
+  background: #ACD1C0;
+  color: #211F1F;
+  border: 2px solid #211F1F;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  font-family: 'Inter', sans-serif;
+}
+
+.not-enrolled-banner .banner-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #211F1F;
+}
+
+.not-enrolled-banner .banner-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #211F1F;
+}
+
+.not-enrolled-banner .banner-hint {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.not-enrolled-banner .banner-hint strong {
+  color: #211F1F;
+}
 
 :root {
     --bg: #F5F4EB;
@@ -459,7 +530,7 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
 <script src="session-manager.js"></script>
 
 <!-- MAIN -->
- <main class="page-content relative z-10 pb-20 px-4">
+<main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
@@ -469,247 +540,254 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
     <div class="text-gray-500 text-sm">Loading your video tasks…</div>
   </div>
 
-  <!-- ERROR -->
-  <div id="errorState" class="hidden text-center py-32">
-    <div class="text-5xl mb-4">⚠️</div>
-    <div class="text-xl font-bold mb-2">Could not load data</div>
-    <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
-    <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
-  </div>
-
-  <!-- DASHBOARD -->
-  <div id="dashContent" class="hidden">
-
-    <!-- ── HEADER ── -->
-    <div class="nb-dashboard-header">
-      <div class="nb-badge-container">
-        <div class="nb-status-card nb-status-static">
-          <span class="nb-card-icon">🎬</span>
-          <span class="nb-card-title">Video Watch-Time Exchange</span>
-        </div>
-        <a href="videoproofs.html" class="nb-status-card nb-status-link">
-          <span class="nb-card-icon">🎥</span>
-          <span class="nb-card-title">View Proofs</span>
-        </a>
-      </div>
-      <h1 class="text-4xl font-black text-[#211F1F]">Video Watch Tasks</h1>
-      <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: 100%;">
-          Watch a matched member's video for the required time and they'll watch yours back.
-          Videos are paired by similar length so the exchange stays fair for everyone.
-      </div>
+  <!-- MAIN CONTAINER - Always visible -->
+  <div id="mainContainer">
+    
+    <!-- ERROR -->
+    <div id="errorState" class="hidden text-center py-32">
+      <div class="text-5xl mb-4">⚠️</div>
+      <div class="text-xl font-bold mb-2">Could not load data</div>
+      <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
+      <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-6">
+    <!-- STATUS MESSAGES (Not Enrolled, Not Active, Suspended, Not Found) -->
+    <div id="statusMessage" class="hidden"></div>
 
-    <!-- SIDEBAR -->
-    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
+    <!-- DASHBOARD -->
+    <div id="dashContent" class="hidden">
 
-        <!-- TASK STATS -->
-        <div class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-4">My Task Stats</h2>
-            <div class="space-y-3 text-sm">
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
-                    <span id="st-nowork" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
-                    <span id="st-pending" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
-                    <span id="st-watched" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
-                    <span id="st-cheating" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Rejected</span>
-                    <span id="st-rejected" class="font-bold">—</span>
-                </div>
-                <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
-                    <span class="text-muted">Total Tasks</span>
-                    <span id="st-total" class="font-bold text-[#211F1F]">—</span>
-                </div>
-            </div>
-
-            <div class="mt-4 pt-4 border-t-2 border-[#211F1F]/10 space-y-2.5 text-sm">
-                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Watch Back</span>
-                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
-                    <span id="st-both" class="font-bold text-teal-600">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
-                </div>
-            </div>
+      <!-- ── HEADER ── -->
+      <div class="nb-dashboard-header">
+        <div class="nb-badge-container">
+          <div class="nb-status-card nb-status-static">
+            <span class="nb-card-icon">🎬</span>
+            <span class="nb-card-title">Video Watch-Time Exchange</span>
+          </div>
+          <a href="videoproofs.html" class="nb-status-card nb-status-link">
+            <span class="nb-card-icon">🎥</span>
+            <span class="nb-card-title">View Proofs</span>
+          </a>
         </div>
-
-        <!-- WATCH SETTINGS CARD -->
-        <div id="settingsCard" class="card rounded-3xl p-5">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="font-semibold text-base">Watch Settings</h2>
-                <button onclick="openSettingsModal()" class="text-xs text-[#211F1F] hover:opacity-70 underline font-semibold">Edit</button>
-            </div>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-muted">Min Video Length</span>
-                    <span id="set-min" class="font-bold">—</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-muted">Max Video Length</span>
-                    <span id="set-max" class="font-bold">—</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-muted">Allowed Gap</span>
-                    <span id="set-gap" class="font-bold">—</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-muted">Pairs Per Run</span>
-                    <span id="set-maxpairs" class="font-bold text-[#211F1F]">—</span>
-                </div>
-            </div>
-            
+        <h1 class="text-4xl font-black text-[#211F1F]">Video Watch Tasks</h1>
+        <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: 100%;">
+            Watch a matched member's video for the required time and they'll watch yours back.
+            Videos are paired by similar length so the exchange stays fair for everyone.
         </div>
+      </div>
 
-    </aside>
+      <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- CONTENT -->
-    <main class="flex-1 min-w-0">
+      <!-- SIDEBAR -->
+      <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
 
-        <!-- BLOCKED BANNER -->
-        <div id="blockedBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626;">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
-                <div>
-                    <h3 class="font-semibold text-red-700 mb-1">Group Access Restricted</h3>
-                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Video Group.</p>
-                </div>
-            </div>
-        </div>
+          <!-- TASK STATS -->
+          <div class="card rounded-3xl p-5">
+              <h2 class="font-semibold text-base mb-4">My Task Stats</h2>
+              <div class="space-y-3 text-sm">
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
+                      <span id="st-nowork" class="font-bold">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                      <span id="st-pending" class="font-bold">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
+                      <span id="st-watched" class="font-bold">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
+                      <span id="st-cheating" class="font-bold">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Rejected</span>
+                      <span id="st-rejected" class="font-bold">—</span>
+                  </div>
+                  <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
+                      <span class="text-muted">Total Tasks</span>
+                      <span id="st-total" class="font-bold text-[#211F1F]">—</span>
+                  </div>
+              </div>
 
-        <!-- CHEATING WARNING BANNER -->
-        <div id="cheatBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626; background:#fff5f5;">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-red-700 mb-1">You Have Flagged Video Task(s)!</h3>
-                    <p class="text-red-600/80 text-sm leading-relaxed mb-3">
-                        You have <strong id="cheatCount" class="text-red-700">0</strong> task(s) flagged as Cheating (insufficient or invalid watch proof).
-                        You <strong class="text-[#211F1F]">must re-watch and resubmit proof</strong> before you can do any other work.
-                        These tasks are pinned at the top.
-                    </p>
-                    <div class="flex gap-3 flex-wrap">
-                        <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
-                            class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
-                            View Flagged Tasks
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+              <div class="mt-4 pt-4 border-t-2 border-[#211F1F]/10 space-y-2.5 text-sm">
+                  <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Watch Back</span>
+                      <span id="st-awaiting" class="font-bold text-blue-600">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
+                      <span id="st-both" class="font-bold text-teal-600">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
+                      <span id="st-theirpending" class="font-bold text-orange-600">—</span>
+                  </div>
+              </div>
+          </div>
 
-        <!-- TOP BAR -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
-            <div>
-                <h2 class="text-2xl font-bold">My Tasks</h2>
-                <p class="text-muted mt-1 text-sm">Make sure exsub extension is install.</p>
-            </div>
-            <div class="flex flex-col sm:flex-row gap-3">
-             
-                <button id="prefsBtn" onclick="openPreferencesModal()"
-                    class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    🎯 Match Preferences
-                </button>
-                <button id="createBtn" onclick="openCreateModal()"
-                    class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    Create Tasks
-                </button>
-            </div>
-        </div>
+          <!-- WATCH SETTINGS CARD -->
+          <div id="settingsCard" class="card rounded-3xl p-5">
+              <div class="flex items-center justify-between mb-3">
+                  <h2 class="font-semibold text-base">Watch Settings</h2>
+                  <button onclick="openSettingsModal()" class="text-xs text-[#211F1F] hover:opacity-70 underline font-semibold">Edit</button>
+              </div>
+              <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                      <span class="text-muted">Min Video Length</span>
+                      <span id="set-min" class="font-bold">—</span>
+                  </div>
+                  <div class="flex justify-between">
+                      <span class="text-muted">Max Video Length</span>
+                      <span id="set-max" class="font-bold">—</span>
+                  </div>
+                  <div class="flex justify-between">
+                      <span class="text-muted">Allowed Gap</span>
+                      <span id="set-gap" class="font-bold">—</span>
+                  </div>
+                  <div class="flex justify-between">
+                      <span class="text-muted">Pairs Per Run</span>
+                      <span id="set-maxpairs" class="font-bold text-[#211F1F]">—</span>
+                  </div>
+              </div>
+              
+          </div>
 
-        <!-- HOW IT WORKS BANNER -->
-        <div class="card rounded-3xl p-5 mb-6">
-            <h3 class="font-semibold text-sm text-[#211F1F] mb-3">📋 How Video Tasks Work</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="step-item">
-                    <div class="step-num">1</div>
-                    <div>Open the assigned video and <strong class="text-[#211F1F]">watch it fully</strong> — proof is tracked automatically by the Exsub Extension</div>
-                </div>
-                <div class="step-item">
-                    <div class="step-num">2</div>
-                    <div>Watch for at least the <strong class="text-[#211F1F]">required minutes</strong> shown on the task card, without skipping</div>
-                </div>
-                <div class="step-item">
-                    <div class="step-num">3</div>
-                    <div>Come back and click <em>Mark Watched</em> — your partner will watch your video back</div>
-                </div>
-            </div>
-        </div>
+      </aside>
 
-        <!-- FILTER TABS -->
-        <div class="flex flex-wrap gap-2 mb-6">
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
-                <span class="dot bg-yellow-400 mr-1"></span>Not Started
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
-                <span class="dot bg-orange-400 mr-1"></span>Pending
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Watched" onclick="setTab('Watched',this)">
-                <span class="dot bg-green-400 mr-1"></span>Watched
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Cheating" onclick="setTab('Cheating',this)">
-                <span class="dot bg-red-400 mr-1"></span>Cheating
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
-                <span class="dot bg-gray-400 mr-1"></span>Rejected
-            </button>
-            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
-        </div>
+      <!-- CONTENT -->
+      <main class="flex-1 min-w-0">
 
-        <!-- TASK LIST -->
-        <div id="taskList" class="space-y-4">
-            <div class="skeleton h-[200px]"></div>
-            <div class="skeleton h-[200px]"></div>
-            <div class="skeleton h-[200px]"></div>
-        </div>
+          <!-- BLOCKED BANNER -->
+          <div id="blockedBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626;">
+              <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
+                  <div>
+                      <h3 class="font-semibold text-red-700 mb-1">Group Access Restricted</h3>
+                      <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Video Group.</p>
+                  </div>
+              </div>
+          </div>
 
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
-            <div class="text-5xl mb-4">🎬</div>
-            <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
-            <p class="text-muted text-sm mb-7 leading-relaxed">
-                You don't have any video tasks here yet.<br>
-                Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new watch-exchange tasks and start growing!
-            </p>
-            <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
-        </div>
+          <!-- CHEATING WARNING BANNER -->
+          <div id="cheatBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626; background:#fff5f5;">
+              <div class="flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                  <div class="flex-1">
+                      <h3 class="font-semibold text-red-700 mb-1">You Have Flagged Video Task(s)!</h3>
+                      <p class="text-red-600/80 text-sm leading-relaxed mb-3">
+                          You have <strong id="cheatCount" class="text-red-700">0</strong> task(s) flagged as Cheating (insufficient or invalid watch proof).
+                          You <strong class="text-[#211F1F]">must re-watch and resubmit proof</strong> before you can do any other work.
+                          These tasks are pinned at the top.
+                      </p>
+                      <div class="flex gap-3 flex-wrap">
+                          <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
+                              class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+                              View Flagged Tasks
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-        <!-- PAGINATION -->
-        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
-            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
-            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
-            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
-        </div>
+          <!-- TOP BAR -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+              <div>
+                  <h2 class="text-2xl font-bold">My Tasks</h2>
+                  <p class="text-muted mt-1 text-sm">Make sure exsub extension is installed.</p>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-3">
+               
+                  <button id="prefsBtn" onclick="openPreferencesModal()"
+                      class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                      🎯 Match Preferences
+                  </button>
+                  <button id="createBtn" onclick="openCreateModal()"
+                      class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                          <line x1="12" y1="5" x2="12" y2="19"/>
+                          <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      Create Tasks
+                  </button>
+              </div>
+          </div>
 
-    </main>
-    </div>
+          <!-- HOW IT WORKS BANNER -->
+          <div class="card rounded-3xl p-5 mb-6">
+              <h3 class="font-semibold text-sm text-[#211F1F] mb-3">📋 How Video Tasks Work</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div class="step-item">
+                      <div class="step-num">1</div>
+                      <div>Open the assigned video and <strong class="text-[#211F1F]">watch it fully</strong> — proof is tracked automatically by the Exsub Extension</div>
+                  </div>
+                  <div class="step-item">
+                      <div class="step-num">2</div>
+                      <div>Watch for at least the <strong class="text-[#211F1F]">required minutes</strong> shown on the task card, without skipping</div>
+                  </div>
+                  <div class="step-item">
+                      <div class="step-num">3</div>
+                      <div>Come back and click <em>Mark Watched</em> — your partner will watch your video back</div>
+                  </div>
+              </div>
+          </div>
 
-  </div><!-- /dashContent -->
+          <!-- FILTER TABS -->
+          <div class="flex flex-wrap gap-2 mb-6">
+              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
+                  <span class="dot bg-yellow-400 mr-1"></span>Not Started
+              </button>
+              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
+                  <span class="dot bg-orange-400 mr-1"></span>Pending
+              </button>
+              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Watched" onclick="setTab('Watched',this)">
+                  <span class="dot bg-green-400 mr-1"></span>Watched
+              </button>
+              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Cheating" onclick="setTab('Cheating',this)">
+                  <span class="dot bg-red-400 mr-1"></span>Cheating
+              </button>
+              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
+                  <span class="dot bg-gray-400 mr-1"></span>Rejected
+              </button>
+              <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
+          </div>
+
+          <!-- TASK LIST -->
+          <div id="taskList" class="space-y-4">
+              <div class="skeleton h-[200px]"></div>
+              <div class="skeleton h-[200px]"></div>
+              <div class="skeleton h-[200px]"></div>
+          </div>
+
+          <!-- EMPTY STATE -->
+          <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+              <div class="text-5xl mb-4">🎬</div>
+              <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
+              <p class="text-muted text-sm mb-7 leading-relaxed">
+                  You don't have any video tasks here yet.<br>
+                  Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new watch-exchange tasks and start growing!
+              </p>
+              <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
+          </div>
+
+          <!-- PAGINATION -->
+          <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+              <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+              <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+              <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
+          </div>
+
+      </main>
+      </div>
+
+    </div><!-- /dashContent -->
+  </div><!-- /mainContainer -->
 
 </div>
 </main>
-
+</main>
 
 
 <!-- MATCH PREFERENCES MODAL -->
@@ -858,7 +936,6 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
         </div>
     </div>
 </div>
-</main>
 
 <script>
 /* ────────────────────────────────────────
@@ -880,7 +957,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyhdkx7MiomDA5-CVeGyRmLws9ubO8Es-ZsY3kZ4WBDYxUdCSzlRyJb5YY1CgJImx2Hw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy_Nhaw63cDA-NrS4D2SVlNi1bSkj1nT7mgfayJn13GcV_R0s9s_VxPdoAypei0dpGzg/exec';
 const USER_CODE = savedUserCode;
 const PER_PAGE = 10;
 
@@ -940,6 +1017,14 @@ function hide(id) {
     el.classList.add('hidden');
 }
 
+function showStatusMessage(html) {
+    const container = document.getElementById('statusMessage');
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+    hide('dashContent');
+    hide('errorState');
+}
+
 /* ────────────────────────────────────────
    BOOT - Optimized with Pagination
 ──────────────────────────────────────── */
@@ -949,18 +1034,88 @@ async function init() {
     show('loadingState');
     hide('errorState');
     hide('dashContent');
+    hide('statusMessage');
 
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=1&perPage=${PER_PAGE}`);
         const data = await res.json();
 
+        hide('loadingState');
+
         if (!data.success) {
-            hide('loadingState');
+            // Check if member is not enrolled
+            if (data.notEnrolled) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner">
+                            <span class="banner-icon">📢</span>
+                            <h2 class="banner-title">Not Enrolled in Video Task Group</h2>
+                            <p class="banner-desc">
+                                ${data.message || 'You are not enrolled in the Video Task Group. Join the group to start exchanging video watch time with other creators.'}
+                            </p>
+                            <a href="groups.html" class="banner-btn">
+                                👥 Go to Groups
+                            </a>
+                            <p class="banner-hint">
+                                💡 Once you join the <strong>Long Video Search Group</strong>, come back here to see your tasks.
+                            </p>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Check if member is not active
+            if (data.notActive) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                            <span class="banner-icon">⛔</span>
+                            <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
+                            <p class="banner-desc">${data.message || 'Your account is not active. Please contact support for assistance.'}</p>
+                            <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Check if member is suspended
+            if (data.suspended) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                            <span class="banner-icon">🚫</span>
+                            <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
+                            <p class="banner-desc">${data.message || 'Your account has been suspended. Please contact support for more information.'}</p>
+                            <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Check if member not found
+            if (data.notFound) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
+                            <span class="banner-icon">❓</span>
+                            <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
+                            <p class="banner-desc">${data.message || 'We could not find your account. Please sign in again.'}</p>
+                            <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
             show('errorState');
             document.getElementById('errorMsg').textContent = data.message || 'Error loading data';
             return;
         }
 
+        // ── SUCCESS: Member is active and enrolled ──
         member = data.member;
         perfStats = data.perfStats || null;
         allTasks = data.tasks || [];
@@ -981,7 +1136,6 @@ async function init() {
             hasRejected = data.priorityInfo.hasRejected || false;
             forcedTaskTab = data.priorityInfo.forcedTab || null;
             
-            // Update banner counts
             if (data.priorityInfo.cheatCount > 0) {
                 document.getElementById('cheatCount').textContent = data.priorityInfo.cheatCount;
             }
@@ -1001,14 +1155,11 @@ async function init() {
         calcStats();
         renderSettingsCard();
         
-        // First enforce priority tabs, then apply filter
         enforceTaskPriorityTabs();
         
-        // Reset filtered and apply
         filtered = [];
         applyFilter();
 
-        hide('loadingState');
         show('dashContent');
 
     } catch (e) {

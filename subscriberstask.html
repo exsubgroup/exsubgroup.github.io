@@ -14,7 +14,66 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
+/* ── Not Enrolled Banner ── */
+.not-enrolled-banner {
+  background: #F5F4EB;
+  border: 3px solid #211F1F;
+  border-radius: 24px;
+  box-shadow: 8px 8px 0px 0px #211F1F;
+  padding: 48px 32px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
 
+.not-enrolled-banner .banner-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.not-enrolled-banner .banner-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #211F1F;
+  margin-bottom: 8px;
+}
+
+.not-enrolled-banner .banner-desc {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto 20px;
+}
+
+.not-enrolled-banner .banner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: #211F1F;
+  color: #DBD4B7;
+  border: 2px solid #211F1F;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  font-family: 'Inter', sans-serif;
+}
+
+.not-enrolled-banner .banner-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #211F1F;
+}
+
+.not-enrolled-banner .banner-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #211F1F;
+}
 :root {
     --bg: #F5F4EB;
     --ink: #211F1F;
@@ -848,7 +907,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLiMWnuL9AK62dwLzU1E_p7JNAYYMTUNxrtpIrkVOqDFB7RvgLm_coSucq654YvqXPVQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5sX9ptubdCuQnFhIiBgWxYdTNUJiOjj4RdHYwsAIrzwX0JKuOwad-K6aZjF5fkLiyVw/exec';
 const USER_CODE  = savedUserCode;
 const PER_PAGE = 10; // Tasks per page
 /* ────────────────────────────────────────
@@ -903,11 +962,36 @@ async function init() {
         hideLoader();
 
         if (!data.success) {
+            // Check if member is not enrolled
+            if (data.notEnrolled) {
+                showNotEnrolled(data.message || 'You are not enrolled in the Subscribers Group.');
+                return;
+            }
+            
+            // Check if member is not active
+            if (data.notActive) {
+                showNotActive(data.message || 'Your account is not active. Please contact support.');
+                return;
+            }
+            
+            // Check if member is suspended
+            if (data.suspended) {
+                showSuspended(data.message || 'Your account is suspended.');
+                return;
+            }
+            
+            // Check if member not found
+            if (data.notFound) {
+                showMemberNotFound(data.message || 'Member not found. Please sign in again.');
+                return;
+            }
+            
             showToast(data.message || 'Error loading data', true);
             clearSkeletons();
             return;
         }
 
+        // ── SUCCESS: Member is active and enrolled ──
         member = data.member;
         perfStats = data.perfStats || null;
         allTasks = data.tasks || [];
@@ -919,7 +1003,6 @@ async function init() {
             stats = data.stats;
         }
         
-        // Use priority info from server
         if (data.priorityInfo) {
             hasUnsub = data.priorityInfo.hasUnsub || false;
             forcedTaskTab = data.priorityInfo.forcedTab || null;
@@ -929,7 +1012,6 @@ async function init() {
             }
         }
 
-        // Cache channel info
         if (data.channelNames) channelNameCache = data.channelNames;
         if (data.channelHandles) channelHandleCache = data.channelHandles;
         if (data.channelImages) channelImageCache = data.channelImages;
@@ -962,6 +1044,99 @@ async function init() {
         console.error('Init error:', e);
     }
 }
+
+
+/* ── STATUS PAGE HELPERS ── */
+
+/* ── STATUS PAGE HELPERS ── */
+
+function showNotEnrolled(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner">
+                    <span class="banner-icon">📢</span>
+                    <h2 class="banner-title">Not Enrolled in Subscribers Group</h2>
+                    <p class="banner-desc">
+                        ${message || 'You are not in the Subscribers Group. Join the group to start exchanging subscribers and growing your channel.'}
+                    </p>
+                    <a href="groups.html" class="banner-btn">
+                        👥 Go to Groups
+                    </a>
+                    <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
+                        💡 Once you join the Subscribers Group, come back here to see your tasks.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showNotActive(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                    <span class="banner-icon">⛔</span>
+                    <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
+                    <p class="banner-desc">${message || 'Your account is not active. Please contact support for assistance.'}</p>
+                    <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showSuspended(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                    <span class="banner-icon">🚫</span>
+                    <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
+                    <p class="banner-desc">${message || 'Your account has been suspended. Please contact support for more information.'}</p>
+                    <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showMemberNotFound(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
+                    <span class="banner-icon">❓</span>
+                    <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
+                    <p class="banner-desc">${message || 'We could not find your account. Please sign in again.'}</p>
+                    <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
+                </div>
+            </div>
+        `;
+    }
+}
+function showMemberNotFound(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
+                    <span class="banner-icon">❓</span>
+                    <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
+                    <p class="banner-desc">${message || 'We could not find your account. Please sign in again.'}</p>
+                    <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+
 function hideLoader() {
     const loader = document.getElementById('pageLoader');
     loader.classList.add('hidden');

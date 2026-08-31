@@ -153,6 +153,10 @@
   box-shadow: 4px 4px 0px 0px #211F1F;
 }
 
+.group-hidden {
+  display: none !important;
+}
+
 /* ── Neo-Brutalist Card ───────────────────────────────────────── */
 .card {
   background: #FFFFFF;
@@ -164,6 +168,55 @@
 .card-hover:hover {
   transform: translate(-2px, -2px);
   box-shadow: 10px 10px 0px 0px #211F1F;
+}
+
+/* ── Ad Watching Special Card ────────────────────────────────── */
+.card-adwatching {
+  background: #211F1F;
+    border: 3px solid #fbbf24;
+    box-shadow: 8px 8px 0px 0px #fbbf24;
+    color: #ffffff;
+}
+.card-adwatching .group-icon {
+  background: #fbbf24;
+  border-color: #ffffff;
+}
+.card-adwatching .group-icon svg {
+  stroke: #1a1a2e;
+}
+.card-adwatching h2 {
+  color: #fbbf24;
+}
+.card-adwatching .text-muted {
+  color: #94a3b8;
+}
+.card-adwatching .tinygroupbills {
+  background: #fbbf24;
+  border-color: #ffffff;
+  color: #1a1a2e;
+}
+.card-adwatching .join-btn {
+  background: #fbbf24;
+  border-color: #ffffff;
+  color: #1a1a2e;
+  box-shadow: 4px 4px 0px 0px #ffffff;
+}
+.card-adwatching .join-btn:hover:not(:disabled) {
+  box-shadow: 6px 6px 0px 0px #ffffff;
+}
+.card-adwatching .join-btn:disabled {
+  opacity: 0.5;
+}
+.card-adwatching .leave-link {
+  color: #fca5a5;
+}
+.card-adwatching .leave-link:hover:not(:disabled) {
+  color: #ef4444;
+}
+.card-adwatching .tinygroupbills {
+  background: #fbbf24;
+  border-color: #ffffff;
+  color: #1a1a2e;
 }
 
 .tinygroupbills {
@@ -266,7 +319,7 @@
           </div>
           <h2 class="text-2xl font-bold mt-6">Subscribers Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
-            Exchange real subscribers with active creators and grow your audience organically.
+            Exchange real subscribers with active creators and grow your audience organically. Requires videos longer than 2 minutes.
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
@@ -292,7 +345,7 @@
           </div>
           <h2 class="text-2xl font-bold mt-6">Long Video Search Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
-            Increase video reach, impressions and engagement with collaborative promotion tasks.
+            Increase video reach, impressions and engagement with collaborative promotion tasks. Requires 5+ long videos.
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
@@ -343,7 +396,7 @@
           </div>
           <h2 class="text-2xl font-bold mt-6">Engagement Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
-            Get more likes, comments and interactions from supportive creators and members.
+            Get more likes, comments and interactions from supportive creators and members. Requires 5+ videos.
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
@@ -356,61 +409,78 @@
           <button class="leave-link hidden" id="leave-engagement" data-group="engagement">Leave Group</button>
         </div>
 
-        <!-- GROUP: AD WATCHING — COMING SOON -->
-        <div class="card rounded-3xl p-6 opacity-60 relative overflow-hidden group-disabled">
-          <div class="absolute top-4 right-4">
-            <div class="tinygroupbills" style="background:#6b7280; color:#fff; border-color:#4b5563;">Coming Soon</div>
-          </div>
+        <!-- GROUP: SHORTS VIDEO VIRAL -->
+        <div class="card card-hover rounded-3xl p-6" id="group-card-shorts">
           <div class="flex items-start justify-between gap-4">
-            <div class="group-icon" style="background:#d1d5db;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="14" rx="2"/>
-                <polygon points="10 9 16 12 10 15 10 9"/>
-                <path d="M8 20h8"/>
-                <path d="M12 18v2"/>
-              </svg>
-            </div>
-          </div>
-          <h2 class="text-2xl font-bold mt-6">Ad Watching Group</h2>
-          <p class="text-muted mt-3 leading-7 text-sm">
-            Earn rewards by watching ads from fellow creators. Features and details will be announced soon — stay tuned!
-          </p>
-          <div class="flex items-center justify-between mt-8">
-            <div>
-              <div class="text-sm font-semibold text-muted">Coming Soon</div>
-              <div class="text-xs text-muted mt-1">Feature In Development</div>
-            </div>
-            <button class="join-btn opacity-50 cursor-not-allowed" disabled style="background:#9ca3af; color:#fff;">Notify Me</button>
-          </div>
-        </div>
-
-        <!-- GROUP: SHORTS VIDEO VIRAL — COMING SOON -->
-        <div class="card rounded-3xl p-6 opacity-60 relative overflow-hidden group-disabled">
-          <div class="absolute top-4 right-4">
-            <div class="tinygroupbills" style="background:#6b7280; color:#fff; border-color:#4b5563;">Coming Soon</div>
-          </div>
-          <div class="flex items-start justify-between gap-4">
-            <div class="group-icon" style="background:#d1d5db;">
+            <div class="group-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
                 <polygon points="10 10 15 12 10 14 10 10"/>
                 <line x1="12" y1="18" x2="12.01" y2="18"/>
               </svg>
             </div>
+            <div class="tinygroupbills" id="badge-shorts">Viral</div>
           </div>
           <h2 class="text-2xl font-bold mt-6">Shorts Video Viral Group</h2>
           <p class="text-muted mt-3 leading-7 text-sm">
-            Boost your short-form content engagement and algorithm reach with specialized engagement pools. Coming soon!
+            Boost your short-form content engagement and algorithm reach with specialized engagement pools. Requires a working channel and shorts.
           </p>
           <div class="flex items-center justify-between mt-8">
             <div>
-              <div class="text-sm font-semibold text-muted">Coming Soon</div>
-              <div class="text-xs text-muted mt-1">Feature In Development</div>
+              <div class="text-sm font-semibold" id="count-shorts">— Members</div>
+              <div class="text-xs text-muted mt-1">Viral Growth</div>
             </div>
-            <button class="join-btn opacity-50 cursor-not-allowed" disabled style="background:#9ca3af; color:#fff;">Notify Me</button>
+            <button class="join-btn" id="btn-shorts" data-group="shorts">Join Group</button>
           </div>
+          <div id="reason-shorts" class="hidden mt-3 text-xs leading-5" style="color: rgb(139, 49, 49);"></div>
+          <button class="leave-link hidden" id="leave-shorts" data-group="shorts">Leave Group</button>
         </div>
 
+        <!-- GROUP: AD WATCHING - SPECIAL STYLING -->
+        <!-- GROUP: AD WATCHING - SPECIAL STYLING -->
+      <div class="card card-adwatching card-hover rounded-3xl p-6" id="group-card-adwatching">
+        <div class="flex items-start justify-between gap-4">
+          <div class="group-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="14" rx="2"/>
+              <polygon points="10 9 16 12 10 15 10 9"/>
+              <path d="M8 20h8"/>
+              <path d="M12 18v2"/>
+            </svg>
+          </div>
+          <div class="tinygroupbills" id="badge-adwatching">⭐ Premium</div>
+        </div>
+        <h2 class="text-2xl font-bold mt-6">Ad Watching Group</h2>
+        <p class="text-muted mt-3 leading-7 text-sm">
+          💰 Earn rewards by watching ads from fellow creators. Support the community while earning.
+        </p>
+        
+        <!-- Requirements Section -->
+        <div class="mt-4 p-3 bg-black/20 rounded-xl border border-yellow-500/30">
+          <p class="text-xs font-semibold text-yellow-400 mb-2">📋 Requirements to Join:</p>
+          <ul class="text-xs text-gray-300 space-y-1.5">
+            <li class="flex items-start gap-2">
+              <span class="text-yellow-400">•</span>
+              <span>⚠️ Add a <strong class="text-white">working channel</strong> to join this group</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-yellow-400">•</span>
+              <span>⚠️ Update <strong class="text-white">Monetized</strong> status to <strong class="text-yellow-400">Yes</strong> in your Promotional Channel</span>
+            </li>
+            
+          </ul>
+        </div>
+        
+        <div class="flex items-center justify-between mt-6">
+          <div>
+            <div class="text-sm font-semibold text-white" id="count-adwatching">— Members</div>
+            <div class="text-xs text-gray-400 mt-1">🎯 Earning Community</div>
+          </div>
+          <button class="join-btn" id="btn-adwatching" data-group="adwatching">Join Group</button>
+        </div>
+        <div id="reason-adwatching" class="hidden mt-3 text-xs leading-5" style="color: #fca5a5;"></div>
+        <button class="leave-link hidden" id="leave-adwatching" data-group="adwatching">Leave Group</button>
+      </div>
       </div><!-- /groupsGrid -->
 
       <!-- ERROR STATE -->
@@ -446,23 +516,26 @@ if (!usercode || !username || !userpassword) {
 /* =========================================================
    GROUPS BACKEND WIRING
 ========================================================= */
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwk5o0Q6yQJPNFe7kQqItGSUEbZZbxhl9xHxCSUiPBeg6cZkRYYI8Lr0rjfR_3PhToC/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyq83KiikmdHVNvel5YvPzG8ahtSfnZoz3wDtzeRndRqbhJ2ZzuRdZueF8_8CfQ-NK9/exec";
 
-const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement"];
+const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement", "shorts", "adwatching"];
 
 const GROUP_LABELS = {
   subscribers: "Subscribers Group",
   video: "Long Video Search Group",
   watchtime: "Playlist Group",
-  engagement: "Engagement Group"
+  engagement: "Engagement Group",
+  shorts: "Shorts Video Viral Group",
+  adwatching: "Ad Watching Group"
 };
 
-// Map group keys to their badge text
 const GROUP_BADGES = {
   subscribers: "Popular",
   video: "Trending",
   watchtime: "Recommended",
-  engagement: "Active"
+  engagement: "Active",
+  shorts: "Viral",
+  adwatching: "⭐ Premium"
 };
 
 function hideLoading() {
@@ -495,11 +568,23 @@ function setButtonState(btn, state, reason, groupKey, isVisible) {
   btn.classList.remove("opacity-50", "cursor-not-allowed");
   btn.disabled = false;
   btn.title = "";
-  btn.style.boxShadow = "4px 4px 0px 0px #211F1F"; 
-  btn.style.border = "2px solid #211F1F";
-  btn.style.borderRadius = "14px";
-  btn.style.color = "#211F1F";
-  btn.style.background = "#DBD4B7";
+  
+  // Check if it's adwatching group (special styling)
+  const isAdWatching = groupKey === "adwatching";
+  
+  if (!isAdWatching) {
+    btn.style.boxShadow = "4px 4px 0px 0px #211F1F";
+    btn.style.border = "2px solid #211F1F";
+    btn.style.borderRadius = "14px";
+    btn.style.color = "#211F1F";
+    btn.style.background = "#DBD4B7";
+  } else {
+    btn.style.boxShadow = "4px 4px 0px 0px #ffffff";
+    btn.style.border = "2px solid #ffffff";
+    btn.style.borderRadius = "14px";
+    btn.style.color = "#1a1a2e";
+    btn.style.background = "#fbbf24";
+  }
 
   // If group is not visible, force disabled state
   if (!isVisible) {
@@ -518,19 +603,23 @@ function setButtonState(btn, state, reason, groupKey, isVisible) {
 
   if (state === "joined") {
     btn.textContent = "Already Joined ✓";
-    btn.style.background = "#ACD1C0";
+    btn.style.background = isAdWatching ? "#34d399" : "#ACD1C0";
     btn.disabled = true;
     if (reasonEl) reasonEl.classList.add("hidden");
 
   } else if (state === "eligible") {
     btn.textContent = "Join Group Now";
-    btn.style.background = "#DBD4B7";
+    if (!isAdWatching) {
+      btn.style.background = "#DBD4B7";
+    } else {
+      btn.style.background = "#fbbf24";
+    }
     if (reasonEl) reasonEl.classList.add("hidden");
 
   } else {
     // Ineligible state
     btn.textContent = "Not Eligible";
-    btn.style.background = "#211F1F";
+    btn.style.background = isAdWatching ? "#dc2626" : "#211F1F";
     btn.style.color = "#FFFFFF";
     btn.classList.add("opacity-50", "cursor-not-allowed");
     btn.disabled = true;
@@ -577,9 +666,10 @@ function updateGroupVisibility(groupKey, isVisible) {
       badge.style.color = "#FFFFFF";
       badge.style.borderColor = "#4b5563";
     }
-    // Also hide the leave button if group is disabled
     const leaveBtn = document.getElementById("leave-" + groupKey);
     if (leaveBtn) leaveBtn.classList.add("hidden");
+    const reasonEl = document.getElementById("reason-" + groupKey);
+    if (reasonEl) reasonEl.classList.add("hidden");
   } else {
     card.classList.remove("group-disabled");
     if (badge) {
@@ -611,7 +701,6 @@ function showGroupsError(message) {
 }
 
 async function loadGroupsStatus() {
-  // Show loading overlay
   const overlay = document.getElementById('loadingOverlay');
   if (overlay) overlay.classList.remove('hide');
 
@@ -643,17 +732,14 @@ async function loadGroupsStatus() {
       return;
     }
 
-    // Get visible groups from response
     const visibleGroups = res.data.visibleGroups || [];
 
     GROUP_KEYS.forEach(key => {
       const btn = document.getElementById("btn-" + key);
       const g = res.data.groups ? res.data.groups[key] : null;
       
-      // Check if group is visible
       const isVisible = visibleGroups.includes(key);
       
-      // Update group card visibility
       updateGroupVisibility(key, isVisible);
       
       if (btn && g) {
@@ -693,31 +779,62 @@ async function handleJoinClick(e) {
   btn.textContent = "Joining…";
 
   try {
+    console.log(`[groups] Attempting to join group: ${groupKey} for user: ${usercode}`);
+    
     const res = await callBackend("joinGroup", { usercode: usercode, group: groupKey });
+    
+    console.log("[groups] Join response:", JSON.stringify(res, null, 2));
+    
     if (res.success) {
       setButtonState(btn, "joined", null, groupKey, true);
-      loadGroupsStatus(); // refresh leave button + member counts
+      await loadGroupsStatus();
     } else {
+      // Show detailed error
+      let errorMessage = res.message || "Could not join group.";
+      
+      // If there's additional error data, include it
+      if (res.error) {
+        errorMessage += `\n\nError: ${res.error}`;
+      }
+      if (res.details) {
+        errorMessage += `\n\nDetails: ${JSON.stringify(res.details)}`;
+      }
+      if (res.stack) {
+        errorMessage += `\n\nStack: ${res.stack}`;
+      }
+      
       Swal.fire({
         icon: "error",
         title: "Couldn't join group",
-        text: res.message || "Could not join group."
+        text: errorMessage,
+        confirmButtonText: "OK"
       });
       btn.disabled = false;
       btn.textContent = originalText;
     }
   } catch (err) {
     console.error("[groups] Join failed:", err);
+    
+    // Capture full error details
+    let errorDetails = "Please try again.";
+    if (err.message) {
+      errorDetails = err.message;
+    }
+    if (err.stack) {
+      console.error("[groups] Stack trace:", err.stack);
+      errorDetails += `\n\nStack: ${err.stack}`;
+    }
+    
     Swal.fire({
       icon: "error",
       title: "Something went wrong",
-      text: "Please try again."
+      text: errorDetails,
+      confirmButtonText: "OK"
     });
     btn.disabled = false;
     btn.textContent = originalText;
   }
 }
-
 async function handleLeaveClick(e) {
   const btn = e.currentTarget;
   const groupKey = btn.dataset.group;

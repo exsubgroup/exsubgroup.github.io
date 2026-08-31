@@ -13,6 +13,93 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
+
+/* ── Toggle Switch ────────────────────────────────────────────── */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: .3s;
+  border-radius: 34px;
+  border: 2px solid #211F1F;
+}
+
+.switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #FFFFFF;
+  transition: .3s;
+  border-radius: 50%;
+  border: 2px solid #211F1F;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.switch input:checked + .slider {
+  background-color: #ACD1C0;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.switch input:disabled + .slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch input:disabled + .slider:before {
+  opacity: 0.5;
+}
+
+.switch:hover .slider {
+  box-shadow: 0 0 0 3px rgba(172, 209, 192, 0.3);
+}
+
+/* ── Monetized Section Enhancement ───────────────────────────── */
+.promochannel-monetized-section {
+  transition: all 0.3s ease;
+  background: #f8f8f0 !important;
+}
+
+.promochannel-monetized-section .switch {
+  width: 50px;
+  height: 28px;
+}
+
+.promochannel-monetized-section .switch .slider:before {
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+}
+
+.promochannel-monetized-section .switch input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
 /* ── Neo-Brutalist Styles ──────────────────────────────────────── */
 :root {
   --charcoal: #211F1F;
@@ -240,7 +327,6 @@ body {
 }
 .promochannel-card:hover {
   transform: translate(-2px, -2px);
-
 }
 .promochannel-card-media {
   flex-shrink: 0;
@@ -306,7 +392,7 @@ body {
 .promochannel-stat-value {
   font-size: 15px;
   font-weight: 800;
-  color: white;
+  color: #f8f8f8;
 }
 .promochannel-stat-value--mono {
   font-family: 'JetBrains Mono', monospace;
@@ -545,6 +631,19 @@ body {
   .promochannel-type-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
+  .switch {
+    width: 42px;
+    height: 24px;
+  }
+  .switch .slider:before {
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+  }
+  .switch input:checked + .slider:before {
+    transform: translateX(18px);
+  }
 }
 
 /* ── SweetAlert2 Overrides ────────────────────────────────────── */
@@ -652,7 +751,7 @@ body {
 /* =========================================================
    CONFIG
 ========================================================= */
-const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbz-fV20RAXN_s3NUFVxXKGPJ061Vcd4PLCM0Rxwyu232aJ0aNdtA9MDa15Ys1C4PjCDOQ/exec";
+const ChannelCRUDScript = "https://script.google.com/macros/s/AKfycbwFidVJQft1x0yESWYFUOseY8qICzR4GRVoA8LYpSG3TQrr8RQLY1IvP4coWP6XJGXszw/exec";
 
 /* =========================================================
    SESSION
@@ -934,6 +1033,7 @@ function emptyState(icon, title, desc) {
 /* =========================================================
    CHANNEL CARD HTML
 ========================================================= */
+
 function channelCardHTML(ch) {
   const image = ch.ChannelImage && ch.ChannelImage.trim() ? ch.ChannelImage : "https://cdn-icons-png.flaticon.com/512/1384/1384060.png";
   
@@ -958,6 +1058,36 @@ function channelCardHTML(ch) {
        </div>`
     : '';
 
+  // Monetized status - USING SWITCH
+  const monetized = String(ch.Monetized || 'No').toLowerCase() === 'yes';
+  const switchId = 'monetizedSwitch-' + ch.ChannelId;
+  
+  const monetizedHTML = `
+    <div class="promochannel-monetized-section" style="margin-top: 12px; padding: 12px 16px; background: #f8f8f0; border: 2px solid #211F1F; border-radius: 12px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 16px;">💰</span>
+          <span style="font-weight: 700; font-size: 14px; color: #211F1F;">Monetized Status</span>
+          <span style="font-size: 12px; color: #6b7280; font-weight: 500;">(Required for Ad Watching Group)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span id="monetizedStatus-${ch.ChannelId}" style="font-weight: 700; font-size: 14px; padding: 4px 12px; border-radius: 8px; background: ${monetized ? '#ACD1C0' : '#fecaca'}; color: ${monetized ? '#065f46' : '#991b1b'};">
+            ${monetized ? '✅ Yes' : '❌ No'}
+          </span>
+          <!-- SWITCH TOGGLE -->
+          <label class="switch" id="switchLabel-${ch.ChannelId}">
+            <input type="checkbox" id="${switchId}" ${monetized ? 'checked' : ''} onchange="toggleMonetizedSwitch('${ch.ChannelId}')">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+      <div id="monetizedWarning-${ch.ChannelId}" style="display: ${monetized ? 'none' : 'block'}; margin-top: 8px; font-size: 12px; color: #dc2626; font-weight: 500;">
+        ⚠️ Set to "Yes" to join the Ad Watching Group <br/>
+        ⚠️ Important : <span style="color: #6b7280;">Please make sure your channel is montize and must have ads on.Please contact admin before enabling Monetized Status</span>
+      </div>
+    </div>
+  `;
+
   const editFn = `openEditModal('${ch.ChannelId}')`;
   const ytFn = `updateChannelYT('${ch.ChannelId}')`;
   const changeFn = `openChangeChannelModal('${ch.ChannelId}')`;
@@ -969,30 +1099,31 @@ function channelCardHTML(ch) {
       </div>
     </div>
     <div class="promochannel-card-body">
-     
       <h2 class="promochannel-name">${ch.ChannelName||'Unknown Channel'}</h2>
       <div class="promochannel-handle">${ch.ChannelHandle||'channel'}</div>
 
- <div class="promochannel-stats">
-  <div class="promochannel-stat">
-    <span class="promochannel-stat-label">Channel Type</span>
-    <strong class="promochannel-stat-value">${typeObj.emoji} ${typeObj.label}</strong>
-  </div>
-  <div class="promochannel-stat">
-    <span class="promochannel-stat-label">Subs On Join</span>
-    <strong class="promochannel-stat-value promochannel-stat-value--mono">${ch.TotalSubscribers||0}</strong>
-  </div>
-  <div class="promochannel-stat">
-    <span class="promochannel-stat-label">Subscribers Now</span>
-    <strong class="promochannel-stat-value promochannel-stat-value--mono" style="color:#ACD1C0;">
-      ${ch.SubscibersNow !== undefined ? ch.SubscibersNow : ch.TotalSubscribers||0}
-    </strong>
-  </div>
-  <div class="promochannel-stat">
-    <span class="promochannel-stat-label">Last Updated</span>
-    <strong class="promochannel-stat-value promochannel-stat-value--mono">${lastUpdated}</strong>
-  </div>
-</div>
+      <div class="promochannel-stats">
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Channel Type</span>
+          <strong class="promochannel-stat-value">${typeObj.emoji} ${typeObj.label}</strong>
+        </div>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Subs On Join</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono">${ch.TotalSubscribers||0}</strong>
+        </div>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Subscribers Now</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono" style="color:#ACD1C0;">
+            ${ch.SubscibersNow !== undefined ? ch.SubscibersNow : ch.TotalSubscribers||0}
+          </strong>
+        </div>
+        <div class="promochannel-stat">
+          <span class="promochannel-stat-label">Last Updated</span>
+          <strong class="promochannel-stat-value promochannel-stat-value--mono">${lastUpdated}</strong>
+        </div>
+      </div>
+
+      ${monetizedHTML}
 
       ${issueBoxHTML}
       ${videosNotReadyHTML}
@@ -1314,6 +1445,100 @@ function openChangeChannelModal(channelId) {
       setTimeout(() => location.reload(), 2700);
     }
   });
+}
+
+/* =========================================================
+   TOGGLE MONETIZED SWITCH
+========================================================= */
+async function toggleMonetizedSwitch(channelId) {
+  const switchEl = document.getElementById('monetizedSwitch-' + channelId);
+  const statusEl = document.getElementById('monetizedStatus-' + channelId);
+  const warningEl = document.getElementById('monetizedWarning-' + channelId);
+  
+  if (!switchEl || !statusEl) return;
+  
+  // Disable switch while processing
+  switchEl.disabled = true;
+  
+  try {
+    // Get current state from switch
+    const isCurrentlyYes = switchEl.checked;
+    const newValue = isCurrentlyYes ? 'Yes' : 'No';
+    
+    const r = await fetch(ChannelCRUDScript
+      + `?action=toggleMonetized`
+      + `&username=${encodeURIComponent(savedUsername)}`
+      + `&password=${encodeURIComponent(savedPassword)}`
+      + `&channelId=${encodeURIComponent(channelId)}`
+      + `&monetized=${encodeURIComponent(newValue)}`
+    );
+    const d = await r.json();
+    
+    if (d.status !== 'success') {
+      // Revert switch state on error
+      switchEl.checked = !switchEl.checked;
+      
+      // Check if error is about Ad Watching group
+      if (d.message && d.message.includes('Ad Watching Group')) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Cannot Change Monetized Status',
+          text: d.message,
+          confirmButtonText: 'Leave Ad Watching Group First',
+          customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to Update',
+          text: d.message,
+          customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
+        });
+      }
+      switchEl.disabled = false;
+      return;
+    }
+    
+    // Update UI based on new value
+    const newMonetized = d.monetized || newValue;
+    const isYes = newMonetized.toLowerCase() === 'yes';
+    
+    // Update status text
+    statusEl.textContent = isYes ? '✅ Yes' : '❌ No';
+    statusEl.style.background = isYes ? '#ACD1C0' : '#fecaca';
+    statusEl.style.color = isYes ? '#065f46' : '#991b1b';
+    
+    // Update warning
+    if (warningEl) {
+      warningEl.style.display = isYes ? 'none' : 'block';
+    }
+    
+    // Ensure switch matches
+    switchEl.checked = isYes;
+    
+    // Show success message
+    Swal.fire({
+      icon: 'success',
+      title: 'Monetized Status Updated',
+      text: `Status changed to: ${isYes ? 'Yes ✓' : 'No ✗'}`,
+      timer: 1500,
+      showConfirmButton: false,
+      customClass: { popup: 'swal2-popup' }
+    });
+    
+  } catch (err) {
+    // Revert switch state on error
+    switchEl.checked = !switchEl.checked;
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Unable to update monetized status: ' + err.message,
+      customClass: { popup: 'swal2-popup', confirmButton: 'swal2-confirm' }
+    });
+  }
+  
+  switchEl.disabled = false;
 }
 
 /* =========================================================
