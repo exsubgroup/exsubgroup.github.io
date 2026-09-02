@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
@@ -25,469 +24,127 @@
   max-width: 700px;
   margin: 0 auto;
 }
-
-.not-enrolled-banner .banner-icon {
-  font-size: 64px;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.not-enrolled-banner .banner-title {
-  font-size: 24px;
-  font-weight: 900;
-  color: #211F1F;
-  margin-bottom: 8px;
-}
-
-.not-enrolled-banner .banner-desc {
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.6;
-  max-width: 480px;
-  margin: 0 auto 20px;
-}
-
+.not-enrolled-banner .banner-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+.not-enrolled-banner .banner-title { font-size: 24px; font-weight: 900; color: #211F1F; margin-bottom: 8px; }
+.not-enrolled-banner .banner-desc { font-size: 14px; color: #6b7280; line-height: 1.6; max-width: 480px; margin: 0 auto 20px; }
 .not-enrolled-banner .banner-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 32px;
-  background: #211F1F;
-  color: #DBD4B7;
-  border: 2px solid #211F1F;
-  border-radius: 16px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.12s ease;
-  text-decoration: none;
-  box-shadow: 4px 4px 0px 0px #211F1F;
-  font-family: 'Inter', sans-serif;
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px;
+  background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F;
+  border-radius: 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.12s ease; text-decoration: none;
+  box-shadow: 4px 4px 0px 0px #211F1F; font-family: 'Inter', sans-serif;
 }
+.not-enrolled-banner .banner-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.not-enrolled-banner .banner-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.not-enrolled-banner .banner-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #211F1F;
-}
-
-.not-enrolled-banner .banner-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px #211F1F;
-}
-:root {
-    --bg: #F5F4EB;
-    --ink: #211F1F;
-    --mint: #ACD1C0;
-    --sand: #DBD4B7;
-    --card: #F5F4EB;
-    --muted: #6b7280;
-}
-
+:root { --bg: #F5F4EB; --ink: #211F1F; --mint: #ACD1C0; --sand: #DBD4B7; --card: #F5F4EB; --muted: #6b7280; }
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
-body {
-    background: var(--bg);
-    color: var(--ink);
-    overflow-x: hidden;
-}
+.gradient-text { color: #211F1F; background: none; -webkit-background-clip: unset; -webkit-text-fill-color: unset; background-clip: unset; }
 
-body::before { content: none; }
-
-.gradient-text {
-    color: #211F1F;
-    background: none;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
-    background-clip: unset;
-}
-
-.card {
-    background: #F5F4EB;
-    border-radius: 20px;
-    font-family: system-ui, -apple-system, sans-serif;
-    border: 2px solid #211F1F;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-}
-
-.task-card {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    border-radius: 20px;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-    transition: 0.2s ease;
-}
-.task-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px 0px #211F1F;
-}
-
-/* Unsubscribed task card — red highlight + pinned look */
-.task-card.unsubscribed-card {
-    border-color: #dc2626;
-    background: #fef2f2;
-    box-shadow: 4px 4px 0px 0px #dc2626;
-}
-.task-card.unsubscribed-card:hover {
-    box-shadow: 6px 6px 0px 0px #dc2626;
-}
+.card { background: #F5F4EB; border-radius: 20px; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; }
+.task-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
+.task-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.task-card.unsubscribed-card { border-color: #dc2626; background: #fef2f2; box-shadow: 4px 4px 0px 0px #dc2626; }
+.task-card.unsubscribed-card:hover { box-shadow: 6px 6px 0px 0px #dc2626; }
 
 .text-muted { color: var(--muted); }
 
-.btn-purple {
-    background: #211F1F;
-    color: #DBD4B7;
-    border: 2px solid #211F1F;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-    font-weight: 700;
-}
+.btn-purple { background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
 .btn-purple:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 .btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
 
-.btn-outline {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    color: #211F1F;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-    font-weight: 700;
-}
+.btn-outline { background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
 .btn-outline:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 .btn-outline:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
 
-.btn-teal {
-    background: #ACD1C0;
-    color: #211F1F;
-    border: 2px solid #211F1F;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-    font-weight: 700;
-}
+.btn-teal { background: #ACD1C0; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
 .btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.btn-red {
-    background: #ef4444;
-    color: #ffffff;
-    border: 2px solid #211F1F;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-    font-weight: 700;
-}
+.btn-red { background: #ef4444; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
 .btn-red:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.filter-tab {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    transition: 0.15s;
-    color: #211F1F;
-    cursor: pointer;
-    white-space: nowrap;
-    font-weight: 700;
-}
-.filter-tab:hover { background: #DBD4B7; }
-.filter-tab.active {
-    background: #211F1F;
-    border-color: #211F1F;
-    color: #DBD4B7;
-}
-.filter-tab:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
-}
-.filter-tab:disabled:hover {
-    background: #F5F4EB;
-    color: #211F1F;
-}
-.filter-tab.active:disabled {
-    opacity: 1;
-    background: #211F1F;
-    color: #DBD4B7;
-}
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-weight: 700;
-    border: 1px solid #211F1F;
-}
+.instructions-box { background: #ACD1C0; border: 2px solid #211F1F; border-radius: 14px; padding: 10px 14px; }
+.issue-box { background: #fee2e2; border: 2px solid #211F1F; border-radius: 14px; padding: 10px 14px; }
+.punishment-box { background: #fecaca; border: 2px solid #dc2626; border-radius: 14px; padding: 10px 14px; }
 
-.dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-}
-
-.instructions-box {
-    background: #ACD1C0;
-    border: 2px solid #211F1F;
-    border-radius: 14px;
-    padding: 10px 14px;
-}
-
-.issue-box {
-    background: #fee2e2;
-    border: 2px solid #211F1F;
-    border-radius: 14px;
-    padding: 10px 14px;
-}
-
-/* Punishment banner inside unsubscribed card */
-.punishment-box {
-    background: #fecaca;
-    border: 2px solid #dc2626;
-    border-radius: 14px;
-    padding: 10px 14px;
-}
-
-.modal-bg {
-    position: fixed; inset: 0;
-    background: rgba(33,31,31,0.55);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.25s;
-}
+.modal-bg { position: fixed; inset: 0; background: rgba(33,31,31,0.55); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s; }
 .modal-bg.open { opacity: 1; visibility: visible; }
-
-.modal-box {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    border-radius: 24px;
-    box-shadow: 6px 6px 0px 0px #211F1F;
-    padding: 28px;
-    width: 100%;
-    max-width: 500px;
-    transform: scale(0.95);
-    transition: 0.25s;
-    max-height: 90vh;
-    overflow-y: auto;
-}
+.modal-box { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px; box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px; width: 100%; max-width: 500px; transform: scale(0.95); transition: 0.25s; max-height: 90vh; overflow-y: auto; }
 .modal-bg.open .modal-box { transform: scale(1); }
 
-.skeleton {
-    background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 20px;
-    border: 2px solid #211F1F;
-}
+.skeleton { background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 20px; border: 2px solid #211F1F; }
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
-#toast {
-    position: fixed; bottom: 24px; right: 24px;
-    z-index: 999;
-    background: #211F1F;
-    color: #DBD4B7;
-    padding: 13px 22px;
-    border-radius: 14px;
-    font-size: 13px;
-    font-weight: 700;
-    border: 2px solid #211F1F;
-    box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3);
-    transform: translateY(80px);
-    opacity: 0;
-    transition: 0.3s;
-    pointer-events: none;
-    max-width: 320px;
-}
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #211F1F; color: #DBD4B7; padding: 13px 22px; border-radius: 14px; font-size: 13px; font-weight: 700; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3); transform: translateY(80px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; }
 #toast.show { transform: translateY(0); opacity: 1; }
 #toast.error { background: #ef4444; color: #ffffff; }
 
-#pageLoader {
-    position: fixed; inset: 0;
-    background: var(--bg);
-    z-index: 300;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    transition: opacity 0.4s ease;
-}
+#pageLoader { position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
 #pageLoader.hidden { opacity: 0; pointer-events: none; }
-#pageLoader .spin {
-    width: 44px; height: 44px;
-    border: 3px solid rgba(33,31,31,0.15);
-    border-top-color: #211F1F;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
+#pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(33,31,31,0.15); border-top-color: #211F1F; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 input, textarea { color: #211F1F; }
 input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
-.step-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.5;
-}
-.step-num {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #ACD1C0;
-    border: 1px solid #211F1F;
-    color: #211F1F;
-    font-size: 10px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-}
+.step-item { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+.step-num { width: 20px; height: 20px; border-radius: 50%; background: #ACD1C0; border: 1px solid #211F1F; color: #211F1F; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 
-.paired-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-weight: 700;
-    border: 1px solid #211F1F;
-}
-
-.issue-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 2px solid #211F1F;
-    background: #F5F4EB;
-    color: #b91c1c;
-    cursor: pointer;
-    transition: 0.2s;
-    white-space: nowrap;
-    font-weight: 600;
-}
+.paired-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
+.issue-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 2px solid #211F1F; background: #F5F4EB; color: #b91c1c; cursor: pointer; transition: 0.2s; white-space: nowrap; font-weight: 600; }
 .issue-pill:hover { background: #fee2e2; }
 .issue-pill.selected { background: #ef4444; border-color: #211F1F; color: #ffffff; }
 
-.pref-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 2px solid #211F1F;
-    background: #F5F4EB;
-    color: #211F1F;
-    cursor: pointer;
-    transition: 0.2s;
-    white-space: nowrap;
-    font-weight: 600;
-}
+.pref-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 2px solid #211F1F; background: #F5F4EB; color: #211F1F; cursor: pointer; transition: 0.2s; white-space: nowrap; font-weight: 600; }
 .pref-pill:hover { background: #DBD4B7; }
 .pref-pill.selected { background: #ACD1C0; border-color: #211F1F; color: #211F1F; }
 .pref-pill:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.match-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10.5px;
-    padding: 3px 9px;
-    border-radius: 999px;
-    background: #ACD1C0;
-    border: 1px solid #211F1F;
-    color: #211F1F;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.copy-handle-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    background: #ACD1C0;
-    border: 1px solid #211F1F;
-    cursor: pointer;
-    transition: 0.2s;
-    flex-shrink: 0;
-    vertical-align: middle;
-}
+.match-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; padding: 3px 9px; border-radius: 999px; background: #ACD1C0; border: 1px solid #211F1F; color: #211F1F; font-weight: 700; white-space: nowrap; }
+.copy-handle-btn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: #ACD1C0; border: 1px solid #211F1F; cursor: pointer; transition: 0.2s; flex-shrink: 0; vertical-align: middle; }
 .copy-handle-btn:hover { background: #9bc2b1; }
 .copy-handle-btn svg { width: 11px; height: 11px; }
 
 /* SweetAlert2 neo-brutalist theme overrides */
-.swal2-popup {
-    background: #F5F4EB !important;
-    border: 2px solid #211F1F !important;
-    color: #211F1F !important;
-    border-radius: 20px !important;
-    box-shadow: 6px 6px 0px 0px #211F1F !important;
-    font-family: 'Inter', sans-serif !important;
-}
+.swal2-popup { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 20px !important; box-shadow: 6px 6px 0px 0px #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
-.swal2-confirm {
-    background: #211F1F !important;
-    color: #DBD4B7 !important;
-    border-radius: 12px !important;
-    border: 2px solid #211F1F !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-}
-.swal2-cancel {
-    background: #F5F4EB !important;
-    border: 2px solid #211F1F !important;
-    color: #211F1F !important;
-    border-radius: 12px !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-}
-.swal2-deny {
-    background: #ACD1C0 !important;
-    color: #211F1F !important;
-    border: 2px solid #211F1F !important;
-    border-radius: 12px !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-}
+.swal2-confirm { background: #211F1F !important; color: #DBD4B7 !important; border-radius: 12px !important; border: 2px solid #211F1F !important; font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
+.swal2-cancel { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 12px !important; font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
+.swal2-deny { background: #ACD1C0 !important; color: #211F1F !important; border: 2px solid #211F1F !important; border-radius: 12px !important; font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
 
-/* Proof Modal specific styles */
-.proof-screenshot {
-    cursor: pointer;
-    transition: 0.2s;
-    border: 2px solid #211F1F/15;
-    border-radius: 12px;
-}
-.proof-screenshot:hover {
-    transform: scale(1.01);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+.proof-screenshot { cursor: pointer; transition: 0.2s; border: 2px solid rgba(33,31,31,0.15); border-radius: 12px; }
+.proof-screenshot:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-.proof-status-valid { background: #dcfce7; color: #16a34a; border-color: #16a34a; }
-.proof-status-cheating { background: #fee2e2; color: #dc2626; border-color: #dc2626; }
-.proof-status-insufficient { background: #fef3c7; color: #d97706; border-color: #d97706; }
-.proof-status-pending { background: #f3f4f6; color: #6b7280; border-color: #6b7280; }
-
+/* ── Invalid Task Card Styles ── */
+.task-card.invalid-task {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+  opacity: 0.6;
+  filter: grayscale(0.3);
+}
+.task-card.invalid-task .btn-purple,
+.task-card.invalid-task .btn-outline,
+.task-card.invalid-task .btn-red,
+.task-card.invalid-task .btn-teal {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.task-card.invalid-task .invalid-badge {
+  background: #dc2626;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -504,6 +161,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
+
 <!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
@@ -528,25 +186,70 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
     <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR - Removed Profile Card, only Task Stats and Limit -->
     <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
 
-        <!-- PROFILE CARD -->
+        <!-- ACTION BUTTONS: Create Tasks, Match Preferences, Toggle Stats, Limit -->
         <div class="card rounded-3xl p-5">
-            <div class="flex items-center gap-4">
-                <img id="sideAvatar" src="https://i.pravatar.cc/100"
-                    class="w-14 h-14 rounded-2xl border-2 border-purple-500 object-cover flex-shrink-0">
-                <div class="min-w-0">
-                    <h2 id="sideName" class="font-semibold text-base truncate">—</h2>
-                    <p id="sideCode" class="text-muted text-sm">—</p>
-                    <span id="sideStatus" class="inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-600 font-medium">Active</span>
-                </div>
+            <div class="space-y-3">
+                <button id="createBtn" onclick="openCreateModal()"
+                    class="btn-purple w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Create Tasks
+                </button>
+                <button id="prefsBtn" onclick="openPreferencesModal()"
+                    class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    🎯 Match Preferences
+                </button>
+                <button id="toggleStatsBtn" onclick="toggleStats()"
+                    class="btn-teal w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    📊 My Task Stats
+                </button>
             </div>
         </div>
 
-        <!-- TASK STATS -->
-        <div class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-4">My Task Stats</h2>
+        <!-- SUBSCRIPTION LIMIT CARD -->
+        <div id="limitCard" class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">📈 Subscription Limit</h2>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-muted">Subscribed</span>
+                    <span id="lim-subscribed" class="font-bold">—</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-muted">Limit</span>
+                    <span id="lim-limit" class="font-bold text-purple-700">—</span>
+                </div>
+                <div id="lim-reached-row" class="hidden flex justify-between">
+                    <span class="text-muted">Status</span>
+                    <span class="font-bold text-red-600">⚠ Limit Reached</span>
+                </div>
+            </div>
+            <div id="lim-bar-wrap" class="mt-3">
+                <div class="w-full bg-white rounded-full h-2">
+                    <div id="lim-bar" class="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all" style="width:0%"></div>
+                </div>
+            </div>
+            <p class="text-xs text-muted mt-3 leading-relaxed">
+                📎 Submit your Subscription proof via the
+                <a href="exsubextension.html" class="text-purple-700 underline hover:text-purple-700">Exsub Extension</a>.
+            </p>
+            <div id="lim-verify-wrap" class="hidden mt-3">
+                <button onclick="showLimitReachedAlert()" class="btn-teal w-full py-2.5 rounded-2xl text-sm font-semibold">
+                    🔍 Verify My Subscriptions
+                </button>
+            </div>
+        </div>
+
+        <!-- TASK STATS - Hidden by default, toggled by button -->
+        <div id="statsPanel" class="card rounded-3xl p-5 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-semibold text-base">📊 My Task Stats</h2>
+                <button onclick="toggleStats()" class="text-muted hover:text-[#211F1F] text-lg">✕</button>
+            </div>
             <div class="space-y-3 text-sm">
                 <div class="flex items-center justify-between">
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
@@ -592,40 +295,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
         </div>
 
-        <!-- SUBSCRIPTION LIMIT CARD -->
-        <div id="limitCard" class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-3">Subscription Limit</h2>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-muted">Subscribed</span>
-                    <span id="lim-subscribed" class="font-bold">—</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-muted">Limit</span>
-                    <span id="lim-limit" class="font-bold text-purple-700">—</span>
-                </div>
-                <div id="lim-reached-row" class="hidden flex justify-between">
-                    <span class="text-muted">Status</span>
-                    <span class="font-bold text-red-600">Limit Reached</span>
-                </div>
-            </div>
-            <div id="lim-bar-wrap" class="mt-3">
-                <div class="w-full bg-white rounded-full h-2">
-                    <div id="lim-bar" class="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all" style="width:0%"></div>
-                </div>
-            </div>
-            <p class="text-xs text-muted mt-3 leading-relaxed">
-                📎 Submit your Subscription proof via the
-                <a href="exsubextension.html" class="text-purple-700 underline hover:text-purple-700">Exsub Extension</a>.
-            </p>
-            <!-- Verify button shown when limit is reached -->
-            <div id="lim-verify-wrap" class="hidden mt-3">
-                <button onclick="showLimitReachedAlert()" class="btn-teal w-full py-2.5 rounded-2xl text-sm font-semibold">
-                    🔍 Verify My Subscriptions
-                </button>
-            </div>
-        </div>
-
     </aside>
 
     <!-- CONTENT -->
@@ -642,7 +311,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
         </div>
 
-        <!-- UNSUBSCRIBED WARNING BANNER (shown when member has unsubscribed tasks) -->
+        <!-- UNSUBSCRIBED WARNING BANNER -->
         <div id="unsubBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
@@ -653,12 +322,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
                         You <strong class="text-[#211F1F]">must re-subscribe</strong> to these channels before you can do any other work.
                         These tasks are pinned at the top.
                     </p>
-                    <div class="flex gap-3 flex-wrap">
-                        <button onclick="setTab('Unsubscribed', document.querySelector('.filter-tab[data-tab=Unsubscribed]'))"
-                            class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
-                            View Unsubscribed Tasks
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -666,23 +329,13 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         <!-- TOP BAR -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
             <div>
-                <h2 class="text-2xl font-bold">My Tasks</h2>
-                <p class="text-muted mt-1 text-sm">Make sure exsub extension is install</p>
-                <!-- NEW: Task counter -->
-                <p id="taskCounter" class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> tasks</p>
+                <h2 class="text-2xl font-bold" id="taskSectionTitle">My Tasks</h2>
+                <p id="taskStatusDesc" class="text-muted mt-1 text-sm">Showing <span id="statusLabel">Not Started</span> tasks</p>
+                <p id="taskCounter" class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> tasks</p>
             </div>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button id="prefsBtn" onclick="openPreferencesModal()"
-                    class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    🎯 Match Preferences
-                </button>
-                <button id="createBtn" onclick="openCreateModal()"
-                    class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    Create Tasks
+            <div class="flex flex-wrap gap-3">
+                <button onclick="refreshTasks()" class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    🔄 Refresh
                 </button>
             </div>
         </div>
@@ -706,26 +359,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
         </div>
 
-        <!-- FILTER TABS -->
-        <div class="flex flex-wrap gap-2 mb-6">
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
-                <span class="dot bg-yellow-400 mr-1"></span>Not Started
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
-                <span class="dot bg-orange-400 mr-1"></span>Pending
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Subscribed" onclick="setTab('Subscribed',this)">
-                <span class="dot bg-green-400 mr-1"></span>Subscribed
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Unsubscribed" onclick="setTab('Unsubscribed',this)">
-                <span class="dot bg-red-400 mr-1"></span>Unsubscribed
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
-                <span class="dot bg-gray-400 mr-1"></span>Rejected
-            </button>
-            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
-        </div>
-
         <!-- TASK LIST -->
         <div id="taskList" class="space-y-4">
             <div class="skeleton h-[200px]"></div>
@@ -742,13 +375,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
                 Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new subscriber tasks and start growing!
             </p>
             <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
-        </div>
-
-        <!-- PAGINATION -->
-        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
-            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
-            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
-            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
         </div>
 
     </main>
@@ -793,7 +419,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            The system will find up to <strong class="text-[#211F1F]">20 members</strong> you haven't worked with yet and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
+            The system will find up to <strong class="text-[#211F1F]">10 members</strong> you haven't worked with yet and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
         </p>
         <div class="instructions-box mb-5">
             <p class="text-xs text-purple-700 leading-relaxed">
@@ -837,7 +463,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             <button onclick="closeProofModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <div id="proofModalContent" class="space-y-4">
-            <!-- Loading state -->
             <div class="text-center py-8">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
                 <p class="text-muted text-sm mt-3">Loading proof data...</p>
@@ -899,36 +524,37 @@ const savedUserCode = localStorage.getItem("usercode") || "";
 if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
-
-/* Navbar menu wiring (mobile drawer, active-link highlight) is handled by navbar.js */
 </script>
 
 <script>
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuT86DMwkP8HxsO_b4W7ftHb0uSDFknbubloO7foNSCj_M8yvy37EJ0OQ5eeXpKxKxnA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvL1RH-J_BjCJovhUC0nObshDToPIvZGI2WRFK42MYXmfoBP5HTRuTzrOmeLHDfvv5ZA/exec';
 const USER_CODE  = savedUserCode;
-const PER_PAGE = 10;
-const GROUP_SETTING_KEY = 'SUBSCRIBERS_GROUP';
+
+// ── CACHE KEYS ──
+const CACHE_KEY_TASKS = 'subscriber_tasks_data';
+const CACHE_KEY_STATS = 'subscriber_tasks_stats';
+const CACHE_KEY_EXCHANGE = 'subscriber_tasks_exchange';
+const CACHE_KEY_PERF = 'subscriber_tasks_perf';
+const CACHE_KEY_TIMESTAMP = 'subscriber_tasks_timestamp';
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
 
 /* ────────────────────────────────────────
    STATE
 ──────────────────────────────────────── */
 let allTasks    = [];
-let filtered    = [];
-let activeTab   = 'All';
-let currentPage = 1;
-let totalPages  = 1;
-let totalTasks  = 0;
 let member      = null;
 let perfStats   = null;
 let isBlocked   = false;
 let hasUnsub    = false;
-let forcedTaskTab = null;
 let isLoading   = false;
+let currentStatus = 'NotWorkYet';
+let isCacheValid = false;
+let validationInterval = null;
 
-// Server-side stats
+// Server-side stats (ALL tasks, not just focused)
 let stats = {
     total: 0,
     notWorkYet: 0,
@@ -936,6 +562,13 @@ let stats = {
     subscribed: 0,
     unsubscribed: 0,
     rejected: 0
+};
+
+// Exchange status counts (ALL tasks)
+let exchangeStats = {
+    awaiting: 0,
+    both: 0,
+    theirPending: 0
 };
 
 let channelNameCache   = {};
@@ -952,6 +585,122 @@ let countryOptions     = [];
 const MAX_PREF_EACH    = 5;
 
 /* ────────────────────────────────────────
+   CACHE HELPERS
+──────────────────────────────────────── */
+function saveTasksToCache(data) {
+    try {
+        localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(data.tasks || []));
+        localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(data.fullStats || data.stats || {}));
+        localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
+        localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(data.perfStats || {}));
+        localStorage.setItem(CACHE_KEY_TIMESTAMP, String(Date.now()));
+        localStorage.setItem('subscriber_tasks_focusedStatus', data.focusedStatus || 'NotWorkYet');
+        localStorage.setItem('subscriber_tasks_hasUnsub', String(data.hasUnsub || false));
+        localStorage.setItem('subscriber_tasks_unsubCount', String(data.unsubCount || 0));
+        localStorage.setItem('subscriber_tasks_member', JSON.stringify(data.member || {}));
+        
+        if (data.channelNames) {
+            localStorage.setItem('subscriber_tasks_channelNames', JSON.stringify(data.channelNames));
+        }
+        if (data.channelHandles) {
+            localStorage.setItem('subscriber_tasks_channelHandles', JSON.stringify(data.channelHandles));
+        }
+        if (data.channelImages) {
+            localStorage.setItem('subscriber_tasks_channelImages', JSON.stringify(data.channelImages));
+        }
+        if (data.channelIds) {
+            localStorage.setItem('subscriber_tasks_channelIds', JSON.stringify(data.channelIds));
+        }
+        
+        isCacheValid = true;
+        console.log('✅ Tasks saved to cache');
+        return true;
+    } catch (e) {
+        console.warn('Could not save to cache:', e);
+        return false;
+    }
+}
+
+function loadTasksFromCache() {
+    try {
+        const tasksData = localStorage.getItem(CACHE_KEY_TASKS);
+        const statsData = localStorage.getItem(CACHE_KEY_STATS);
+        const exchangeData = localStorage.getItem(CACHE_KEY_EXCHANGE);
+        const perfData = localStorage.getItem(CACHE_KEY_PERF);
+        const timestamp = localStorage.getItem(CACHE_KEY_TIMESTAMP);
+        const focusedStatus = localStorage.getItem('subscriber_tasks_focusedStatus') || 'NotWorkYet';
+        const hasUnsubStr = localStorage.getItem('subscriber_tasks_hasUnsub') || 'false';
+        const unsubCountStr = localStorage.getItem('subscriber_tasks_unsubCount') || '0';
+        const memberData = localStorage.getItem('subscriber_tasks_member');
+        
+        if (!tasksData || !timestamp) {
+            console.log('📭 No cache found');
+            return null;
+        }
+        
+        const age = Date.now() - parseInt(timestamp);
+        if (age > CACHE_TTL) {
+            console.log('⏰ Cache expired (age:', Math.round(age/1000), 's)');
+            return null;
+        }
+        
+        const tasks = JSON.parse(tasksData);
+        const savedStats = JSON.parse(statsData || '{}');
+        const savedExchange = JSON.parse(exchangeData || '{}');
+        const savedPerf = JSON.parse(perfData || '{}');
+        const savedMember = memberData ? JSON.parse(memberData) : null;
+        
+        const channelNames = JSON.parse(localStorage.getItem('subscriber_tasks_channelNames') || '{}');
+        const channelHandles = JSON.parse(localStorage.getItem('subscriber_tasks_channelHandles') || '{}');
+        const channelImages = JSON.parse(localStorage.getItem('subscriber_tasks_channelImages') || '{}');
+        const channelIds = JSON.parse(localStorage.getItem('subscriber_tasks_channelIds') || '{}');
+        
+        console.log('📦 Cache loaded:', tasks.length, 'tasks');
+        
+        return {
+            tasks: tasks,
+            stats: savedStats,
+            exchangeStats: savedExchange,
+            perfStats: savedPerf,
+            focusedStatus: focusedStatus,
+            hasUnsub: hasUnsubStr === 'true',
+            unsubCount: parseInt(unsubCountStr) || 0,
+            member: savedMember,
+            channelNames: channelNames,
+            channelHandles: channelHandles,
+            channelImages: channelImages,
+            channelIds: channelIds,
+            isCacheValid: true
+        };
+    } catch (e) {
+        console.warn('Could not load from cache:', e);
+        return null;
+    }
+}
+
+function clearCache() {
+    try {
+        localStorage.removeItem(CACHE_KEY_TASKS);
+        localStorage.removeItem(CACHE_KEY_STATS);
+        localStorage.removeItem(CACHE_KEY_EXCHANGE);
+        localStorage.removeItem(CACHE_KEY_PERF);
+        localStorage.removeItem(CACHE_KEY_TIMESTAMP);
+        localStorage.removeItem('subscriber_tasks_focusedStatus');
+        localStorage.removeItem('subscriber_tasks_hasUnsub');
+        localStorage.removeItem('subscriber_tasks_unsubCount');
+        localStorage.removeItem('subscriber_tasks_member');
+        localStorage.removeItem('subscriber_tasks_channelNames');
+        localStorage.removeItem('subscriber_tasks_channelHandles');
+        localStorage.removeItem('subscriber_tasks_channelImages');
+        localStorage.removeItem('subscriber_tasks_channelIds');
+        isCacheValid = false;
+        console.log('🗑️ Cache cleared');
+    } catch (e) {
+        console.warn('Could not clear cache:', e);
+    }
+}
+
+/* ────────────────────────────────────────
    GROUP VISIBILITY CHECK
 ──────────────────────────────────────── */
 async function checkGroupVisibility() {
@@ -960,7 +709,7 @@ async function checkGroupVisibility() {
         const data = await res.json();
         
         if (data.success && data.settings) {
-            const groupSetting = data.settings[GROUP_SETTING_KEY];
+            const groupSetting = data.settings['SUBSCRIBERS_GROUP'];
             
             const isEnabled = groupSetting === true || 
                              groupSetting === 'TRUE' || 
@@ -1006,6 +755,153 @@ function showGroupDisabled(message) {
 }
 
 /* ────────────────────────────────────────
+   REAL-TIME TASK VALIDATION
+──────────────────────────────────────── */
+
+async function validateSingleTask(task) {
+    if (!task || !task.TargetUserCode) return { valid: true, task: task };
+    
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(task.TargetUserCode)}`);
+        const data = await res.json();
+        
+        if (!data.success || !data.targets) {
+            return { valid: true, task: task };
+        }
+        
+        const targetData = data.targets[task.TargetUserCode];
+        if (!targetData) return { valid: true, task: task };
+        
+        const isInvalid = 
+            targetData.InSubscribersWork !== 'Yes' ||
+            targetData.ViolationFlag === 'Suspended' ||
+            targetData.Status === 'Blocked' ||
+            targetData.SubscribersPromotionActive === 'No';
+        
+        return {
+            valid: !isInvalid,
+            task: task,
+            targetData: targetData,
+            reason: isInvalid ? getInvalidReason(targetData) : null
+        };
+    } catch (e) {
+        console.warn('Validation error:', e);
+        return { valid: true, task: task };
+    }
+}
+
+function getInvalidReason(targetData) {
+    if (targetData.InSubscribersWork !== 'Yes') return 'Member left the Subscribers Group';
+    if (targetData.ViolationFlag === 'Suspended') return 'Member is Suspended';
+    if (targetData.Status === 'Blocked') return 'Member is Blocked';
+    if (targetData.SubscribersPromotionActive === 'No') return 'Member has Promotion Disabled';
+    return 'Member is no longer eligible';
+}
+
+function removeInvalidTask(taskId, reason) {
+    const taskIndex = allTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+    if (taskIndex === -1) return false;
+    
+    const removedTask = allTasks[taskIndex];
+    allTasks.splice(taskIndex, 1);
+    
+    try {
+        const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
+        const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+        if (cachedIndex !== -1) {
+            cachedTasks.splice(cachedIndex, 1);
+            localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+        }
+    } catch (e) {
+        console.warn('Could not update cache:', e);
+    }
+    
+    recalculateStats();
+    
+    try {
+        localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+        localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+    } catch (e) {}
+    
+    renderStats();
+    renderList();
+    checkBlock();
+    checkUnsubscribed();
+    
+    showToast(`🗑️ Task ${taskId} removed: ${reason}`, false);
+    return true;
+}
+
+async function validateAllTasksInBackground() {
+    if (allTasks.length === 0) return;
+    
+    console.log('🔍 Validating all tasks in background...');
+    const invalidTasks = [];
+    
+    for (const task of allTasks) {
+        const result = await validateSingleTask(task);
+        if (!result.valid) {
+            invalidTasks.push({
+                taskId: task.TaskID,
+                reason: result.reason || 'Target member is no longer eligible'
+            });
+        }
+    }
+    
+    if (invalidTasks.length > 0) {
+        console.log(`🗑️ Removing ${invalidTasks.length} invalid tasks`);
+        invalidTasks.forEach(({ taskId, reason }) => {
+            removeInvalidTask(taskId, reason);
+        });
+        showToast(`🗑️ ${invalidTasks.length} task(s) removed - target members no longer eligible`, false);
+    }
+}
+
+async function validateTaskBeforeAction(taskId, actionName) {
+    const task = allTasks.find(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+    if (!task) {
+        showToast('❌ Task not found. It may have been removed.', true);
+        return { valid: false, task: null };
+    }
+    
+    const result = await validateSingleTask(task);
+    
+    if (!result.valid) {
+        removeInvalidTask(taskId, result.reason || 'Target member is no longer eligible');
+        showToast(`❌ Cannot ${actionName}: ${result.reason || 'Target member is no longer eligible'}`, true);
+        return { valid: false, task: null };
+    }
+    
+    return { valid: true, task: task };
+}
+
+/* ────────────────────────────────────────
+   PERIODIC VALIDATION
+──────────────────────────────────────── */
+function startPeriodicValidation() {
+    if (validationInterval) {
+        clearInterval(validationInterval);
+    }
+    validationInterval = setInterval(async () => {
+        if (allTasks.length > 0) {
+            console.log('🔄 Periodic validation check...');
+            await validateAllTasksInBackground();
+        }
+    }, 30000);
+}
+
+function stopPeriodicValidation() {
+    if (validationInterval) {
+        clearInterval(validationInterval);
+        validationInterval = null;
+    }
+}
+
+window.addEventListener('beforeunload', function() {
+    stopPeriodicValidation();
+});
+
+/* ────────────────────────────────────────
    BOOT
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', async function() {
@@ -1017,14 +913,181 @@ window.addEventListener('DOMContentLoaded', async function() {
 });
 
 /* ────────────────────────────────────────
-   INIT
+   INIT - Try Cache First, Then Server
 ──────────────────────────────────────── */
 async function init() {
     try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=1&perPage=${PER_PAGE}`);
+        const cachedData = loadTasksFromCache();
+        
+        if (cachedData && cachedData.tasks && cachedData.tasks.length > 0) {
+            console.log('📦 Using cached tasks');
+            
+            allTasks = cachedData.tasks;
+            stats = cachedData.stats;
+            exchangeStats = cachedData.exchangeStats;
+            perfStats = cachedData.perfStats;
+            currentStatus = cachedData.focusedStatus;
+            member = cachedData.member;
+            hasUnsub = cachedData.hasUnsub;
+            
+            if (cachedData.channelNames) channelNameCache = cachedData.channelNames;
+            if (cachedData.channelHandles) channelHandleCache = cachedData.channelHandles;
+            if (cachedData.channelImages) channelImageCache = cachedData.channelImages;
+            if (cachedData.channelIds) channelIdCache = cachedData.channelIds;
+            
+            const validatedTasks = await validateTasksWithServer(allTasks);
+            
+            if (validatedTasks.length !== allTasks.length) {
+                allTasks = validatedTasks;
+                recalculateStats();
+                const tempData = {
+                    tasks: allTasks,
+                    fullStats: stats,
+                    exchangeStats: exchangeStats,
+                    perfStats: perfStats,
+                    focusedStatus: currentStatus,
+                    hasUnsub: hasUnsub,
+                    unsubCount: parseInt(localStorage.getItem('subscriber_tasks_unsubCount')) || 0,
+                    member: member,
+                    channelNames: channelNameCache,
+                    channelHandles: channelHandleCache,
+                    channelImages: channelImageCache,
+                    channelIds: channelIdCache
+                };
+                saveTasksToCache(tempData);
+            }
+            
+            hideLoader();
+            loadPreferenceOptions();
+            checkBlock();
+            checkUnsubscribed();
+            renderStats();
+            renderLimitCard();
+            renderList();
+            updateStatusLabel();
+            
+            if (perfStats && perfStats.LimitReached === 'Yes') {
+                setTimeout(showLimitReachedAlert, 800);
+            }
+            
+            refreshTasksInBackground();
+            startPeriodicValidation();
+            
+            return;
+        }
+        
+        console.log('🔄 No cache or cache empty, fetching from server...');
+        await fetchTasksFromServer(true);
+        startPeriodicValidation();
+        
+    } catch (e) {
+        hideLoader();
+        clearSkeletons();
+        showToast('Could not connect to server.', true);
+        console.error('Init error:', e);
+    }
+}
+
+/* ────────────────────────────────────────
+   VALIDATE TASKS AGAINST TARGET STATUS
+──────────────────────────────────────── */
+async function validateTasksWithServer(tasks) {
+    if (!tasks || tasks.length === 0) return tasks;
+    
+    try {
+        const targetCodes = tasks
+            .map(t => t.TargetUserCode)
+            .filter(code => code && code !== '');
+        
+        if (targetCodes.length === 0) return tasks;
+        
+        const targetCodesParam = targetCodes.join(',');
+        const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(targetCodesParam)}`);
+        const data = await res.json();
+        
+        if (!data.success || !data.targets) {
+            console.warn('Could not validate targets, keeping all tasks');
+            return tasks;
+        }
+        
+        const validTasks = tasks.filter(task => {
+            const targetCode = task.TargetUserCode;
+            const targetData = data.targets[targetCode];
+            if (!targetData) return true;
+            
+            if (targetData.InSubscribersWork !== 'Yes') return false;
+            if (targetData.ViolationFlag === 'Suspended') return false;
+            if (targetData.Status === 'Blocked') return false;
+            if (targetData.SubscribersPromotionActive === 'No') return false;
+            return true;
+        });
+        
+        const removedCount = tasks.length - validTasks.length;
+        if (removedCount > 0) {
+            console.log(`🗑️ Removed ${removedCount} tasks with ineligible targets`);
+        }
+        
+        return validTasks;
+    } catch (e) {
+        console.warn('Task validation error:', e);
+        return tasks;
+    }
+}
+
+/* ────────────────────────────────────────
+   RECALCULATE STATS FROM TASKS
+──────────────────────────────────────── */
+function recalculateStats() {
+    const total = allTasks.length;
+    stats = {
+        total: total,
+        notWorkYet: allTasks.filter(t => t.Status === 'NotWorkYet').length,
+        pending: allTasks.filter(t => t.Status === 'Pending').length,
+        subscribed: allTasks.filter(t => t.Status === 'Subscribed').length,
+        unsubscribed: allTasks.filter(t => t.Status === 'Unsubscribed').length,
+        rejected: allTasks.filter(t => t.Status === 'Rejected').length
+    };
+    
+    let awaitingCount = 0;
+    let bothCount = 0;
+    let theirPendingCount = 0;
+    
+    allTasks.forEach(t => {
+        if (t.Status === 'Subscribed') {
+            if (t.PairedStatus === 'Subscribed') {
+                bothCount++;
+            } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+                theirPendingCount++;
+            } else {
+                awaitingCount++;
+            }
+        }
+    });
+    
+    exchangeStats = {
+        awaiting: awaitingCount,
+        both: bothCount,
+        theirPending: theirPendingCount
+    };
+}
+
+/* ────────────────────────────────────────
+   FETCH TASKS FROM SERVER
+──────────────────────────────────────── */
+async function fetchTasksFromServer(showLoader = true) {
+    if (showLoader) {
+        document.getElementById('taskList').innerHTML = `
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+        `;
+    }
+    
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
         const data = await res.json();
 
-        hideLoader();
+        if (showLoader) hideLoader();
 
         if (!data.success) {
             if (data.notEnrolled) {
@@ -1048,27 +1111,30 @@ async function init() {
             return;
         }
 
-        // ── SUCCESS: Member is active and enrolled ──
         member = data.member;
         perfStats = data.perfStats || null;
-        console.log('📊 PerfStats received:', perfStats);
         
-        allTasks = data.tasks || [];
-        totalTasks = data.totalTasks || 0;
-        totalPages = data.totalPages || 1;
-        currentPage = data.currentPage || 1;
+        let validatedTasks = data.tasks || [];
+        if (validatedTasks.length > 0) {
+            validatedTasks = await validateTasksWithServer(validatedTasks);
+        }
         
-        if (data.stats) {
+        allTasks = validatedTasks;
+        currentStatus = data.focusedStatus || 'NotWorkYet';
+        
+        if (data.fullStats) {
+            stats = data.fullStats;
+        } else if (data.stats) {
             stats = data.stats;
         }
         
-        if (data.priorityInfo) {
-            hasUnsub = data.priorityInfo.hasUnsub || false;
-            forcedTaskTab = data.priorityInfo.forcedTab || null;
-            
-            if (data.priorityInfo.unsubCount > 0) {
-                document.getElementById('unsubCount').textContent = data.priorityInfo.unsubCount;
-            }
+        if (data.exchangeStats) {
+            exchangeStats = data.exchangeStats;
+        }
+
+        hasUnsub = data.hasUnsub || false;
+        if (data.unsubCount > 0) {
+            document.getElementById('unsubCount').textContent = data.unsubCount;
         }
 
         if (data.channelNames) channelNameCache = data.channelNames;
@@ -1083,28 +1149,106 @@ async function init() {
             };
         }
 
+        saveTasksToCache(data);
+
         loadPreferenceOptions();
-        renderMember();
         checkBlock();
         checkUnsubscribed();
-        calcStats();
+        renderStats();
         renderLimitCard();
-        enforceTaskPriorityTabs();
-        applyFilter();
+        renderList();
+        updateStatusLabel();
 
         if (perfStats && perfStats.LimitReached === 'Yes') {
             setTimeout(showLimitReachedAlert, 800);
         }
 
     } catch (e) {
-        hideLoader();
-        clearSkeletons();
+        if (showLoader) {
+            hideLoader();
+            clearSkeletons();
+        }
         showToast('Could not connect to server.', true);
-        console.error('Init error:', e);
+        console.error('Fetch error:', e);
     }
 }
 
-/* ── STATUS PAGE HELPERS ── */
+/* ────────────────────────────────────────
+   BACKGROUND REFRESH - SILENT UPDATE
+──────────────────────────────────────── */
+async function refreshTasksInBackground() {
+    try {
+        console.log('🔄 Background refresh started...');
+        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
+        const data = await res.json();
+        
+        if (data.success) {
+            let validatedTasks = data.tasks || [];
+            if (validatedTasks.length > 0) {
+                validatedTasks = await validateTasksWithServer(validatedTasks);
+            }
+            
+            const oldTaskIds = new Set(allTasks.map(t => t.TaskID));
+            const newTaskIds = new Set(validatedTasks.map(t => t.TaskID));
+            
+            const removedTasks = allTasks.filter(t => !newTaskIds.has(t.TaskID));
+            if (removedTasks.length > 0) {
+                console.log(`🗑️ Background: ${removedTasks.length} tasks removed`);
+            }
+            
+            allTasks = validatedTasks;
+            currentStatus = data.focusedStatus || 'NotWorkYet';
+            
+            if (data.fullStats) stats = data.fullStats;
+            if (data.exchangeStats) exchangeStats = data.exchangeStats;
+            if (data.perfStats) perfStats = data.perfStats;
+            if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
+            if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+            if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
+            if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
+            
+            saveTasksToCache(data);
+            
+            checkBlock();
+            checkUnsubscribed();
+            renderStats();
+            renderLimitCard();
+            renderList();
+            updateStatusLabel();
+            
+            console.log('✅ Background refresh complete');
+        }
+    } catch (e) {
+        console.warn('Background refresh failed:', e);
+    }
+}
+
+/* ────────────────────────────────────────
+   REFRESH TASKS - User triggered
+──────────────────────────────────────── */
+async function refreshTasks() {
+    if (isLoading) return;
+    isLoading = true;
+
+    document.getElementById('taskList').innerHTML = `
+        <div class="skeleton h-[200px]"></div>
+        <div class="skeleton h-[200px]"></div>
+        <div class="skeleton h-[200px]"></div>
+    `;
+
+    try {
+        await fetchTasksFromServer(false);
+        showToast('✅ Tasks refreshed!');
+    } catch (e) {
+        showToast('Error loading tasks', true);
+    }
+
+    isLoading = false;
+}
+
+/* ────────────────────────────────────────
+   STATUS PAGE HELPERS
+──────────────────────────────────────── */
 
 function showNotEnrolled(message) {
     const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
@@ -1184,32 +1328,30 @@ function hideLoader() {
 }
 
 /* ────────────────────────────────────────
-   RENDER MEMBER
+   TOGGLE STATS PANEL
 ──────────────────────────────────────── */
-function renderMember() {
-    if (!member) return;
-    const pic  = member.ProfilePicture || 'https://i.pravatar.cc/100';
-    const name = member.UserName  || savedUsername || '—';
-    const code = member.UserCode  || savedUserCode || '—';
-
-    document.getElementById('sideAvatar').src = pic;
-    document.getElementById('sideName').textContent = name;
-    document.getElementById('sideCode').textContent = `ID #${code}`;
-
-    const st = member.Status || 'Active';
-    const stEl = document.getElementById('sideStatus');
-    stEl.textContent = st;
-    if (st === 'Active') {
-        stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-green-500/15 text-green-600 font-medium';
-    } else if (st === 'Suspended') {
-        stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-red-500/15 text-red-600 font-medium';
-    } else {
-        stEl.className = 'inline-block mt-1.5 text-xs px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-700 font-medium';
+function toggleStats() {
+    const panel = document.getElementById('statsPanel');
+    panel.classList.toggle('hidden');
+    if (!panel.classList.contains('hidden')) {
+        refreshStats();
     }
 }
 
 /* ────────────────────────────────────────
-   BLOCK CHECK
+   UPDATE STATUS LABEL
+──────────────────────────────────────── */
+function updateStatusLabel() {
+    const labelMap = {
+        'Unsubscribed': 'Unsubscribed (Action Required)',
+        'Pending': 'Pending (Waiting for Subscribe Back)',
+        'NotWorkYet': 'Not Started'
+    };
+    document.getElementById('statusLabel').textContent = labelMap[currentStatus] || currentStatus;
+}
+
+/* ────────────────────────────────────────
+   BLOCK CHECK - UPDATED
 ──────────────────────────────────────── */
 function checkBlock() {
     if (!member) return;
@@ -1220,7 +1362,13 @@ function checkBlock() {
     const msgEl = document.getElementById('blockedMsg');
     const createBtn = document.getElementById('createBtn');
 
-    if (suspended || disabled) {
+    const hasPendingTasks = allTasks.some(t => 
+        t.Status === 'NotWorkYet' || t.Status === 'Pending'
+    );
+
+    const shouldShowBanner = suspended || (disabled && !hasPendingTasks);
+
+    if (shouldShowBanner) {
         isBlocked = true;
         banner.classList.remove('hidden');
         
@@ -1231,12 +1379,12 @@ function checkBlock() {
                 createBtn.classList.add('opacity-40', 'cursor-not-allowed');
                 createBtn.title = 'Your account is suspended.';
             }
-        } else {
-            msgEl.textContent = '⚠️ Subscriber group promotion is currently disabled. To re-enable, complete your pending tasks (mark them as subscribed) or submit your subscription list via the Exsub Extension.';
+        } else if (disabled && !hasPendingTasks) {
+            msgEl.textContent = '⚠️ Subscriber group promotion is currently disabled. To re-enable, submit your subscription list via the Exsub Extension.';
             if (createBtn) {
                 createBtn.disabled = true;
                 createBtn.classList.add('opacity-40', 'cursor-not-allowed');
-                createBtn.title = 'Complete your pending tasks first to re-enable promotion.';
+                createBtn.title = 'Submit your subscription list to re-enable promotion.';
             }
         }
     } else {
@@ -1268,59 +1416,29 @@ function checkUnsubscribed() {
         btn.title = 'You must re-subscribe to your unsubscribed channels first.';
     } else {
         banner.classList.add('hidden');
+        const btn = document.getElementById('createBtn');
+        btn.disabled = false;
+        btn.classList.remove('opacity-40', 'cursor-not-allowed');
+        btn.title = '';
     }
 }
 
 /* ────────────────────────────────────────
-   STATS
+   RENDER STATS
 ──────────────────────────────────────── */
-function calcStats() {
-    // Use stats from server or calculate locally
-    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
-    
-    // If server stats available, use them
-    if (stats.total > 0) {
-        document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
-        document.getElementById('st-pending').textContent = stats.pending || 0;
-        document.getElementById('st-subscribed').textContent = stats.subscribed || 0;
-        document.getElementById('st-unsub').textContent = stats.unsubscribed || 0;
-        document.getElementById('st-rejected').textContent = stats.rejected || 0;
-        document.getElementById('st-total').textContent = stats.total || 0;
-    } else {
-        // Fallback: calculate locally
-        const notWorkYet = myTasks.filter(t => t.Status === 'NotWorkYet').length;
-        const pending = myTasks.filter(t => t.Status === 'Pending').length;
-        const subscribed = myTasks.filter(t => t.Status === 'Subscribed').length;
-        const unsubscribed = myTasks.filter(t => t.Status === 'Unsubscribed').length;
-        const rejected = myTasks.filter(t => t.Status === 'Rejected').length;
-        const total = myTasks.length;
-        
-        document.getElementById('st-nowork').textContent = notWorkYet;
-        document.getElementById('st-pending').textContent = pending;
-        document.getElementById('st-subscribed').textContent = subscribed;
-        document.getElementById('st-unsub').textContent = unsubscribed;
-        document.getElementById('st-rejected').textContent = rejected;
-        document.getElementById('st-total').textContent = total;
-    }
+function renderStats() {
+    document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
+    document.getElementById('st-pending').textContent = stats.pending || 0;
+    document.getElementById('st-subscribed').textContent = stats.subscribed || 0;
+    document.getElementById('st-unsub').textContent = stats.unsubscribed || 0;
+    document.getElementById('st-rejected').textContent = stats.rejected || 0;
+    document.getElementById('st-total').textContent = stats.total || 0;
 
-    // Exchange status counts
-    const awaitingCount = myTasks.filter(t =>
-        t.Status === 'Subscribed' && t.PairedStatus !== 'Subscribed'
-    ).length;
-    const bothCount = myTasks.filter(t =>
-        t.Status === 'Subscribed' && t.PairedStatus === 'Subscribed'
-    ).length;
-    const theirPendingCount = myTasks.filter(t =>
-        t.Status === 'Subscribed' && (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending')
-    ).length;
-
-    document.getElementById('st-awaiting').textContent = awaitingCount;
-    document.getElementById('st-both').textContent = bothCount;
-    document.getElementById('st-theirpending').textContent = theirPendingCount;
+    document.getElementById('st-awaiting').textContent = exchangeStats.awaiting || 0;
+    document.getElementById('st-both').textContent = exchangeStats.both || 0;
+    document.getElementById('st-theirpending').textContent = exchangeStats.theirPending || 0;
     
-    // Update showing count
     document.getElementById('showingCount').textContent = allTasks.length;
-    document.getElementById('totalCount').textContent = totalTasks || stats.total || 0;
 }
 
 /* ────────────────────────────────────────
@@ -1328,17 +1446,17 @@ function calcStats() {
 ──────────────────────────────────────── */
 async function refreshStats() {
     try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=${currentPage}&perPage=${PER_PAGE}`);
+        const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
         const data = await res.json();
         if (data.success && data.stats) {
             stats = data.stats;
-            totalTasks = data.totalTasks || 0;
-            totalPages = data.totalPages || 1;
-            if (data.perfStats) {
-                perfStats = data.perfStats;
-                renderLimitCard();
+            if (data.exchangeStats) {
+                exchangeStats = data.exchangeStats;
             }
-            calcStats();
+            renderStats();
+            
+            localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+            localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
         }
     } catch (e) {
         console.warn('Could not refresh stats:', e);
@@ -1346,11 +1464,9 @@ async function refreshStats() {
 }
 
 /* ────────────────────────────────────────
-   LIMIT CARD - FIXED
+   LIMIT CARD
 ──────────────────────────────────────── */
 function renderLimitCard() {
-    console.log('📊 Rendering limit card with perfStats:', perfStats);
-    
     const subscribedEl = document.getElementById('lim-subscribed');
     const limitEl = document.getElementById('lim-limit');
     const barEl = document.getElementById('lim-bar');
@@ -1358,7 +1474,6 @@ function renderLimitCard() {
     const verifyWrapEl = document.getElementById('lim-verify-wrap');
     
     if (!perfStats) {
-        console.warn('⚠️ No perfStats available');
         if (subscribedEl) subscribedEl.textContent = '—';
         if (limitEl) limitEl.textContent = '—';
         if (barEl) barEl.style.width = '0%';
@@ -1371,44 +1486,6 @@ function renderLimitCard() {
     const limit = parseInt(perfStats.SubscribersLimit) || 50;
     const reached = perfStats.LimitReached === 'Yes';
     const pct = Math.min(100, Math.round((subscribed / limit) * 100));
-
-    console.log(`📊 Subscribed: ${subscribed}, Limit: ${limit}, Reached: ${reached}, %: ${pct}`);
-
-    if (subscribedEl) subscribedEl.textContent = subscribed;
-    if (limitEl) limitEl.textContent = limit;
-    if (barEl) barEl.style.width = pct + '%';
-
-    if (reached) {
-        if (reachedRowEl) reachedRowEl.classList.remove('hidden');
-        if (verifyWrapEl) verifyWrapEl.classList.remove('hidden');
-        if (barEl) {
-            barEl.classList.add('bg-red-500');
-            barEl.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
-        }
-    } else {
-        if (reachedRowEl) reachedRowEl.classList.add('hidden');
-        if (verifyWrapEl) verifyWrapEl.classList.add('hidden');
-        if (barEl) {
-            barEl.classList.remove('bg-red-500');
-            barEl.classList.add('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
-        }
-    }
-}
-
-function renderLimitCardFromData(data) {
-    console.log('📊 Rendering limit card from data:', data);
-    if (!data) return;
-    
-    const subscribed = parseInt(data.TotalSubscribeChannels) || 0;
-    const limit = parseInt(data.SubscribersLimit) || 50;
-    const reached = data.LimitReached === 'Yes';
-    const pct = Math.min(100, Math.round((subscribed / limit) * 100));
-
-    const subscribedEl = document.getElementById('lim-subscribed');
-    const limitEl = document.getElementById('lim-limit');
-    const barEl = document.getElementById('lim-bar');
-    const reachedRowEl = document.getElementById('lim-reached-row');
-    const verifyWrapEl = document.getElementById('lim-verify-wrap');
 
     if (subscribedEl) subscribedEl.textContent = subscribed;
     if (limitEl) limitEl.textContent = limit;
@@ -1459,12 +1536,7 @@ async function showLimitReachedAlert() {
         denyButtonText: '📎 Open Extension',
         cancelButtonText: 'Close',
         reverseButtons: false,
-        allowOutsideClick: true,
-        customClass: {
-            popup: 'swal2-popup',
-            title: 'swal2-title',
-            htmlContainer: 'swal2-html-container',
-        }
+        allowOutsideClick: true
     });
 
     if (result.isConfirmed) {
@@ -1507,20 +1579,13 @@ async function doVerifySubscriptions() {
 
             if (data.updatedPerfStats) {
                 perfStats = data.updatedPerfStats;
-                renderLimitCardFromData(perfStats);
-            } else {
-                const refreshRes = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=${currentPage}&perPage=${PER_PAGE}`);
-                const refreshData = await refreshRes.json();
-                if (refreshData.success && refreshData.perfStats) {
-                    perfStats = refreshData.perfStats;
-                    renderLimitCard();
-                }
+                renderLimitCard();
             }
 
             checkUnsubscribed();
-            calcStats();
-            enforceTaskPriorityTabs();
-            applyFilter();
+            await refreshTasks();
+            renderStats();
+            renderList();
 
             const unsubFound = data.unsubscribedCount || 0;
             const verifiedSub = data.verifiedCount || 0;
@@ -1533,15 +1598,12 @@ async function doVerifySubscriptions() {
                             <p>✅ Verified subscribed: <strong style="color:#16a34a;">${verifiedSub}</strong></p>
                             <p>❌ Found unsubscribed: <strong style="color:#f87171;">${unsubFound}</strong></p>
                             <div style="margin-top:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
-                                You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed before you can continue working. These tasks are now pinned at the top.
+                                You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed before you can continue working.
                             </div>
                         </div>
                     `,
                     icon: 'warning',
-                    confirmButtonText: 'View Unsubscribed Tasks',
-                    customClass: { popup: 'swal2-popup' }
-                }).then(() => {
-                    setTab('Unsubscribed', document.querySelector('.filter-tab[data-tab="Unsubscribed"]'));
+                    confirmButtonText: 'OK'
                 });
             } else {
                 if (data.newLimit && perfStats) {
@@ -1560,17 +1622,17 @@ async function doVerifySubscriptions() {
                         </div>
                     `,
                     icon: 'success',
-                    confirmButtonText: 'Great!',
-                    customClass: { popup: 'swal2-popup' }
+                    confirmButtonText: 'Great!'
                 });
             }
+            
+            await refreshTasks();
         } else {
             Swal.fire({
                 title: 'Verification Failed',
                 html: `<p style="color:#4b5563;font-size:14px;">${data.message || 'Could not verify subscriptions. Please make sure you have submitted your subscription list via the Exsub Extension.'}</p>`,
                 icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: { popup: 'swal2-popup' }
+                confirmButtonText: 'OK'
             });
         }
     } catch (e) {
@@ -1578,182 +1640,34 @@ async function doVerifySubscriptions() {
             title: 'Connection Error',
             html: '<p style="color:#4b5563;font-size:14px;">Could not reach the server. Please try again.</p>',
             icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: { popup: 'swal2-popup' }
+            confirmButtonText: 'OK'
         });
     }
 }
 
 /* ────────────────────────────────────────
-   FILTER + SEARCH
-──────────────────────────────────────── */
-function enforceTaskPriorityTabs() {
-    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
-    const hasUnsubTasks = myTasks.some(t => t.Status === 'Unsubscribed');
-    const hasPendingTasks = myTasks.some(t => t.Status === 'Pending');
-
-    const previousForcedTab = forcedTaskTab;
-    forcedTaskTab = hasUnsubTasks ? 'Unsubscribed' : (hasPendingTasks ? 'Pending' : null);
-    if (!forcedTaskTab && previousForcedTab) {
-        activeTab = 'All';
-        currentPage = 1;
-    }
-
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-        const tabName = tab.dataset.tab;
-        const shouldDisable = !!forcedTaskTab && tabName !== forcedTaskTab;
-        tab.disabled = shouldDisable;
-        tab.classList.toggle('active', tabName === (forcedTaskTab || activeTab));
-        if (shouldDisable) {
-            tab.title = forcedTaskTab === 'Unsubscribed'
-                ? 'Complete unsubscribed tasks first.'
-                : 'Complete pending subscribe-back tasks first.';
-        } else {
-            tab.removeAttribute('title');
-        }
-    });
-
-    if (forcedTaskTab) {
-        activeTab = forcedTaskTab;
-        currentPage = 1;
-    }
-}
-
-function setTab(tab, btn) {
-    if (forcedTaskTab && tab !== forcedTaskTab) return;
-    activeTab = tab;
-    currentPage = 1;
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    applyFilter();
-}
-
-function applyFilter() {
-    enforceTaskPriorityTabs();
-
-    let base = allTasks.filter(t => {
-        if (t.UserCode !== USER_CODE) return false;
-
-        const tabMatch =
-            activeTab === 'All' ? true :
-            activeTab === 'NotWorkYet' ? t.Status === 'NotWorkYet' :
-            activeTab === 'Pending' ? t.Status === 'Pending' :
-            activeTab === 'Subscribed' ? t.Status === 'Subscribed' :
-            activeTab === 'Unsubscribed' ? t.Status === 'Unsubscribed' :
-            activeTab === 'Rejected' ? t.Status === 'Rejected' :
-            true;
-
-        return tabMatch;
-    });
-
-    const ORDER = { 'Unsubscribed': 0, 'Pending': 1, 'NotWorkYet': 2, 'Subscribed': 3, 'Rejected': 4 };
-    base.sort((a, b) => {
-        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
-    });
-
-    filtered = base;
-    currentPage = 1;
-    renderList();
-}
-
-/* ────────────────────────────────────────
-   RENDER LIST (NO TAB COUNTS)
+   RENDER LIST
 ──────────────────────────────────────── */
 function renderList() {
     const list = document.getElementById('taskList');
     const empty = document.getElementById('emptyState');
-    const pages = document.getElementById('paginationBar');
 
-    const tasksToShow = filtered.length > 0 ? filtered : allTasks;
-
-    if (tasksToShow.length === 0) {
+    if (allTasks.length === 0) {
         list.innerHTML = '';
         empty.classList.remove('hidden');
-        pages.classList.add('hidden');
         document.getElementById('showingCount').textContent = '0';
         return;
     }
 
     empty.classList.add('hidden');
 
-    const unsubCount = tasksToShow.filter(t => t.Status === 'Unsubscribed').length;
-    const pendingCount = tasksToShow.filter(t => t.Status === 'Pending').length;
-    
-    let priorityHtml = '';
-    if (unsubCount > 0) {
-        priorityHtml = `<div class="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-2xl text-sm text-red-600">
-            ⚠️ <strong>${unsubCount}</strong> unsubscribed task(s) — re-subscribe to these channels first!
-        </div>`;
-    } else if (pendingCount > 0) {
-        priorityHtml = `<div class="mb-4 p-3 bg-orange-500/10 border border-orange-500/30 rounded-2xl text-sm text-orange-600">
-            ⏳ <strong>${pendingCount}</strong> pending task(s) — complete these before creating new ones.
-        </div>`;
-    }
+    const ORDER = { 'Unsubscribed': 0, 'Pending': 1, 'NotWorkYet': 2, 'Subscribed': 3, 'Rejected': 4 };
+    const sorted = [...allTasks].sort((a, b) => {
+        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
+    });
 
-    list.innerHTML = priorityHtml + tasksToShow.map(taskCard).join('');
-
-    // Pagination
-    if (totalTasks > PER_PAGE) {
-        pages.classList.remove('hidden');
-        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
-        document.getElementById('prevBtn').disabled = currentPage === 1;
-        document.getElementById('nextBtn').disabled = currentPage === totalPages;
-    } else {
-        pages.classList.add('hidden');
-    }
-
-    document.getElementById('showingCount').textContent = tasksToShow.length;
-    document.getElementById('totalCount').textContent = totalTasks || stats.total || 0;
-}
-
-function changePage(delta) {
-    const newPage = currentPage + delta;
-    if (newPage < 1 || newPage > totalPages) return;
-    loadPage(newPage);
-}
-
-/* ────────────────────────────────────────
-   LOAD PAGE
-──────────────────────────────────────── */
-async function loadPage(page) {
-    if (isLoading) return;
-    isLoading = true;
-
-    document.getElementById('taskList').innerHTML = `
-        <div class="skeleton h-[200px]"></div>
-        <div class="skeleton h-[200px]"></div>
-        <div class="skeleton h-[200px]"></div>
-    `;
-
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=${page}&perPage=${PER_PAGE}`);
-        const data = await res.json();
-
-        if (data.success) {
-            allTasks = data.tasks || [];
-            currentPage = data.currentPage || page;
-            totalPages = data.totalPages || 1;
-            totalTasks = data.totalTasks || 0;
-            
-            if (data.stats) {
-                stats = data.stats;
-                calcStats();
-            }
-            
-            if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
-            if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
-            if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
-            if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
-
-            checkUnsubscribed();
-            calcStats();
-            applyFilter();
-        }
-    } catch (e) {
-        showToast('Error loading page', true);
-    }
-
-    isLoading = false;
+    list.innerHTML = sorted.map(taskCard).join('');
+    document.getElementById('showingCount').textContent = sorted.length;
 }
 
 function clearSkeletons() {
@@ -2022,6 +1936,9 @@ function taskCard(t) {
    VIEW WATCHING PROOF
 ──────────────────────────────────────── */
 async function viewWatchingProof(taskId, targetUserCode, btnEl) {
+    const validation = await validateTaskBeforeAction(taskId, 'View Proof');
+    if (!validation.valid) return;
+    
     const modal = document.getElementById('proofModal');
     const content = document.getElementById('proofModalContent');
     
@@ -2085,34 +2002,27 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
             let screenshotHtml = '';
             if (isValidImageUrl) {
                 const imgId = `screenshot-${taskId}-${index}`;
-                const isDriveLink = proofUrl.includes('drive.google.com');
-                const displayUrl = proofUrl;
                 
                 screenshotHtml = `
                     <div class="mt-3 bg-gray-50 rounded-xl p-2 border border-[#211F1F]/10">
                         <img id="${imgId}" 
-                            src="${displayUrl}" 
+                            src="${proofUrl}" 
                             alt="Screenshot" 
                             class="proof-screenshot w-full rounded-lg border-2 border-[#211F1F]/15 max-h-[400px] object-contain cursor-pointer"
-                            onclick="window.open('${displayUrl}', '_blank')"
-                            onload="console.log('✅ Screenshot loaded: ${displayUrl}')"
-                            onerror="console.log('❌ Screenshot failed to load'); 
-                                    document.getElementById('${imgId}').style.display='none'; 
-                                    document.getElementById('${imgId}-error').style.display='block';">
+                            onclick="window.open('${proofUrl}', '_blank')"
+                            onerror="document.getElementById('${imgId}').style.display='none'; document.getElementById('${imgId}-error').style.display='block'">
                         <div id="${imgId}-error" style="display:none;" class="text-center py-4">
                             <p class="text-xs text-muted mt-1">Open Image Proof</p>
-                            <button onclick="window.open('${displayUrl}', '_blank')" class="mt-2 btn-outline px-3 py-1 rounded-lg text-xs">
+                            <button onclick="window.open('${proofUrl}', '_blank')" class="mt-2 btn-outline px-3 py-1 rounded-lg text-xs">
                                 🔗 Open Image Directly
                             </button>
                         </div>
-                        ${isDriveLink ? `<p class="text-xs text-blue-500 mt-1 text-center">📁 Google Drive Image</p>` : ''}
                     </div>
                 `;
             } else {
                 screenshotHtml = `
                     <div class="mt-3 bg-yellow-50 rounded-xl p-4 border border-yellow-200 text-center">
                         <p class="text-xs text-yellow-700">📷 No screenshot available for this proof</p>
-                        ${proofUrl ? `<p class="text-xs text-muted mt-1">Screenshot data: ${proofUrl.substring(0, 50)}...</p>` : ''}
                     </div>
                 `;
             }
@@ -2196,6 +2106,15 @@ function closeProofModal() {
    MARK SUBSCRIBED
 ──────────────────────────────────────── */
 async function doMarkSubscribed(taskId, btnEl) {
+    const validation = await validateTaskBeforeAction(taskId, 'Mark Subscribed');
+    if (!validation.valid) {
+        if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = '✓ Mark Subscribed';
+        }
+        return;
+    }
+    
     if (hasUnsub) {
         showToast('You must resolve your unsubscribed tasks first.', true);
         return;
@@ -2234,9 +2153,17 @@ async function doMarkSubscribed(taskId, btnEl) {
                 myTask.PairedStatus = data.pairedStatus || (data.bothSubscribed ? 'Subscribed' : 'NotWorkYet');
             }
             showToast(data.bothSubscribed ? '🎉 Both subscribed! Exchange complete!' : '✅ Task marked as Subscribed!');
-            await refreshStats();
-            calcStats();
-            applyFilter();
+            
+            const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
+            const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+            if (cachedIndex !== -1) {
+                cachedTasks[cachedIndex] = myTask || cachedTasks[cachedIndex];
+                localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+            }
+            
+            await refreshTasks();
+            renderStats();
+            renderList();
         } else if (data.proofMissing) {
             Swal.fire({
                 icon: 'warning',
@@ -2257,15 +2184,8 @@ async function doMarkSubscribed(taskId, btnEl) {
                     </div>
                 `,
                 confirmButtonText: 'Got It',
-                confirmButtonColor: '#211F1F',
                 allowOutsideClick: false,
-                allowEscapeKey: false,
-                customClass: {
-                    popup: 'swal2-popup',
-                    title: 'swal2-title',
-                    htmlContainer: 'swal2-html-container',
-                    confirmButton: 'swal2-confirm'
-                }
+                allowEscapeKey: false
             });
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
@@ -2305,15 +2225,8 @@ async function doMarkSubscribed(taskId, btnEl) {
                         </div>
                     `,
                     confirmButtonText: 'Close',
-                    confirmButtonColor: '#211F1F',
                     allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    customClass: {
-                        popup: 'swal2-popup',
-                        title: 'swal2-title',
-                        htmlContainer: 'swal2-html-container',
-                        confirmButton: 'swal2-confirm'
-                    }
+                    allowEscapeKey: false
                 });
             } else {
                 showToast(data.message || 'Update failed.', true);
@@ -2331,9 +2244,11 @@ async function doMarkSubscribed(taskId, btnEl) {
 /* ────────────────────────────────────────
    DETAIL MODAL
 ──────────────────────────────────────── */
-function openDetail(taskId) {
-    const t = allTasks.find(x => x.TaskID === taskId);
-    if (!t) return;
+async function openDetail(taskId) {
+    const validation = await validateTaskBeforeAction(taskId, 'View Details');
+    if (!validation.valid) return;
+    
+    const t = validation.task;
 
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', label: t.Status };
     const chanId = getChannelId(t);
@@ -2607,10 +2522,26 @@ async function doCreateTasks() {
                 if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
                 if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
                 if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
-                await refreshStats();
-                calcStats();
-                enforceTaskPriorityTabs();
-                applyFilter();
+                
+                const tempData = {
+                    tasks: allTasks,
+                    fullStats: stats,
+                    exchangeStats: exchangeStats,
+                    perfStats: perfStats,
+                    focusedStatus: currentStatus,
+                    hasUnsub: hasUnsub,
+                    unsubCount: parseInt(localStorage.getItem('subscriber_tasks_unsubCount')) || 0,
+                    member: member,
+                    channelNames: channelNameCache,
+                    channelHandles: channelHandleCache,
+                    channelImages: channelImageCache,
+                    channelIds: channelIdCache
+                };
+                saveTasksToCache(tempData);
+                
+                await refreshTasks();
+                renderStats();
+                renderList();
             }
             showToast(`${data.created} task(s) created!`);
         } else {
@@ -2635,7 +2566,12 @@ async function doCreateTasks() {
 ──────────────────────────────────────── */
 let selectedIssuePill = '';
 
-function openIssueModal(taskId) {
+async function openIssueModal(taskId) {
+    const validation = await validateTaskBeforeAction(taskId, 'Report Issue');
+    if (!validation.valid) return;
+    
+    const t = validation.task;
+    
     selectedIssuePill = '';
     document.getElementById('issueTaskId').value = taskId;
     document.getElementById('issueCustomText').value = '';
@@ -2643,7 +2579,6 @@ function openIssueModal(taskId) {
     document.getElementById('issueResultBox').classList.add('hidden');
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
 
-    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
     if (t && t.Issue) {
         document.getElementById('issueCustomText').value = t.Issue;
     }
@@ -2711,7 +2646,15 @@ async function doSubmitIssue() {
             box.className = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             task.Issue = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
             showToast('Issue reported successfully.');
-            applyFilter();
+            renderList();
+            
+            const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
+            const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+            if (cachedIndex !== -1) {
+                cachedTasks[cachedIndex] = task;
+                localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+            }
+            
             setTimeout(closeIssueModal, 1600);
         } else {
             box.textContent = data.message || 'Could not submit issue.';
@@ -2725,6 +2668,5 @@ async function doSubmitIssue() {
     btn.disabled = false;
 }
 </script>
-
 </body>
 </html>
