@@ -7,7 +7,6 @@ class SessionManager {
     constructor() {
         this.SESSION_KEY = 'sessionData';
         this.USER_CODE_KEY = 'usercode';
-        this.USERNAME_KEY = 'username';
         // This should point to your NAVBAR INFO SCRIPT (with getSetting and getProfileContext)
         this.GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxb3qFF-Zg-cU2fPWrIsYL_VPrfZj-pQ_4iodtffBfkw8u52qEWpX1CMP9H_l_mn7Ahw/exec";
         this.SESSION_DURATION_HOURS = 12;
@@ -18,8 +17,8 @@ class SessionManager {
         this.redirectInProgress = false;
 
         // TEST MODE: Set to true for 5-minute testing, false for production
-this.TEST_MODE = false;
-this.TEST_DURATION_MINUTES = 5;
+        this.TEST_MODE = false;
+        this.TEST_DURATION_MINUTES = 5;
     }
 
     async fetchSessionDuration() {
@@ -56,37 +55,39 @@ this.TEST_DURATION_MINUTES = 5;
         }
     }
 
-  createSession(userCode, username) {
-    let expiresAt;
-    
-    // TEST MODE: Use 5 minutes
-    if (this.TEST_MODE) {
-        expiresAt = Date.now() + (this.TEST_DURATION_MINUTES * 60 * 1000);
-        console.log(`⚠️ TEST MODE: Session will expire in ${this.TEST_DURATION_MINUTES} minutes`);
-    } else {
-        // Use the session duration from sheet
-        expiresAt = Date.now() + this.SESSION_DURATION_MS;
+    createSession(userCode, username) {
+        let expiresAt;
+        
+        // TEST MODE: Use 5 minutes
+        if (this.TEST_MODE) {
+            expiresAt = Date.now() + (this.TEST_DURATION_MINUTES * 60 * 1000);
+            console.log(`⚠️ TEST MODE: Session will expire in ${this.TEST_DURATION_MINUTES} minutes`);
+        } else {
+            // Use the session duration from sheet
+            expiresAt = Date.now() + this.SESSION_DURATION_MS;
+        }
+        
+        const sessionData = {
+            userCode: userCode,
+            username: username,
+            loginTime: Date.now(),
+            expiresAt: expiresAt,
+            sessionId: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
+        };
+        
+        localStorage.setItem(this.SESSION_KEY, JSON.stringify(sessionData));
+        localStorage.setItem(this.USER_CODE_KEY, userCode);
+        // Store username in session-specific key, NOT the main 'username' key
+        localStorage.setItem('session_username', username);
+        console.log('Session created, expires at:', new Date(sessionData.expiresAt));
+        if (this.TEST_MODE) {
+            console.log(`⚠️ TEST MODE: ${this.TEST_DURATION_MINUTES} minute expiry`);
+        } else {
+            console.log('Session duration:', this.SESSION_DURATION_HOURS, 'hours');
+        }
+        return sessionData;
     }
-    
-    const sessionData = {
-        userCode: userCode,
-        username: username,
-        loginTime: Date.now(),
-        expiresAt: expiresAt,
-        sessionId: 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
-    };
-    
-    localStorage.setItem(this.SESSION_KEY, JSON.stringify(sessionData));
-    localStorage.setItem(this.USER_CODE_KEY, userCode);
-    localStorage.setItem(this.USERNAME_KEY, username);
-    console.log('Session created, expires at:', new Date(sessionData.expiresAt));
-    if (this.TEST_MODE) {
-        console.log(`⚠️ TEST MODE: ${this.TEST_DURATION_MINUTES} minute expiry`);
-    } else {
-        console.log('Session duration:', this.SESSION_DURATION_HOURS, 'hours');
-    }
-    return sessionData;
-}
+
     validateSession() {
         const sessionData = this.getSessionData();
         
@@ -129,11 +130,22 @@ this.TEST_DURATION_MINUTES = 5;
     }
 
     clearSession() {
+        // ONLY clear session data - KEEP the saved credentials
         localStorage.removeItem(this.SESSION_KEY);
         localStorage.removeItem(this.USER_CODE_KEY);
-        localStorage.removeItem(this.USERNAME_KEY);
+        localStorage.removeItem('session_username');
+        // DO NOT remove 'username' and 'password' - these are for "Remember Me"
+        console.log('Session cleared (credentials preserved for Remember Me)');
+    }
+
+    // This method is for COMPLETE logout - clears everything
+    clearAll() {
+        localStorage.removeItem(this.SESSION_KEY);
+        localStorage.removeItem(this.USER_CODE_KEY);
+        localStorage.removeItem('session_username');
+        localStorage.removeItem('username');
         localStorage.removeItem('password');
-        console.log('Session cleared');
+        console.log('All session data and credentials cleared');
     }
 
     getTimeRemaining() {
@@ -158,85 +170,88 @@ this.TEST_DURATION_MINUTES = 5;
         };
     }
 
-  async init() {
-    if (this.isInitialized) return this;
-    
-    const currentPage = window.location.pathname.split('/').pop() || '';
-    this.isLoginPage = currentPage === 'signin.html' || currentPage === '';
-    
-    if (this.isLoginPage) {
-        console.log('On login page, skipping session validation');
-        this.isInitialized = true;
-        return this;
-    }
-    
-    // Only fetch session duration if not in test mode
-    if (!this.TEST_MODE) {
-        await this.fetchSessionDuration();
-    } else {
-        console.log('⚠️ TEST MODE: Using 5 minute session duration');
-    }
-    
-    const validation = this.validateSession();
-    
-    if (!validation.valid && !this.redirectInProgress) {
-        console.log('Session invalid, redirecting to login...');
-        this.redirectInProgress = true;
-        this.clearSession();
-        setTimeout(() => {
-            window.location.href = 'signin.html';
-        }, 100);
-        return this;
-    } else if (validation.valid) {
-        console.log(`Session valid. Expires at:`, new Date(validation.sessionData.expiresAt));
-        this.isInitialized = true;
-        this.startSessionCheck();
-    }
-    
-    return this;
-}
-   startSessionCheck() {
-    if (this.sessionCheckInterval) {
-        clearInterval(this.sessionCheckInterval);
-    }
-    
-    // Check every 10 seconds for test mode, 60 seconds for production
-    const checkInterval = this.TEST_MODE ? 10000 : 60000;
-    
-    this.sessionCheckInterval = setInterval(() => {
-        if (this.isLoginPage) return;
+    async init() {
+        if (this.isInitialized) return this;
+        
+        const currentPage = window.location.pathname.split('/').pop() || '';
+        this.isLoginPage = currentPage === 'signin.html' || currentPage === '';
+        
+        if (this.isLoginPage) {
+            console.log('On login page, skipping session validation');
+            this.isInitialized = true;
+            return this;
+        }
+        
+        // Only fetch session duration if not in test mode
+        if (!this.TEST_MODE) {
+            await this.fetchSessionDuration();
+        } else {
+            console.log('⚠️ TEST MODE: Using 5 minute session duration');
+        }
         
         const validation = this.validateSession();
         
         if (!validation.valid && !this.redirectInProgress) {
-            console.log('Session expired during periodic check');
+            console.log('Session invalid, redirecting to login...');
             this.redirectInProgress = true;
+            // Clear session but keep credentials
             this.clearSession();
-            
-            if (window.showToast) {
-                window.showToast('Your session has expired. Please log in again.', 'warning');
-            }
-            
             setTimeout(() => {
                 window.location.href = 'signin.html';
-            }, 2000);
-            return;
+            }, 100);
+            return this;
+        } else if (validation.valid) {
+            console.log(`Session valid. Expires at:`, new Date(validation.sessionData.expiresAt));
+            this.isInitialized = true;
+            this.startSessionCheck();
         }
         
-        // Check if session is about to expire (30 seconds or less)
-        if (validation.sessionData) {
-            const timeRemaining = validation.sessionData.expiresAt - Date.now();
-            if (timeRemaining <= 30000 && timeRemaining > 0) {
-                const seconds = Math.floor(timeRemaining / 1000);
-                console.log(`Session expiring in ${seconds} seconds`);
+        return this;
+    }
+
+    startSessionCheck() {
+        if (this.sessionCheckInterval) {
+            clearInterval(this.sessionCheckInterval);
+        }
+        
+        // Check every 10 seconds for test mode, 60 seconds for production
+        const checkInterval = this.TEST_MODE ? 10000 : 60000;
+        
+        this.sessionCheckInterval = setInterval(() => {
+            if (this.isLoginPage) return;
+            
+            const validation = this.validateSession();
+            
+            if (!validation.valid && !this.redirectInProgress) {
+                console.log('Session expired during periodic check');
+                this.redirectInProgress = true;
+                // Clear session but keep credentials
+                this.clearSession();
                 
-                if (window.showToast && timeRemaining <= 10000) {
-                    window.showToast(`Session expires in ${seconds} seconds`, 'warning');
+                if (window.showToast) {
+                    window.showToast('Your session has expired. Please log in again.', 'warning');
+                }
+                
+                setTimeout(() => {
+                    window.location.href = 'signin.html';
+                }, 2000);
+                return;
+            }
+            
+            // Check if session is about to expire (30 seconds or less)
+            if (validation.sessionData) {
+                const timeRemaining = validation.sessionData.expiresAt - Date.now();
+                if (timeRemaining <= 30000 && timeRemaining > 0) {
+                    const seconds = Math.floor(timeRemaining / 1000);
+                    console.log(`Session expiring in ${seconds} seconds`);
+                    
+                    if (window.showToast && timeRemaining <= 10000) {
+                        window.showToast(`Session expires in ${seconds} seconds`, 'warning');
+                    }
                 }
             }
-        }
-    }, checkInterval);
-}
+        }, checkInterval);
+    }
 
     stopSessionCheck() {
         if (this.sessionCheckInterval) {

@@ -274,6 +274,8 @@ function showBannedAlert() {
 }
 
 /* ===== AUTO LOGIN ===== */
+
+/* ===== AUTO LOGIN ===== */
 window.addEventListener("load", async () => {
   const savedUsername = localStorage.getItem("username");
   const savedPassword = localStorage.getItem("password");
@@ -281,7 +283,19 @@ window.addEventListener("load", async () => {
   if (savedUsername) usernameInput.value = savedUsername;
   if (savedPassword) passwordInput.value = savedPassword;
 
+  // Check if "Remember Me" was checked by checking if both exist
   if (savedUsername && savedPassword) {
+    // Check if there's a valid session first
+    if (typeof sessionManager !== 'undefined' && sessionManager) {
+      const validation = sessionManager.validateSession();
+      if (validation.valid) {
+        // Session is valid, redirect to dashboard
+        window.location.href = "analytics.html";
+        return;
+      }
+    }
+
+    // No valid session, try to auto-login
     try {
       const response = await fetch(WEB_APP_URL, {
         method: "POST",
@@ -298,12 +312,16 @@ window.addEventListener("load", async () => {
           }
           window.location.href = "analytics.html";
         } else {
+          // Account is banned, clear everything
           clearSession();
+          localStorage.removeItem('username');
+          localStorage.removeItem('password');
           showBannedAlert();
         }
       } else {
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
+        // Login failed, clear credentials
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
       }
     } catch (error) {
       console.log("Auto login failed:", error);

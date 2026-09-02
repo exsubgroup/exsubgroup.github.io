@@ -294,12 +294,41 @@ function initNavbar() {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function(e) {
       e.preventDefault();
-      // Clear session
+      
+      // ONLY clear session data - KEEP the saved credentials (username/password)
       if (typeof sessionManager !== 'undefined' && sessionManager) {
+        // Use clearSession() which only removes session data, not credentials
         sessionManager.clearSession();
+      } else {
+        // Fallback: only remove session-related items
+        localStorage.removeItem('sessionData');
+        localStorage.removeItem('usercode');
+        // DO NOT remove 'username' and 'password' - these are for "Remember Me"
       }
-      // Also clear localStorage
-      localStorage.clear();
+      
+      // Clear member data but KEEP username and password for Remember Me
+      localStorage.removeItem('memberData');
+      localStorage.removeItem('status');
+      localStorage.removeItem('profilePicture');
+      localStorage.removeItem('bio');
+      localStorage.removeItem('whatsappNumber');
+      localStorage.removeItem('facebookId');
+      localStorage.removeItem('dateOfJoin');
+      localStorage.removeItem('country');
+      localStorage.removeItem('accountCompleted');
+      localStorage.removeItem('inSubscribersWork');
+      localStorage.removeItem('inVideoTaskWork');
+      localStorage.removeItem('inWatchtimeWork');
+      localStorage.removeItem('inLikeAndCommentWork');
+      localStorage.removeItem('subscribersPromotionActive');
+      localStorage.removeItem('videoPromotionActive');
+      localStorage.removeItem('playlistPromotionActive');
+      localStorage.removeItem('engagementPromotionActive');
+      localStorage.removeItem('violationFlag');
+      localStorage.removeItem('violationReason');
+      localStorage.removeItem('suspendedUntil');
+      
+      // Redirect to login page
       window.location.href = "signin.html";
     });
   }

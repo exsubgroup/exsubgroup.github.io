@@ -503,7 +503,7 @@
 /* =========================================================
    AUTH CHECK + NAVBAR POPULATE
 ========================================================= */
-var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
+var usercode = (localStorage.getItem("usercode") || "").trim();
 var username = localStorage.getItem("username") || "";
 var userpassword = localStorage.getItem("password") || "";
 
@@ -516,7 +516,7 @@ if (!usercode || !username || !userpassword) {
 /* =========================================================
    GROUPS BACKEND WIRING
 ========================================================= */
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyq83KiikmdHVNvel5YvPzG8ahtSfnZoz3wDtzeRndRqbhJ2ZzuRdZueF8_8CfQ-NK9/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxTPnd47PBeK-fjqv_FtMknqNzFfbGLBSQjPZrhnAl_dU4BrN60-DUAE8vhtIF4icum/exec";
 
 const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement", "shorts", "adwatching"];
 

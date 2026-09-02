@@ -24,6 +24,78 @@
     --playlist-orange: #f59e0b;
 }
 
+/* ── Not Enrolled Banner ── */
+.not-enrolled-banner {
+  background: #F5F4EB;
+  border: 3px solid #211F1F;
+  border-radius: 24px;
+  box-shadow: 8px 8px 0px 0px #211F1F;
+  padding: 48px 32px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.not-enrolled-banner .banner-icon {
+  font-size: 72px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.not-enrolled-banner .banner-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #211F1F;
+  margin-bottom: 12px;
+}
+
+.not-enrolled-banner .banner-desc {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto 24px;
+}
+
+.not-enrolled-banner .banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 36px;
+  background: #ACD1C0;
+  color: #211F1F;
+  border: 2px solid #211F1F;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  box-shadow: 4px 4px 0px 0px #211F1F;
+  font-family: 'Inter', sans-serif;
+}
+
+.not-enrolled-banner .banner-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #211F1F;
+}
+
+.not-enrolled-banner .banner-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #211F1F;
+}
+
+.not-enrolled-banner .banner-hint {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.not-enrolled-banner .banner-hint strong {
+  color: #211F1F;
+}
+
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
@@ -517,9 +589,9 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     border-radius: 999px;
     transition: width 0.4s ease;
 }
-.progress-bar-mini .fill.ok { background: #16a34a; }      /* 90%+ */
-.progress-bar-mini .fill.partial { background: #f59e0b; } /* 1% - 89% */
-.progress-bar-mini .fill.fail { background: #ef4444; }    /* 0% */
+.progress-bar-mini .fill.ok { background: #16a34a; }
+.progress-bar-mini .fill.partial { background: #f59e0b; }
+.progress-bar-mini .fill.fail { background: #ef4444; }
 
 .playlist-name-display {
     font-size: 15px;
@@ -531,7 +603,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     flex-wrap: wrap;
 }
 
-/* Preference Pills */
 .pref-pill {
     display: inline-flex;
     padding: 6px 14px;
@@ -595,184 +666,226 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-6">
+    <!-- MAIN CONTAINER -->
+    <div id="mainContainer">
+        
+        <!-- STATUS MESSAGE (Not Enrolled, Not Active, Suspended, Not Found) -->
+        <div id="statusMessage" class="hidden"></div>
 
-    <!-- SIDEBAR - PROFILE CARD REMOVED -->
-    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
+        <!-- DASHBOARD -->
+        <div id="dashContent" class="hidden">
 
-        <!-- TASK STATS ONLY -->
-        <div class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-4">📊 My Playlist Stats</h2>
-            <div class="space-y-3 text-sm">
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
-                    <span id="st-nowork" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
-                    <span id="st-pending" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
-                    <span id="st-watched" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
-                    <span id="st-cheating" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
-                    <span id="st-rejected" class="font-bold">—</span>
-                </div>
-                <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
-                    <span class="text-muted">Total Tasks</span>
-                    <span id="st-total" class="font-bold text-purple-700">—</span>
-                </div>
-            </div>
+            <div class="flex flex-col lg:flex-row gap-6">
 
-            <!-- Exchange status counts -->
-            <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
-                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Their Watch</span>
-                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
-                    <span id="st-both" class="font-bold text-teal-600">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
-                </div>
-            </div>
-        </div>
+            <!-- SIDEBAR -->
+            <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
 
-    </aside>
+                <!-- TASK STATS ONLY -->
+                <div class="card rounded-3xl p-5">
+                    <h2 class="font-semibold text-base mb-4">📊 My Playlist Stats</h2>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
+                            <span id="st-nowork" class="font-bold">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                            <span id="st-pending" class="font-bold">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
+                            <span id="st-watched" class="font-bold">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
+                            <span id="st-cheating" class="font-bold">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
+                            <span id="st-rejected" class="font-bold">—</span>
+                        </div>
+                        <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
+                            <span class="text-muted">Total Tasks</span>
+                            <span id="st-total" class="font-bold text-purple-700">—</span>
+                        </div>
+                    </div>
 
-    <!-- CONTENT -->
-    <main class="flex-1 min-w-0">
-
-        <!-- BLOCKED BANNER -->
-        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0" id="blockedIcon">🚫</div>
-                <div>
-                    <h3 class="font-semibold text-red-600 mb-1" id="blockedTitle">Group Access Restricted</h3>
-                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Playlist Group.</p>
+                    <!-- Exchange status counts -->
+                    <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
+                        <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Their Watch</span>
+                            <span id="st-awaiting" class="font-bold text-blue-600">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
+                            <span id="st-both" class="font-bold text-teal-600">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
+                            <span id="st-theirpending" class="font-bold text-orange-600">—</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- CHEATING WARNING BANNER -->
-        <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-red-600 mb-1">You Have Cheating Flags!</h3>
-                    <p class="text-red-600/80 text-sm leading-relaxed mb-3">
-                        You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged as cheating.
-                        You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
-                        These tasks are pinned at the top.
-                    </p>
-                    <div class="flex gap-3 flex-wrap">
-                        <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
-                            class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
-                            View Cheating Tasks
+            </aside>
+
+            <!-- CONTENT -->
+            <main class="flex-1 min-w-0">
+
+                <!-- BLOCKED BANNER -->
+                <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0" id="blockedIcon">🚫</div>
+                        <div>
+                            <h3 class="font-semibold text-red-600 mb-1" id="blockedTitle">Group Access Restricted</h3>
+                            <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Playlist Group.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHEATING WARNING BANNER -->
+                <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-red-600 mb-1">You Have Cheating Flags!</h3>
+                            <p class="text-red-600/80 text-sm leading-relaxed mb-3">
+                                You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged as cheating.
+                                You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
+                                These tasks are pinned at the top.
+                            </p>
+                            <div class="flex gap-3 flex-wrap">
+                                <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
+                                    class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+                                    View Cheating Tasks
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROMOTION DISABLED BANNER -->
+                <div id="promotionDisabledBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fffbeb;border:2px solid #f59e0b;box-shadow:4px 4px 0px 0px #f59e0b;">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-orange-500/20 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-orange-600 mb-1">Playlist Promotion Disabled</h3>
+                            <p class="text-orange-600/80 text-sm leading-relaxed">
+                                You have <strong>pending tasks</strong> that need to be completed. 
+                                Please complete your <strong>Pending, Cheating, and Rejected</strong> tasks to re-enable playlist promotion.
+                                <br><br>
+                                <strong>Note:</strong> You can still work on existing tasks, but cannot create new ones until promotion is re-enabled.
+                            </p>
+                            <div class="flex gap-3 flex-wrap mt-3">
+                                <button onclick="setTab('Pending', document.querySelector('.filter-tab[data-tab=Pending]'))"
+                                    class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold" style="border-color:#f59e0b;color:#f59e0b;">
+                                    View Pending Tasks
+                                </button>
+                                <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
+                                    class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+                                    View Cheating Tasks
+                                </button>
+                                <button onclick="setTab('Rejected', document.querySelector('.filter-tab[data-tab=Rejected]'))"
+                                    class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold" style="border-color:#6b7280;color:#6b7280;">
+                                    View Rejected Tasks
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP BAR -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+                    <div>
+                        <h2 class="text-2xl font-bold">My Playlist Tasks</h2>
+                        <p class="text-muted mt-1 text-sm">Watch playlists and earn watches back</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button id="prefsBtn" onclick="openPreferencesModal()"
+                            class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                            🎯 Match Preferences
+                        </button>
+                        <button id="createBtn" onclick="openCreateModal()"
+                            class="btn-playlist px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Create Tasks
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- TOP BAR -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
-            <div>
-                <h2 class="text-2xl font-bold">My Playlist Tasks</h2>
-                <p class="text-muted mt-1 text-sm">Watch playlists and earn watches back</p>
-            </div>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button id="prefsBtn" onclick="openPreferencesModal()"
-                    class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    🎯 Match Preferences
-                </button>
-                <button id="createBtn" onclick="openCreateModal()"
-                    class="btn-playlist px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    Create Tasks
-                </button>
-            </div>
-        </div>
-
-        <!-- HOW IT WORKS BANNER -->
-        <div class="card rounded-3xl p-5 mb-6">
-            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Playlist Tasks Work</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="step-item">
-                    <div class="step-num">1</div>
-                    <div>Open the target <strong class="text-[#211F1F]">channel</strong>, go to their <strong class="text-[#211F1F]">Playlist</strong> section</div>
+                <!-- HOW IT WORKS BANNER -->
+                <div class="card rounded-3xl p-5 mb-6">
+                    <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Playlist Tasks Work</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="step-item">
+                            <div class="step-num">1</div>
+                            <div>Open the target <strong class="text-[#211F1F]">channel</strong>, go to their <strong class="text-[#211F1F]">Playlist</strong> section</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">2</div>
+                            <div>Watch at least <strong class="text-[#211F1F]">90% of each video</strong> in the playlist</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">3</div>
+                            <div><strong class="text-[#211F1F]">Complete the playlist</strong>, then click <em>Mark Watched</em></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="step-item">
-                    <div class="step-num">2</div>
-                    <div>Watch at least <strong class="text-[#211F1F]">90% of each video</strong> in the playlist</div>
+
+                <!-- FILTER TABS -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
+                        <span class="dot bg-yellow-400 mr-1"></span>Not Started
+                    </button>
+                    <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
+                        <span class="dot bg-orange-400 mr-1"></span>Pending
+                    </button>
+                    <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Watched" onclick="setTab('Watched',this)">
+                        <span class="dot bg-green-400 mr-1"></span>Watched
+                    </button>
+                    <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Cheating" onclick="setTab('Cheating',this)">
+                        <span class="dot bg-red-400 mr-1"></span>Cheating
+                    </button>
+                    <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
+                        <span class="dot bg-gray-400 mr-1"></span>Rejected
+                    </button>
+                    <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
                 </div>
-                <div class="step-item">
-                    <div class="step-num">3</div>
-                    <div><strong class="text-[#211F1F]">Complete the playlist</strong>, then click <em>Mark Watched</em></div>
+
+                <!-- TASK LIST -->
+                <div id="taskList" class="space-y-4">
+                    <div class="skeleton h-[220px]"></div>
+                    <div class="skeleton h-[220px]"></div>
+                    <div class="skeleton h-[220px]"></div>
                 </div>
+
+                <!-- EMPTY STATE -->
+                <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+                    <div class="text-5xl mb-4">📋</div>
+                    <h3 class="text-xl font-semibold mb-2">No Playlist Tasks Yet</h3>
+                    <p class="text-muted text-sm mb-7 leading-relaxed">
+                        You don't have any playlist tasks here yet.<br>
+                        Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new playlist tasks and start growing!
+                    </p>
+                    <button onclick="openCreateModal()" class="btn-playlist px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
+                </div>
+
+                <!-- PAGINATION -->
+                <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+                    <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+                    <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+                    <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
+                </div>
+
+            </main>
             </div>
-        </div>
 
-        <!-- FILTER TABS -->
-        <div class="flex flex-wrap gap-2 mb-6">
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
-                <span class="dot bg-yellow-400 mr-1"></span>Not Started
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
-                <span class="dot bg-orange-400 mr-1"></span>Pending
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Watched" onclick="setTab('Watched',this)">
-                <span class="dot bg-green-400 mr-1"></span>Watched
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Cheating" onclick="setTab('Cheating',this)">
-                <span class="dot bg-red-400 mr-1"></span>Cheating
-            </button>
-            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
-                <span class="dot bg-gray-400 mr-1"></span>Rejected
-            </button>
-            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
-        </div>
-
-        <!-- TASK LIST -->
-        <div id="taskList" class="space-y-4">
-            <div class="skeleton h-[220px]"></div>
-            <div class="skeleton h-[220px]"></div>
-            <div class="skeleton h-[220px]"></div>
-        </div>
-
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
-            <div class="text-5xl mb-4">📋</div>
-            <h3 class="text-xl font-semibold mb-2">No Playlist Tasks Yet</h3>
-            <p class="text-muted text-sm mb-7 leading-relaxed">
-                You don't have any playlist tasks here yet.<br>
-                Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new playlist tasks and start growing!
-            </p>
-            <button onclick="openCreateModal()" class="btn-playlist px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
-        </div>
-
-        <!-- PAGINATION -->
-        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
-            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
-            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
-            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
-        </div>
-
-    </main>
-</div>
+        </div><!-- /dashContent -->
+    </div><!-- /mainContainer -->
 
 </div>
 </main>
@@ -858,10 +971,9 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             <button class="issue-pill" onclick="toggleIssuePill(this,'Video count mismatch')">📊 Video count mismatch</button>
             <button class="issue-pill" onclick="toggleIssuePill(this,'Watching not working')">⚡ Watch not working</button>
         </div>
-        <label class="block text-xs text-muted mb-1.5">Additional details (optional): <span id="charCount" class="text-xs text-muted">0/160</span></label>
-        <textarea id="issueCustomText" rows="3" maxlength="160" placeholder="Describe the issue in more detail…"
-            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"
-            oninput="updateCharCount()"></textarea>
+        <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
+        <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
 
         <input type="hidden" id="issueTaskId">
         <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
@@ -897,20 +1009,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
 <!-- SCRIPTS -->
 <script>
-function updateCharCount() {
-    const textarea = document.getElementById('issueCustomText');
-    const count = textarea.value.length;
-    document.getElementById('charCount').textContent = `${count}/160`;
-    if (count >= 160) {
-        document.getElementById('charCount').style.color = '#ef4444';
-    } else {
-        document.getElementById('charCount').style.color = '#6b7280';
-    }
-}
-
-/* ────────────────────────────────────────
-   AUTH
-──────────────────────────────────────── */
 function logoutUser() {
     localStorage.clear();
     window.location.href = "signin.html";
@@ -923,64 +1021,11 @@ const savedUserCode = localStorage.getItem("usercode") || "";
 if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
-</script>
-
-<script>
-
-    // ── ADD: Function to check if target user should be shown based on task status ──
-
-// ── UPDATED: Function to check if target user should be shown based on task status ──
-function shouldShowTargetTask(targetUserCode, taskStatus) {
-    // Get target user status from cache
-    const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
-    
-    if (!status) {
-        // If not in cache, assume valid
-        return true;
-    }
-    
-    // ── RULE 1: Status = "Blocked" → HIDE in ALL tabs ──
-    if (status.status === 'Blocked' || status.hideInAllTabs) {
-        return false;
-    }
-    
-    // ── RULE 2: InWatchtimeWork = "No" → HIDE in ALL tabs ──
-    if (status.inWatchtimeWork !== 'Yes') {
-        return false;
-    }
-    
-    // ── RULE 3: PlaylistPromotionActive = "No" → HIDE except Pending and Watched ──
-    if (status.playlistPromotionActive === 'No') {
-        // ✅ SHOW if task is Pending or Watched (Ex800's case - Watched)
-        if (taskStatus !== 'Pending' && taskStatus !== 'Watched') {
-            return false;
-        }
-    }
-    
-    // ── RULE 4: ViolationFlag = "Yes" or "Suspended" → HIDE except Watched ──
-    if (status.violationFlag === 'Suspended' || status.violationFlag === 'Yes') {
-        // ✅ SHOW if task is Watched (Ex800's case - Watched)
-        if (taskStatus !== 'Watched') {
-            return false;
-        }
-    }
-    
-    // ── RULE 5: GroupRemovalRequest = "Yes" → HIDE except Pending and Watched ──
-    if (status.groupRemovalRequest === 'Yes') {
-        // ✅ SHOW if task is Pending or Watched (Ex800's case - Watched)
-        if (taskStatus !== 'Pending' && taskStatus !== 'Watched') {
-            return false;
-        }
-    }
-    
-    // All checks passed
-    return true;
-}
 
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8HHHHSuSoNiGxXtgoSrqJm-Eu79dMraf-Cd9gixAYjpODtmMxBPrIR8SJK6-xR9_Z/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzY9TXRadJb0HzKOo7_4918OjNy1_EiphR4k2NKWaCBTlMDvqCnAmZlG4tRR3h7Accf/exec';
 const USER_CODE  = savedUserCode;
 
 /* ────────────────────────────────────────
@@ -1012,25 +1057,116 @@ let countryOptions     = [];
 const MAX_PREF_EACH    = 5;
 
 /* ────────────────────────────────────────
+   DOM HELPERS
+──────────────────────────────────────── */
+function show(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('hidden');
+}
+function hide(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('hidden');
+}
+
+function showStatusMessage(html) {
+    const container = document.getElementById('statusMessage');
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+    hide('dashContent');
+}
+
+/* ────────────────────────────────────────
    BOOT
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', init);
 
-// ── MODIFY: init() function ──
 async function init() {
+    show('pageLoader');
+    hide('dashContent');
+    hide('statusMessage');
+
     try {
         const res  = await fetch(`${SCRIPT_URL}?action=getPlaylistMemberAndTasks&userCode=${USER_CODE}`);
         const data = await res.json();
 
-        hideLoader();
+        hide('pageLoader');
 
         if (!data.success) {
+            // Check if member is not enrolled
+            if (data.notEnrolled) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner">
+                            <span class="banner-icon">📢</span>
+                            <h2 class="banner-title">Not Enrolled in Playlist Group</h2>
+                            <p class="banner-desc">
+                                ${data.message || 'You are not enrolled in the Playlist Group. Join the group to start exchanging playlist watch time with other creators.'}
+                            </p>
+                            <a href="groups.html" class="banner-btn">
+                                👥 Go to Groups
+                            </a>
+                            <p class="banner-hint">
+                                💡 Once you join the <strong>Playlist Group</strong>, come back here to see your tasks.
+                            </p>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Check if member is not active
+            if (data.notActive) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                            <span class="banner-icon">⛔</span>
+                            <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
+                            <p class="banner-desc">${data.message || 'Your account is not active. Please contact support for assistance.'}</p>
+                            <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Check if member is suspended
+            if (data.suspended) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                            <span class="banner-icon">🚫</span>
+                            <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
+                            <p class="banner-desc">${data.message || 'Your account has been suspended. Please contact support for more information.'}</p>
+                            <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Check if member not found
+            if (data.notFound) {
+                showStatusMessage(`
+                    <div class="w-full flex justify-center items-center min-h-[400px]">
+                        <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
+                            <span class="banner-icon">❓</span>
+                            <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
+                            <p class="banner-desc">${data.message || 'We could not find your account. Please sign in again.'}</p>
+                            <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
+                        </div>
+                    </div>
+                `);
+                return;
+            }
+            
             showToast(data.message || 'Error loading data', true);
-            clearSkeletons();
             return;
         }
 
-        member    = data.member;
+        // ── SUCCESS: Member is active and enrolled ──
+        member = data.member;
         perfStats = data.perfStats || null;
         
         // ── Build target user status cache ──
@@ -1044,15 +1180,9 @@ async function init() {
         // ── Filter tasks using all rules ──
         const allTasksRaw = data.tasks || [];
         allTasks = allTasksRaw.filter(t => {
-            // Only process tasks where current user is the worker
-            if (t.UserCode !== USER_CODE) {
-                return false;
-            }
-            
+            if (t.UserCode !== USER_CODE) return false;
             const targetCode = t.TargetUserCode;
             const taskStatus = t.Status;
-            
-            // Check if target user should be shown
             return shouldShowTargetTask(targetCode, taskStatus);
         });
         
@@ -1063,55 +1193,59 @@ async function init() {
         if (data.channelImages)  channelImageCache  = data.channelImages;
         if (data.channelIds)     channelIdCache     = data.channelIds;
 
+        loadPreferenceOptions();
         checkBlock();
         checkCheating();
         calcStats();
         enforceTaskPriorityTabs();
         applyFilter();
 
+        show('dashContent');
+
     } catch (e) {
-        hideLoader();
-        clearSkeletons();
+        hide('pageLoader');
         showToast('Could not connect to server.', true);
+        console.error('Init error:', e);
     }
 }
-// ── ADD: Function to refresh target user status ──
-async function refreshTargetUserStatus() {
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getTargetUsersStatus&userCode=${USER_CODE}`);
-        const data = await res.json();
-        if (data.success && data.targetUsersStatus) {
-            window.targetUserStatusCache = data.targetUsersStatus;
-            // Re-filter tasks
-            applyFilter();
-            return true;
-        }
-    } catch (e) {
-        console.error('Error refreshing target status:', e);
+
+/* ── Function to check if target user should be shown based on task status ── */
+function shouldShowTargetTask(targetUserCode, taskStatus) {
+    const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
+    
+    if (!status) return true;
+    
+    // RULE 1: Status = "Blocked" → HIDE in ALL tabs
+    if (status.status === 'Blocked' || status.hideInAllTabs) return false;
+    
+    // RULE 2: InWatchtimeWork = "No" → HIDE in ALL tabs
+    if (status.inWatchtimeWork !== 'Yes') return false;
+    
+    // RULE 3: PlaylistPromotionActive = "No" → HIDE except Pending and Watched
+    if (status.playlistPromotionActive === 'No') {
+        if (taskStatus !== 'Pending' && taskStatus !== 'Watched') return false;
     }
-    return false;
-}
-
-
-function hideLoader() {
-    const loader = document.getElementById('pageLoader');
-    loader.classList.add('hidden');
-    setTimeout(() => loader.style.display = 'none', 400);
+    
+    // RULE 4: ViolationFlag = "Yes" or "Suspended" → HIDE except Watched
+    if (status.violationFlag === 'Suspended' || status.violationFlag === 'Yes') {
+        if (taskStatus !== 'Watched') return false;
+    }
+    
+    // RULE 5: GroupRemovalRequest = "Yes" → HIDE except Pending and Watched
+    if (status.groupRemovalRequest === 'Yes') {
+        if (taskStatus !== 'Pending' && taskStatus !== 'Watched') return false;
+    }
+    
+    return true;
 }
 
 /* ────────────────────────────────────────
-   BLOCK CHECK - THREE SEPARATE CONDITIONS
+   BLOCK CHECK
 ──────────────────────────────────────── */
-// ── UPDATED: checkBlock() - Allows pending/cheating/rejected tasks even when promotion is disabled ──
-
-
-
-// ── UPDATED: checkBlock() - Fix for Create Tasks button ──
 function checkBlock() {
     if (!member) return;
     
     const suspended = member.ViolationFlag === 'Suspended';
-    const promotionDisabled = member.PlaylistPromotionActive === 'No';
     const notEnrolled = member.InWatchtimeWork !== 'Yes';
 
     const isBlocked = suspended || notEnrolled;
@@ -1126,7 +1260,7 @@ function checkBlock() {
             message += `Reason: ${member.ViolationReason || 'Policy violation.'}<br>`;
             message += `Contact support to resolve this issue.`;
         } else if (notEnrolled) {
-            message = `📋 You are not enrolled in the Watchtime Group. Please join the Watchtime Group first to access playlist tasks.<br>`;
+            message = `📋 You are not enrolled in the Playlist Group. Please join the Playlist Group first to access playlist tasks.<br>`;
             message += `Go to <a href="groups.html" style="color:#7c3aed;text-decoration:underline;">Groups</a> to join.`;
         }
 
@@ -1139,12 +1273,14 @@ function checkBlock() {
         if (suspended) {
             btn.title = 'Your account is suspended.';
         } else if (notEnrolled) {
-            btn.title = 'Join the Watchtime Group first.';
+            btn.title = 'Join the Playlist Group first.';
         }
     } else {
         document.getElementById('blockedBanner').classList.add('hidden');
         
-        // ── Show/hide promotion disabled banner ──
+        // Check promotion status
+        const promotionDisabled = member.PlaylistPromotionActive === 'No';
+        
         if (promotionDisabled) {
             showPromotionDisabledBanner();
         } else {
@@ -1153,13 +1289,11 @@ function checkBlock() {
         
         const btn = document.getElementById('createBtn');
         
-        // ── FIX: Only disable button if promotion is actually disabled ──
         if (promotionDisabled) {
             btn.disabled = true;
             btn.classList.add('opacity-40', 'cursor-not-allowed');
             btn.title = 'Complete your pending tasks first to re-enable promotion.';
         } else {
-            // ── ENABLE button when promotion is active ──
             btn.disabled = false;
             btn.classList.remove('opacity-40', 'cursor-not-allowed');
             btn.title = '';
@@ -1167,14 +1301,9 @@ function checkBlock() {
     }
 }
 
-
-// ── NEW: Show promotion disabled banner ──
 function showPromotionDisabledBanner() {
     const banner = document.getElementById('promotionDisabledBanner');
-    if (!banner) {
-        // Create banner if it doesn't exist
-        createPromotionDisabledBanner();
-    } else {
+    if (banner) {
         banner.classList.remove('hidden');
     }
 }
@@ -1186,43 +1315,6 @@ function hidePromotionDisabledBanner() {
     }
 }
 
-function createPromotionDisabledBanner() {
-    const banner = document.createElement('div');
-    banner.id = 'promotionDisabledBanner';
-    banner.className = 'mb-6 rounded-3xl p-5';
-    banner.style.cssText = 'background:#fffbeb;border:2px solid #f59e0b;box-shadow:4px 4px 0px 0px #f59e0b;';
-    banner.innerHTML = `
-        <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-2xl bg-orange-500/20 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
-            <div class="flex-1">
-                <h3 class="font-semibold text-orange-600 mb-1">Playlist Promotion Disabled</h3>
-                <p class="text-orange-600/80 text-sm leading-relaxed">
-                    You have <strong>pending tasks</strong> that need to be completed. 
-                    Please complete your <strong>Pending, Cheating, and Rejected</strong> tasks to re-enable playlist promotion.
-                    <br><br>
-                    <strong>Note:</strong> You can still work on existing tasks, but cannot create new ones until promotion is re-enabled.
-                </p>
-                <div class="flex gap-3 flex-wrap mt-3">
-                    <button onclick="setTab('Pending', document.querySelector('.filter-tab[data-tab=Pending]'))"
-                        class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold" style="border-color:#f59e0b;color:#f59e0b;">
-                        View Pending Tasks
-                    </button>
-                    <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
-                        class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
-                        View Cheating Tasks
-                    </button>
-                    <button onclick="setTab('Rejected', document.querySelector('.filter-tab[data-tab=Rejected]'))"
-                        class="btn-outline px-4 py-2 rounded-xl text-xs font-semibold" style="border-color:#6b7280;color:#6b7280;">
-                        View Rejected Tasks
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    const blockedBanner = document.getElementById('blockedBanner');
-    blockedBanner.parentNode.insertBefore(banner, blockedBanner.nextSibling);
-}
 /* ────────────────────────────────────────
    CHECK CHEATING
 ──────────────────────────────────────── */
@@ -1315,17 +1407,13 @@ function setTab(tab, btn) {
     applyFilter();
 }
 
-// ── MODIFY: applyFilter() to use filtered tasks ──
 function applyFilter() {
     enforceTaskPriorityTabs();
 
     let base = allTasks.filter(t => {
         if (t.UserCode !== USER_CODE) return false;
 
-        // Additional filter for target user status
-        if (!shouldShowTargetTask(t.TargetUserCode, t.Status)) {
-            return false;
-        }
+        if (!shouldShowTargetTask(t.TargetUserCode, t.Status)) return false;
 
         const tabMatch =
             activeTab === 'All'          ? true :
@@ -1348,6 +1436,7 @@ function applyFilter() {
     currentPage = 1;
     renderList();
 }
+
 /* ────────────────────────────────────────
    RENDER LIST
 ──────────────────────────────────────── */
@@ -1387,11 +1476,6 @@ function changePage(d) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function clearSkeletons() {
-    document.getElementById('taskList').innerHTML = '';
-    document.getElementById('emptyState').classList.remove('hidden');
-}
-
 /* ────────────────────────────────────────
    HELPERS
 ──────────────────────────────────────── */
@@ -1426,12 +1510,8 @@ function getCategoryBadge(category) {
     if (!category) return '';
     const cat = category.toUpperCase();
     const colors = {
-        'A': 'cat-a',
-        'B': 'cat-b',
-        'C': 'cat-c',
-        'D': 'cat-d',
-        'E': 'cat-e',
-        'F': 'cat-f'
+        'A': 'cat-a', 'B': 'cat-b', 'C': 'cat-c',
+        'D': 'cat-d', 'E': 'cat-e', 'F': 'cat-f'
     };
     return `<span class="category-badge ${colors[cat] || 'cat-a'}">📂 CAT-${cat}</span>`;
 }
@@ -1440,15 +1520,11 @@ function getChannelKey(t) {
     return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
 }
 
-// ── UPDATED: formatMinutes() - Properly converts seconds to minutes ──
 function formatMinutes(seconds) {
     if (!seconds || seconds === 0) return '0 min';
-    
-    // Convert seconds to minutes
     const totalSeconds = parseFloat(seconds);
     const totalMinutes = Math.floor(totalSeconds / 60);
     const remainingSeconds = Math.round(totalSeconds % 60);
-    
     if (totalMinutes > 0 && remainingSeconds > 0) {
         return `${totalMinutes} min ${remainingSeconds} sec`;
     } else if (totalMinutes > 0) {
@@ -1502,7 +1578,7 @@ function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className   = isError ? 'error show' : 'show';
-    setTimeout(() => { t.className = ''; }, 30000);
+    setTimeout(() => { t.className = ''; }, 3000);
 }
 
 function copyText(text, btn) {
@@ -1512,7 +1588,7 @@ function copyText(text, btn) {
         setTimeout(() => { btn.innerHTML = orig; }, 1500);
     }).catch(() => showToast('Could not copy.', true));
 }
-// ── NEW: Get Target User Status Badge ──
+
 function getTargetUserStatusBadge(targetUserCode) {
     const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
     
@@ -1546,24 +1622,9 @@ function getTargetUserStatusBadge(targetUserCode) {
     return `<span class="text-xs bg-green-500/10 text-green-600 border border-green-500/30 px-2 py-0.5 rounded-lg">✅ Active</span>`;
 }
 
-// ── NEW: Get detailed target user status for tooltip ──
-function getTargetUserStatusDetails(targetUserCode) {
-    const status = window.targetUserStatusCache && window.targetUserStatusCache[targetUserCode];
-    
-    if (!status) {
-        return 'Target user status unknown';
-    }
-    
-    if (!status.isValid) {
-        return `⚠️ ${status.reasons.join(', ')}`;
-    }
-    
-    return `✅ Active - ${status.status}`;
-}
 /* ────────────────────────────────────────
    TASK CARD
 ──────────────────────────────────────── */
-// ── MODIFY: taskCard() to show target user status badge ──
 function taskCard(t) {
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
 
@@ -1608,7 +1669,6 @@ function taskCard(t) {
         ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
 
-    // ── NEW: Target User Status Badge ──
     const targetStatusBadge = getTargetUserStatusBadge(t.TargetUserCode);
 
     const cheatingBlock = isCheating ? `
@@ -1751,15 +1811,13 @@ function taskCard(t) {
 }
 
 /* ────────────────────────────────────────
-   DETAIL MODAL - Videos + Watch Progress (UPDATED for New Record Sheet)
+   DETAIL MODAL
 ──────────────────────────────────────── */
-
 async function openDetailModal(taskId) {
     detailTaskId = taskId;
     const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
     if (!t) { showToast('Task not found.', true); return; }
 
-    // Show loading state
     document.getElementById('detailPanelVideos').innerHTML = `
         <div class="text-center py-8 text-muted text-sm">
             <div class="spin mx-auto mb-3" style="width:30px;height:30px;"></div>
@@ -1774,33 +1832,21 @@ async function openDetailModal(taskId) {
     switchDetailTab('videos', document.querySelector('.detail-tab[data-tab="videos"]'));
     document.getElementById('detailModal').classList.add('open');
 
-    // ── 1. FETCH VIDEOS WITH WATCH STATUS ──
+    // Fetch videos and progress
     let videoData = { videos: [], totalMinutes: 0, videoCount: 0 };
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getPlaylistVideos&userCode=${t.TargetUserCode}&playlistCategory=${t.PlaylistCategory || ''}`);
         const data = await res.json();
-        if (data.success) {
-            videoData = data;
-        }
-    } catch (e) {
-        console.error('Error fetching videos:', e);
-    }
+        if (data.success) videoData = data;
+    } catch (e) { console.error('Error fetching videos:', e); }
 
-    // ── 2. FETCH WATCH PROGRESS ──
     let progressData = { records: [], allVideos: [], totalVideos: 0, expectedVideoCount: 0 };
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getHighestPercentageRecords&taskId=${taskId}&userCode=${USER_CODE}`);
         const data = await res.json();
-        if (data.success) {
-            progressData = data;
-            console.log('✅ Progress records:', progressData.records.length);
-            console.log('✅ All videos with status:', progressData.allVideos);
-        }
-    } catch (e) {
-        console.error('Error fetching progress:', e);
-    }
+        if (data.success) progressData = data;
+    } catch (e) { console.error('Error fetching progress:', e); }
 
-    // ── 3. BUILD VIDEOS PANEL WITH WATCH STATUS ──
     const videosPanel = document.getElementById('detailPanelVideos');
     const progressPanel = document.getElementById('detailPanelProgress');
 
@@ -1809,15 +1855,10 @@ async function openDetailModal(taskId) {
     const totalHours = Math.floor(totalMinutes / 60);
     const totalMins = totalMinutes % 60;
     let timeDisplay = '';
-    if (totalHours > 0 && totalMins > 0) {
-        timeDisplay = `${totalHours}h ${totalMins}min`;
-    } else if (totalHours > 0) {
-        timeDisplay = `${totalHours}h`;
-    } else {
-        timeDisplay = `${totalMinutes}min`;
-    }
+    if (totalHours > 0 && totalMins > 0) timeDisplay = `${totalHours}h ${totalMins}min`;
+    else if (totalHours > 0) timeDisplay = `${totalHours}h`;
+    else timeDisplay = `${totalMinutes}min`;
 
-    // ── VIDEOS PANEL WITH WATCH STATUS ──
     const WATCH_THRESHOLD = 85;
     const allVideos = progressData.allVideos || videoData.videos || [];
     const watchedCount = allVideos.filter(v => v.isWatched === true && v.Percentage >= WATCH_THRESHOLD).length;
@@ -1841,13 +1882,11 @@ async function openDetailModal(taskId) {
         videosHtml += `<p class="text-muted text-sm text-center py-4">No videos found in this playlist.</p>`;
     } else {
         allVideos.forEach((v, idx) => {
-            // ── FIX: Convert seconds to minutes using formatMinutes() ──
             const duration = v.VideoMinutes ? formatMinutes(v.VideoMinutes) : (v.VideoDuration ? formatMinutes(v.VideoDuration) : '—');
             const percentage = v.Percentage || 0;
             const isWatched = v.isWatched === true && percentage >= WATCH_THRESHOLD;
             const isPartial = v.isWatched === true && percentage > 0 && percentage < WATCH_THRESHOLD;
             
-            // Status badge
             let statusBadge = '';
             let statusColor = '';
             if (isWatched) {
@@ -1881,7 +1920,7 @@ async function openDetailModal(taskId) {
     videosHtml += `</div>`;
     videosPanel.innerHTML = videosHtml;
 
-    // ── 4. BUILD PROGRESS PANEL ──
+    // Progress panel
     const records = progressData.records || [];
 
     let progressHtml = `
@@ -1904,7 +1943,6 @@ async function openDetailModal(taskId) {
             const statusLabel = isWatched ? 'Watched' : (isPartial ? 'Partial' : 'Not Started');
             const statusColor = isWatched ? '#16a34a' : (isPartial ? '#f59e0b' : '#ef4444');
             
-            // ── FIX: Convert seconds to minutes using formatMinutes() ──
             const durationDisplay = p.VideoDuration ? formatMinutes(p.VideoDuration) : '0 sec';
             const playDisplay = p.PlaySeconds ? formatMinutes(p.PlaySeconds) : '0 sec';
             const fullTitle = p.VideoTitle || `Video ${idx + 1}`;
@@ -1922,14 +1960,8 @@ async function openDetailModal(taskId) {
                 borderColor = '#ef4444';
             }
             
-            const isRewatchNeeded = !isWatched;
-
             progressHtml += `
-                <div style="display:flex;flex-direction:column;gap:8px;padding:14px 18px;border-radius:14px;border:2px solid ${borderColor};background:${cardBg};box-shadow:3px 3px 0px 0px #211F1F;transition:0.2s ease;width:100%;height:auto;"
-                     onmouseover="this.style.transform='translate(-1px, -1px)';this.style.boxShadow='5px 5px 0px 0px #211F1F';"
-                     onmouseout="this.style.transform='none';this.style.boxShadow='3px 3px 0px 0px #211F1F';">
-                    
-                    <!-- Header Row -->
+                <div style="display:flex;flex-direction:column;gap:8px;padding:14px 18px;border-radius:14px;border:2px solid ${borderColor};background:${cardBg};box-shadow:3px 3px 0px 0px #211F1F;">
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
                         <div style="display:flex;align-items:center;gap:10px;">
                             <span style="font-weight:800;font-size:14px;color:var(--muted);min-width:32px;">#${idx + 1}</span>
@@ -1941,13 +1973,9 @@ async function openDetailModal(taskId) {
                             ${percentage}%
                         </span>
                     </div>
-                    
-                    <!-- Video Title -->
                     <div style="font-size:14px;font-weight:600;color:#211F1F;line-height:1.4;padding:4px 0;word-break:break-word;">
                         ${fullTitle}
                     </div>
-                    
-                    <!-- Details Row -->
                     <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted);padding:8px 12px;background:#f8f8f0;border-radius:8px;">
                         <div style="display:flex;align-items:center;gap:8px;">
                             <span style="font-weight:600;min-width:110px;">⏱ Video Duration:</span>
@@ -1962,38 +1990,17 @@ async function openDetailModal(taskId) {
                             <strong style="color:${isWatched ? '#16a34a' : (isPartial ? '#f59e0b' : '#ef4444')};">${percentage}%</strong>
                         </div>
                     </div>
-                    
-                    <!-- Progress Bar -->
                     <div style="width:100%;height:6px;background:#e5e7eb;border-radius:999px;overflow:hidden;border:1px solid #211F1F;">
                         <div style="width:${Math.min(100, percentage)}%;height:100%;border-radius:999px;background:${isWatched ? '#16a34a' : (isPartial ? '#f59e0b' : '#ef4444')};transition:width 0.4s ease;"></div>
                     </div>
-                    
-                    <!-- Check Status -->
                     ${p.Checked && p.Checked !== 'Pending' ? `
                         <div style="font-size:10px;color:var(--muted);text-align:right;margin-top:2px;">
                             ✓ Checked: ${p.Checked} ${p.CheckRemarks ? '— ' + p.CheckRemarks : ''}
                         </div>
                     ` : ''}
-                    
-                    <!-- Action Button -->
-                    <div style="display:flex;justify-content:flex-end;margin-top:6px;">
-                        ${isRewatchNeeded ? `
-                            <button onclick="openVideoForRewatch('${p.VideoId}')" 
-                                    style="background:#f59e0b;color:#ffffff;border:2px solid #211F1F;border-radius:10px;padding:6px 16px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:2px 2px 0px 0px #211F1F;transition:0.15s;display:flex;align-items:center;gap:6px;"
-                                    onmouseover="this.style.transform='translate(1px, 1px)';this.style.boxShadow='1px 1px 0px 0px #211F1F';"
-                                    onmouseout="this.style.transform='none';this.style.boxShadow='2px 2px 0px 0px #211F1F';">
-                                🔄 Rewatch Video
-                            </button>
-                        ` : `
-                            <span style="font-size:11px;color:#16a34a;font-weight:700;display:flex;align-items:center;gap:4px;background:#dcfce7;padding:4px 12px;border-radius:999px;border:1px solid #16a34a30;">
-                                ✓ Complete
-                            </span>
-                        `}
-                    </div>
                 </div>`;
         });
 
-        // ── Overall Progress Summary ──
         const watchedCountSummary = records.filter(p => p.Percentage >= WATCH_THRESHOLD).length;
         const overallPercent = totalVideosInPlaylist > 0 ? Math.round((watchedCountSummary / totalVideosInPlaylist) * 100) : 0;
         const overallStatus = overallPercent >= 100 ? '✅ Complete' : (overallPercent > 0 ? '⏳ In Progress' : '❌ Not Started');
@@ -2027,16 +2034,8 @@ function switchDetailTab(tab, btn) {
     document.getElementById(`detailPanel${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
 }
 
-function openVideoForRewatch(videoId) {
-    if (!videoId) {
-        showToast('Video ID not found.', true);
-        return;
-    }
-    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
-}
-
 /* ────────────────────────────────────────
-   MARK WATCHED - UPDATED for New Record Sheet
+   MARK WATCHED
 ──────────────────────────────────────── */
 async function doMarkWatched(taskId, btnEl) {
     if (hasCheating) {
@@ -2119,7 +2118,7 @@ function openCreateModal() {
     }
 
     if (member && member.InWatchtimeWork !== 'Yes') {
-        showToast('You are not enrolled in the Watchtime Group. Please join first.', true);
+        showToast('You are not enrolled in the Playlist Group. Please join first.', true);
         return;
     }
 
@@ -2407,141 +2406,6 @@ async function doSavePreferences() {
 
     btn.textContent = 'Save Preferences';
     btn.disabled    = false;
-}
-
-/* ────────────────────────────────────────
-   FUNCTION: Record Watching Proof
-   Called by the extension when a video is watched
-──────────────────────────────────────── */
-
-async function recordWatchingProof(proofData) {
-    /**
-     * proofData should contain:
-     *   userCode, channelName, videoTitle, videoDuration, videoId,
-     *   playlistId, playSeconds, stopSeconds, proofScreenshot,
-     *   taskType, taskId, targetUserCode
-     */
-    
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'syncProofToRecordSheet',
-                proofData: proofData
-            })
-        });
-        const data = await res.json();
-        
-        if (data.success) {
-            console.log(`✅ Recorded: ${data.videoId} - ${data.percentage}% (${data.action})`);
-            return data;
-        } else {
-            console.error('❌ Error recording proof:', data.message);
-            return null;
-        }
-    } catch (e) {
-        console.error('❌ Connection error:', e);
-        return null;
-    }
-}
-
-/* ────────────────────────────────────────
-   FUNCTION: Migrate Existing Proofs
-   Run this once to migrate old data to the new sheet
-──────────────────────────────────────── */
-
-async function migrateProofsToRecordSheet() {
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'migrateProofsToRecordSheet'
-            })
-        });
-        const data = await res.json();
-        
-        if (data.success) {
-            showToast(`✅ Migration complete: ${data.migrated} records migrated, ${data.skipped} skipped`);
-            return data;
-        } else {
-            showToast('❌ Migration failed: ' + data.message, true);
-            return null;
-        }
-    } catch (e) {
-        showToast('❌ Connection error during migration', true);
-        return null;
-    }
-}
-
-/* ────────────────────────────────────────
-   FUNCTION: Get Playlist Watch Summary
-──────────────────────────────────────── */
-
-async function getPlaylistWatchSummary(taskId) {
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getPlaylistWatchSummary&taskId=${taskId}&userCode=${USER_CODE}`);
-        const data = await res.json();
-        if (data.success) {
-            return data;
-        } else {
-            showToast('Error getting summary: ' + data.message, true);
-            return null;
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-        return null;
-    }
-}
-
-/* ────────────────────────────────────────
-   FUNCTION: Validate Watch Records
-──────────────────────────────────────── */
-
-async function validateWatchRecords(taskId) {
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'validateWatchRecords',
-                taskId: taskId,
-                userCode: USER_CODE
-            })
-        });
-        const data = await res.json();
-        if (data.success) {
-            showToast(`✅ Validated ${data.total} records`);
-            return data;
-        } else {
-            showToast('Error: ' + data.message, true);
-            return null;
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-        return null;
-    }
-}
-
-/* ────────────────────────────────────────
-   FUNCTION: Get User Watch Records
-──────────────────────────────────────── */
-
-async function getUserWatchRecords() {
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getUserWatchRecords&userCode=${USER_CODE}`);
-        const data = await res.json();
-        if (data.success) {
-            return data;
-        } else {
-            showToast('Error: ' + data.message, true);
-            return null;
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-        return null;
-    }
 }
 </script>
 
