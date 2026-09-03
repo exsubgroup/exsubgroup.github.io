@@ -530,7 +530,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvL1RH-J_BjCJovhUC0nObshDToPIvZGI2WRFK42MYXmfoBP5HTRuTzrOmeLHDfvv5ZA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxByZxYhgPVZjQxRrEqn6J71nl7MY1J9vbV_-qOjobZcQQ1LN-B3SgAbasrk_4lgi-L5g/exec';
 const USER_CODE  = savedUserCode;
 
 // ── CACHE KEYS ──
@@ -539,6 +539,10 @@ const CACHE_KEY_STATS = 'subscriber_tasks_stats';
 const CACHE_KEY_EXCHANGE = 'subscriber_tasks_exchange';
 const CACHE_KEY_PERF = 'subscriber_tasks_perf';
 const CACHE_KEY_TIMESTAMP = 'subscriber_tasks_timestamp';
+const CACHE_KEY_FOCUSED_STATUS = 'subscriber_tasks_focusedStatus';
+const CACHE_KEY_UNSUB_COUNT = 'subscriber_tasks_unsubCount';
+const CACHE_KEY_HAS_UNSUB = 'subscriber_tasks_hasUnsub';
+const CACHE_KEY_MEMBER = 'subscriber_tasks_member';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
 
 /* ────────────────────────────────────────
@@ -594,10 +598,10 @@ function saveTasksToCache(data) {
         localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
         localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(data.perfStats || {}));
         localStorage.setItem(CACHE_KEY_TIMESTAMP, String(Date.now()));
-        localStorage.setItem('subscriber_tasks_focusedStatus', data.focusedStatus || 'NotWorkYet');
-        localStorage.setItem('subscriber_tasks_hasUnsub', String(data.hasUnsub || false));
-        localStorage.setItem('subscriber_tasks_unsubCount', String(data.unsubCount || 0));
-        localStorage.setItem('subscriber_tasks_member', JSON.stringify(data.member || {}));
+        localStorage.setItem(CACHE_KEY_FOCUSED_STATUS, data.focusedStatus || 'NotWorkYet');
+        localStorage.setItem(CACHE_KEY_HAS_UNSUB, String(data.hasUnsub || false));
+        localStorage.setItem(CACHE_KEY_UNSUB_COUNT, String(data.unsubCount || 0));
+        localStorage.setItem(CACHE_KEY_MEMBER, JSON.stringify(data.member || {}));
         
         if (data.channelNames) {
             localStorage.setItem('subscriber_tasks_channelNames', JSON.stringify(data.channelNames));
@@ -628,10 +632,10 @@ function loadTasksFromCache() {
         const exchangeData = localStorage.getItem(CACHE_KEY_EXCHANGE);
         const perfData = localStorage.getItem(CACHE_KEY_PERF);
         const timestamp = localStorage.getItem(CACHE_KEY_TIMESTAMP);
-        const focusedStatus = localStorage.getItem('subscriber_tasks_focusedStatus') || 'NotWorkYet';
-        const hasUnsubStr = localStorage.getItem('subscriber_tasks_hasUnsub') || 'false';
-        const unsubCountStr = localStorage.getItem('subscriber_tasks_unsubCount') || '0';
-        const memberData = localStorage.getItem('subscriber_tasks_member');
+        const focusedStatus = localStorage.getItem(CACHE_KEY_FOCUSED_STATUS) || 'NotWorkYet';
+        const hasUnsubStr = localStorage.getItem(CACHE_KEY_HAS_UNSUB) || 'false';
+        const unsubCountStr = localStorage.getItem(CACHE_KEY_UNSUB_COUNT) || '0';
+        const memberData = localStorage.getItem(CACHE_KEY_MEMBER);
         
         if (!tasksData || !timestamp) {
             console.log('📭 No cache found');
@@ -685,10 +689,10 @@ function clearCache() {
         localStorage.removeItem(CACHE_KEY_EXCHANGE);
         localStorage.removeItem(CACHE_KEY_PERF);
         localStorage.removeItem(CACHE_KEY_TIMESTAMP);
-        localStorage.removeItem('subscriber_tasks_focusedStatus');
-        localStorage.removeItem('subscriber_tasks_hasUnsub');
-        localStorage.removeItem('subscriber_tasks_unsubCount');
-        localStorage.removeItem('subscriber_tasks_member');
+        localStorage.removeItem(CACHE_KEY_FOCUSED_STATUS);
+        localStorage.removeItem(CACHE_KEY_HAS_UNSUB);
+        localStorage.removeItem(CACHE_KEY_UNSUB_COUNT);
+        localStorage.removeItem(CACHE_KEY_MEMBER);
         localStorage.removeItem('subscriber_tasks_channelNames');
         localStorage.removeItem('subscriber_tasks_channelHandles');
         localStorage.removeItem('subscriber_tasks_channelImages');
@@ -763,6 +767,12 @@ async function validateSingleTask(task) {
     
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(task.TargetUserCode)}`);
+        
+        if (!res.ok) {
+            console.warn('Validation request failed:', res.status);
+            return { valid: true, task: task };
+        }
+        
         const data = await res.json();
         
         if (!data.success || !data.targets) {
@@ -832,10 +842,91 @@ function removeInvalidTask(taskId, reason) {
     return true;
 }
 
+/* ────────────────────────────────────────
+   CHECK PERFORMANCE TABLE FOR PRIORITY TASKS
+──────────────────────────────────────── */
+async function checkPerformanceTableForPriority() {
+    try {
+        console.log('🔍 Checking Performance Table for priority tasks...');
+        const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
+        
+        if (!res.ok) {
+            console.warn('Performance check failed:', res.status);
+            return null;
+        }
+        
+        const data = await res.json();
+        
+        if (!data.success || !data.stats) {
+            console.warn('Invalid response from performance check');
+            return null;
+        }
+        
+        const freshStats = data.stats;
+        const hasUnsub = freshStats.unsubscribed > 0;
+        const hasPending = freshStats.pending > 0;
+        
+        // Determine if we need to fetch priority tasks
+        let newFocusedStatus = null;
+        if (hasUnsub) {
+            newFocusedStatus = 'Unsubscribed';
+        } else if (hasPending) {
+            newFocusedStatus = 'Pending';
+        }
+        
+        // If there are Unsubscribed or Pending tasks, fetch them
+        if (newFocusedStatus) {
+            console.log(`🎯 Found ${newFocusedStatus} tasks, fetching from server...`);
+            const tasksRes = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
+            
+            if (!tasksRes.ok) {
+                console.warn('Tasks fetch failed:', tasksRes.status);
+                return null;
+            }
+            
+            const tasksData = await tasksRes.json();
+            
+            if (tasksData.success && tasksData.tasks && tasksData.tasks.length > 0) {
+                return {
+                    tasks: tasksData.tasks,
+                    focusedStatus: tasksData.focusedStatus || newFocusedStatus,
+                    stats: tasksData.fullStats || freshStats,
+                    exchangeStats: tasksData.exchangeStats || {},
+                    hasUnsub: tasksData.hasUnsub || false,
+                    unsubCount: tasksData.unsubCount || 0,
+                    perfStats: tasksData.perfStats || null,
+                    channelNames: tasksData.channelNames || {},
+                    channelHandles: tasksData.channelHandles || {},
+                    channelImages: tasksData.channelImages || {},
+                    channelIds: tasksData.channelIds || {},
+                    member: tasksData.member || null,
+                    fromPriority: true
+                };
+            }
+        }
+        
+        // No priority tasks found
+        return {
+            hasUnsub: hasUnsub,
+            hasPending: hasPending,
+            noPriorityTasks: true,
+            stats: freshStats
+        };
+    } catch (e) {
+        console.warn('Performance check error:', e);
+        return null;
+    }
+}
+
+/* ────────────────────────────────────────
+   VALIDATE ALL TASKS IN BACKGROUND
+──────────────────────────────────────── */
 async function validateAllTasksInBackground() {
     if (allTasks.length === 0) return;
     
     console.log('🔍 Validating all tasks in background...');
+    
+    // ── STEP 1: Validate each cached task's target ──
     const invalidTasks = [];
     
     for (const task of allTasks) {
@@ -848,6 +939,7 @@ async function validateAllTasksInBackground() {
         }
     }
     
+    // ── STEP 2: Remove invalid tasks ──
     if (invalidTasks.length > 0) {
         console.log(`🗑️ Removing ${invalidTasks.length} invalid tasks`);
         invalidTasks.forEach(({ taskId, reason }) => {
@@ -855,8 +947,96 @@ async function validateAllTasksInBackground() {
         });
         showToast(`🗑️ ${invalidTasks.length} task(s) removed - target members no longer eligible`, false);
     }
+    
+    // ── STEP 3: Check Performance Table for priority tasks ──
+    const priorityResult = await checkPerformanceTableForPriority();
+    
+    if (priorityResult && priorityResult.fromPriority) {
+        // We have priority tasks (Unsubscribed or Pending) from server
+        console.log(`🔄 Updating to show ${priorityResult.focusedStatus} tasks from server`);
+        
+        // Update all data
+        allTasks = priorityResult.tasks || [];
+        currentStatus = priorityResult.focusedStatus || 'NotWorkYet';
+        stats = priorityResult.stats || stats;
+        exchangeStats = priorityResult.exchangeStats || exchangeStats;
+        hasUnsub = priorityResult.hasUnsub || false;
+        perfStats = priorityResult.perfStats || perfStats;
+        
+        if (priorityResult.channelNames) Object.assign(channelNameCache, priorityResult.channelNames);
+        if (priorityResult.channelHandles) Object.assign(channelHandleCache, priorityResult.channelHandles);
+        if (priorityResult.channelImages) Object.assign(channelImageCache, priorityResult.channelImages);
+        if (priorityResult.channelIds) Object.assign(channelIdCache, priorityResult.channelIds);
+        if (priorityResult.member) member = priorityResult.member;
+        
+        if (priorityResult.unsubCount > 0) {
+            document.getElementById('unsubCount').textContent = priorityResult.unsubCount;
+        }
+        
+        // Save to cache
+        const tempData = {
+            tasks: allTasks,
+            fullStats: stats,
+            exchangeStats: exchangeStats,
+            perfStats: perfStats,
+            focusedStatus: currentStatus,
+            hasUnsub: hasUnsub,
+            unsubCount: priorityResult.unsubCount || 0,
+            member: member,
+            channelNames: channelNameCache,
+            channelHandles: channelHandleCache,
+            channelImages: channelImageCache,
+            channelIds: channelIdCache
+        };
+        saveTasksToCache(tempData);
+        
+        // ── STEP 4: Update UI ──
+        const labelMap = {
+            'Unsubscribed': 'Unsubscribed (Action Required)',
+            'Pending': 'Pending (Waiting for Subscribe Back)',
+            'NotWorkYet': 'Not Started'
+        };
+        document.getElementById('statusLabel').textContent = labelMap[currentStatus] || currentStatus;
+        
+        checkBlock();
+        checkUnsubscribed();
+        renderStats();
+        renderLimitCard();
+        renderList();
+        
+        showToast(`📋 Showing ${labelMap[currentStatus] || currentStatus} tasks`, false);
+        
+    } else if (priorityResult && priorityResult.noPriorityTasks) {
+        // No Unsubscribed or Pending tasks - stay with cached
+        console.log('✅ No priority tasks found, keeping cached tasks');
+        if (priorityResult.stats) {
+            stats = priorityResult.stats;
+            renderStats();
+        }
+    } else {
+        // ── STEP 5: Fallback - fetch fresh stats ──
+        try {
+            const statsRes = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
+            const statsData = await statsRes.json();
+            if (statsData.success && statsData.stats) {
+                stats = statsData.stats;
+                if (statsData.exchangeStats) {
+                    exchangeStats = statsData.exchangeStats;
+                }
+                renderStats();
+                
+                localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+                localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+            }
+        } catch (e) {
+            console.warn('Stats update failed:', e);
+        }
+    }
 }
 
+/* ────────────────────────────────────────
+   VALIDATE TASK BEFORE ACTION
+──────────────────────────────────────── */
 async function validateTaskBeforeAction(taskId, actionName) {
     const task = allTasks.find(t => t.TaskID === taskId && t.UserCode === USER_CODE);
     if (!task) {
@@ -913,14 +1093,75 @@ window.addEventListener('DOMContentLoaded', async function() {
 });
 
 /* ────────────────────────────────────────
-   INIT - Try Cache First, Then Server
+   INIT - Try Cache First, Then Check Performance
 ──────────────────────────────────────── */
 async function init() {
     try {
+        // ── STEP 1: Check Performance Table for priority tasks FIRST ──
+        const priorityResult = await checkPerformanceTableForPriority();
+        
+        if (priorityResult && priorityResult.fromPriority) {
+            // We have priority tasks (Unsubscribed or Pending) from server
+            console.log(`🎯 Using ${priorityResult.focusedStatus} tasks from server (priority)`);
+            
+            allTasks = priorityResult.tasks || [];
+            currentStatus = priorityResult.focusedStatus || 'NotWorkYet';
+            stats = priorityResult.stats || stats;
+            exchangeStats = priorityResult.exchangeStats || exchangeStats;
+            hasUnsub = priorityResult.hasUnsub || false;
+            perfStats = priorityResult.perfStats || perfStats;
+            
+            if (priorityResult.channelNames) Object.assign(channelNameCache, priorityResult.channelNames);
+            if (priorityResult.channelHandles) Object.assign(channelHandleCache, priorityResult.channelHandles);
+            if (priorityResult.channelImages) Object.assign(channelImageCache, priorityResult.channelImages);
+            if (priorityResult.channelIds) Object.assign(channelIdCache, priorityResult.channelIds);
+            if (priorityResult.member) member = priorityResult.member;
+            
+            if (priorityResult.unsubCount > 0) {
+                document.getElementById('unsubCount').textContent = priorityResult.unsubCount;
+            }
+            
+            // Save to cache
+            const tempData = {
+                tasks: allTasks,
+                fullStats: stats,
+                exchangeStats: exchangeStats,
+                perfStats: perfStats,
+                focusedStatus: currentStatus,
+                hasUnsub: hasUnsub,
+                unsubCount: priorityResult.unsubCount || 0,
+                member: member,
+                channelNames: channelNameCache,
+                channelHandles: channelHandleCache,
+                channelImages: channelImageCache,
+                channelIds: channelIdCache
+            };
+            saveTasksToCache(tempData);
+            
+            hideLoader();
+            loadPreferenceOptions();
+            checkBlock();
+            checkUnsubscribed();
+            renderStats();
+            renderLimitCard();
+            renderList();
+            updateStatusLabel();
+            
+            if (perfStats && perfStats.LimitReached === 'Yes') {
+                setTimeout(showLimitReachedAlert, 800);
+            }
+            
+            refreshTasksInBackground();
+            startPeriodicValidation();
+            
+            return;
+        }
+        
+        // ── STEP 2: No priority tasks, check cache ──
         const cachedData = loadTasksFromCache();
         
         if (cachedData && cachedData.tasks && cachedData.tasks.length > 0) {
-            console.log('📦 Using cached tasks');
+            console.log('📦 Using cached tasks (no priority tasks found)');
             
             allTasks = cachedData.tasks;
             stats = cachedData.stats;
@@ -935,6 +1176,7 @@ async function init() {
             if (cachedData.channelImages) channelImageCache = cachedData.channelImages;
             if (cachedData.channelIds) channelIdCache = cachedData.channelIds;
             
+            // ── STEP 3: Validate cached tasks ──
             const validatedTasks = await validateTasksWithServer(allTasks);
             
             if (validatedTasks.length !== allTasks.length) {
@@ -947,7 +1189,7 @@ async function init() {
                     perfStats: perfStats,
                     focusedStatus: currentStatus,
                     hasUnsub: hasUnsub,
-                    unsubCount: parseInt(localStorage.getItem('subscriber_tasks_unsubCount')) || 0,
+                    unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0,
                     member: member,
                     channelNames: channelNameCache,
                     channelHandles: channelHandleCache,
@@ -955,6 +1197,15 @@ async function init() {
                     channelIds: channelIdCache
                 };
                 saveTasksToCache(tempData);
+            }
+            
+            // ── STEP 4: Update stats from performance table ──
+            if (priorityResult && priorityResult.stats) {
+                stats = priorityResult.stats;
+                if (priorityResult.stats.unsubscribed > 0 || priorityResult.stats.pending > 0) {
+                    console.log('⚠️ Performance table shows tasks, refreshing in background...');
+                    refreshTasksInBackground();
+                }
             }
             
             hideLoader();
@@ -1003,6 +1254,12 @@ async function validateTasksWithServer(tasks) {
         
         const targetCodesParam = targetCodes.join(',');
         const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(targetCodesParam)}`);
+        
+        if (!res.ok) {
+            console.warn('Validation request failed:', res.status);
+            return tasks;
+        }
+        
         const data = await res.json();
         
         if (!data.success || !data.targets) {
@@ -1085,6 +1342,11 @@ async function fetchTasksFromServer(showLoader = true) {
     
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        
         const data = await res.json();
 
         if (showLoader) hideLoader();
@@ -1188,35 +1450,48 @@ async function refreshTasksInBackground() {
                 validatedTasks = await validateTasksWithServer(validatedTasks);
             }
             
-            const oldTaskIds = new Set(allTasks.map(t => t.TaskID));
-            const newTaskIds = new Set(validatedTasks.map(t => t.TaskID));
+            // Check if we have priority tasks (Unsubscribed or Pending)
+            const hasPriority = data.stats && (data.stats.unsubscribed > 0 || data.stats.pending > 0);
             
-            const removedTasks = allTasks.filter(t => !newTaskIds.has(t.TaskID));
-            if (removedTasks.length > 0) {
-                console.log(`🗑️ Background: ${removedTasks.length} tasks removed`);
+            if (hasPriority && validatedTasks.length > 0) {
+                // We have priority tasks - update everything
+                console.log(`🔄 Background: Updating to show ${data.focusedStatus} tasks`);
+                allTasks = validatedTasks;
+                currentStatus = data.focusedStatus || 'NotWorkYet';
+                if (data.fullStats) stats = data.fullStats;
+                if (data.exchangeStats) exchangeStats = data.exchangeStats;
+                if (data.perfStats) perfStats = data.perfStats;
+                if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
+                if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+                if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
+                if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
+                
+                saveTasksToCache(data);
+                
+                checkBlock();
+                checkUnsubscribed();
+                renderStats();
+                renderLimitCard();
+                renderList();
+                updateStatusLabel();
+                
+                console.log('✅ Background refresh complete (priority tasks)');
+                return;
             }
             
-            allTasks = validatedTasks;
-            currentStatus = data.focusedStatus || 'NotWorkYet';
+            // No priority tasks, just update stats
+            if (data.fullStats) {
+                stats = data.fullStats;
+                if (data.exchangeStats) exchangeStats = data.exchangeStats;
+                if (data.perfStats) perfStats = data.perfStats;
+                renderStats();
+                
+                localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+                localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+                localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(perfStats));
+            }
             
-            if (data.fullStats) stats = data.fullStats;
-            if (data.exchangeStats) exchangeStats = data.exchangeStats;
-            if (data.perfStats) perfStats = data.perfStats;
-            if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
-            if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
-            if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
-            if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
-            
-            saveTasksToCache(data);
-            
-            checkBlock();
-            checkUnsubscribed();
-            renderStats();
-            renderLimitCard();
-            renderList();
-            updateStatusLabel();
-            
-            console.log('✅ Background refresh complete');
+            console.log('✅ Background refresh complete (stats only)');
         }
     } catch (e) {
         console.warn('Background refresh failed:', e);
@@ -1249,7 +1524,6 @@ async function refreshTasks() {
 /* ────────────────────────────────────────
    STATUS PAGE HELPERS
 ──────────────────────────────────────── */
-
 function showNotEnrolled(message) {
     const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
     if (container) {
@@ -1447,6 +1721,12 @@ function renderStats() {
 async function refreshStats() {
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
+        
+        if (!res.ok) {
+            console.warn('Stats refresh failed:', res.status);
+            return;
+        }
+        
         const data = await res.json();
         if (data.success && data.stats) {
             stats = data.stats;
@@ -2530,7 +2810,7 @@ async function doCreateTasks() {
                     perfStats: perfStats,
                     focusedStatus: currentStatus,
                     hasUnsub: hasUnsub,
-                    unsubCount: parseInt(localStorage.getItem('subscriber_tasks_unsubCount')) || 0,
+                    unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0,
                     member: member,
                     channelNames: channelNameCache,
                     channelHandles: channelHandleCache,
