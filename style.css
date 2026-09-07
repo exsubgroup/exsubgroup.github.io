@@ -1674,13 +1674,13 @@ btnssssss */
 /* proof style */
 
 /* ══════════════════════════════════════════════════════════════
-   RESPONSIVE FIXES FOR MOBILE - Video Task Cards
+   RESPONSIVE FIXES FOR MOBILE - Playlist Task Cards
    ══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
     /* Make task cards full width and reduce padding */
     .task-card {
-        padding: 14px !important;
+        padding: 16px !important;
         border-radius: 16px !important;
         width: 100% !important;
     }
@@ -1700,192 +1700,282 @@ btnssssss */
     .task-card .flex.xl\:flex-col {
         flex-direction: column !important;
         width: 100% !important;
-        gap: 6px !important;
-        margin-top: 10px !important;
+        gap: 8px !important;
+        margin-top: 12px !important;
     }
 
-    .task-card .xl\:w-\[160px\] {
+    .task-card .xl\:w-\[160px\],
+    .task-card .xl\:w-\[200px\] {
         width: 100% !important;
     }
 
-    /* All action buttons full width */
+    /* ── INCREASED FONT SIZES FOR MOBILE ── */
+    
+    /* Task ID */
+    .task-card .flex-wrap code {
+        font-size: 12px !important;
+        padding: 3px 10px !important;
+    }
+
+    /* Status badges */
+    .task-card .status-badge {
+        font-size: 11px !important;
+        padding: 3px 10px !important;
+    }
+
+    .task-card .paired-badge,
+    .task-card .match-badge {
+        font-size: 10px !important;
+        padding: 3px 8px !important;
+    }
+
+    /* Channel name */
+    .task-card .min-w-0.flex-1 .text-sm {
+        font-size: 15px !important;
+        line-height: 1.4 !important;
+        font-weight: 700 !important;
+    }
+
+    /* Channel handle */
+    .task-card .min-w-0.flex-1 .text-xs {
+        font-size: 13px !important;
+    }
+
+    /* Playlist name */
+    .task-card .font-semibold.text-\[#211F1F\].text-sm {
+        font-size: 15px !important;
+    }
+
+    /* Playlist meta info (videos count, duration) */
+    .task-card .flex.gap-4.text-xs.text-muted {
+        font-size: 13px !important;
+        gap: 12px !important;
+    }
+    .task-card .flex.gap-4.text-xs.text-muted span {
+        font-size: 13px !important;
+    }
+
+    /* Instructions box text */
+    .instructions-box .text-xs {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+    .instructions-box .text-purple-700.font-semibold {
+        font-size: 14px !important;
+    }
+
+    /* All action buttons */
     .task-card .flex.xl\:flex-col a,
     .task-card .flex.xl\:flex-col button,
     .task-card .flex.xl\:flex-col .px-4 {
         width: 100% !important;
         flex: 1 1 auto !important;
-        padding: 10px 12px !important;
-        font-size: 11px !important;
+        padding: 12px 14px !important;
+        font-size: 14px !important;
         justify-content: center !important;
-        min-height: 40px !important;
+        min-height: 48px !important;
+        border-radius: 14px !important;
     }
 
-    /* Action buttons container */
-    .task-card .flex.xl\:flex-col.items-center.xl\:items-stretch {
-        align-items: stretch !important;
+    /* Channel image size */
+    .task-card .w-11.h-11 {
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        min-height: 48px !important;
     }
 
-    /* Channel link full width */
-    .task-card .flex.xl\:flex-col a.no-underline {
-        display: flex !important;
-        width: 100% !important;
-        justify-content: center !important;
-        text-align: center !important;
+    .task-card .w-11.h-11 img {
+        width: 48px !important;
+        height: 48px !important;
     }
 
-    /* Video thumb - smaller on mobile */
-    .video-thumb-wrap {
-        max-width: 100px !important;
-        min-width: 80px !important;
+    /* Icon placeholders */
+    .task-card .w-11.h-11.rounded-xl {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 24px !important;
     }
 
-    /* Keep video info in row */
-    .task-card .flex.items-start.gap-3 {
-        flex-direction: row !important;
-        align-items: flex-start !important;
-        gap: 10px !important;
+    /* Meta info (Member, Created, etc.) */
+    .task-card .flex.flex-wrap.gap-4.text-xs.text-muted {
+        font-size: 13px !important;
+        gap: 8px 12px !important;
     }
 
-    /* Smaller text */
-    .task-card .min-w-0.flex-1 .text-sm {
-        font-size: 12px !important;
-        line-height: 1.3 !important;
-        word-break: break-word !important;
+    .task-card .flex.flex-wrap.gap-4.text-xs.text-muted span {
+        font-size: 13px !important;
     }
 
-    .task-card .min-w-0.flex-1 .text-xs {
-        font-size: 10px !important;
-    }
-
-    /* Badges wrap and smaller */
-    .task-card .flex-wrap {
-        gap: 4px !important;
-    }
-
-    .task-card .flex-wrap code {
-        font-size: 10px !important;
-        padding: 2px 8px !important;
-    }
-
-    .task-card .status-badge {
-        font-size: 9px !important;
-        padding: 2px 8px !important;
-    }
-
-    .task-card .paired-badge,
-    .task-card .match-badge,
-    .task-card .gap-badge {
-        font-size: 9px !important;
-        padding: 2px 6px !important;
-    }
-
-    /* Instructions box */
-    .instructions-box {
-        padding: 8px 10px !important;
-    }
-
-    .instructions-box .text-xs {
-        font-size: 10px !important;
-    }
-
-    /* Punishment box buttons */
-    .punishment-box .flex.gap-2.mt-3 {
-        flex-wrap: wrap !important;
-    }
-
-    .punishment-box .flex.gap-2.mt-3 a,
-    .punishment-box .flex.gap-2.mt-3 button {
-        font-size: 10px !important;
-        padding: 6px 10px !important;
-        flex: 1 1 auto !important;
-        min-width: 70px !important;
-        text-align: center !important;
-        justify-content: center !important;
+    .task-card .flex.flex-wrap.gap-4.text-xs.text-muted .text-\[#211F1F\]\/70 {
+        font-size: 13px !important;
     }
 
     /* Issue box */
-    .issue-box .flex.items-center.justify-between {
-        flex-wrap: wrap !important;
-        gap: 6px !important;
-    }
-
-    .issue-box .flex.items-center.justify-between span {
-        font-size: 10px !important;
+    .issue-box .text-xs.text-red-600\/80 {
+        font-size: 13px !important;
     }
 
     .issue-box .flex.items-center.justify-between button {
-        font-size: 10px !important;
+        font-size: 13px !important;
     }
 
-    /* Meta info */
-    .task-card .flex.flex-wrap.gap-4.text-xs {
-        gap: 4px 8px !important;
+    /* Cheating box */
+    .cheating-box .text-xs.text-red-600.font-semibold {
+        font-size: 14px !important;
+    }
+    .cheating-box .text-xs.text-red-600\/80 {
+        font-size: 13px !important;
     }
 
-    .task-card .flex.flex-wrap.gap-4.text-xs span {
-        font-size: 9px !important;
+    /* Report Issue buttons */
+    .issue-box .flex.items-center.justify-between span {
+        font-size: 13px !important;
     }
 
-    .duration-chip {
-        font-size: 9px !important;
-        padding: 1px 6px !important;
+    /* Category badge */
+    .category-badge {
+        font-size: 12px !important;
+        padding: 3px 12px !important;
     }
 
     /* Filter tabs */
     .filter-tab {
-        font-size: 11px !important;
-        padding: 6px 12px !important;
-        white-space: nowrap !important;
+        font-size: 13px !important;
+        padding: 8px 16px !important;
+        border-radius: 14px !important;
     }
 
     .filter-tab .dot {
-        width: 5px !important;
-        height: 5px !important;
+        width: 7px !important;
+        height: 7px !important;
+    }
+
+    /* How it works banner */
+    .card.rounded-3xl.p-5.mb-6 .step-item {
+        font-size: 14px !important;
+    }
+    .card.rounded-3xl.p-5.mb-6 .step-item strong {
+        font-size: 14px !important;
+    }
+
+    /* Sidebar buttons */
+    .btn-purple.w-full.py-3.rounded-2xl,
+    .btn-outline.w-full.py-3.rounded-2xl,
+    .btn-teal.w-full.py-3.rounded-2xl {
+        font-size: 14px !important;
+        padding: 14px !important;
+        height: auto !important;
+        min-height: 50px !important;
+    }
+
+    /* Stats panel */
+    #statsPanel .space-y-3.text-sm {
+        font-size: 14px !important;
+    }
+    #statsPanel .space-y-3.text-sm .text-muted {
+        font-size: 14px !important;
+    }
+    #statsPanel .font-bold {
+        font-size: 14px !important;
+    }
+
+    /* Page title */
+    .text-4xl.font-black {
+        font-size: 28px !important;
+    }
+
+    /* Subtitle */
+    .text-gray-400.text-sm {
+        font-size: 14px !important;
+    }
+
+    /* Task section title */
+    #taskSectionTitle {
+        font-size: 22px !important;
+    }
+
+    /* Step numbers */
+    .step-num {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 13px !important;
+        min-width: 26px !important;
     }
 }
 
 /* Extra small devices */
 @media (max-width: 480px) {
     .task-card {
-        padding: 10px !important;
-    }
-
-    .video-thumb-wrap {
-        max-width: 70px !important;
-        min-width: 55px !important;
+        padding: 14px !important;
     }
 
     .task-card .min-w-0.flex-1 .text-sm {
-        font-size: 10px !important;
+        font-size: 14px !important;
     }
 
     .task-card .min-w-0.flex-1 .text-xs {
-        font-size: 9px !important;
+        font-size: 12px !important;
     }
 
     .task-card .flex.xl\:flex-col a,
     .task-card .flex.xl\:flex-col button,
     .task-card .flex.xl\:flex-col .px-4 {
-        font-size: 9px !important;
-        padding: 7px 8px !important;
-        min-height: 32px !important;
+        font-size: 13px !important;
+        padding: 10px 12px !important;
+        min-height: 44px !important;
     }
 
     .task-card .flex-wrap code {
-        font-size: 8px !important;
-        padding: 1px 5px !important;
+        font-size: 11px !important;
+        padding: 2px 8px !important;
     }
 
     .task-card .status-badge {
-        font-size: 8px !important;
-        padding: 1px 6px !important;
+        font-size: 10px !important;
+        padding: 2px 8px !important;
     }
 
     .task-card .paired-badge,
-    .task-card .match-badge,
-    .task-card .gap-badge {
-        font-size: 8px !important;
-        padding: 1px 5px !important;
+    .task-card .match-badge {
+        font-size: 9px !important;
+        padding: 2px 6px !important;
+    }
+
+    .filter-tab {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+
+    .text-4xl.font-black {
+        font-size: 24px !important;
+    }
+
+    .btn-purple.w-full.py-3.rounded-2xl,
+    .btn-outline.w-full.py-3.rounded-2xl,
+    .btn-teal.w-full.py-3.rounded-2xl {
+        font-size: 13px !important;
+        padding: 12px !important;
+        min-height: 44px !important;
+    }
+
+    .instructions-box .text-xs {
+        font-size: 12px !important;
+    }
+
+    .task-card .flex.gap-4.text-xs.text-muted {
+        font-size: 12px !important;
+    }
+    .task-card .flex.gap-4.text-xs.text-muted span {
+        font-size: 12px !important;
+    }
+
+    .task-card .flex.flex-wrap.gap-4.text-xs.text-muted {
+        font-size: 12px !important;
+    }
+    .task-card .flex.flex-wrap.gap-4.text-xs.text-muted span {
+        font-size: 12px !important;
     }
 }
 
@@ -1900,23 +1990,6 @@ btnssssss */
     overflow: hidden !important;
     width: 100% !important;
 }
-
-    /* ── ICON CHIP ── */
-    .idx-icon-chip{
-        width:44px; height:44px; min-width:44px;
-        border-radius:14px;
-        background:var(--mint);
-        border:2px solid var(--ink);
-        display:flex; align-items:center; justify-content:center;
-        flex-shrink:0;
-    }
-
-    .mt-10 {
-    margin-top: 1.5rem;
-}
-
-
-
 
 
 /* =========================================================

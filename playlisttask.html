@@ -272,10 +272,10 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
         <div class="nb-status-card nb-status-static">
           <span class="nb-card-title">🎵 Playlist Tasks</span>
         </div>
-          <a href="playlistproofs.html" class="nb-status-card nb-status-link">
-          <span class="nb-card-icon">🎥</span>
-          <span class="nb-card-title">View Proofs</span>
-        </a>
+        <a href="playlistproofs.html" target="_blank" rel="noopener noreferrer" class="nb-status-card nb-status-link">
+            <span class="nb-card-icon">🎥</span>
+            <span class="nb-card-title">View Proofs</span>
+            </a>
       </div>
       <h1 class="text-4xl font-black text-[#211F1F]">Playlist Tasks</h1>
       <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
@@ -601,7 +601,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXg-pL2Qz3v7NJYF9oP5i586vfhB4U7DupmokH-n6sKzkjxrIQ77f4kKngfSc8y9Rb/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8YV-JwXAi4QAf0BWnzlU8-xbrLLYkwvjD101oF5ntq3CrOYS5vJAGQQUgq5R804o9/exec';
 const USER_CODE  = savedUserCode;
 
 // ── CACHE KEYS ──
@@ -661,9 +661,15 @@ const MAX_PREF_EACH    = 5;
 /* ────────────────────────────────────────
    CACHE HELPERS
 ──────────────────────────────────────── */
+
 function saveTasksToCache(data) {
     try {
-        localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(data.tasks || []));
+        // 🔥 FIX: Only store active tasks (exclude Watched and Rejected)
+        const activeTasks = (data.tasks || []).filter(t => 
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
+        
+        localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(activeTasks));
         localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(data.fullStats || data.stats || {}));
         localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
         localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(data.perfStats || {}));
@@ -688,13 +694,15 @@ function saveTasksToCache(data) {
         }
         
         isCacheValid = true;
-        console.log('✅ Playlist tasks saved to cache');
+        console.log('✅ Playlist tasks saved to cache (Watched/Rejected filtered out)');
         return true;
     } catch (e) {
         console.warn('Could not save to cache:', e);
         return false;
     }
 }
+
+
 
 function loadTasksFromCache() {
     try {
@@ -1152,7 +1160,10 @@ async function init() {
         if (priorityResult && priorityResult.fromPriority) {
             console.log(`🎯 Using ${priorityResult.focusedStatus} tasks from server (priority)`);
             
-            allTasks = priorityResult.tasks || [];
+            // 🔥 FIX: Filter out Watched and Rejected
+            allTasks = (priorityResult.tasks || []).filter(t => 
+                t.Status !== 'Watched' && t.Status !== 'Rejected'
+            );
             currentStatus = priorityResult.focusedStatus || 'NotWorkYet';
             stats = priorityResult.stats || stats;
             exchangeStats = priorityResult.exchangeStats || exchangeStats;
@@ -1206,7 +1217,10 @@ async function init() {
         if (cachedData && cachedData.tasks && cachedData.tasks.length > 0) {
             console.log('📦 Using cached playlist tasks (no priority tasks found)');
             
-            allTasks = cachedData.tasks;
+            // 🔥 FIX: Filter out Watched and Rejected from cache
+            allTasks = (cachedData.tasks || []).filter(t => 
+                t.Status !== 'Watched' && t.Status !== 'Rejected'
+            );
             stats = cachedData.stats;
             exchangeStats = cachedData.exchangeStats;
             perfStats = cachedData.perfStats;
@@ -1279,6 +1293,7 @@ async function init() {
     }
 }
 
+
 async function validateTasksWithServer(tasks) {
     if (!tasks || tasks.length === 0) return tasks;
     
@@ -1324,22 +1339,27 @@ async function validateTasksWithServer(tasks) {
 }
 
 function recalculateStats() {
-    const total = allTasks.length;
+    // 🔥 FIX: Only count active tasks (exclude Watched and Rejected)
+    const activeTasks = allTasks.filter(t => 
+        t.Status !== 'Watched' && t.Status !== 'Rejected'
+    );
+    
+    const total = activeTasks.length;
     stats = {
         total: total,
-        notWorkYet: allTasks.filter(t => t.Status === 'NotWorkYet').length,
-        pending: allTasks.filter(t => t.Status === 'Pending').length,
-        watched: allTasks.filter(t => t.Status === 'Watched').length,
-        cheating: allTasks.filter(t => t.Status === 'Cheating').length,
-        rejected: allTasks.filter(t => t.Status === 'Rejected').length
+        notWorkYet: activeTasks.filter(t => t.Status === 'NotWorkYet').length,
+        pending: activeTasks.filter(t => t.Status === 'Pending').length,
+        watched: 0, // Not shown in main list
+        cheating: activeTasks.filter(t => t.Status === 'Cheating').length,
+        rejected: 0 // Not shown in main list
     };
     
     let awaitingCount = 0;
     let bothCount = 0;
     let theirPendingCount = 0;
     
-    allTasks.forEach(t => {
-        if (t.Status === 'Watched') {
+    activeTasks.forEach(t => {
+        if (t.Status === 'Pending' || t.Status === 'NotWorkYet') {
             if (t.PairedStatus === 'Watched') {
                 bothCount++;
             } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
@@ -1408,7 +1428,11 @@ async function fetchTasksFromServer(showLoader = true) {
             validatedTasks = await validateTasksWithServer(validatedTasks);
         }
         
-        allTasks = validatedTasks;
+        // 🔥 FIX: Filter out Watched and Rejected tasks
+        allTasks = validatedTasks.filter(t => 
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
+        
         currentStatus = data.focusedStatus || 'NotWorkYet';
         
         if (data.fullStats) {
@@ -1438,6 +1462,7 @@ async function fetchTasksFromServer(showLoader = true) {
             };
         }
 
+        // Save filtered tasks to cache
         saveTasksToCache(data);
 
         loadPreferenceOptions();
@@ -1469,11 +1494,16 @@ async function refreshTasksInBackground() {
                 validatedTasks = await validateTasksWithServer(validatedTasks);
             }
             
+            // 🔥 FIX: Filter out Watched and Rejected tasks
+            const activeTasks = validatedTasks.filter(t => 
+                t.Status !== 'Watched' && t.Status !== 'Rejected'
+            );
+            
             const hasPriority = data.stats && (data.stats.cheating > 0 || data.stats.pending > 0);
             
-            if (hasPriority && validatedTasks.length > 0) {
+            if (hasPriority && activeTasks.length > 0) {
                 console.log(`🔄 Background: Updating to show ${data.focusedStatus} tasks`);
-                allTasks = validatedTasks;
+                allTasks = activeTasks;
                 currentStatus = data.focusedStatus || 'NotWorkYet';
                 if (data.fullStats) stats = data.fullStats;
                 if (data.exchangeStats) exchangeStats = data.exchangeStats;
@@ -1516,6 +1546,7 @@ async function refreshTasksInBackground() {
     }
 }
 
+
 async function refreshTasks() {
     if (isLoading) return;
     isLoading = true;
@@ -1528,6 +1559,11 @@ async function refreshTasks() {
 
     try {
         await fetchTasksFromServer(false);
+        // 🔥 FIX: Filter out Watched/Rejected after fetch
+        allTasks = allTasks.filter(t => 
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
+        renderList();
         showToast('✅ Tasks refreshed!');
     } catch (e) {
         showToast('Error loading tasks', true);
@@ -1535,6 +1571,8 @@ async function refreshTasks() {
 
     isLoading = false;
 }
+
+
 
 function showNotEnrolled(message) {
     const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
@@ -1753,7 +1791,12 @@ function renderList() {
     const list = document.getElementById('taskList');
     const empty = document.getElementById('emptyState');
 
-    if (allTasks.length === 0) {
+    // 🔥 FIX: Filter out Watched and Rejected tasks
+    const activeTasks = allTasks.filter(t => 
+        t.Status !== 'Watched' && t.Status !== 'Rejected'
+    );
+
+    if (activeTasks.length === 0) {
         list.innerHTML = '';
         empty.classList.remove('hidden');
         document.getElementById('showingCount').textContent = '0';
@@ -1762,14 +1805,16 @@ function renderList() {
 
     empty.classList.add('hidden');
 
-    const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2, 'Watched': 3, 'Rejected': 4 };
-    const sorted = [...allTasks].sort((a, b) => {
+    const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2 };
+    const sorted = [...activeTasks].sort((a, b) => {
         return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
     });
 
     list.innerHTML = sorted.map(taskCard).join('');
     document.getElementById('showingCount').textContent = sorted.length;
 }
+
+
 
 function clearSkeletons() {
     document.getElementById('taskList').innerHTML = '';
@@ -2084,15 +2129,34 @@ function taskCard(t) {
 }
 
 /* ────────────────────────────────────────
-   VIEW WATCHING PROOF - SHOWS ALL RECORDS PER VIDEO
+   VIEW WATCHING PROOF - WITH LOADING STATE
 ──────────────────────────────────────── */
 
-/* ────────────────────────────────────────
-   VIEW WATCHING PROOF - SHOWS ALL RECORDS WITH SCREENSHOTS
-──────────────────────────────────────── */
+// ── VIEW WATCHING PROOF - SHOWS HIGHEST PERCENTAGE PER VIDEO ──
 async function viewWatchingProof(taskId, targetUserCode, btnEl) {
+    // ── SHOW LOADING ON BUTTON ──
+    if (btnEl) {
+        const originalHTML = btnEl.innerHTML;
+        btnEl.disabled = true;
+        btnEl.innerHTML = `
+            <span class="inline-flex items-center justify-center gap-1">
+                <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                Loading...
+            </span>
+        `;
+    }
+    
     const validation = await validateTaskBeforeAction(taskId, 'View Proof');
-    if (!validation.valid) return;
+    if (!validation.valid) {
+        if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = '🎥 Proof';
+        }
+        return;
+    }
     
     const modal = document.getElementById('proofModal');
     const content = document.getElementById('proofModalContent');
@@ -2104,6 +2168,12 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
         </div>
     `;
     modal.classList.add('open');
+    
+    // ── RESTORE BUTTON ──
+    if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.innerHTML = '🎥 Proof';
+    }
     
     try {
         // Get ALL proof records for this task
@@ -2133,7 +2203,7 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
             return;
         }
         
-        // Group records by VideoId
+        // ── GROUP BY VIDEO AND GET HIGHEST PERCENTAGE PER VIDEO ──
         const groupedByVideo = {};
         allRecords.forEach(record => {
             const videoId = record.VideoId || 'unknown';
@@ -2143,176 +2213,152 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
                     VideoTitle: record.VideoTitle || `Video ${Object.keys(groupedByVideo).length + 1}`,
                     VideoDuration: record.VideoDuration || 0,
                     VideoDurationDisplay: record.VideoDurationDisplay || '0 sec',
-                    records: []
+                    allRecords: [],
+                    highestRecord: null,
+                    highestPercentage: 0
                 };
             }
-            groupedByVideo[videoId].records.push(record);
+            // Store all records for this video
+            groupedByVideo[videoId].allRecords.push(record);
+            
+            // Track highest percentage
+            const percentage = record.Percentage || 0;
+            if (percentage > groupedByVideo[videoId].highestPercentage) {
+                groupedByVideo[videoId].highestPercentage = percentage;
+                groupedByVideo[videoId].highestRecord = record;
+            }
         });
         
         const videoKeys = Object.keys(groupedByVideo);
         const WATCH_THRESHOLD = 85;
-        
-        // Count how many records are fully watched
-        const watchedCount = allRecords.filter(r => r.Percentage >= WATCH_THRESHOLD).length;
+        const watchedCount = videoKeys.filter(vid => groupedByVideo[vid].highestPercentage >= WATCH_THRESHOLD).length;
         
         let proofsHtml = `<div class="space-y-4">`;
         proofsHtml += `<p class="text-sm text-muted">Found <strong class="text-purple-700">${allRecords.length}</strong> total proof record(s) for Task: <span class="font-mono">${taskId}</span></p>`;
         proofsHtml += `<p class="text-xs text-muted">📹 ${videoKeys.length} unique video(s) with proof records</p>`;
-        proofsHtml += `<p class="text-xs text-muted">✅ Fully watched (≥${WATCH_THRESHOLD}%): <strong class="text-green-600">${watchedCount}/${allRecords.length}</strong></p>`;
-        proofsHtml += `<p class="text-xs text-muted">💡 Click <strong class="text-red-600">🗑️ Delete</strong> to remove a proof record from the sheet.</p>`;
+        proofsHtml += `<p class="text-xs text-muted">✅ Fully watched (≥${WATCH_THRESHOLD}%): <strong class="text-green-600">${watchedCount}/${videoKeys.length}</strong></p>`;
+        proofsHtml += `<p class="text-xs text-muted">💡 Showing <strong>highest percentage</strong> record per video. Click <strong>📋 Details</strong> to see all records for a video.</p>`;
         proofsHtml += `<hr class="border-[#211F1F]/15 my-3">`;
         
-        // Loop through each video and show ALL its records with screenshots
-        videoKeys.forEach((videoId, vidIndex) => {
+        // ── SORT VIDEOS BY PERCENTAGE (highest first) ──
+        const sortedVideoKeys = videoKeys.sort((a, b) => {
+            return groupedByVideo[b].highestPercentage - groupedByVideo[a].highestPercentage;
+        });
+        
+        sortedVideoKeys.forEach((videoId, vidIndex) => {
             const video = groupedByVideo[videoId];
-            const sortedRecords = [...video.records].sort((a, b) => {
-                const dateA = new Date(a.Timestamp || 0);
-                const dateB = new Date(b.Timestamp || 0);
-                return dateA - dateB;
-            });
+            const highest = video.highestRecord;
+            const isWatched = video.highestPercentage >= WATCH_THRESHOLD;
+            const statusColor = isWatched ? '#16a34a' : (video.highestPercentage > 0 ? '#f59e0b' : '#ef4444');
+            const statusIcon = isWatched ? '✅' : (video.highestPercentage > 0 ? '⏳' : '❌');
+            const totalRecords = video.allRecords.length;
             
-            // Find the highest percentage for this video
-            const highestRecord = sortedRecords.reduce((max, r) => 
-                (r.Percentage > max.Percentage) ? r : max, sortedRecords[0]
-            );
-            const isWatched = highestRecord.Percentage >= WATCH_THRESHOLD;
-            const statusColor = isWatched ? '#16a34a' : (highestRecord.Percentage > 0 ? '#f59e0b' : '#ef4444');
-            const statusIcon = isWatched ? '✅' : (highestRecord.Percentage > 0 ? '⏳' : '❌');
+            // Get screenshot for the highest record
+            let proofScreenshot = highest.ProofScreenshot || '';
+            let driveFileId = highest.DriveFileId || null;
             
+            if (!proofScreenshot && highest.ProofScreenshotRaw) {
+                proofScreenshot = highest.ProofScreenshotRaw;
+                if (proofScreenshot && proofScreenshot.includes('drive.google.com')) {
+                    let match = proofScreenshot.match(/\/file\/d\/([^\/]+)/);
+                    if (match) driveFileId = match[1];
+                    if (!driveFileId) {
+                        match = proofScreenshot.match(/[?&]id=([^&]+)/);
+                        if (match) driveFileId = match[1];
+                    }
+                    if (driveFileId) {
+                        proofScreenshot = `https://drive.google.com/thumbnail?id=${driveFileId}&sz=w400`;
+                    }
+                }
+            }
+            
+            const playDisplay = highest.PlaySecondsDisplay || formatMinutes(highest.PlaySeconds) || '0 sec';
+            const stopDisplay = highest.StopSecondsDisplay || formatMinutes(highest.StopSeconds) || '0 sec';
+            
+            // Build screenshot HTML
+            let screenshotHtml = '';
+            if (proofScreenshot) {
+                const isValidImage = proofScreenshot.startsWith('http://') || 
+                                   proofScreenshot.startsWith('https://') || 
+                                   proofScreenshot.startsWith('data:image');
+                
+                if (isValidImage) {
+                    screenshotHtml = `
+                        <div class="mt-2 bg-gray-50 rounded-xl p-2 border border-[#211F1F]/10">
+                            <img src="${proofScreenshot}" 
+                                 alt="Screenshot ${vidIndex + 1}" 
+                                 class="proof-screenshot w-full rounded-lg border-2 border-[#211F1F]/15 max-h-[250px] object-contain cursor-pointer"
+                                 onclick="window.open('${highest.ProofScreenshotRaw || proofScreenshot}', '_blank')"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <div style="display:none;" class="text-center py-2">
+                                <p class="text-xs text-muted">Could not load image</p>
+                                <button onclick="window.open('${highest.ProofScreenshotRaw || proofScreenshot}', '_blank')" class="mt-1 btn-outline px-3 py-1 rounded-lg text-xs">
+                                    🔗 Open Image Directly
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    screenshotHtml = `
+                        <div class="mt-2 bg-yellow-50 rounded-xl p-3 border border-yellow-200 text-center">
+                            <p class="text-xs text-yellow-700">📷 Screenshot available</p>
+                            <button onclick="window.open('${highest.ProofScreenshotRaw || proofScreenshot}', '_blank')" class="mt-1 btn-outline px-3 py-1 rounded-lg text-xs">
+                                🔗 Open Image
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                screenshotHtml = `
+                    <div class="mt-2 bg-gray-50 rounded-xl p-3 border border-gray-200 text-center">
+                        <p class="text-xs text-muted">📷 No screenshot available</p>
+                    </div>
+                `;
+            }
+            
+            // ── VIDEO CARD WITH DETAILS BUTTON ──
             proofsHtml += `
-                <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                    <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+                <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4" id="video-${videoId}">
+                    <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-purple-700 text-sm">📹 Video #${vidIndex + 1}</span>
-                            <span class="text-xs font-semibold" style="color:${statusColor}">${statusIcon} ${highestRecord.Percentage}%</span>
+                            <span class="text-xs font-semibold" style="color:${statusColor}">${statusIcon} ${video.highestPercentage}%</span>
                             <span class="text-xs text-muted">${video.VideoDurationDisplay || '0 sec'}</span>
+                            <span class="text-xs bg-gray-100 px-2 py-0.5 rounded-full text-muted">${totalRecords} record(s)</span>
                         </div>
-                        <span class="text-xs text-muted">${sortedRecords.length} record(s)</span>
+                        <button onclick="showVideoDetailSwal('${taskId}', '${videoId}', '${video.VideoTitle.replace(/'/g, "\\'")}')"
+                            class="btn-teal px-3 py-1.5 rounded-xl text-[10px] font-semibold flex items-center gap-1">
+                            📋 Details
+                        </button>
                     </div>
                     
-                    <div class="text-sm font-semibold text-[#211F1F] mb-3 truncate" title="${video.VideoTitle}">
+                    <div class="text-sm font-semibold text-[#211F1F] mb-2 truncate" title="${video.VideoTitle}">
                         ${video.VideoTitle}
                     </div>
                     
-                    <!-- ALL RECORDS for this video -->
-                    <div class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                        ${sortedRecords.map((record, recIndex) => {
-                            const timestamp = record.Timestamp ? new Date(record.Timestamp).toLocaleString() : '—';
-                            const isSufficient = record.Percentage >= WATCH_THRESHOLD;
-                            const percentageColor = isSufficient ? '#16a34a' : (record.Percentage > 0 ? '#f59e0b' : '#ef4444');
-                            
-                            let statusBadge = '';
-                            if (record.Checked === 'Valid') {
-                                statusBadge = `<span class="bg-green-500/15 text-green-600 px-2 py-0.5 rounded text-xs font-semibold">✅ Valid</span>`;
-                            } else if (record.Checked === 'Cheating') {
-                                statusBadge = `<span class="bg-red-500/15 text-red-600 px-2 py-0.5 rounded text-xs font-semibold">🚫 Cheating</span>`;
-                            } else if (record.Checked === 'Insufficient') {
-                                statusBadge = `<span class="bg-yellow-500/15 text-yellow-700 px-2 py-0.5 rounded text-xs font-semibold">⏱ Insufficient</span>`;
-                            } else {
-                                statusBadge = `<span class="bg-gray-500/15 text-gray-600 px-2 py-0.5 rounded text-xs font-semibold">⏳ Pending</span>`;
-                            }
-                            
-                            // Build screenshot HTML - use the thumbnail URL from backend
-                            const proofUrl = record.ProofScreenshot || '';
-                            const proofUrlRaw = record.ProofScreenshotRaw || '';
-                            const driveFileId = record.DriveFileId || '';
-                            
-                            let screenshotHtml = '';
-                            if (proofUrl) {
-                                // Check if it's a valid image URL
-                                const isValidImage = proofUrl.startsWith('http://') || 
-                                                   proofUrl.startsWith('https://') || 
-                                                   proofUrl.startsWith('data:image');
-                                
-                                if (isValidImage) {
-                                    const imgId = `screenshot-${taskId}-${vidIndex}-${recIndex}`;
-                                    
-                                    screenshotHtml = `
-                                        <div class="mt-2 bg-gray-50 rounded-xl p-2 border border-[#211F1F]/10">
-                                            <img id="${imgId}" 
-                                                 src="${proofUrl}" 
-                                                 alt="Screenshot ${recIndex + 1}" 
-                                                 class="proof-screenshot w-full rounded-lg border-2 border-[#211F1F]/15 max-h-[300px] object-contain cursor-pointer"
-                                                 onclick="window.open('${proofUrlRaw || proofUrl}', '_blank')"
-                                                 onerror="document.getElementById('${imgId}').style.display='none'; document.getElementById('${imgId}-error').style.display='block'">
-                                            <div id="${imgId}-error" style="display:none;" class="text-center py-2">
-                                                <p class="text-xs text-muted">Could not load image</p>
-                                                <button onclick="window.open('${proofUrlRaw || proofUrl}', '_blank')" class="mt-1 btn-outline px-3 py-1 rounded-lg text-xs">
-                                                    🔗 Open Image Directly
-                                                </button>
-                                            </div>
-                                        </div>
-                                    `;
-                                } else {
-                                    screenshotHtml = `
-                                        <div class="mt-2 bg-yellow-50 rounded-xl p-3 border border-yellow-200 text-center">
-                                            <p class="text-xs text-yellow-700">📷 Screenshot available</p>
-                                            <button onclick="window.open('${proofUrlRaw || proofUrl}', '_blank')" class="mt-1 btn-outline px-3 py-1 rounded-lg text-xs">
-                                                🔗 Open Image
-                                            </button>
-                                        </div>
-                                    `;
-                                }
-                            } else {
-                                screenshotHtml = `
-                                    <div class="mt-2 bg-gray-50 rounded-xl p-3 border border-gray-200 text-center">
-                                        <p class="text-xs text-muted">📷 No screenshot available</p>
-                                    </div>
-                                `;
-                            }
-                            
-                            // Build play seconds display
-                            const playDisplay = record.PlaySecondsDisplay || formatMinutes(record.PlaySeconds) || '0 sec';
-                            const stopDisplay = record.StopSecondsDisplay || formatMinutes(record.StopSeconds) || '0 sec';
-                            
-                            return `
-                                <div class="record-card border-2 border-[#211F1F] rounded-xl p-3 bg-gray-50" id="proof-${taskId}-${vidIndex}-${recIndex}">
-                                    <div class="record-header flex justify-between items-center flex-wrap gap-2">
-                                        <div class="flex items-center gap-2 flex-wrap">
-                                            <span class="text-xs font-mono text-muted">#${recIndex + 1}</span>
-                                            ${statusBadge}
-                                            <span class="record-time text-xs text-muted">${timestamp}</span>
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="record-percentage text-sm font-bold ${isSufficient ? 'text-green-600' : (record.Percentage > 0 ? 'text-orange-500' : 'text-red-500')}">
-                                                ${record.Percentage}%
-                                            </span>
-                                            <button onclick="deleteProofRecord('${taskId}', '${record.VideoId || ''}', '${(record.VideoTitle || 'Video').replace(/'/g, "\\'")}', this)"
-                                                class="btn-delete px-2 py-1 rounded-lg text-[10px] font-medium flex items-center gap-1">
-                                                🗑️
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-3 gap-2 mt-2 text-xs">
-                                        <div>
-                                            <span class="text-muted">▶ Play:</span>
-                                            <span class="font-semibold">${playDisplay}</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-muted">⏹ Stop:</span>
-                                            <span class="font-semibold">${stopDisplay}</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-muted">📊:</span>
-                                            <span class="font-semibold" style="color:${percentageColor}">${record.Percentage}%</span>
-                                        </div>
-                                    </div>
-                                    ${record.CheckRemarks ? `
-                                        <div class="mt-1 text-xs text-muted">📝 ${record.CheckRemarks}</div>
-                                    ` : ''}
-                                    ${screenshotHtml}
-                                </div>
-                            `;
-                        }).join('')}
+                    <!-- Highest Record Summary -->
+                    <div class="grid grid-cols-3 gap-2 text-xs bg-gray-50 rounded-xl p-3 border border-[#211F1F]/10">
+                        <div>
+                            <span class="text-muted">▶ Play:</span>
+                            <span class="font-semibold">${playDisplay}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">⏹ Stop:</span>
+                            <span class="font-semibold">${stopDisplay}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">📊 Best:</span>
+                            <span class="font-semibold" style="color:${statusColor}">${video.highestPercentage}%</span>
+                        </div>
                     </div>
+                    
+                    ${screenshotHtml}
                 </div>
             `;
         });
         
         proofsHtml += `</div>`;
         content.innerHTML = proofsHtml;
-        
-        // Scroll to top of modal
         modal.scrollTop = 0;
         
     } catch (e) {
@@ -2327,8 +2373,223 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
 }
 
 
+
+
+
+
+
+// ── SHOW ALL RECORDS FOR A SPECIFIC VIDEO IN A SWAL DIALOG ──
+async function showVideoDetailSwal(taskId, videoId, videoTitle) {
+    // Show loading
+    Swal.fire({
+        title: '📋 Loading Records...',
+        html: `
+            <div class="flex justify-center py-4">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+            </div>
+            <p class="text-muted text-sm">Loading all records for this video...</p>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
+    try {
+        // Fetch all proof records for this task
+        const url = `${SCRIPT_URL}?action=getPlaylistWatchProgress&taskId=${encodeURIComponent(taskId)}&userCode=${encodeURIComponent(USER_CODE)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (!data.success) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                html: `<p style="color:#4b5563;">${data.message || 'Could not load records.'}</p>`,
+                confirmButtonColor: '#211F1F'
+            });
+            return;
+        }
+        
+        const allRecords = data.progress || [];
+        const videoRecords = allRecords.filter(r => (r.VideoId || '') === videoId);
+        
+        if (videoRecords.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Records Found',
+                html: `<p style="color:#4b5563;">No records found for this video.</p>`,
+                confirmButtonColor: '#211F1F'
+            });
+            return;
+        }
+        
+        // Sort records by timestamp (newest first)
+        const sortedRecords = [...videoRecords].sort((a, b) => {
+            const dateA = new Date(a.Timestamp || 0);
+            const dateB = new Date(b.Timestamp || 0);
+            return dateB - dateA;
+        });
+        
+        const WATCH_THRESHOLD = 85;
+        const videoDuration = videoRecords[0]?.VideoDurationDisplay || '0 sec';
+        
+        // Build HTML
+        let html = `
+            <div style="text-align:left;font-size:14px;color:#4b5563;max-height:450px;overflow-y:auto;padding-right:4px;">
+                <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:12px 16px;margin-bottom:14px;">
+                    <p style="font-weight:700;color:#16a34a;font-size:15px;margin-bottom:4px;">🎬 ${videoTitle || 'Video'}</p>
+                    <p style="font-size:12px;color:#6b7280;">Duration: ${videoDuration} • ${videoRecords.length} record(s) found</p>
+                </div>
+        `;
+        
+        // ── SHOW ALL RECORDS ──
+        sortedRecords.forEach((record, index) => {
+            const percentage = record.Percentage || 0;
+            const isSufficient = percentage >= WATCH_THRESHOLD;
+            const percentageColor = isSufficient ? '#16a34a' : (percentage > 0 ? '#f59e0b' : '#ef4444');
+            const timestamp = record.Timestamp ? new Date(record.Timestamp).toLocaleString() : '—';
+            
+            const playDisplay = record.PlaySecondsDisplay || formatMinutes(record.PlaySeconds) || '0 sec';
+            const stopDisplay = record.StopSecondsDisplay || formatMinutes(record.StopSeconds) || '0 sec';
+            
+            // Check status badge
+            let statusBadge = '';
+            if (record.Checked === 'Valid') {
+                statusBadge = `<span style="background:#dcfce7;color:#16a34a;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;">✅ Valid</span>`;
+            } else if (record.Checked === 'Cheating') {
+                statusBadge = `<span style="background:#fee2e2;color:#dc2626;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;">🚫 Cheating</span>`;
+            } else if (record.Checked === 'Insufficient') {
+                statusBadge = `<span style="background:#fef3c7;color:#f59e0b;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;">⏱ Insufficient</span>`;
+            } else {
+                statusBadge = `<span style="background:#f3f4f6;color:#6b7280;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;">⏳ Pending</span>`;
+            }
+            
+            // Screenshot thumbnail
+            let screenshotHtml = '';
+            let proofScreenshot = record.ProofScreenshot || '';
+            let proofScreenshotRaw = record.ProofScreenshotRaw || '';
+            
+            // Try to get drive file ID for thumbnail
+            let driveFileId = record.DriveFileId || null;
+            if (!driveFileId && proofScreenshotRaw && proofScreenshotRaw.includes('drive.google.com')) {
+                let match = proofScreenshotRaw.match(/\/file\/d\/([^\/]+)/);
+                if (match) driveFileId = match[1];
+                if (!driveFileId) {
+                    match = proofScreenshotRaw.match(/[?&]id=([^&]+)/);
+                    if (match) driveFileId = match[1];
+                }
+                if (driveFileId) {
+                    proofScreenshot = `https://drive.google.com/thumbnail?id=${driveFileId}&sz=w200`;
+                }
+            }
+            
+            if (proofScreenshot && (proofScreenshot.startsWith('http://') || proofScreenshot.startsWith('https://'))) {
+                screenshotHtml = `
+                    <div style="margin-top:6px;">
+                        <img src="${proofScreenshot}" 
+                             style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:2px solid #e5e7eb;cursor:pointer;"
+                             onclick="window.open('${proofScreenshotRaw || proofScreenshot}', '_blank')"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                        <div style="display:none;text-align:center;padding:8px 0;">
+                            <p style="font-size:11px;color:#6b7280;">Could not load image</p>
+                            <button onclick="window.open('${proofScreenshotRaw || proofScreenshot}', '_blank')" 
+                                    style="margin-top:4px;padding:4px 12px;background:#F5F4EB;border:2px solid #211F1F;border-radius:8px;font-size:11px;cursor:pointer;">
+                                🔗 Open Image
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (proofScreenshotRaw) {
+                screenshotHtml = `
+                    <div style="margin-top:6px;text-align:center;">
+                        <button onclick="window.open('${proofScreenshotRaw}', '_blank')" 
+                                style="padding:4px 12px;background:#F5F4EB;border:2px solid #211F1F;border-radius:8px;font-size:11px;cursor:pointer;">
+                            📷 View Screenshot
+                        </button>
+                    </div>
+                `;
+            } else {
+                screenshotHtml = `
+                    <div style="margin-top:6px;text-align:center;">
+                        <span style="font-size:11px;color:#9ca3af;">📷 No screenshot</span>
+                    </div>
+                `;
+            }
+            
+            // Check remarks
+            let remarksHtml = '';
+            if (record.CheckRemarks) {
+                remarksHtml = `
+                    <div style="margin-top:4px;font-size:11px;color:#6b7280;background:#f9fafb;padding:4px 8px;border-radius:6px;">
+                        📝 ${record.CheckRemarks}
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div style="border:2px solid #e5e7eb;border-radius:12px;padding:12px 14px;margin-bottom:8px;background:#ffffff;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
+                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                            <span style="font-weight:600;font-size:12px;color:#6b7280;">#${index + 1}</span>
+                            ${statusBadge}
+                            <span style="font-size:11px;color:#6b7280;">${timestamp}</span>
+                        </div>
+                        <span style="font-weight:800;font-size:16px;color:${percentageColor};">${percentage}%</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:12px;">
+                        <div><span style="color:#6b7280;">▶ Play:</span> <strong>${playDisplay}</strong></div>
+                        <div><span style="color:#6b7280;">⏹ Stop:</span> <strong>${stopDisplay}</strong></div>
+                        <div><span style="color:#6b7280;">📊 Duration:</span> <strong>${record.VideoDurationDisplay || '—'}</strong></div>
+                        <div><span style="color:#6b7280;">🏷️ Video ID:</span> <strong style="font-size:10px;font-family:monospace;">${record.VideoId || '—'}</strong></div>
+                    </div>
+                    ${remarksHtml}
+                    ${screenshotHtml}
+                </div>
+            `;
+        });
+        
+        html += `
+                <div style="margin-top:12px;text-align:center;font-size:11px;color:#6b7280;">
+                    💡 Click any screenshot to view full size
+                </div>
+            </div>
+        `;
+        
+        Swal.fire({
+            title: `📋 All Records for ${videoTitle || 'Video'}`,
+            html: html,
+            width: 'min(95%, 680px)',
+            confirmButtonColor: '#211F1F',
+            confirmButtonText: 'Close',
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+            showCloseButton: true,
+            customClass: {
+                popup: 'swal2-popup',
+                htmlContainer: 'swal2-html-container'
+            }
+        });
+        
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            html: `<p style="color:#4b5563;">Could not load records. Please try again.</p>`,
+            confirmButtonColor: '#211F1F'
+        });
+        console.error('Video detail error:', e);
+    }
+}
+
+
+
+
+
+
 /* ────────────────────────────────────────
-   DELETE PROOF RECORD FROM SHEET
+   DELETE PROOF RECORD
 ──────────────────────────────────────── */
 async function deleteProofRecord(taskId, videoId, videoTitle, btnEl) {
     if (!taskId || !videoId) {
@@ -2368,10 +2629,18 @@ async function deleteProofRecord(taskId, videoId, videoTitle, btnEl) {
         return;
     }
     
-    const originalHTML = btnEl ? btnEl.innerHTML : 'Deleting...';
+    const originalHTML = btnEl ? btnEl.innerHTML : '🗑️';
     if (btnEl) {
         btnEl.disabled = true;
-        btnEl.innerHTML = '⏳ Deleting...';
+        btnEl.innerHTML = `
+            <span class="inline-flex items-center justify-center gap-1">
+                <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                Deleting...
+            </span>
+        `;
     }
     
     try {
@@ -2397,10 +2666,8 @@ async function deleteProofRecord(taskId, videoId, videoTitle, btnEl) {
                     recordCard.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         recordCard.remove();
-                        // Check if any records left
                         const remainingRecords = document.querySelectorAll('.record-card');
                         if (remainingRecords.length === 0) {
-                            // Check if any videos left
                             const remainingVideos = document.querySelectorAll('.bg-white.border-2.border-[#211F1F].rounded-2xl');
                             if (remainingVideos.length === 0) {
                                 document.getElementById('proofModalContent').innerHTML = `
@@ -2572,7 +2839,7 @@ function closeDetailModal() {
 }
 
 /* ────────────────────────────────────────
-   MARK WATCHED
+   MARK WATCHED - WITH LOADING STATE
 ──────────────────────────────────────── */
 async function doMarkWatched(taskId, btnEl) {
     const validation = await validateTaskBeforeAction(taskId, 'Mark Watched');
@@ -2592,13 +2859,14 @@ async function doMarkWatched(taskId, btnEl) {
     const originalHTML = btnEl.innerHTML;
     btnEl.disabled = true;
     btnEl.innerHTML = `
-        <span class="inline-flex items-center gap-2">
+        <span class="inline-flex items-center justify-center gap-2">
             <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
             </svg>
-            Checking...
-        </span>`;
+            Checking Proof...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -2616,6 +2884,7 @@ async function doMarkWatched(taskId, btnEl) {
                 myTask.WorkedDate = now;
                 myTask.PairedStatus = data.pairedStatus || (data.bothWatched ? 'Watched' : 'NotWorkYet');
             }
+            
             showToast(data.bothWatched ? '🎉 Both watched! Exchange complete!' : '✅ Playlist marked as Watched!');
             
             const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
@@ -2625,10 +2894,18 @@ async function doMarkWatched(taskId, btnEl) {
                 localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
             }
             
+            btnEl.innerHTML = '✅ Done';
+            btnEl.className = 'btn-watched px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-70';
+            btnEl.disabled = true;
+            
             await refreshTasks();
             renderStats();
             renderList();
+            
         } else if (data.proofMissing) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+            
             Swal.fire({
                 icon: 'warning',
                 title: '⚠️ Proof Not Found',
@@ -2651,9 +2928,11 @@ async function doMarkWatched(taskId, btnEl) {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             });
+            
+        } else if (data.cheatingDetected) {
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
-        } else if (data.cheatingDetected) {
+            
             Swal.fire({
                 icon: 'error',
                 title: '⚠️ Cheating Detected',
@@ -2679,17 +2958,20 @@ async function doMarkWatched(taskId, btnEl) {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             });
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
+            
+            setTimeout(() => location.reload(), 2000);
+            
         } else {
-            showToast(data.message || 'Update failed.', true);
             btnEl.disabled = false;
             btnEl.innerHTML = originalHTML;
+            showToast(data.message || 'Update failed.', true);
         }
+        
     } catch (e) {
-        showToast('Connection error.', true);
         btnEl.disabled = false;
         btnEl.innerHTML = originalHTML;
+        showToast('Connection error. Please try again.', true);
+        console.error('Mark watched error:', e);
     }
 }
 
@@ -2767,8 +3049,18 @@ function togglePrefPill(kind, value) {
 
 async function doSavePreferences() {
     const btn = document.getElementById('doSavePrefsBtn');
-    btn.textContent = 'Saving…';
+    const originalHTML = btn.innerHTML;
+    
     btn.disabled = true;
+    btn.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Saving...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -2799,12 +3091,12 @@ async function doSavePreferences() {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Save Preferences';
+    btn.textContent = originalHTML;
     btn.disabled = false;
 }
 
 /* ────────────────────────────────────────
-   CREATE TASKS MODAL
+   CREATE TASKS MODAL - WITH LOADING STATE
 ──────────────────────────────────────── */
 function openCreateModal() {
     if (isBlocked) { showToast('Your account is restricted from this group.', true); return; }
@@ -2844,8 +3136,18 @@ function closeCreateModal() {
 
 async function doCreateTasks() {
     const btn = document.getElementById('doCreateBtn');
-    btn.textContent = 'Creating…';
+    const originalHTML = btn.innerHTML;
+    
     btn.disabled = true;
+    btn.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Creating Tasks...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -2894,6 +3196,8 @@ async function doCreateTasks() {
                 renderList();
             }
             showToast(`${data.created} task(s) created!`);
+            setTimeout(() => closeCreateModal(), 1500);
+            
         } else {
             box.textContent = data.message || 'Could not create tasks.';
             box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
@@ -2902,7 +3206,7 @@ async function doCreateTasks() {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Generate Tasks';
+    btn.textContent = originalHTML;
     btn.disabled = false;
 }
 
@@ -2965,8 +3269,18 @@ async function doSubmitIssue() {
 
     const targetUserCode = task.TargetUserCode;
     const btn = document.getElementById('doIssueBtn');
-    btn.textContent = 'Submitting…';
+    const originalHTML = btn.innerHTML;
+    
     btn.disabled = true;
+    btn.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Submitting...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -3009,7 +3323,7 @@ async function doSubmitIssue() {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Submit Issue';
+    btn.textContent = originalHTML;
     btn.disabled = false;
 }
 </script>
