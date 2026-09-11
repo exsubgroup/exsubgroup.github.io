@@ -10,16 +10,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
 
-/* ══════════════════════════════════════════════════════════════
-   VIDEO TASKS — LIGHT THEME
-   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
-   ══════════════════════════════════════════════════════════════ */
+    /* ── CRITICAL: Hide entire tabs container when priority exists ── */
+#filterTabsContainer.hidden-container {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
 
+/* ── Force hide individual tabs too ── */
+.filter-tab.hidden-tab {
+    display: none !important;
+}
+
+.filter-tab.visible-tab {
+    display: inline-flex !important;
+}
 /* ── Not Enrolled Banner ── */
 .not-enrolled-banner {
   background: #F5F4EB;
@@ -31,500 +45,262 @@
   max-width: 700px;
   margin: 0 auto;
 }
-
-.not-enrolled-banner .banner-icon {
-  font-size: 72px;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.not-enrolled-banner .banner-title {
-  font-size: 24px;
-  font-weight: 900;
-  color: #211F1F;
-  margin-bottom: 12px;
-}
-
-.not-enrolled-banner .banner-desc {
-  font-size: 15px;
-  color: #4b5563;
-  line-height: 1.7;
-  max-width: 500px;
-  margin: 0 auto 24px;
-}
-
+.not-enrolled-banner .banner-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+.not-enrolled-banner .banner-title { font-size: 24px; font-weight: 900; color: #211F1F; margin-bottom: 8px; }
+.not-enrolled-banner .banner-desc { font-size: 14px; color: #6b7280; line-height: 1.6; max-width: 480px; margin: 0 auto 20px; }
 .not-enrolled-banner .banner-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 14px 36px;
-  background: #ACD1C0;
-  color: #211F1F;
-  border: 2px solid #211F1F;
-  border-radius: 16px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.12s ease;
-  text-decoration: none;
-  box-shadow: 4px 4px 0px 0px #211F1F;
-  font-family: 'Inter', sans-serif;
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px;
+  background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F;
+  border-radius: 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.12s ease; text-decoration: none;
+  box-shadow: 4px 4px 0px 0px #211F1F; font-family: 'Inter', sans-serif;
 }
-
-.not-enrolled-banner .banner-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #211F1F;
-}
-
-.not-enrolled-banner .banner-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px #211F1F;
-}
-
-.not-enrolled-banner .banner-hint {
-  margin-top: 16px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.not-enrolled-banner .banner-hint strong {
-  color: #211F1F;
-}
+.not-enrolled-banner .banner-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.not-enrolled-banner .banner-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
 :root {
-    --bg: #F5F4EB;
-    --ink: #211F1F;
-    --mint: #ACD1C0;
-    --sand: #DBD4B7;
-    --muted: #6b7280;
-    --border: #211F1F;
+  --bg: #F5F4EB;
+  --ink: #211F1F;
+  --mint: #ACD1C0;
+  --sand: #DBD4B7;
+  --card: #F5F4EB;
+  --muted: #6b7280;
 }
-
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
-body {
-    background: var(--bg);
-    color: var(--ink);
-    overflow-x: hidden;
-}
+.gradient-text { color: #211F1F; background: none; -webkit-background-clip: unset; -webkit-text-fill-color: unset; background-clip: unset; }
 
-body::before { content: none; }
-
-.gradient-text {
-    color: #211F1F;
-    -webkit-text-fill-color: #211F1F;
-}
-
-.card {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    border-radius: 20px;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-}
-
-.task-card {
-    background: #ffffff;
-    border: 2px solid #211F1F;
-    border-radius: 20px;
-    box-shadow: 4px 4px 0px 0px #211F1F;
-    transition: 0.2s ease;
-}
-.task-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px 0px #211F1F;
-}
-
-/* Cheating task card — red highlight + pinned look */
-.task-card.cheating-card {
-    border-color: #dc2626;
-    background: #fff5f5;
-}
-.task-card.cheating-card:hover {
-    box-shadow: 6px 6px 0px 0px #dc2626;
-}
+.card { background: #F5F4EB; border-radius: 20px; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; }
+.task-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
+.task-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.task-card.cheating-card { border-color: #dc2626; background: #fef2f2; box-shadow: 4px 4px 0px 0px #dc2626; }
+.task-card.cheating-card:hover { box-shadow: 6px 6px 0px 0px #dc2626; }
+.task-card.watched-card { border-color: #16a34a; background: #f0fdf4; box-shadow: 4px 4px 0px 0px #16a34a; }
+.task-card.watched-card:hover { box-shadow: 6px 6px 0px 0px #16a34a; }
 
 .text-muted { color: var(--muted); }
 
-.btn-purple {
-    background: #211F1F;
-    color: #ffffff;
-    border: 2px solid #211F1F;
-    border-radius: 14px;
-    box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-}
-.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-purple { background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-purple:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.45; transform: none; cursor: not-allowed; }
 
-.btn-outline {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    color: #211F1F;
-    border-radius: 14px;
-    transition: 0.15s;
-    cursor: pointer;
-}
-.btn-outline:hover:not(:disabled) { background: var(--sand); }
-.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline { background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-outline:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
 
-.btn-teal {
-    background: var(--mint);
-    color: #211F1F;
-    border: 2px solid #211F1F;
-    border-radius: 14px;
-    box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-}
-.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-teal { background: #ACD1C0; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.btn-red {
-    background: #ef4444;
-    color: white;
-    border: 2px solid #211F1F;
-    border-radius: 14px;
-    box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s;
-    cursor: pointer;
-}
-.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-red { background: #ef4444; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-red:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.filter-tab {
-    background: #ffffff;
-    border: 2px solid #211F1F;
-    transition: 0.2s;
-    color: var(--ink);
-    cursor: pointer;
-    white-space: nowrap;
-}
-.filter-tab:hover { background: var(--sand); }
-.filter-tab.active {
-    background: #211F1F;
-    border-color: #211F1F;
-    color: white;
-}
-.filter-tab:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
-}
-.filter-tab:disabled:hover { background: #ffffff; }
-.filter-tab.active:disabled {
-    opacity: 1;
-    background: #211F1F;
-    color: white;
-}
+.btn-watched { background: #16a34a; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-watched:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-weight: 700;
-    border: 1px solid rgba(33,31,31,0.15);
-}
+.btn-delete { background: #dc2626; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-delete:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-delete:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
 
-.dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-}
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
-.instructions-box {
-    background: var(--mint);
-    border: 2px solid #211F1F;
-    border-radius: 14px;
-    padding: 10px 14px;
-}
+.instructions-box { background: #ACD1C0; border: 2px solid #211F1F; border-radius: 14px; padding: 10px 14px; }
+.issue-box { background: #fee2e2; border: 2px solid #211F1F; border-radius: 14px; padding: 10px 14px; }
+.cheating-box { background: #fecaca; border: 2px solid #dc2626; border-radius: 14px; padding: 10px 14px; }
 
-.issue-box {
-    background: #fee2e2;
-    border: 2px solid rgba(220,38,38,0.4);
-    border-radius: 14px;
-    padding: 10px 14px;
-}
-
-.punishment-box {
-    background: #fee2e2;
-    border: 2px solid #dc2626;
-    border-radius: 14px;
-    padding: 10px 14px;
-}
-
-.modal-bg {
-    position: fixed; inset: 0;
-    background: rgba(33,31,31,0.55);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.25s;
-}
+.modal-bg { position: fixed; inset: 0; background: rgba(33,31,31,0.55); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s; }
 .modal-bg.open { opacity: 1; visibility: visible; }
-
-.modal-box {
-    background: #F5F4EB;
-    border: 2px solid #211F1F;
-    border-radius: 24px;
-    box-shadow: 6px 6px 0px 0px #211F1F;
-    padding: 28px;
-    width: 100%;
-    max-width: 500px;
-    transform: scale(0.96);
-    transition: 0.25s;
-    max-height: 90vh;
-    overflow-y: auto;
-}
+.modal-box { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px; box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px; width: 100%; max-width: 500px; transform: scale(0.95); transition: 0.25s; max-height: 90vh; overflow-y: auto; }
 .modal-bg.open .modal-box { transform: scale(1); }
 
-.skeleton {
-    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 24px;
-}
+.skeleton { background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 20px; border: 2px solid #211F1F; }
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
-#toast {
-    position: fixed; bottom: 24px; right: 24px;
-    z-index: 999;
-    background: #211F1F;
-    color: white;
-    padding: 13px 22px;
-    border-radius: 14px;
-    font-size: 13px;
-    font-weight: 600;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: 0.3s;
-    pointer-events: none;
-    max-width: 320px;
-    border: 2px solid #211F1F;
-}
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #211F1F; color: #DBD4B7; padding: 13px 22px; border-radius: 14px; font-size: 13px; font-weight: 700; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3); transform: translateY(80px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; }
 #toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: #b91c1c; }
+#toast.error { background: #ef4444; color: #ffffff; }
 
-.spinner{
-  width:40px; height:40px; border-radius:50%;
-  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
-  animation:spin 0.7s linear infinite;
-}
-@keyframes spin{ to{ transform:rotate(360deg); } }
+#pageLoader { position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+#pageLoader.hidden { opacity: 0; pointer-events: none; }
+#pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(33,31,31,0.15); border-top-color: #211F1F; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 input, textarea { color: #211F1F; }
-input::placeholder, textarea::placeholder { color: #8a8578; }
+input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
-.step-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.5;
-}
-.step-num {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--mint);
-    border: 1px solid #211F1F;
-    color: #211F1F;
-    font-size: 10px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-}
+.step-item { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+.step-num { width: 20px; height: 20px; border-radius: 50%; background: #ACD1C0; border: 1px solid #211F1F; color: #211F1F; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 
-.paired-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-weight: 700;
-}
+.paired-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
+.issue-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 2px solid #211F1F; background: #F5F4EB; color: #b91c1c; cursor: pointer; transition: 0.2s; white-space: nowrap; font-weight: 600; }
+.issue-pill:hover { background: #fee2e2; }
+.issue-pill.selected { background: #ef4444; border-color: #211F1F; color: #ffffff; }
 
-.issue-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(220,38,38,0.4);
-    background: #fee2e2;
-    color: #b91c1c;
-    cursor: pointer;
-    transition: 0.2s;
-    white-space: nowrap;
-}
-.issue-pill:hover { background: #fecaca; }
-.issue-pill.selected { background: #dc2626; border-color: #dc2626; color: #fff; }
-
-.pref-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(33,31,31,0.3);
-    background: #ffffff;
-    color: #211F1F;
-    cursor: pointer;
-    transition: 0.2s;
-    white-space: nowrap;
-}
-.pref-pill:hover { background: var(--sand); }
-.pref-pill.selected { background: #211F1F; border-color: #211F1F; color: #fff; }
+.pref-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 2px solid #211F1F; background: #F5F4EB; color: #211F1F; cursor: pointer; transition: 0.2s; white-space: nowrap; font-weight: 600; }
+.pref-pill:hover { background: #DBD4B7; }
+.pref-pill.selected { background: #ACD1C0; border-color: #211F1F; color: #211F1F; }
 .pref-pill:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.match-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10.5px;
-    padding: 3px 9px;
-    border-radius: 999px;
-    background: var(--mint);
-    border: 1px solid #211F1F;
-    color: #211F1F;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.gap-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10.5px;
-    padding: 3px 9px;
-    border-radius: 999px;
-    background: var(--sand);
-    border: 1px solid #211F1F;
-    color: #211F1F;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.copy-handle-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    background: var(--mint);
-    border: 1px solid #211F1F;
-    cursor: pointer;
-    transition: 0.2s;
-    flex-shrink: 0;
-    vertical-align: middle;
-}
-.copy-handle-btn:hover { background: var(--sand); }
+.match-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; padding: 3px 9px; border-radius: 999px; background: #ACD1C0; border: 1px solid #211F1F; color: #211F1F; font-weight: 700; white-space: nowrap; }
+.gap-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; padding: 3px 9px; border-radius: 999px; background: #DBD4B7; border: 1px solid #211F1F; color: #211F1F; font-weight: 700; white-space: nowrap; }
+.copy-handle-btn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: #ACD1C0; border: 1px solid #211F1F; cursor: pointer; transition: 0.2s; flex-shrink: 0; vertical-align: middle; }
+.copy-handle-btn:hover { background: #9bc2b1; }
 .copy-handle-btn svg { width: 11px; height: 11px; }
 
-.video-thumb-wrap {
-    position: relative;
-    width: 100%;
-    max-width: 220px;
-    aspect-ratio: 16/9;
-    border-radius: 14px;
-    overflow: hidden;
-    background: #e8e5d8;
-    border: 2px solid #211F1F;
-    flex-shrink: 0;
-}
-.video-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
-.video-thumb-wrap .play-badge {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(33,31,31,0.15);
-}
-.video-thumb-wrap .play-badge svg { width: 34px; height: 34px; }
-.duration-chip {
-    position: absolute;
-    bottom: 6px; right: 6px;
-    background: #211F1F;
-    color: white;
-    font-size: 10.5px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 6px;
+.filter-tab { background: #ffffff; border: 2px solid #211F1F; transition: 0.2s; color: var(--ink); cursor: pointer; white-space: nowrap; padding: 8px 16px; border-radius: 14px; font-size: 13px; font-weight: 600; }
+.filter-tab:hover { background: var(--sand); }
+.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
+.filter-tab:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.filter-tab:disabled:hover { background: #ffffff; }
+.filter-tab.active:disabled { opacity: 1; background: #211F1F; color: white; }
+
+/* ── Force hide tabs when priority exists ── */
+.filter-tab.hidden-tab {
+    display: none !important;
 }
 
-.settings-input {
-    background: #ffffff;
-    border: 2px solid #211F1F;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 13px;
-    width: 100%;
-    outline: none;
-    transition: 0.2s;
+.filter-tab.visible-tab {
+    display: inline-flex !important;
 }
-.settings-input:focus { box-shadow: 3px 3px 0px 0px #211F1F; }
 
-/* SweetAlert2 light theme overrides */
-.swal2-popup {
-    background: #F5F4EB !important;
-    border: 2px solid #211F1F !important;
-    color: #211F1F !important;
-    border-radius: 24px !important;
-    font-family: 'Inter', sans-serif !important;
-    box-shadow: 6px 6px 0px 0px #211F1F !important;
-}
+.video-thumb-wrap { position: relative; width: 100%; max-width: 160px; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #e8e5d8; border: 2px solid #211F1F; flex-shrink: 0; }
+.video-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.video-thumb-wrap .play-badge { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(33,31,31,0.15); font-size: 32px; }
+.duration-chip { position: absolute; bottom: 4px; right: 4px; background: #211F1F; color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+
+/* SweetAlert2 neo-brutalist theme overrides */
+.swal2-popup { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 20px !important; box-shadow: 6px 6px 0px 0px #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
-.swal2-confirm {
-    background: #211F1F !important;
-    border-radius: 14px !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
+.swal2-confirm { background: #211F1F !important; color: #DBD4B7 !important; border-radius: 12px !important; border: 2px solid #211F1F !important; font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
+.swal2-cancel { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 12px !important; font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
+.swal2-deny { background: #ACD1C0 !important; color: #211F1F !important; border: 2px solid #211F1F !important; border-radius: 12px !important; font-family: 'Inter', sans-serif !important; font-weight: 700 !important; }
+
+/* ── Invalid Task Card Styles ── */
+.task-card.invalid-task {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+  opacity: 0.6;
+  filter: grayscale(0.3);
 }
-.swal2-cancel {
-    background: transparent !important;
-    border: 2px solid #211F1F !important;
-    color: #211F1F !important;
-    border-radius: 14px !important;
-    font-family: 'Inter', sans-serif !important;
+.task-card.invalid-task .btn-purple,
+.task-card.invalid-task .btn-outline,
+.task-card.invalid-task .btn-red,
+.task-card.invalid-task .btn-teal,
+.task-card.invalid-task .btn-watched {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
 }
-.swal2-deny {
-    background: var(--mint) !important;
-    color: #211F1F !important;
-    border-radius: 14px !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
+.task-card.invalid-task .invalid-badge {
+  background: #dc2626;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
 }
 
-/* status colors on light cards */
-.status-notwork  { background:#fef3c7; color:#92400e; }
-.status-pending   { background:#ffedd5; color:#9a3412; }
-.status-watched    { background:#dcfce7; color:#166534; }
-.status-cheating   { background:#fee2e2; color:#991b1b; }
-.status-rejected   { background:#e5e7eb; color:#374151; }
+/* Proof screenshot styles */
+.proof-screenshot {
+  cursor: pointer;
+  transition: 0.2s;
+  border: 2px solid rgba(33,31,31,0.15);
+  border-radius: 12px;
+}
+.proof-screenshot:hover {
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Record card styles */
+.record-card {
+  border: 2px solid #211F1F;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  background: #ffffff;
+  transition: 0.2s;
+}
+.record-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px #211F1F;
+}
+.record-card .record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.record-card .record-time {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.record-card .record-percentage {
+  font-size: 12px;
+  font-weight: 800;
+}
+.record-card .record-percentage.ok { color: #16a34a; }
+.record-card .record-percentage.partial { color: #f59e0b; }
+.record-card .record-percentage.fail { color: #ef4444; }
+
+.record-screenshots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.record-screenshots .thumb {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #211F1F;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.record-screenshots .thumb:hover {
+  transform: scale(1.05);
+  box-shadow: 3px 3px 0px 0px #211F1F;
+}
+.record-screenshots .thumb-placeholder {
+  width: 120px;
+  height: 90px;
+  border-radius: 8px;
+  border: 2px dashed #211F1F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--muted);
+  background: #f8f8f0;
+}
+
+/* ── Force hide tabs when priority exists ── */
+.filter-tab.hidden-tab {
+    display: none !important;
+}
+
+.filter-tab.visible-tab {
+    display: inline-flex !important;
+}
 </style>
-<base target="_blank">
 </head>
 <body>
+
+<!-- FULL-PAGE LOADER -->
+<div id="pageLoader">
+    <div class="spin"></div>
+    <p style="color: var(--muted); font-size: 14px;">Loading your video tasks…</p>
+</div>
 
 <!-- TOAST -->
 <div id="toast"></div>
 
-<!-- NAVBAR -->
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
@@ -534,277 +310,212 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- LOADING -->
-  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
-    <div class="spinner"></div>
-    <div class="text-gray-500 text-sm">Loading your video tasks…</div>
-  </div>
-
-  <!-- MAIN CONTAINER - Always visible -->
-  <div id="mainContainer">
-    
-    <!-- ERROR -->
-    <div id="errorState" class="hidden text-center py-32">
-      <div class="text-5xl mb-4">⚠️</div>
-      <div class="text-xl font-bold mb-2">Could not load data</div>
-      <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
-      <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
-    </div>
-
-    <!-- STATUS MESSAGES (Not Enrolled, Not Active, Suspended, Not Found) -->
-    <div id="statusMessage" class="hidden"></div>
-
-    <!-- DASHBOARD -->
-    <div id="dashContent" class="hidden">
-
-      <!-- ── HEADER ── -->
-      <div class="nb-dashboard-header">
-        <div class="nb-badge-container">
-          <div class="nb-status-card nb-status-static">
-            <span class="nb-card-icon">🎬</span>
-            <span class="nb-card-title">Video Watch-Time Exchange</span>
-          </div>
-          <a href="videoproofs.html" class="nb-status-card nb-status-link">
+    <!-- PAGE HEADER -->
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-title">🎬 Video Watch Tasks</span>
+        </div>
+        <a href="videoproofs.html" target="_blank" rel="noopener noreferrer" class="nb-status-card nb-status-link">
             <span class="nb-card-icon">🎥</span>
             <span class="nb-card-title">View Proofs</span>
-          </a>
-        </div>
-        <h1 class="text-4xl font-black text-[#211F1F]">Video Watch Tasks</h1>
-        <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: 100%;">
-            Watch a matched member's video for the required time and they'll watch yours back.
-            Videos are paired by similar length so the exchange stays fair for everyone.
-        </div>
+            </a>
       </div>
-
-      <div class="flex flex-col lg:flex-row gap-6">
-
-      <!-- SIDEBAR -->
-      <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
-
-          <!-- TASK STATS -->
-          <div class="card rounded-3xl p-5">
-              <h2 class="font-semibold text-base mb-4">My Task Stats</h2>
-              <div class="space-y-3 text-sm">
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
-                      <span id="st-nowork" class="font-bold">—</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
-                      <span id="st-pending" class="font-bold">—</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
-                      <span id="st-watched" class="font-bold">—</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
-                      <span id="st-cheating" class="font-bold">—</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Rejected</span>
-                      <span id="st-rejected" class="font-bold">—</span>
-                  </div>
-                  <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
-                      <span class="text-muted">Total Tasks</span>
-                      <span id="st-total" class="font-bold text-[#211F1F]">—</span>
-                  </div>
-              </div>
-
-              <div class="mt-4 pt-4 border-t-2 border-[#211F1F]/10 space-y-2.5 text-sm">
-                  <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Watch Back</span>
-                      <span id="st-awaiting" class="font-bold text-blue-600">—</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
-                      <span id="st-both" class="font-bold text-teal-600">—</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                      <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                      <span id="st-theirpending" class="font-bold text-orange-600">—</span>
-                  </div>
-              </div>
-          </div>
-
-          <!-- WATCH SETTINGS CARD -->
-          <div id="settingsCard" class="card rounded-3xl p-5">
-              <div class="flex items-center justify-between mb-3">
-                  <h2 class="font-semibold text-base">Watch Settings</h2>
-                  <button onclick="openSettingsModal()" class="text-xs text-[#211F1F] hover:opacity-70 underline font-semibold">Edit</button>
-              </div>
-              <div class="space-y-2 text-sm">
-                  <div class="flex justify-between">
-                      <span class="text-muted">Min Video Length</span>
-                      <span id="set-min" class="font-bold">—</span>
-                  </div>
-                  <div class="flex justify-between">
-                      <span class="text-muted">Max Video Length</span>
-                      <span id="set-max" class="font-bold">—</span>
-                  </div>
-                  <div class="flex justify-between">
-                      <span class="text-muted">Allowed Gap</span>
-                      <span id="set-gap" class="font-bold">—</span>
-                  </div>
-                  <div class="flex justify-between">
-                      <span class="text-muted">Pairs Per Run</span>
-                      <span id="set-maxpairs" class="font-bold text-[#211F1F]">—</span>
-                  </div>
-              </div>
-              
-          </div>
-
-      </aside>
-
-      <!-- CONTENT -->
-      <main class="flex-1 min-w-0">
-
-          <!-- BLOCKED BANNER -->
-          <div id="blockedBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626;">
-              <div class="flex items-start gap-4">
-                  <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
-                  <div>
-                      <h3 class="font-semibold text-red-700 mb-1">Group Access Restricted</h3>
-                      <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Video Group.</p>
-                  </div>
-              </div>
-          </div>
-
-          <!-- CHEATING WARNING BANNER -->
-          <div id="cheatBanner" class="hidden mb-6 card rounded-3xl p-5" style="border-color:#dc2626; background:#fff5f5;">
-              <div class="flex items-start gap-4">
-                  <div class="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
-                  <div class="flex-1">
-                      <h3 class="font-semibold text-red-700 mb-1">You Have Flagged Video Task(s)!</h3>
-                      <p class="text-red-600/80 text-sm leading-relaxed mb-3">
-                          You have <strong id="cheatCount" class="text-red-700">0</strong> task(s) flagged as Cheating (insufficient or invalid watch proof).
-                          You <strong class="text-[#211F1F]">must re-watch and resubmit proof</strong> before you can do any other work.
-                          These tasks are pinned at the top.
-                      </p>
-                      <div class="flex gap-3 flex-wrap">
-                          <button onclick="setTab('Cheating', document.querySelector('.filter-tab[data-tab=Cheating]'))"
-                              class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
-                              View Flagged Tasks
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <!-- TOP BAR -->
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
-              <div>
-                  <h2 class="text-2xl font-bold">My Tasks</h2>
-                  <p class="text-muted mt-1 text-sm">Make sure exsub extension is installed.</p>
-              </div>
-              <div class="flex flex-col sm:flex-row gap-3">
-               
-                  <button id="prefsBtn" onclick="openPreferencesModal()"
-                      class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                      🎯 Match Preferences
-                  </button>
-                  <button id="createBtn" onclick="openCreateModal()"
-                      class="btn-purple px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                          <line x1="12" y1="5" x2="12" y2="19"/>
-                          <line x1="5" y1="12" x2="19" y2="12"/>
-                      </svg>
-                      Create Tasks
-                  </button>
-              </div>
-          </div>
-
-          <!-- HOW IT WORKS BANNER -->
-          <div class="card rounded-3xl p-5 mb-6">
-              <h3 class="font-semibold text-sm text-[#211F1F] mb-3">📋 How Video Tasks Work</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div class="step-item">
-                      <div class="step-num">1</div>
-                      <div>Open the assigned video and <strong class="text-[#211F1F]">watch it fully</strong> — proof is tracked automatically by the Exsub Extension</div>
-                  </div>
-                  <div class="step-item">
-                      <div class="step-num">2</div>
-                      <div>Watch for at least the <strong class="text-[#211F1F]">required minutes</strong> shown on the task card, without skipping</div>
-                  </div>
-                  <div class="step-item">
-                      <div class="step-num">3</div>
-                      <div>Come back and click <em>Mark Watched</em> — your partner will watch your video back</div>
-                  </div>
-              </div>
-          </div>
-
-          <!-- FILTER TABS -->
-          <div class="flex flex-wrap gap-2 mb-6">
-              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotWorkYet" onclick="setTab('NotWorkYet',this)">
-                  <span class="dot bg-yellow-400 mr-1"></span>Not Started
-              </button>
-              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Pending" onclick="setTab('Pending',this)">
-                  <span class="dot bg-orange-400 mr-1"></span>Pending
-              </button>
-              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Watched" onclick="setTab('Watched',this)">
-                  <span class="dot bg-green-400 mr-1"></span>Watched
-              </button>
-              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Cheating" onclick="setTab('Cheating',this)">
-                  <span class="dot bg-red-400 mr-1"></span>Cheating
-              </button>
-              <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Rejected" onclick="setTab('Rejected',this)">
-                  <span class="dot bg-gray-400 mr-1"></span>Rejected
-              </button>
-              <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All Tasks</button>
-          </div>
-
-          <!-- TASK LIST -->
-          <div id="taskList" class="space-y-4">
-              <div class="skeleton h-[200px]"></div>
-              <div class="skeleton h-[200px]"></div>
-              <div class="skeleton h-[200px]"></div>
-          </div>
-
-          <!-- EMPTY STATE -->
-          <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
-              <div class="text-5xl mb-4">🎬</div>
-              <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
-              <p class="text-muted text-sm mb-7 leading-relaxed">
-                  You don't have any video tasks here yet.<br>
-                  Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new watch-exchange tasks and start growing!
-              </p>
-              <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
-          </div>
-
-          <!-- PAGINATION -->
-          <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
-              <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
-              <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
-              <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
-          </div>
-
-      </main>
+      <h1 class="text-4xl font-black text-[#211F1F]">Video Watch Tasks</h1>
+      <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
+        Watch matched members' videos and earn watch time back. Watch videos, complete tasks, and grow your channel's watch time together with creators worldwide.
       </div>
+    </div>
 
-    </div><!-- /dashContent -->
-  </div><!-- /mainContainer -->
+    <div class="flex flex-col lg:flex-row gap-6">
+
+    <!-- SIDEBAR -->
+    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
+
+        <!-- ACTION BUTTONS -->
+        <div class="card rounded-3xl p-5">
+            <div class="space-y-3">
+                <button id="createBtn" onclick="openCreateModal()"
+                    class="btn-purple w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Create Tasks
+                </button>
+                <button id="prefsBtn" onclick="openPreferencesModal()"
+                    class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    🎯 Match Preferences
+                </button>
+                <button id="toggleStatsBtn" onclick="toggleStats()"
+                    class="btn-teal w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    📊 My Task Stats
+                </button>
+            </div>
+        </div>
+
+        <!-- TASK STATS - Hidden by default -->
+        <div id="statsPanel" class="card rounded-3xl p-5 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-semibold text-base">📊 My Video Stats</h2>
+                <button onclick="toggleStats()" class="text-muted hover:text-[#211F1F] text-lg">✕</button>
+            </div>
+            <div class="space-y-3 text-sm">
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
+                    <span id="st-nowork" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                    <span id="st-pending" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
+                    <span id="st-watched" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
+                    <span id="st-cheating" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
+                    <span id="st-rejected" class="font-bold">—</span>
+                </div>
+                <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
+                    <span class="text-muted">Total Tasks</span>
+                    <span id="st-total" class="font-bold text-purple-700">—</span>
+                </div>
+            </div>
+
+            <!-- Exchange status counts -->
+            <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
+                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Their Watch</span>
+                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
+                    <span id="st-both" class="font-bold text-teal-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
+                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="flex-1 min-w-0">
+
+        <!-- BLOCKED BANNER -->
+        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
+                <div>
+                    <h3 class="font-semibold text-red-600 mb-1">Group Access Restricted / Promotion OFF</h3>
+                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted from the Video Group.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHEATING WARNING BANNER -->
+        <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-red-600 mb-1" id="bannerTitle">⚠️ Action Required!</h3>
+                    <p class="text-red-600/80 text-sm leading-relaxed mb-3" id="bannerMessage">
+                        You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged.
+                        You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
+                        <strong>All other tabs are locked</strong> until resolved.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP BAR -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+            <div>
+                <h2 class="text-2xl font-bold" id="taskSectionTitle">My Video Tasks</h2>
+                <p id="taskStatusDesc" class="text-muted mt-1 text-sm">Showing <span id="statusLabel">Not Started</span> tasks</p>
+                <p id="taskCounter" class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> tasks</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="refreshTasks()" class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- HOW IT WORKS BANNER -->
+        <div class="card rounded-3xl p-5 mb-6">
+            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Video Tasks Work</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div>Open the target <strong class="text-[#211F1F]">video</strong> on YouTube</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div>Watch at least <strong class="text-[#211F1F]">85% of the video</strong> with the Exsub Extension running</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div>Click <strong class="text-[#211F1F]">Mark Watched</strong> — your partner will watch your video back</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK LIST -->
+        <div id="taskList" class="space-y-4">
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">🎬</div>
+            <h3 class="text-xl font-semibold mb-2">No Video Tasks Yet</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                You don't have any video tasks here yet.<br>
+                Click <strong class="text-[#211F1F]">Create Tasks</strong> to generate new video tasks and start growing!
+            </p>
+            <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
+        </div>
+
+        <!-- PAGINATION -->
+        <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
+            <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
+            <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
+            <button id="nextBtn" onclick="changePage(1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">Next →</button>
+        </div>
+
+    </main>
+</div>
 
 </div>
 </main>
 </main>
-
 
 <!-- MATCH PREFERENCES MODAL -->
 <div id="prefsModal" class="modal-bg" onclick="if(event.target===this)closePreferencesModal()">
     <div class="modal-box max-w-[560px]">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">🎯 Match Preferences</h2>
-            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            Tell us what kind of members you're looking for. These preferences are shared across all task groups (Subscribers, Video, Playlist, Engagement). When you create video tasks, members whose channel interests or audience countries overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter.
+            Tell us what kind of videos you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get tasks even if your preferences are rare.
         </p>
 
-        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-[#211F1F] font-semibold">(0/5)</span></label>
+        <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-purple-700">(0/5)</span></label>
         <div id="prefInterestPills" class="flex flex-wrap gap-2 mb-5"></div>
 
-        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-[#211F1F] font-semibold">(0/5)</span></label>
+        <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-purple-700">(0/5)</span></label>
         <div id="prefCountryPills" class="flex flex-wrap gap-2 mb-5"></div>
 
         <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
@@ -816,63 +527,22 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
     </div>
 </div>
 
-<!-- WATCH SETTINGS MODAL -->
-<div id="settingsModal" class="modal-bg" onclick="if(event.target===this)closeSettingsModal()">
-    <div class="modal-box max-w-[480px]">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold">⚙️ Watch Settings</h2>
-            <button onclick="closeSettingsModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
-        </div>
-        <p class="text-muted text-sm mb-5 leading-relaxed">
-            Control which videos you get matched with. Shorter gaps mean fairer, more even trades — but fewer possible matches.
-        </p>
-
-        <div class="grid grid-cols-2 gap-3 mb-4">
-            <div>
-                <label class="block text-xs text-muted mb-1.5">Min Video Length (min)</label>
-                <input id="set-input-min" type="number" min="1" class="settings-input" placeholder="2">
-            </div>
-            <div>
-                <label class="block text-xs text-muted mb-1.5">Max Video Length (min)</label>
-                <input id="set-input-max" type="number" min="1" class="settings-input" placeholder="20">
-            </div>
-            <div>
-                <label class="block text-xs text-muted mb-1.5">Allowed Gap (min)</label>
-                <input id="set-input-gap" type="number" min="0" class="settings-input" placeholder="3">
-            </div>
-            <div>
-                <label class="block text-xs text-muted mb-1.5">Pairs Per Run</label>
-                <input id="set-input-maxpairs" type="number" min="1" max="20" class="settings-input" placeholder="10">
-            </div>
-        </div>
-
-        <div id="settingsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
-
-        <div class="flex gap-3">
-            <button onclick="closeSettingsModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
-            <button id="doSaveSettingsBtn" onclick="doSaveSettings()" class="btn-purple flex-1 py-3 rounded-2xl text-sm font-semibold">Save Settings</button>
-        </div>
-    </div>
-</div>
-
 <!-- CREATE TASKS MODAL -->
 <div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Create Video Tasks</h2>
-            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            The system will find members whose video length is close to yours (within your <strong class="text-[#211F1F]">Allowed Gap</strong>) and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to watch their video, one for them to watch yours. Tasks are only generated when your pending count is below 5.
+            The system will find up to <strong class="text-[#211F1F]">10 members</strong> whose video length is close to yours and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to watch their video, and one for them to watch yours. Tasks are only generated when your pending count is below 5.
         </p>
         <div class="instructions-box mb-5">
-            <p class="text-xs text-[#211F1F] leading-relaxed">
-                🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first, then filled by closest video-length match. Adjust your
-                <button onclick="closeCreateModal();openSettingsModal()" class="underline font-semibold">Watch Settings</button>
-                to control video length range and gap tolerance.
+            <p class="text-xs text-purple-700 leading-relaxed">
+                🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first. Set your preferences beforehand for better-targeted matches — the rest of the slots are filled with random untouched members as usual.
             </p>
         </div>
-        <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4 mb-5 space-y-3 text-sm">
+        <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 mb-5 space-y-3 text-sm">
             <div class="flex justify-between items-center">
                 <span class="text-muted">Your Pending (Not Started) Tasks</span>
                 <span id="modalPendingCount" class="font-bold text-lg">—</span>
@@ -880,6 +550,10 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
             <div class="flex justify-between items-center">
                 <span class="text-muted">Can Create Tasks</span>
                 <span id="modalCanCreate" class="font-semibold">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Available Videos</span>
+                <span id="modalVideoCount" class="font-bold text-purple-700">—</span>
             </div>
         </div>
         <div id="createResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
@@ -892,12 +566,28 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
 
 <!-- TASK DETAIL MODAL -->
 <div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
-    <div class="modal-box max-w-[540px]">
+    <div class="modal-box max-w-[620px]">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold">Task Detail</h2>
-            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+            <h2 class="text-xl font-bold">Video Task Details</h2>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
         </div>
         <div id="detailBody" class="space-y-4"></div>
+    </div>
+</div>
+
+<!-- PROOF MODAL -->
+<div id="proofModal" class="modal-bg" onclick="if(event.target===this)closeProofModal()">
+    <div class="modal-box max-w-[780px]">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">🎥 Watching Proof</h2>
+            <button onclick="closeProofModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+        </div>
+        <div id="proofModalContent" class="space-y-4">
+            <div class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+                <p class="text-muted text-sm mt-3">Loading proof data...</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -905,8 +595,8 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-lg font-bold text-red-700">⚠ Report Issue</h2>
-            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border-2 border-[#211F1F] flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+            <h2 class="text-lg font-bold text-red-600">⚠ Report Issue</h2>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
         </div>
 
         <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
@@ -923,7 +613,7 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
 
         <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
         <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
-            class="w-full bg-white border-2 border-[#211F1F] rounded-2xl px-4 py-3 text-sm outline-none transition resize-none mb-4"></textarea>
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
 
         <input type="hidden" id="issueTaskId">
         <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
@@ -937,6 +627,7 @@ input::placeholder, textarea::placeholder { color: #8a8578; }
     </div>
 </div>
 
+<!-- SCRIPTS -->
 <script>
 /* ────────────────────────────────────────
    AUTH + LOGOUT
@@ -953,325 +644,360 @@ const savedUserCode = localStorage.getItem("usercode") || "";
 if (!savedUsername || !savedPassword) {
     window.location.href = "signin.html";
 }
+</script>
 
+<script>
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy_Nhaw63cDA-NrS4D2SVlNi1bSkj1nT7mgfayJn13GcV_R0s9s_VxPdoAypei0dpGzg/exec';
-const USER_CODE = savedUserCode;
-const PER_PAGE = 10;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxftoyYcKCoRz6T5Yzqve0JdIXKvD8AZRRiQsdkjRQnh3FUlUntdtn9N9_myDaVlluAPQ/exec';
+const USER_CODE  = savedUserCode;
+
+// ── CACHE KEYS ──
+const CACHE_KEY_TASKS = 'video_tasks_data';
+const CACHE_KEY_STATS = 'video_tasks_stats';
+const CACHE_KEY_EXCHANGE = 'video_tasks_exchange';
+const CACHE_KEY_PERF = 'video_tasks_perf';
+const CACHE_KEY_TIMESTAMP = 'video_tasks_timestamp';
+const CACHE_KEY_FOCUSED_STATUS = 'video_tasks_focusedStatus';
+const CACHE_KEY_CHEAT_COUNT = 'video_tasks_cheatCount';
+const CACHE_KEY_HAS_CHEAT = 'video_tasks_hasCheat';
+const CACHE_KEY_MEMBER = 'video_tasks_member';
+const CACHE_TTL = 5 * 60 * 1000;
 
 /* ────────────────────────────────────────
    STATE
 ──────────────────────────────────────── */
-let allTasks = [];
-let filtered = [];
-let activeTab = 'All';
-let currentPage = 1;
-let totalPages = 1;
-let totalTasks = 0;
-let member = null;
-let perfStats = null;
-let mySettings = null;
-let isBlocked = false;
+let allTasks    = [];
+let member      = null;
+let perfStats   = null;
+let isBlocked   = false;
 let hasCheating = false;
-let hasPending = false;
+let hasPending  = false;
 let hasRejected = false;
 let forcedTaskTab = null;
-let isLoading = false;
+let isLoading   = false;
+let currentStatus = 'NotWorkYet';
+let isCacheValid = false;
+let validationInterval = null;
+let myVideos = [];
 
-// Server-side stats (pre-calculated)
 let stats = {
     total: 0,
     notWorkYet: 0,
     pending: 0,
     watched: 0,
     cheating: 0,
-    rejected: 0,
+    rejected: 0
+};
+
+let exchangeStats = {
     awaiting: 0,
-    bothWatched: 0,
+    both: 0,
     theirPending: 0
 };
 
-/* ── MATCHING FEATURE — STATE ──────────────────────────────── */
-let myPreferences = { interests: [], countries: [] };
-let selectedInterests = [];
-let selectedCountries = [];
-let interestOptions = [];
-let countryOptions = [];
-const MAX_PREF_EACH = 5;
+let channelNameCache   = {};
+let channelHandleCache = {};
+let channelImageCache  = {};
+let channelLinkCache   = {};
 
-const DEFAULT_SETTINGS = { MinVideoMinutes: 2, MaxVideoMinutes: 20, AllowedGapMinutes: 3, MaxPairsPerRun: 10 };
+let myPreferences     = { interests: [], countries: [] };
+let selectedInterests  = [];
+let selectedCountries  = [];
+let interestOptions    = [];
+let countryOptions     = [];
+const MAX_PREF_EACH    = 5;
 
-/* ────────────────────────────────────────
-   DOM HELPERS
-──────────────────────────────────────── */
-function show(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.remove('hidden');
-}
-function hide(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.add('hidden');
-}
-
-function showStatusMessage(html) {
-    const container = document.getElementById('statusMessage');
-    container.innerHTML = html;
-    container.classList.remove('hidden');
-    hide('dashContent');
-    hide('errorState');
-}
+// ── PAGINATION ──
+let currentPage = 1;
+let totalPages = 1;
+const PER_PAGE = 10;
+let activeTab = 'All';
 
 /* ────────────────────────────────────────
-   BOOT - Optimized with Pagination
+   CACHE HELPERS
 ──────────────────────────────────────── */
-window.addEventListener('DOMContentLoaded', init);
 
-async function init() {
-    show('loadingState');
-    hide('errorState');
-    hide('dashContent');
-    hide('statusMessage');
-
+function saveTasksToCache(data) {
     try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=1&perPage=${PER_PAGE}`);
-        const data = await res.json();
-
-        hide('loadingState');
-
-        if (!data.success) {
-            // Check if member is not enrolled
-            if (data.notEnrolled) {
-                showStatusMessage(`
-                    <div class="w-full flex justify-center items-center min-h-[400px]">
-                        <div class="not-enrolled-banner">
-                            <span class="banner-icon">📢</span>
-                            <h2 class="banner-title">Not Enrolled in Video Task Group</h2>
-                            <p class="banner-desc">
-                                ${data.message || 'You are not enrolled in the Video Task Group. Join the group to start exchanging video watch time with other creators.'}
-                            </p>
-                            <a href="groups.html" class="banner-btn">
-                                👥 Go to Groups
-                            </a>
-                            <p class="banner-hint">
-                                💡 Once you join the <strong>Long Video Search Group</strong>, come back here to see your tasks.
-                            </p>
-                        </div>
-                    </div>
-                `);
-                return;
-            }
-            
-            // Check if member is not active
-            if (data.notActive) {
-                showStatusMessage(`
-                    <div class="w-full flex justify-center items-center min-h-[400px]">
-                        <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
-                            <span class="banner-icon">⛔</span>
-                            <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
-                            <p class="banner-desc">${data.message || 'Your account is not active. Please contact support for assistance.'}</p>
-                            <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
-                        </div>
-                    </div>
-                `);
-                return;
-            }
-            
-            // Check if member is suspended
-            if (data.suspended) {
-                showStatusMessage(`
-                    <div class="w-full flex justify-center items-center min-h-[400px]">
-                        <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
-                            <span class="banner-icon">🚫</span>
-                            <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
-                            <p class="banner-desc">${data.message || 'Your account has been suspended. Please contact support for more information.'}</p>
-                            <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
-                        </div>
-                    </div>
-                `);
-                return;
-            }
-            
-            // Check if member not found
-            if (data.notFound) {
-                showStatusMessage(`
-                    <div class="w-full flex justify-center items-center min-h-[400px]">
-                        <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
-                            <span class="banner-icon">❓</span>
-                            <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
-                            <p class="banner-desc">${data.message || 'We could not find your account. Please sign in again.'}</p>
-                            <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
-                        </div>
-                    </div>
-                `);
-                return;
-            }
-            
-            show('errorState');
-            document.getElementById('errorMsg').textContent = data.message || 'Error loading data';
-            return;
-        }
-
-        // ── SUCCESS: Member is active and enrolled ──
-        member = data.member;
-        perfStats = data.perfStats || null;
-        allTasks = data.tasks || [];
-        totalTasks = data.totalTasks || 0;
-        totalPages = data.totalPages || 1;
-        currentPage = data.currentPage || 1;
-        mySettings = data.settings || { ...DEFAULT_SETTINGS };
-
-        // Use server-side stats
-        if (data.stats) {
-            stats = data.stats;
-        }
-
-        // Priority info from server
-        if (data.priorityInfo) {
-            hasCheating = data.priorityInfo.hasCheating || false;
-            hasPending = data.priorityInfo.hasPending || false;
-            hasRejected = data.priorityInfo.hasRejected || false;
-            forcedTaskTab = data.priorityInfo.forcedTab || null;
-            
-            if (data.priorityInfo.cheatCount > 0) {
-                document.getElementById('cheatCount').textContent = data.priorityInfo.cheatCount;
-            }
-        }
-
-        if (data.preferences) {
-            myPreferences = {
-                interests: data.preferences.interests || [],
-                countries: data.preferences.countries || []
-            };
-        }
-
-        loadPreferenceOptions();
-
-        checkBlock();
-        checkCheating();
-        calcStats();
-        renderSettingsCard();
+        const activeTasks = (data.tasks || []).filter(t => 
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
         
-        enforceTaskPriorityTabs();
+        localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(activeTasks));
+        localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(data.fullStats || data.stats || {}));
+        localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
+        localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(data.perfStats || {}));
+        localStorage.setItem(CACHE_KEY_TIMESTAMP, String(Date.now()));
+        localStorage.setItem(CACHE_KEY_FOCUSED_STATUS, data.focusedStatus || 'NotWorkYet');
+        localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(data.hasCheating || false));
+        localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(data.cheatCount || 0));
+        localStorage.setItem(CACHE_KEY_MEMBER, JSON.stringify(data.member || {}));
         
-        filtered = [];
-        applyFilter();
-
-        show('dashContent');
-
+        if (data.channelNames) {
+            localStorage.setItem('video_tasks_channelNames', JSON.stringify(data.channelNames));
+        }
+        if (data.channelHandles) {
+            localStorage.setItem('video_tasks_channelHandles', JSON.stringify(data.channelHandles));
+        }
+        if (data.channelImages) {
+            localStorage.setItem('video_tasks_channelImages', JSON.stringify(data.channelImages));
+        }
+        if (data.channelLinks) {
+            localStorage.setItem('video_tasks_channelLinks', JSON.stringify(data.channelLinks));
+        }
+        
+        isCacheValid = true;
+        console.log('✅ Video tasks saved to cache (Watched/Rejected filtered out)');
+        return true;
     } catch (e) {
-        hide('loadingState');
-        show('errorState');
-        document.getElementById('errorMsg').textContent = `Error: ${e.message}`;
-        console.error('Init error:', e);
+        console.warn('Could not save to cache:', e);
+        return false;
     }
 }
 
-/* ────────────────────────────────────────
-   BLOCK CHECK
-──────────────────────────────────────── */
-function checkBlock() {
-    if (!member) return;
-    const suspended = member.ViolationFlag === 'Suspended';
-    const disabled = member.VideoPromotionActive === 'No';
-
-    if (suspended || disabled) {
-        isBlocked = true;
-        document.getElementById('blockedBanner').classList.remove('hidden');
-        document.getElementById('blockedMsg').textContent = suspended
-            ? `Your account is suspended until ${member.SuspendedUntil || 'further notice'}. Reason: ${member.ViolationReason || 'Policy violation.'}`
-            : 'Video group promotion is currently disabled for your account. Clear your pending/cheating tasks to re-enable.';
-
-        const btn = document.getElementById('createBtn');
-        btn.disabled = true;
-        btn.classList.add('opacity-40', 'cursor-not-allowed');
-    }
-}
-
-/* ────────────────────────────────────────
-   CHECK CHEATING FLAGS - FIXED
-──────────────────────────────────────── */
-function checkCheating() {
-    const myWorkerTasks = allTasks.filter(t => t.UserCode === USER_CODE);
-    const cheatTasks = myWorkerTasks.filter(t => t.Status === 'Cheating');
-    const rejectedTasks = myWorkerTasks.filter(t => t.Status === 'Rejected');
-    const pendingTasks = myWorkerTasks.filter(t => t.Status === 'Pending');
-    
-    // Check performance stats too
-    const hasRejects = perfStats && perfStats.TotalYourVideoWatchingRejects > 0;
-    const hasPendingWork = perfStats && perfStats.TotalVideoWatchedPendingByOthers > 0;
-    
-    const hasCheating = cheatTasks.length > 0 || hasRejects;
-    const hasPending = pendingTasks.length > 0 || hasPendingWork;
-    const hasRejected = rejectedTasks.length > 0;
-
-    const banner = document.getElementById('cheatBanner');
-    if (hasCheating) {
-        banner.classList.remove('hidden');
-        document.getElementById('cheatCount').textContent = stats.cheating || cheatTasks.length || 0;
-        const btn = document.getElementById('createBtn');
-        btn.disabled = true;
-        btn.classList.add('opacity-40', 'cursor-not-allowed');
-        btn.title = 'You must resolve your flagged tasks first.';
-    } else {
-        banner.classList.add('hidden');
-        const btn = document.getElementById('createBtn');
-        btn.disabled = false;
-        btn.classList.remove('opacity-40', 'cursor-not-allowed');
-        btn.title = '';
-    }
-}
-
-/* ────────────────────────────────────────
-   STATS - Using Server-Side Stats
-──────────────────────────────────────── */
-function calcStats() {
-    document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
-    document.getElementById('st-pending').textContent = stats.pending || 0;
-    document.getElementById('st-watched').textContent = stats.watched || 0;
-    document.getElementById('st-cheating').textContent = stats.cheating || 0;
-    document.getElementById('st-rejected').textContent = stats.rejected || 0;
-    document.getElementById('st-total').textContent = stats.total || 0;
-
-    document.getElementById('st-awaiting').textContent = stats.awaiting || 0;
-    document.getElementById('st-both').textContent = stats.bothWatched || 0;
-    document.getElementById('st-theirpending').textContent = stats.theirPending || 0;
-}
-
-/* ────────────────────────────────────────
-   SETTINGS CARD
-──────────────────────────────────────── */
-function renderSettingsCard() {
-    const s = mySettings || DEFAULT_SETTINGS;
-    document.getElementById('set-min').textContent = `${s.MinVideoMinutes} min`;
-    document.getElementById('set-max').textContent = `${s.MaxVideoMinutes} min`;
-    document.getElementById('set-gap').textContent = `± ${s.AllowedGapMinutes} min`;
-    document.getElementById('set-maxpairs').textContent = s.MaxPairsPerRun;
-}
-
-/* ────────────────────────────────────────
-   REFRESH STATS (Helper)
-──────────────────────────────────────── */
-async function refreshStats() {
+function loadTasksFromCache() {
     try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=${currentPage}&perPage=${PER_PAGE}`);
+        const tasksData = localStorage.getItem(CACHE_KEY_TASKS);
+        const statsData = localStorage.getItem(CACHE_KEY_STATS);
+        const exchangeData = localStorage.getItem(CACHE_KEY_EXCHANGE);
+        const perfData = localStorage.getItem(CACHE_KEY_PERF);
+        const timestamp = localStorage.getItem(CACHE_KEY_TIMESTAMP);
+        const focusedStatus = localStorage.getItem(CACHE_KEY_FOCUSED_STATUS) || 'NotWorkYet';
+        const hasCheatStr = localStorage.getItem(CACHE_KEY_HAS_CHEAT) || 'false';
+        const cheatCountStr = localStorage.getItem(CACHE_KEY_CHEAT_COUNT) || '0';
+        const memberData = localStorage.getItem(CACHE_KEY_MEMBER);
+        
+        if (!tasksData || !timestamp) {
+            console.log('📭 No video cache found');
+            return null;
+        }
+        
+        const age = Date.now() - parseInt(timestamp);
+        if (age > CACHE_TTL) {
+            console.log('⏰ Video cache expired (age:', Math.round(age/1000), 's)');
+            return null;
+        }
+        
+        const tasks = JSON.parse(tasksData);
+        const savedStats = JSON.parse(statsData || '{}');
+        const savedExchange = JSON.parse(exchangeData || '{}');
+        const savedPerf = JSON.parse(perfData || '{}');
+        const savedMember = memberData ? JSON.parse(memberData) : null;
+        
+        const channelNames = JSON.parse(localStorage.getItem('video_tasks_channelNames') || '{}');
+        const channelHandles = JSON.parse(localStorage.getItem('video_tasks_channelHandles') || '{}');
+        const channelImages = JSON.parse(localStorage.getItem('video_tasks_channelImages') || '{}');
+        const channelLinks = JSON.parse(localStorage.getItem('video_tasks_channelLinks') || '{}');
+        
+        console.log('📦 Video cache loaded:', tasks.length, 'tasks');
+        
+        return {
+            tasks: tasks,
+            stats: savedStats,
+            exchangeStats: savedExchange,
+            perfStats: savedPerf,
+            focusedStatus: focusedStatus,
+            hasCheating: hasCheatStr === 'true',
+            cheatCount: parseInt(cheatCountStr) || 0,
+            member: savedMember,
+            channelNames: channelNames,
+            channelHandles: channelHandles,
+            channelImages: channelImages,
+            channelLinks: channelLinks,
+            isCacheValid: true
+        };
+    } catch (e) {
+        console.warn('Could not load from cache:', e);
+        return null;
+    }
+}
+
+function clearCache() {
+    try {
+        localStorage.removeItem(CACHE_KEY_TASKS);
+        localStorage.removeItem(CACHE_KEY_STATS);
+        localStorage.removeItem(CACHE_KEY_EXCHANGE);
+        localStorage.removeItem(CACHE_KEY_PERF);
+        localStorage.removeItem(CACHE_KEY_TIMESTAMP);
+        localStorage.removeItem(CACHE_KEY_FOCUSED_STATUS);
+        localStorage.removeItem(CACHE_KEY_HAS_CHEAT);
+        localStorage.removeItem(CACHE_KEY_CHEAT_COUNT);
+        localStorage.removeItem(CACHE_KEY_MEMBER);
+        localStorage.removeItem('video_tasks_channelNames');
+        localStorage.removeItem('video_tasks_channelHandles');
+        localStorage.removeItem('video_tasks_channelImages');
+        localStorage.removeItem('video_tasks_channelLinks');
+        isCacheValid = false;
+        console.log('🗑️ Video cache cleared');
+    } catch (e) {
+        console.warn('Could not clear cache:', e);
+    }
+}
+
+/* ────────────────────────────────────────
+   GROUP VISIBILITY CHECK
+──────────────────────────────────────── */
+
+async function checkGroupVisibility() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getSettings`);
         const data = await res.json();
-        if (data.success && data.stats) {
-            stats = data.stats;
-            totalTasks = data.totalTasks || 0;
-            totalPages = data.totalPages || 1;
+        
+        if (data.success && data.settings) {
+            const groupSetting = data.settings['LONG_VIDEO_SEARCH_GROUP'] || 
+                                 data.settings['VIDEO_GROUP'] || 
+                                 data.settings['VIDEO_TASK_GROUP'] ||
+                                 data.settings['GROUPS_LONG_VIDEO_SEARCH_GROUP'];
+            
+            const isEnabled = groupSetting === true || 
+                             groupSetting === 'TRUE' || 
+                             groupSetting === 'YES' || 
+                             groupSetting === '1' ||
+                             String(groupSetting).toUpperCase() === 'TRUE';
+            
+            if (!isEnabled) {
+                showGroupDisabled();
+                return false;
+            }
+        }
+        return true;
+    } catch (e) {
+        console.error('Error checking group visibility:', e);
+        showGroupDisabled('Could not verify group status. Please try again later.');
+        return false;
+    }
+}
+
+function showGroupDisabled(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #211F1F; box-shadow: 8px 8px 0px 0px #211F1F;">
+                    <span class="banner-icon">🚫</span>
+                    <h2 class="banner-title" style="color: #d97706;">Group Currently Disabled</h2>
+                    <p class="banner-desc">
+                        ${message || 'The Video Task Group is currently not available. Please check back later or contact support for more information.'}
+                    </p>
+                    <a href="groups.html" class="banner-btn" style="background: #211F1F; border-color: #d97706;">
+                        👥 View All Groups
+                    </a>
+                    <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
+                        💡 Group availability is managed by administrators.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+    hideLoader();
+}
+
+/* ────────────────────────────────────────
+   VALIDATE TASKS
+──────────────────────────────────────── */
+async function validateSingleTask(task) {
+    if (!task || !task.TargetUserCode) return { valid: true, task: task };
+    
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getTargetUsersStatus&userCode=${USER_CODE}`);
+        
+        if (!res.ok) {
+            console.warn('Validation request failed:', res.status);
+            return { valid: true, task: task };
+        }
+        
+        const data = await res.json();
+        
+        if (!data.success || !data.targetUsersStatus) {
+            return { valid: true, task: task };
+        }
+        
+        const targetData = data.targetUsersStatus[task.TargetUserCode];
+        if (!targetData) return { valid: true, task: task };
+        
+        const isInvalid = 
+            targetData.inVideoTaskWork !== 'Yes' ||
+            targetData.violationFlag === 'Suspended' ||
+            targetData.status === 'Blocked' ||
+            targetData.videoPromotionActive === 'No';
+        
+        return {
+            valid: !isInvalid,
+            task: task,
+            targetData: targetData,
+            reason: isInvalid ? getInvalidReason(targetData) : null
+        };
+    } catch (e) {
+        console.warn('Validation error:', e);
+        return { valid: true, task: task };
+    }
+}
+
+function getInvalidReason(targetData) {
+    if (targetData.inVideoTaskWork !== 'Yes') return 'Member left the Video Group';
+    if (targetData.violationFlag === 'Suspended') return 'Member is Suspended';
+    if (targetData.status === 'Blocked') return 'Member is Blocked';
+    if (targetData.videoPromotionActive === 'No') return 'Member has Promotion Disabled';
+    return 'Member is no longer eligible';
+}
+
+function removeInvalidTask(taskId, reason) {
+    const taskIndex = allTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+    if (taskIndex === -1) return false;
+    
+    allTasks.splice(taskIndex, 1);
+    
+    try {
+        const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
+        const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+        if (cachedIndex !== -1) {
+            cachedTasks.splice(cachedIndex, 1);
+            localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
         }
     } catch (e) {
-        console.warn('Could not refresh stats:', e);
+        console.warn('Could not update cache:', e);
     }
+    
+    recalculateStats();
+    
+    try {
+        localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+        localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+    } catch (e) {}
+    
+    renderStats();
+    renderList();
+    checkBlock();
+    checkCheatingAndEnforcePriority();
+    
+    showToast(`🗑️ Task ${taskId} removed: ${reason}`, false);
+    return true;
+}
+
+async function validateTaskBeforeAction(taskId, actionName) {
+    const task = allTasks.find(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+    if (!task) {
+        showToast('❌ Task not found. It may have been removed.', true);
+        return { valid: false, task: null };
+    }
+    
+    const result = await validateSingleTask(task);
+    
+    if (!result.valid) {
+        removeInvalidTask(taskId, result.reason || 'Target member is no longer eligible');
+        showToast(`❌ Cannot ${actionName}: ${result.reason || 'Target member is no longer eligible'}`, true);
+        return { valid: false, task: null };
+    }
+    
+    return { valid: true, task: task };
 }
 
 /* ────────────────────────────────────────
-   FILTER + SEARCH - FIXED
+   PRIORITY TABS - CRITICAL FIX - TABS COMPLETELY HIDDEN
 ──────────────────────────────────────── */
+
 function enforceTaskPriorityTabs() {
     const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
     
@@ -1279,8 +1005,9 @@ function enforceTaskPriorityTabs() {
     const hasRejectedTasks = myTasks.some(t => t.Status === 'Rejected') || (stats.rejected || 0) > 0;
     const hasPendingTasks = myTasks.some(t => t.Status === 'Pending') || (stats.pending || 0) > 0;
 
-    const previousForcedTab = forcedTaskTab;
-    
+    console.log('🔍 Checking priority - Cheating:', hasCheatTasks, 'Rejected:', hasRejectedTasks, 'Pending:', hasPendingTasks);
+
+    // 🔥 CRITICAL: Priority order - Cheating > Rejected > Pending
     if (hasCheatTasks) {
         forcedTaskTab = 'Cheating';
     } else if (hasRejectedTasks) {
@@ -1291,184 +1018,301 @@ function enforceTaskPriorityTabs() {
         forcedTaskTab = null;
     }
 
-    if (forcedTaskTab && forcedTaskTab !== previousForcedTab) {
-        activeTab = forcedTaskTab;
-        currentPage = 1;
-    } else if (!forcedTaskTab && previousForcedTab) {
+    console.log('🎯 Forced tab:', forcedTaskTab);
+
+    const tabsContainer = document.getElementById('filterTabsContainer');
+    if (!tabsContainer) {
+        console.warn('⚠️ filterTabsContainer not found');
+        return;
+    }
+    
+    const tabs = tabsContainer.querySelectorAll('.filter-tab');
+    console.log('📊 Found', tabs.length, 'tabs');
+
+    // 🔥 CRITICAL FIX: Use CSS class with !important
+    if (forcedTaskTab) {
+        // HIDE ENTIRE CONTAINER using CSS class
+        tabsContainer.classList.add('hidden-container');
+        tabsContainer.classList.remove('visible-container');
+        console.log('✅ Tabs container HIDDEN completely via CSS class');
+        
+        // Also hide individual tabs as backup
+        tabs.forEach(tab => {
+            tab.classList.add('hidden-tab');
+            tab.classList.remove('visible-tab');
+            tab.classList.remove('active');
+        });
+        
+        // Update status label to show priority
+        updateStatusLabel();
+        
+        // Show only the priority tasks
+        filterTasksByTab(forcedTaskTab);
+        
+    } else {
+        // SHOW ALL TABS
+        tabsContainer.classList.remove('hidden-container');
+        tabsContainer.classList.add('visible-container');
+        console.log('✅ Tabs container SHOWN');
+        
+        tabs.forEach(tab => {
+            tab.classList.remove('hidden-tab');
+            tab.classList.add('visible-tab');
+            tab.classList.remove('active');
+        });
+        const allTab = tabsContainer.querySelector('.filter-tab[data-tab="All"]');
+        if (allTab) {
+            allTab.classList.add('active');
+        }
         activeTab = 'All';
         currentPage = 1;
+        updateStatusLabel();
+        filterTasksByTab('All');
     }
+}
 
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-        const tabName = tab.dataset.tab;
-        const shouldDisable = !!forcedTaskTab && tabName !== forcedTaskTab;
-        tab.disabled = shouldDisable;
-        tab.classList.toggle('active', tabName === (forcedTaskTab || activeTab));
-        if (shouldDisable) {
-            tab.title = forcedTaskTab === 'Cheating'
-                ? 'Resolve your flagged tasks first.'
-                : (forcedTaskTab === 'Rejected' ? 'Resolve rejected tasks first.' : 'Complete pending watch-back tasks first.');
-        } else {
-            tab.removeAttribute('title');
-        }
+
+
+
+function debugTabs() {
+    const tabsContainer = document.getElementById('filterTabsContainer');
+    if (!tabsContainer) {
+        console.log('❌ No tabs container found!');
+        return;
+    }
+    
+    console.log('📊 Tab Debug:');
+    console.log('  - Container display:', tabsContainer.style.display);
+    console.log('  - Forced tab:', forcedTaskTab);
+    console.log('  - Active tab:', activeTab);
+    
+    const tabs = tabsContainer.querySelectorAll('.filter-tab');
+    tabs.forEach(tab => {
+        console.log(`  - ${tab.dataset.tab}: display=${tab.style.display}, hidden=${tab.classList.contains('hidden-tab')}`);
     });
+}
+
+function checkCheatingAndEnforcePriority() {
+    const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
+    const cheatTasks = myTasks.filter(t => t.Status === 'Cheating');
+    const pendingTasks = myTasks.filter(t => t.Status === 'Pending');
+    const rejectedTasks = myTasks.filter(t => t.Status === 'Rejected');
+    
+    const hasCheating = cheatTasks.length > 0 || (perfStats && perfStats.TotalYourVideoWatchingRejects > 0);
+    const hasPending = pendingTasks.length > 0 || (perfStats && perfStats.TotalVideoWatchedPendingByOthers > 0);
+    const hasRejected = rejectedTasks.length > 0;
+
+    const banner = document.getElementById('cheatingBanner');
+    const createBtn = document.getElementById('createBtn');
+    const bannerMsg = document.getElementById('bannerMessage');
+    const bannerTitle = document.getElementById('bannerTitle');
+    const cheatCountEl = document.getElementById('cheatCount');
+    const tabsContainer = document.getElementById('filterTabsContainer');
+    
+    if (hasCheating) {
+        // 🔥 FORCE HIDE TABS
+        if (tabsContainer) {
+            tabsContainer.classList.add('hidden-container');
+            tabsContainer.style.display = 'none !important';
+        }
+        
+        banner.classList.remove('hidden');
+        banner.style.background = '#fee2e2';
+        banner.style.borderColor = '#dc2626';
+        const count = cheatTasks.length || stats.cheating || 0;
+        cheatCountEl.textContent = count;
+        bannerTitle.textContent = '🚫 Cheating Detected!';
+        bannerMsg.innerHTML = `
+            You have <strong class="text-red-600">${count}</strong> task(s) flagged as cheating.
+            You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
+            <strong class="text-red-600">All other tabs are locked and hidden</strong> until resolved.
+            Click <strong>Recheck</strong> after re-watching the video.
+        `;
+        
+        if (createBtn) {
+            createBtn.disabled = true;
+            createBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            createBtn.title = 'You must resolve your cheating flags first.';
+        }
+        forcedTaskTab = 'Cheating';
+        activeTab = 'Cheating';
+        updateStatusLabel();
+        filterTasksByTab('Cheating');
+        return true;
+        
+    } else if (hasRejected) {
+        // 🔥 FORCE HIDE TABS
+        if (tabsContainer) {
+            tabsContainer.classList.add('hidden-container');
+            tabsContainer.style.display = 'none !important';
+        }
+        
+        banner.classList.remove('hidden');
+        banner.style.background = '#fef3c7';
+        banner.style.borderColor = '#f59e0b';
+        const count = rejectedTasks.length || stats.rejected || 0;
+        cheatCountEl.textContent = count;
+        bannerTitle.textContent = '❌ Rejected Tasks!';
+        bannerMsg.innerHTML = `
+            You have <strong class="text-red-600">${count}</strong> rejected task(s).
+            You <strong class="text-[#211F1F]">must review and re-watch</strong> these videos before you can do any other work.
+            <strong class="text-orange-600">All other tabs are locked and hidden</strong> until resolved.
+            Click <strong>Recheck</strong> after re-watching the video.
+        `;
+        
+        if (createBtn) {
+            createBtn.disabled = true;
+            createBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            createBtn.title = 'You must resolve your rejected tasks first.';
+        }
+        forcedTaskTab = 'Rejected';
+        activeTab = 'Rejected';
+        updateStatusLabel();
+        filterTasksByTab('Rejected');
+        return true;
+        
+    } else if (hasPending) {
+        // 🔥 FORCE HIDE TABS
+        if (tabsContainer) {
+            tabsContainer.classList.add('hidden-container');
+            tabsContainer.style.display = 'none !important';
+        }
+        
+        banner.classList.remove('hidden');
+        banner.style.background = '#fffbeb';
+        banner.style.borderColor = '#f59e0b';
+        const count = pendingTasks.length || stats.pending || 0;
+        cheatCountEl.textContent = count;
+        bannerTitle.textContent = '⏳ Pending Tasks!';
+        bannerMsg.innerHTML = `
+            You have <strong class="text-orange-600">${count}</strong> pending task(s) awaiting watch back.
+            You <strong class="text-[#211F1F]">must complete these exchanges</strong> before you can do any other work.
+            <strong class="text-orange-600">All other tabs are locked and hidden</strong> until completed.
+        `;
+        
+        if (createBtn) {
+            createBtn.disabled = true;
+            createBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            createBtn.title = 'Complete your pending tasks first.';
+        }
+        forcedTaskTab = 'Pending';
+        activeTab = 'Pending';
+        updateStatusLabel();
+        filterTasksByTab('Pending');
+        return true;
+        
+    } else {
+        // 🔥 SHOW TABS
+        if (tabsContainer) {
+            tabsContainer.classList.remove('hidden-container');
+            tabsContainer.style.display = 'flex';
+        }
+        
+        banner.classList.add('hidden');
+        if (createBtn && !isBlocked) {
+            createBtn.disabled = false;
+            createBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            createBtn.title = '';
+        }
+        forcedTaskTab = null;
+        activeTab = 'All';
+        updateStatusLabel();
+        filterTasksByTab('All');
+        return false;
+    }
+}
+
+
+function updateStatusLabel() {
+    const statusLabel = document.getElementById('statusLabel');
+    if (!statusLabel) return;
+    
+    if (forcedTaskTab) {
+        const labelMap = {
+            'Cheating': '🚫 Cheating (Action Required) — Fix These First!',
+            'Pending': '⏳ Pending (Awaiting Watch Back) — Complete These First!',
+            'Rejected': '❌ Rejected — Review These First!'
+        };
+        statusLabel.textContent = labelMap[forcedTaskTab] || forcedTaskTab;
+        return;
+    }
+    
+    const labelMap = {
+        'Cheating': 'Cheating (Action Required)',
+        'Pending': 'Pending (Waiting for Watch Back)',
+        'NotWorkYet': 'Not Started',
+        'Rejected': 'Rejected',
+        'Watched': 'Watched',
+        'All': 'All Tasks'
+    };
+    statusLabel.textContent = labelMap[currentStatus] || currentStatus || 'Not Started';
 }
 
 function setTab(tab, btn) {
-    if (forcedTaskTab && tab !== forcedTaskTab) return;
-    activeTab = tab;
-    currentPage = 1;
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    loadFilteredTasks(tab);
-}
-
-async function loadFilteredTasks(status) {
-    if (isLoading) return;
-    isLoading = true;
-
-    document.getElementById('taskList').innerHTML = `
-        <div class="skeleton h-[200px]"></div>
-        <div class="skeleton h-[200px]"></div>
-        <div class="skeleton h-[200px]"></div>
-    `;
-
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasksFiltered&userCode=${USER_CODE}&status=${status}`);
-        const data = await res.json();
-
-        if (data.success) {
-            if (data.member) {
-                member = data.member;
-            }
-            
-            allTasks = data.tasks || [];
-            totalTasks = data.totalTasks || 0;
-            totalPages = Math.ceil(totalTasks / PER_PAGE);
-            currentPage = 1;
-
-            if (data.stats) {
-                stats = data.stats;
-                calcStats();
-            }
-
-            if (data.priorityInfo) {
-                hasCheating = data.priorityInfo.hasCheating || false;
-                forcedTaskTab = data.priorityInfo.forcedTab || null;
-            }
-
-            if (data.settings) {
-                mySettings = data.settings;
-                renderSettingsCard();
-            }
-
-            if (data.perfStats) {
-                perfStats = data.perfStats;
-            }
-
-            checkCheating();
-            enforceTaskPriorityTabs();
-            
-            filtered = allTasks;
-            applyFilter();
-        }
-    } catch (e) {
-        showToast('Error loading filtered tasks', true);
-        console.error('loadFilteredTasks error:', e);
-    }
-
-    isLoading = false;
-}
-
-function applyFilter() {
-    enforceTaskPriorityTabs();
-
-    let base = allTasks.filter(t => {
-        if (t.UserCode !== USER_CODE) return false;
-
-        const tabMatch =
-            activeTab === 'All' ? true :
-            activeTab === 'NotWorkYet' ? t.Status === 'NotWorkYet' :
-            activeTab === 'Pending' ? t.Status === 'Pending' :
-            activeTab === 'Watched' ? t.Status === 'Watched' :
-            activeTab === 'Cheating' ? t.Status === 'Cheating' :
-            activeTab === 'Rejected' ? t.Status === 'Rejected' :
-            true;
-
-        return tabMatch;
-    });
-
-    base.sort((a, b) => {
-        const ORDER = { 'Cheating': 0, 'Rejected': 1, 'Pending': 2, 'NotWorkYet': 3, 'Watched': 4 };
-        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
-    });
-
-    filtered = base;
-    currentPage = 1;
-    renderList();
-}
-
-function renderList() {
-    const list = document.getElementById('taskList');
-    const empty = document.getElementById('emptyState');
-    const pages = document.getElementById('paginationBar');
-
-    const tasksToShow = filtered.length > 0 ? filtered : allTasks;
-
-    if (tasksToShow.length === 0) {
-        list.innerHTML = '';
-        empty.classList.remove('hidden');
-        pages.classList.add('hidden');
+    if (forcedTaskTab && tab !== forcedTaskTab) {
+        showToast(`🔒 You must resolve ${forcedTaskTab.toLowerCase()} tasks first.`, true);
         return;
     }
-
-    empty.classList.add('hidden');
-
-    const totalFiltered = tasksToShow.length;
-    const totalFilteredPages = Math.ceil(totalFiltered / PER_PAGE);
     
-    if (currentPage > totalFilteredPages) {
-        currentPage = totalFilteredPages;
+    activeTab = tab;
+    currentPage = 1;
+    const tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(b => {
+        b.classList.remove('active');
+        b.classList.remove('hidden-tab');
+        b.classList.add('visible-tab');
+    });
+    if (btn) {
+        btn.classList.add('active');
+        btn.classList.remove('hidden-tab');
     }
-    if (currentPage < 1) {
-        currentPage = 1;
+    
+    filterTasksByTab(tab);
+}
+
+function filterTasksByTab(tab) {
+    const activeTasks = allTasks.filter(t => 
+        t.Status !== 'Watched' && t.Status !== 'Rejected'
+    );
+    
+    let filtered = activeTasks;
+    if (tab !== 'All') {
+        filtered = activeTasks.filter(t => t.Status === tab);
     }
+    
+    const ORDER = { 'Cheating': 0, 'Rejected': 1, 'Pending': 2, 'NotWorkYet': 3, 'Watched': 4 };
+    filtered.sort((a, b) => (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9));
+    
+    currentStatus = tab;
+    updateStatusLabel();
+    
+    const list = document.getElementById('taskList');
+    const empty = document.getElementById('emptyState');
+    
+    if (filtered.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        document.getElementById('showingCount').textContent = '0';
+        document.getElementById('paginationBar').classList.add('hidden');
+        return;
+    }
+    
+    empty.classList.add('hidden');
+    
+    const totalFiltered = filtered.length;
+    const totalFilteredPages = Math.ceil(totalFiltered / PER_PAGE);
+    if (currentPage > totalFilteredPages) currentPage = totalFilteredPages;
+    if (currentPage < 1) currentPage = 1;
     
     const start = (currentPage - 1) * PER_PAGE;
     const end = Math.min(start + PER_PAGE, totalFiltered);
-    const pageTasks = tasksToShow.slice(start, end);
-
-    const cheatCount = tasksToShow.filter(t => t.Status === 'Cheating').length;
-    const rejectedCount = tasksToShow.filter(t => t.Status === 'Rejected').length;
-    const pendingCount = tasksToShow.filter(t => t.Status === 'Pending').length;
+    const pageTasks = filtered.slice(start, end);
     
-    let priorityHtml = '';
-    if (cheatCount > 0) {
-        priorityHtml = `<div class="mb-4 p-3 bg-red-500/10 border-2 border-red-500 rounded-2xl text-sm text-red-700">
-            ⚠️ <strong>${cheatCount}</strong> flagged task(s) — re-watch these videos and use "Recheck" to resolve!
-        </div>`;
-    } else if (rejectedCount > 0) {
-        priorityHtml = `<div class="mb-4 p-3 bg-orange-500/10 border-2 border-orange-500 rounded-2xl text-sm text-orange-700">
-            ⚠️ <strong>${rejectedCount}</strong> rejected task(s) — review and re-watch these videos!
-        </div>`;
-    } else if (pendingCount > 0) {
-        priorityHtml = `<div class="mb-4 p-3 bg-yellow-500/10 border-2 border-yellow-500 rounded-2xl text-sm text-yellow-700">
-            ⏳ <strong>${pendingCount}</strong> pending task(s) — complete these watch exchanges!
-        </div>`;
-    }
-
-    list.innerHTML = priorityHtml + pageTasks.map(taskCard).join('');
-
-    updatePagination();
-}
-
-function updatePagination() {
+    list.innerHTML = pageTasks.map(taskCard).join('');
+    document.getElementById('showingCount').textContent = filtered.length;
+    
     const pages = document.getElementById('paginationBar');
-    const tasksToShow = filtered.length > 0 ? filtered : allTasks;
-    const totalFiltered = tasksToShow.length;
-    const totalFilteredPages = Math.ceil(totalFiltered / PER_PAGE);
-    
-    if (totalFiltered > PER_PAGE && totalFilteredPages > 0 && totalFilteredPages > 1) {
+    if (totalFilteredPages > 1) {
         pages.classList.remove('hidden');
         document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalFilteredPages}`;
         document.getElementById('prevBtn').disabled = currentPage === 1;
@@ -1478,20 +1322,315 @@ function updatePagination() {
     }
 }
 
-function changePage(delta) {
-    const newPage = currentPage + delta;
-    const tasksToShow = filtered.length > 0 ? filtered : allTasks;
-    const totalFilteredPages = Math.ceil(tasksToShow.length / PER_PAGE);
-    if (newPage < 1 || newPage > totalFilteredPages) return;
-    currentPage = newPage;
-    renderList();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+/* ────────────────────────────────────────
+   BOOT
+──────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', async function() {
+    const isVisible = await checkGroupVisibility();
+    if (!isVisible) {
+        return;
+    }
+    await init();
+});
+
+async function init() {
+    try {
+        const cachedData = loadTasksFromCache();
+        
+        if (cachedData && cachedData.tasks && cachedData.tasks.length > 0) {
+            console.log('📦 Using cached video tasks');
+            
+            allTasks = (cachedData.tasks || []).filter(t => 
+                t.Status !== 'Watched' && t.Status !== 'Rejected'
+            );
+            stats = cachedData.stats;
+            exchangeStats = cachedData.exchangeStats;
+            perfStats = cachedData.perfStats;
+            currentStatus = cachedData.focusedStatus;
+            member = cachedData.member;
+            hasCheating = cachedData.hasCheating;
+            
+            if (cachedData.channelNames) channelNameCache = cachedData.channelNames;
+            if (cachedData.channelHandles) channelHandleCache = cachedData.channelHandles;
+            if (cachedData.channelImages) channelImageCache = cachedData.channelImages;
+            if (cachedData.channelLinks) channelLinkCache = cachedData.channelLinks;
+            
+            hideLoader();
+            loadPreferenceOptions();
+            checkBlock();
+            checkCheatingAndEnforcePriority();
+            renderStats();
+            renderList();
+            
+            refreshTasksInBackground();
+            startPeriodicValidation();
+            
+            return;
+        }
+        
+        console.log('🔄 No cache or cache empty, fetching from server...');
+        await fetchTasksFromServer(true);
+        startPeriodicValidation();
+        
+    } catch (e) {
+        hideLoader();
+        clearSkeletons();
+        showToast('Could not connect to server.', true);
+        console.error('Init error:', e);
+    }
 }
 
-/* ────────────────────────────────────────
-   LOAD PAGE - Server-side pagination
-──────────────────────────────────────── */
-async function loadPage(page) {
+async function fetchTasksFromServer(showLoader = true) {
+    if (showLoader) {
+        document.getElementById('taskList').innerHTML = `
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+        `;
+    }
+    
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getVideoMemberAndTasks&userCode=${USER_CODE}&page=1&perPage=${PER_PAGE}`);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        
+        const data = await res.json();
+
+        if (showLoader) hideLoader();
+
+        if (!data.success) {
+            if (data.notEnrolled) {
+                showNotEnrolled(data.message || 'You are not enrolled in the Video Task Group.');
+                return;
+            }
+            if (data.notActive) {
+                showNotActive(data.message || 'Your account is not active. Please contact support.');
+                return;
+            }
+            if (data.suspended) {
+                showSuspended(data.message || 'Your account is suspended.');
+                return;
+            }
+            if (data.notFound) {
+                showMemberNotFound(data.message || 'Member not found. Please sign in again.');
+                return;
+            }
+            showToast(data.message || 'Error loading data', true);
+            clearSkeletons();
+            return;
+        }
+
+        member = data.member;
+        perfStats = data.perfStats || null;
+        currentPage = data.currentPage || 1;
+        totalPages = data.totalPages || 1;
+        
+        let validatedTasks = data.tasks || [];
+        if (validatedTasks.length > 0) {
+            validatedTasks = await validateTasksWithServer(validatedTasks);
+        }
+        
+        allTasks = validatedTasks.filter(t => 
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
+        
+        if (data.priorityInfo) {
+            hasCheating = data.priorityInfo.hasCheating || false;
+            hasPending = data.priorityInfo.hasPending || false;
+            hasRejected = data.priorityInfo.hasRejected || false;
+            forcedTaskTab = data.priorityInfo.forcedTab || null;
+            
+            if (data.priorityInfo.cheatCount > 0) {
+                document.getElementById('cheatCount').textContent = data.priorityInfo.cheatCount;
+            }
+        }
+        
+        currentStatus = forcedTaskTab || 'NotWorkYet';
+        
+        if (data.stats) {
+            stats = data.stats;
+        }
+        
+        if (data.exchangeStats) {
+            exchangeStats = data.exchangeStats;
+        }
+
+        if (data.channelNames) channelNameCache = data.channelNames;
+        if (data.channelHandles) channelHandleCache = data.channelHandles;
+        if (data.channelImages) channelImageCache = data.channelImages;
+        if (data.channelLinks) channelLinkCache = data.channelLinks;
+        
+        if (data.preferences) {
+            myPreferences = {
+                interests: data.preferences.interests || [],
+                countries: data.preferences.countries || []
+            };
+        }
+
+        saveTasksToCache(data);
+
+        loadPreferenceOptions();
+        checkBlock();
+        checkCheatingAndEnforcePriority();
+        renderStats();
+        renderList();
+
+        // Debug after load
+        setTimeout(debugTabs, 500);
+
+    } catch (e) {
+        if (showLoader) {
+            hideLoader();
+            clearSkeletons();
+        }
+        showToast('Could not connect to server.', true);
+        console.error('Fetch error:', e);
+    }
+}
+
+async function refreshTasksInBackground() {
+    try {
+        console.log('🔄 Background refresh started...');
+        const res = await fetch(`${SCRIPT_URL}?action=getVideoMemberAndTasks&userCode=${USER_CODE}&page=1&perPage=${PER_PAGE}`);
+        const data = await res.json();
+        
+        if (data.success) {
+            let validatedTasks = data.tasks || [];
+            if (validatedTasks.length > 0) {
+                validatedTasks = await validateTasksWithServer(validatedTasks);
+            }
+            
+            const activeTasks = validatedTasks.filter(t => 
+                t.Status !== 'Watched' && t.Status !== 'Rejected'
+            );
+            
+            const hasPriority = data.priorityInfo && (data.priorityInfo.cheatCount > 0 || data.priorityInfo.pendingCount > 0);
+            
+            if (hasPriority && activeTasks.length > 0) {
+                console.log(`🔄 Background: Updating to show ${data.priorityInfo.forcedTab} tasks`);
+                allTasks = activeTasks;
+                currentStatus = data.priorityInfo.forcedTab || 'NotWorkYet';
+                if (data.stats) stats = data.stats;
+                if (data.exchangeStats) exchangeStats = data.exchangeStats;
+                if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
+                if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+                if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
+                if (data.channelLinks) Object.assign(channelLinkCache, data.channelLinks);
+                
+                saveTasksToCache(data);
+                
+                checkBlock();
+                checkCheatingAndEnforcePriority();
+                renderStats();
+                renderList();
+                
+                console.log('✅ Background refresh complete (priority tasks)');
+                return;
+            }
+            
+            if (data.stats) {
+                stats = data.stats;
+                if (data.exchangeStats) exchangeStats = data.exchangeStats;
+                if (data.perfStats) perfStats = data.perfStats;
+                renderStats();
+                
+                localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+                localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+                localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(perfStats));
+            }
+            
+            console.log('✅ Background refresh complete (stats only)');
+        }
+    } catch (e) {
+        console.warn('Background refresh failed:', e);
+    }
+}
+
+async function validateTasksWithServer(tasks) {
+    if (!tasks || tasks.length === 0) return tasks;
+    
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getTargetUsersStatus&userCode=${USER_CODE}`);
+        
+        if (!res.ok) {
+            console.warn('Validation request failed:', res.status);
+            return tasks;
+        }
+        
+        const data = await res.json();
+        
+        if (!data.success || !data.targetUsersStatus) {
+            console.warn('Could not validate targets, keeping all tasks');
+            return tasks;
+        }
+        
+        const targetStatusMap = data.targetUsersStatus;
+        
+        const validTasks = tasks.filter(task => {
+            const targetCode = task.TargetUserCode;
+            const targetData = targetStatusMap[targetCode];
+            if (!targetData) return true;
+            
+            if (targetData.inVideoTaskWork !== 'Yes') return false;
+            if (targetData.violationFlag === 'Suspended') return false;
+            if (targetData.status === 'Blocked') return false;
+            if (targetData.videoPromotionActive === 'No') return false;
+            return true;
+        });
+        
+        const removedCount = tasks.length - validTasks.length;
+        if (removedCount > 0) {
+            console.log(`🗑️ Removed ${removedCount} tasks with ineligible targets`);
+        }
+        
+        return validTasks;
+    } catch (e) {
+        console.warn('Task validation error:', e);
+        return tasks;
+    }
+}
+
+function recalculateStats() {
+    const activeTasks = allTasks.filter(t => 
+        t.Status !== 'Watched' && t.Status !== 'Rejected'
+    );
+    
+    const total = activeTasks.length;
+    stats = {
+        total: total,
+        notWorkYet: activeTasks.filter(t => t.Status === 'NotWorkYet').length,
+        pending: activeTasks.filter(t => t.Status === 'Pending').length,
+        watched: 0,
+        cheating: activeTasks.filter(t => t.Status === 'Cheating').length,
+        rejected: 0
+    };
+    
+    let awaitingCount = 0;
+    let bothCount = 0;
+    let theirPendingCount = 0;
+    
+    activeTasks.forEach(t => {
+        if (t.Status === 'Pending' || t.Status === 'NotWorkYet') {
+            if (t.PairedStatus === 'Watched') {
+                bothCount++;
+            } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+                theirPendingCount++;
+            } else {
+                awaitingCount++;
+            }
+        }
+    });
+    
+    exchangeStats = {
+        awaiting: awaitingCount,
+        both: bothCount,
+        theirPending: theirPendingCount
+    };
+}
+
+async function refreshTasks() {
     if (isLoading) return;
     isLoading = true;
 
@@ -1502,49 +1641,235 @@ async function loadPage(page) {
     `;
 
     try {
-        const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}&page=${page}&perPage=${PER_PAGE}`);
-        const data = await res.json();
-
-        if (data.success) {
-            if (data.member) {
-                member = data.member;
-            }
-            
-            allTasks = data.tasks || [];
-            currentPage = data.currentPage || page;
-            totalPages = data.totalPages || 1;
-            totalTasks = data.totalTasks || 0;
-
-            if (data.stats) {
-                stats = data.stats;
-            }
-
-            if (data.priorityInfo) {
-                hasCheating = data.priorityInfo.hasCheating || false;
-                forcedTaskTab = data.priorityInfo.forcedTab || null;
-            }
-
-            if (data.settings) {
-                mySettings = data.settings;
-                renderSettingsCard();
-            }
-
-            if (data.perfStats) {
-                perfStats = data.perfStats;
-            }
-
-            checkCheating();
-            enforceTaskPriorityTabs();
-            
-            filtered = allTasks;
-            applyFilter();
-        }
+        await fetchTasksFromServer(false);
+        allTasks = allTasks.filter(t => 
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
+        renderList();
+        showToast('✅ Tasks refreshed!');
     } catch (e) {
-        showToast('Error loading page', true);
-        console.error('loadPage error:', e);
+        showToast('Error loading tasks', true);
     }
 
     isLoading = false;
+}
+
+/* ────────────────────────────────────────
+   STATUS MESSAGES
+──────────────────────────────────────── */
+function showNotEnrolled(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner">
+                    <span class="banner-icon">📢</span>
+                    <h2 class="banner-title">Not Enrolled in Video Task Group</h2>
+                    <p class="banner-desc">
+                        ${message || 'You are not in the Video Task Group. Join the group to start exchanging video watch time.'}
+                    </p>
+                    <a href="groups.html" class="banner-btn">
+                        👥 Go to Groups
+                    </a>
+                    <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
+                        💡 Once you join the <strong>Long Video Search Group</strong>, come back here to see your tasks.
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showNotActive(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                    <span class="banner-icon">⛔</span>
+                    <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
+                    <p class="banner-desc">${message || 'Your account is not active. Please contact support for assistance.'}</p>
+                    <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showSuspended(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                    <span class="banner-icon">🚫</span>
+                    <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
+                    <p class="banner-desc">${message || 'Your account has been suspended. Please contact support for more information.'}</p>
+                    <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showMemberNotFound(message) {
+    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (container) {
+        container.innerHTML = `
+            <div class="w-full flex justify-center items-center min-h-[400px]">
+                <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
+                    <span class="banner-icon">❓</span>
+                    <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
+                    <p class="banner-desc">${message || 'We could not find your account. Please sign in again.'}</p>
+                    <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function hideLoader() {
+    const loader = document.getElementById('pageLoader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.style.display = 'none', 400);
+}
+
+function toggleStats() {
+    const panel = document.getElementById('statsPanel');
+    panel.classList.toggle('hidden');
+    if (!panel.classList.contains('hidden')) {
+        refreshStats();
+    }
+}
+
+function checkBlock() {
+    if (!member) return;
+    const suspended = member.ViolationFlag === 'Suspended';
+    const disabled = member.VideoPromotionActive === 'No';
+    const notEnrolled = member.InVideoTaskWork !== 'Yes';
+
+    const banner = document.getElementById('blockedBanner');
+    const msgEl = document.getElementById('blockedMsg');
+    const createBtn = document.getElementById('createBtn');
+
+    const hasPendingTasks = allTasks.some(t => 
+        t.Status === 'NotWorkYet' || t.Status === 'Pending'
+    );
+
+    const shouldShowBanner = suspended || notEnrolled || (disabled && !hasPendingTasks);
+
+    if (shouldShowBanner) {
+        isBlocked = true;
+        banner.classList.remove('hidden');
+        
+        if (suspended) {
+            msgEl.textContent = `Your account is suspended until ${member.SuspendedUntil || 'further notice'}. Reason: ${member.ViolationReason || 'Policy violation.'}`;
+            if (createBtn) {
+                createBtn.disabled = true;
+                createBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                createBtn.title = 'Your account is suspended.';
+            }
+        } else if (notEnrolled) {
+            msgEl.textContent = 'You are not enrolled in the Video Task Group. Please join the group first.';
+            if (createBtn) {
+                createBtn.disabled = true;
+                createBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                createBtn.title = 'Join the Video Task Group first.';
+            }
+        } else if (disabled && !hasPendingTasks) {
+            msgEl.textContent = '⚠️ Video group promotion is currently disabled. Complete your pending tasks to re-enable.';
+            if (createBtn) {
+                createBtn.disabled = true;
+                createBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                createBtn.title = 'Complete your pending tasks to re-enable promotion.';
+            }
+        }
+    } else {
+        isBlocked = false;
+        banner.classList.add('hidden');
+        if (createBtn && !hasCheating && !hasPending && !hasRejected) {
+            createBtn.disabled = false;
+            createBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            createBtn.title = '';
+        }
+    }
+}
+
+function renderStats() {
+    document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
+    document.getElementById('st-pending').textContent = stats.pending || 0;
+    document.getElementById('st-watched').textContent = stats.watched || 0;
+    document.getElementById('st-cheating').textContent = stats.cheating || 0;
+    document.getElementById('st-rejected').textContent = stats.rejected || 0;
+    document.getElementById('st-total').textContent = stats.total || 0;
+
+    document.getElementById('st-awaiting').textContent = exchangeStats.awaiting || 0;
+    document.getElementById('st-both').textContent = exchangeStats.both || 0;
+    document.getElementById('st-theirpending').textContent = exchangeStats.theirPending || 0;
+    
+    document.getElementById('showingCount').textContent = allTasks.length;
+}
+
+async function refreshStats() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getVideoMemberAndTasks&userCode=${USER_CODE}&page=1&perPage=${PER_PAGE}`);
+        const data = await res.json();
+        if (data.success && data.stats) {
+            stats = data.stats;
+            if (data.exchangeStats) exchangeStats = data.exchangeStats;
+            renderStats();
+            localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+            localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+        }
+    } catch (e) {
+        console.warn('Could not refresh stats:', e);
+    }
+}
+
+function renderList() {
+    const list = document.getElementById('taskList');
+    const empty = document.getElementById('emptyState');
+
+    const activeTasks = allTasks.filter(t => 
+        t.Status !== 'Watched' && t.Status !== 'Rejected'
+    );
+
+    if (activeTasks.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        document.getElementById('showingCount').textContent = '0';
+        return;
+    }
+
+    empty.classList.add('hidden');
+
+    const ORDER = { 'Cheating': 0, 'Rejected': 1, 'Pending': 2, 'NotWorkYet': 3, 'Watched': 4 };
+    const sorted = [...activeTasks].sort((a, b) => {
+        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
+    });
+
+    const totalFiltered = sorted.length;
+    const totalFilteredPages = Math.ceil(totalFiltered / PER_PAGE);
+    
+    if (currentPage > totalFilteredPages) currentPage = totalFilteredPages;
+    if (currentPage < 1) currentPage = 1;
+    
+    const start = (currentPage - 1) * PER_PAGE;
+    const end = Math.min(start + PER_PAGE, totalFiltered);
+    const pageTasks = sorted.slice(start, end);
+
+    list.innerHTML = pageTasks.map(taskCard).join('');
+    document.getElementById('showingCount').textContent = sorted.length;
+
+    const pages = document.getElementById('paginationBar');
+    if (totalFilteredPages > 1) {
+        pages.classList.remove('hidden');
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalFilteredPages}`;
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === totalFilteredPages;
+    } else {
+        pages.classList.add('hidden');
+    }
 }
 
 function clearSkeletons() {
@@ -1552,25 +1877,35 @@ function clearSkeletons() {
     document.getElementById('emptyState').classList.remove('hidden');
 }
 
+function changePage(delta) {
+    const newPage = currentPage + delta;
+    const activeTasks = allTasks.filter(t => t.Status !== 'Watched' && t.Status !== 'Rejected');
+    const totalFilteredPages = Math.ceil(activeTasks.length / PER_PAGE);
+    if (newPage < 1 || newPage > totalFilteredPages) return;
+    currentPage = newPage;
+    renderList();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 /* ────────────────────────────────────────
    HELPERS
 ──────────────────────────────────────── */
 const STATUS_CFG = {
-    'NotWorkYet': { bg: 'status-notwork', text: '', dot: 'bg-yellow-400', label: 'Not Started' },
-    'Pending': { bg: 'status-pending', text: '', dot: 'bg-orange-400', label: 'Pending' },
-    'Watched': { bg: 'status-watched', text: '', dot: 'bg-green-400', label: 'Watched' },
-    'Cheating': { bg: 'status-cheating', text: '', dot: 'bg-red-400', label: 'Cheating' },
-    'Rejected': { bg: 'status-rejected', text: '', dot: 'bg-gray-400', label: 'Rejected' },
+    'NotWorkYet': { bg: 'bg-yellow-500/15', text: 'text-yellow-700', dot: 'bg-yellow-400', label: 'Not Started' },
+    'Pending': { bg: 'bg-orange-500/15', text: 'text-orange-600', dot: 'bg-orange-400', label: 'Pending' },
+    'Watched': { bg: 'bg-green-500/15', text: 'text-green-600', dot: 'bg-green-400', label: 'Watched' },
+    'Cheating': { bg: 'bg-red-500/15', text: 'text-red-600', dot: 'bg-red-400', label: 'Cheating' },
+    'Rejected': { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: 'Rejected' },
 };
 
 function pairedBadge(t) {
     if (t.Status !== 'Watched') return '';
     if (t.PairedStatus === 'Watched') {
-        return `<span class="paired-badge status-watched">✓ They Watched Back</span>`;
+        return `<span class="paired-badge bg-teal-500/15 text-teal-600">✓ They Watched Back</span>`;
     } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
-        return `<span class="paired-badge status-pending">⏳ Their Watch: Pending</span>`;
+        return `<span class="paired-badge bg-orange-500/15 text-orange-600">⏳ Their Watch: Pending</span>`;
     } else {
-        return `<span class="paired-badge" style="background:#dbeafe;color:#1e40af;">⏳ Awaiting Their Watch</span>`;
+        return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Watch</span>`;
     }
 }
 
@@ -1587,6 +1922,48 @@ function gapBadge(t) {
     return `<span class="gap-badge" title="Difference between your video length and theirs">⏱ Gap: ${t.MatchedGapMinutes} min</span>`;
 }
 
+function getChannelKey(t) {
+    return (t && (t.TargetUserCode)) || '';
+}
+
+function getChannelName(t) {
+    const key = getChannelKey(t);
+    return (t && t.TargetChannelName) || channelNameCache[key] || null;
+}
+
+function getChannelHandle(t) {
+    const key = getChannelKey(t);
+    return (t && t.TargetChannelHandle) || channelHandleCache[key] || null;
+}
+
+function getChannelImage(t) {
+    const key = getChannelKey(t);
+    return (t && t.TargetChannelImage) || channelImageCache[key] || '';
+}
+
+function getChannelLink(t) {
+    const key = getChannelKey(t);
+    return (t && t.TargetChannelLink) || channelLinkCache[key] || '';
+}
+
+function buildVideoUrl(t) {
+    return t.VideoUrl || `https://youtube.com/watch?v=${t.VideoID}`;
+}
+
+function formatMinutes(seconds) {
+    if (!seconds || seconds === 0) return '0 min';
+    const totalSeconds = parseFloat(seconds);
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const remainingSeconds = Math.round(totalSeconds % 60);
+    if (totalMinutes > 0 && remainingSeconds > 0) {
+        return `${totalMinutes} min ${remainingSeconds} sec`;
+    } else if (totalMinutes > 0) {
+        return `${totalMinutes} min`;
+    } else {
+        return `${remainingSeconds} sec`;
+    }
+}
+
 function fmtDate(v) {
     if (!v) return '—';
     const d = new Date(v);
@@ -1601,189 +1978,153 @@ function showToast(msg, isError = false) {
     setTimeout(() => { t.className = ''; }, 3200);
 }
 
-function getTaskById(taskId) {
-    return allTasks.find(x => String(x.TaskID) === String(taskId));
-}
-
-function getVideoSearchText(t) {
-    return [t?.VideoTitle || '', t?.TargetChannelName || '', t?.TargetChannelHandle || '']
-        .filter(Boolean)
-        .join(' ');
-}
-
-function openVideoSearch(taskId) {
-    const t = getTaskById(taskId);
-    if (!t) return showToast('Task not found.', true);
-    const query = getVideoSearchText(t) || t.VideoID || t.VideoUrl || '';
-    if (!query) return showToast('No video title available for search.', true);
-    window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank', 'noopener');
-}
-
-async function copyVideoTitle(taskId) {
-    const t = getTaskById(taskId);
-    const title = (t?.VideoTitle || '').trim();
-    if (!title) return showToast('No video title available to copy.', true);
-
-    try {
-        if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(title);
-        } else {
-            const temp = document.createElement('textarea');
-            temp.value = title;
-            temp.style.position = 'fixed';
-            temp.style.opacity = '0';
-            document.body.appendChild(temp);
-            temp.focus();
-            temp.select();
-            document.execCommand('copy');
-            temp.remove();
-        }
-        showToast('Video title copied.');
-    } catch (e) {
-        showToast('Could not copy title.', true);
-    }
-}
-
 /* ────────────────────────────────────────
    TASK CARD
 ──────────────────────────────────────── */
 function taskCard(t) {
-    const sc = STATUS_CFG[t.Status] || { bg: 'status-rejected', text: '', dot: 'bg-gray-400', label: t.Status };
+    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
 
     const isCheating = t.Status === 'Cheating';
+    const isWatched = t.Status === 'Watched';
+    
     const isSuspended = member && member.ViolationFlag === 'Suspended';
-    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isSuspended && !hasCheating;
+    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && 
+                    !isSuspended && 
+                    !hasCheating;
 
-    const videoUrl = t.VideoUrl || '#';
+    const chanName = getChannelName(t);
+    const chanHandle = getChannelHandle(t);
+    const chanImage = getChannelImage(t);
+    const chanLink = getChannelLink(t);
+    const videoUrl = buildVideoUrl(t);
     const videoTitle = t.VideoTitle || 'Video';
     const thumb = t.VideoThumbnail || '';
+    
     let displayDuration = '—';
     let durationUnit = 'min';
-    if (t.VideoSeconds !== undefined && t.VideoSeconds !== null && t.VideoSeconds !== '') {
+    if (t.VideoSeconds !== undefined && t.VideoSeconds !== null) {
         const secs = parseFloat(t.VideoSeconds);
         if (secs > 0 && secs < 60) {
             displayDuration = secs;
             durationUnit = 'sec';
-        } else if (t.VideoMinutes !== undefined && t.VideoMinutes !== null && t.VideoMinutes !== '') {
+        } else if (t.VideoMinutes !== undefined) {
             displayDuration = t.VideoMinutes;
             durationUnit = 'min';
         }
-    } else if (t.VideoMinutes !== undefined && t.VideoMinutes !== null && t.VideoMinutes !== '') {
+    } else if (t.VideoMinutes !== undefined) {
         displayDuration = t.VideoMinutes;
         durationUnit = 'min';
     }
-    const reqMinutes = displayDuration;
-    const reqUnit = durationUnit;
 
-    const chanName = t.TargetChannelName || '';
-    const chanHandle = t.TargetChannelHandle || '';
-    const chanImage = t.TargetChannelImage || '';
-
-    const issueText = t.Issue || '';
-    const issueRow = issueText
-        ? `<span class="text-xs text-red-700 bg-red-100 px-2.5 py-1 rounded-lg font-semibold">⚠ Reported</span>`
+    const issueRow = t.Issue
+        ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
         : '';
 
-    const punishmentBlock = isCheating ? `
-        <div class="punishment-box mt-3">
-            <p class="text-xs text-red-700 font-semibold mb-1">🚫 Action Required — Re-Watch &amp; Resubmit</p>
-            <p class="text-xs text-red-700/80 leading-relaxed">
-                Your watch proof for this video was flagged as insufficient or invalid. You <strong class="text-red-800">must re-watch the full video</strong> using the Exsub Extension and resubmit proof to resolve this task.
-                Until resolved, all other actions are locked.
+    const cheatingBlock = isCheating ? `
+        <div class="cheating-box mt-3">
+            <p class="text-xs text-red-600 font-semibold mb-1">🚫 Cheating Detected</p>
+            <p class="text-xs text-red-600/80 leading-relaxed">
+                This task has been flagged for cheating. You <strong class="text-red-600">must resolve</strong> this issue before you can continue.
+                Click <strong>Recheck</strong> after re-watching the video.
             </p>
-            <div class="flex gap-2 mt-3 flex-wrap">
-                <a href="${videoUrl}" target="_blank" rel="noopener"
-                    class="btn-red inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold">
-                    ▶ Re-Watch Now
-                </a>
-                ${t.TargetChannelLink ? `<a href="${t.TargetChannelLink}" target="_blank" rel="noopener"
-                    class="btn-outline inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold no-underline">
-                    📺 Open Channel
-                </a>` : ''}
-                <button onclick="openVideoSearch('${t.TaskID}')"
-                    class="btn-outline inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold">
-                    Search Video
-                </button>
-                <button onclick="copyVideoTitle('${t.TaskID}')"
-                    class="btn-outline inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold">
-                    Copy Title
-                </button>
-                <button onclick="doRetryTask('${t.TaskID}', this)"
-                    class="btn-outline inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold">
-                    🔄 I've Re-Watched — Recheck
-                </button>
-            </div>
         </div>` : '';
 
     const issueSection = !isCheating ? `
         <div class="issue-box mt-3">
             <div class="flex items-center justify-between">
-                <span class="text-xs text-red-700 font-medium">⚠ Report Issue with this task</span>
+                <span class="text-xs text-red-600/80 font-medium">⚠ Report Issue with this task</span>
                 <button onclick="openIssueModal('${t.TaskID}')"
-                    class="text-xs text-red-700 hover:opacity-70 underline transition font-semibold">
-                    ${issueText ? 'Update Issue' : 'Report'}
+                    class="text-xs text-red-600 hover:text-red-600 underline transition">
+                    ${t.Issue ? 'Update Issue' : 'Report'}
                 </button>
             </div>
-            ${issueText ? `<p class="text-xs text-red-700/70 mt-1">Current: ${issueText}</p>` : ''}
+            ${t.Issue ? `<p class="text-xs text-red-600/70 mt-1">Current: ${t.Issue}</p>` : ''}
         </div>` : '';
 
     let actionButtons = '';
-    const channelLink = t.TargetChannelLink || t.channelLink || '';
-    const openChannelBtn = channelLink
-        ? `<a href="${channelLink}" target="_blank" rel="noopener"
-            class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none no-underline">
-            📺 Open Channel
-        </a>`
-        : `<button onclick="showToast('Channel link not available', true)"
-            class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-50 cursor-not-allowed" disabled>
-            📺 Open Channel
-        </button>`;
-
     if (isCheating) {
         actionButtons = `
-            <div class="px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center flex-1 xl:flex-none bg-red-100 border-2 border-red-300 text-red-700">
+            <button onclick="openDetailModal('${t.TaskID}')"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
+                📋 View Details
+            </button>
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #ACD1C0;">
+                🎥 Proof
+            </button>
+            <button onclick="doRetryTask('${t.TaskID}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #fecaca;">
+                🔄 Recheck
+            </button>
+            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-600">
                 🔒 Actions Locked
             </div>`;
     } else if (canMark) {
         actionButtons = `
-            ${openChannelBtn}
-            <button onclick="openVideoSearch('${t.TaskID}')"
+            <a href="${videoUrl}" target="_blank" rel="noopener"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                Search Video
+                ▶ Open Video
+            </a>
+            <button onclick="openDetailModal('${t.TaskID}')"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                📋 View Details
             </button>
-            <button onclick="copyVideoTitle('${t.TaskID}')"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                Copy Title
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #ACD1C0;">
+                🎥 Proof
             </button>
             <button onclick="doMarkWatched('${t.TaskID}', this)"
-                class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
+                class="btn-watched px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ✓ Mark Watched
             </button>`;
     } else {
         actionButtons = `
-            ${openChannelBtn}
-            <button onclick="openVideoSearch('${t.TaskID}')"
+            <a href="${videoUrl}" target="_blank" rel="noopener"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                Search Video
-            </button>
-            <button onclick="copyVideoTitle('${t.TaskID}')"
+                ▶ Open Video
+            </a>
+            <button onclick="openDetailModal('${t.TaskID}')"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                Copy Title
+                📋 View Details
             </button>
-            <button onclick="openDetail('${t.TaskID}')"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
-                View Details
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
+                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #ACD1C0;">
+                🎥 Proof
+            </button>
+            <button class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none opacity-60" disabled>
+                ✓ Done
             </button>`;
     }
 
     const pinnedBadge = isCheating
-        ? `<span class="text-xs bg-red-100 text-red-700 border border-red-300 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
+        ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
         : '';
 
+    const cardClass = isCheating ? 'task-card cheating-card' : 
+                     (isWatched ? 'task-card watched-card' : 'task-card');
+
+    const videoDisplay = `
+    <div class="flex items-start gap-3">
+        <div class="video-thumb-wrap">
+            ${thumb
+                ? `<img src="${thumb}" alt="" onerror="this.parentElement.innerHTML='<div class=&quot;play-badge&quot;>🎬</div>'">`
+                : `<div class="play-badge">🎬</div>`}
+            <span class="duration-chip">${displayDuration} ${durationUnit}</span>
+        </div>
+        <div class="min-w-0 flex-1">
+            <div class="text-sm font-semibold text-[#211F1F] truncate">${videoTitle}</div>
+            <div class="flex items-center gap-2 mt-1">
+                ${chanImage ? `<img src="${chanImage}" class="w-5 h-5 rounded-full object-cover" onerror="this.style.display='none'">` : ''}
+                <span class="text-xs text-[#211F1F]/70">${chanName || '—'}</span>
+            </div>
+            ${chanHandle ? `<div class="text-xs text-[#211F1F]/60 font-mono mt-0.5">${chanHandle}</div>` : ''}
+        </div>
+    </div>`;
+
     return `
-    <div class="task-card ${isCheating ? 'cheating-card' : ''} rounded-3xl p-5">
+    <div class="${cardClass} rounded-3xl p-5">
         <div class="flex flex-wrap items-center gap-2 mb-4">
-            <code class="text-xs text-muted font-mono bg-[#F5F4EB] border border-[#211F1F]/20 px-2.5 py-1 rounded-lg">${t.TaskID}</code>
+            <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
             ${pairedBadge(t)}
             ${matchBadge(t)}
@@ -1795,26 +2136,11 @@ function taskCard(t) {
         <div class="flex flex-col xl:flex-row gap-5">
             <div class="flex-1 min-w-0">
                 <div class="instructions-box mb-3">
-                    <p class="text-xs text-[#211F1F] font-semibold mb-2">🎬 ${isCheating ? 'Re-watch this video:' : 'Watch this video:'}</p>
-                    <div class="flex items-start gap-3">
-                        <div class="video-thumb-wrap">
-                            ${thumb
-                                ? `<img src="${thumb}" alt="" onerror="this.parentElement.innerHTML='<div class=&quot;play-badge&quot;>🎬</div>'">`
-                                : `<div class="play-badge">🎬</div>`}
-                            <span class="duration-chip">${reqMinutes} ${reqUnit}</span>
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="text-sm font-semibold text-[#211F1F] truncate">${videoTitle}</div>
-                            <div class="flex items-center gap-2 mt-1">
-                                ${chanImage ? `<img src="${chanImage}" class="w-5 h-5 rounded-full object-cover" onerror="this.style.display='none'">` : ''}
-                                <span class="text-xs text-[#211F1F]/70">${chanName || '—'}</span>
-                            </div>
-                            ${chanHandle ? `<div class="text-xs text-[#211F1F]/60 font-mono mt-0.5">${chanHandle}</div>` : ''}
-                        </div>
-                    </div>
+                    <p class="text-xs text-purple-700 font-semibold mb-2">${isCheating ? '⚠️ Re-watch this video:' : '🎬 Watch this video:'}</p>
+                    ${videoDisplay}
                 </div>
 
-                ${punishmentBlock}
+                ${cheatingBlock}
                 ${issueSection}
 
                 <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
@@ -1826,7 +2152,7 @@ function taskCard(t) {
                 </div>
             </div>
 
-            <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[160px] flex-shrink-0">
+            <div class="flex flex-wrap xl:flex-col items-center xl:items-stretch gap-2 xl:w-[200px] flex-shrink-0">
                 ${actionButtons}
             </div>
         </div>
@@ -1834,134 +2160,179 @@ function taskCard(t) {
 }
 
 /* ────────────────────────────────────────
-   MARK WATCHED
+   VIEW WATCHING PROOF, DETAIL MODAL, MARK WATCHED, RETRY TASK
+   MATCH PREFERENCES, CREATE TASKS, REPORT ISSUE
+   (All these functions remain the same as your existing code)
 ──────────────────────────────────────── */
-async function doMarkWatched(taskId, btnEl) {
-    if (hasCheating) {
-        showToast('You must resolve your flagged tasks first.', true);
+
+async function viewWatchingProof(taskId, targetUserCode, btnEl) {
+    if (btnEl) {
+        const originalHTML = btnEl.innerHTML;
+        btnEl.disabled = true;
+        btnEl.innerHTML = `
+            <span class="inline-flex items-center justify-center gap-1">
+                <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                Loading...
+            </span>
+        `;
+    }
+    
+    const validation = await validateTaskBeforeAction(taskId, 'View Proof');
+    if (!validation.valid) {
+        if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = '🎥 Proof';
+        }
         return;
     }
-
-    const originalHTML = btnEl.innerHTML;
-    btnEl.disabled = true;
-    btnEl.innerHTML = `
-        <span class="inline-flex items-center gap-2">
-            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-            </svg>
-            Checking...
-        </span>`;
-
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'markWatched', taskId, userCode: USER_CODE })
-        });
-        const data = await res.json();
-
-        if (data.success) {
-            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
-            if (myTask) {
-                myTask.Status = data.newStatus || 'Watched';
-                myTask.WorkedDate = data.workedDate || new Date().toISOString();
-                myTask.WatchedMinutes = data.watchedMinutes || myTask.WatchedMinutes;
-                myTask.PairedStatus = data.pairedStatus || (data.bothWatched ? 'Watched' : 'NotWorkYet');
-            }
-            await refreshStats();
-            calcStats();
-            filtered = [];
-            applyFilter();
-            showToast(data.bothWatched ? '🎉 Both watched! Exchange complete!' : '✅ Task marked as Watched!');
-        } else if (data.proofMissing) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Proof Not Found',
-                text: 'Please watch the full video first using the Exsub Extension. Your task is not complete yet.',
-                background: '#F5F4EB',
-                color: '#211F1F',
-                confirmButtonColor: '#211F1F',
-                confirmButtonText: 'Got it'
-            });
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        } else if (data.insufficient) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Not Enough Watch Time Yet',
-                text: data.message || 'Keep watching — you have not reached the required minutes yet.',
-                background: '#F5F4EB',
-                color: '#211F1F',
-                confirmButtonColor: '#211F1F',
-                confirmButtonText: 'OK'
-            });
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        } else {
-            showToast(data.message || 'Update failed.', true);
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
+    
+    const modal = document.getElementById('proofModal');
+    const content = document.getElementById('proofModalContent');
+    
+    content.innerHTML = `
+        <div class="text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+            <p class="text-muted text-sm mt-3">Loading proof data...</p>
+        </div>
+    `;
+    modal.classList.add('open');
+    
+    if (btnEl) {
         btnEl.disabled = false;
-        btnEl.innerHTML = originalHTML;
+        btnEl.innerHTML = '🎥 Proof';
     }
-}
-
-/* ────────────────────────────────────────
-   RETRY TASK
-──────────────────────────────────────── */
-async function doRetryTask(taskId, btnEl) {
-    const originalHTML = btnEl.innerHTML;
-    btnEl.disabled = true;
-    btnEl.textContent = 'Rechecking…';
-
+    
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'retryVideoTask', taskId, userCode: USER_CODE })
-        });
+        const url = `${SCRIPT_URL}?action=getVideoWatchProgress&taskId=${encodeURIComponent(taskId)}&userCode=${encodeURIComponent(USER_CODE)}`;
+        const res = await fetch(url);
         const data = await res.json();
-
-        if (data.success) {
-            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
-            if (myTask) {
-                myTask.Status = data.newStatus;
-                if (data.newStatus === 'Watched') {
-                    myTask.WorkedDate = data.workedDate || new Date().toISOString();
-                    myTask.WatchedMinutes = data.watchedMinutes || myTask.WatchedMinutes;
-                    myTask.PairedStatus = data.pairedStatus || 'NotWorkYet';
+        
+        if (!data.success) {
+            content.innerHTML = `
+                <div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center">
+                    <p class="text-red-600">${data.message || 'Could not load proof data.'}</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const records = data.progress || [];
+        
+        if (records.length === 0) {
+            content.innerHTML = `
+                <div class="bg-yellow-500/10 border border-yellow-500/25 rounded-2xl p-6 text-center">
+                    <p class="text-yellow-700">📭 No watching proof found for this task.</p>
+                    <p class="text-muted text-sm mt-2">Watch the video using the Exsub Extension to generate proof.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let proofsHtml = `<div class="space-y-4">`;
+        proofsHtml += `<p class="text-sm text-muted">Found <strong class="text-purple-700">${records.length}</strong> proof record(s) for Task: <span class="font-mono">${taskId}</span></p>`;
+        proofsHtml += `<p class="text-xs text-muted">📹 Video: <strong>${data.videoTitle || records[0]?.VideoTitle || '—'}</strong></p>`;
+        proofsHtml += `<p class="text-xs text-muted">⏱ Duration: <strong>${data.videoDurationDisplay || records[0]?.VideoDurationDisplay || '—'}</strong></p>`;
+        proofsHtml += `<hr class="border-[#211F1F]/15 my-3">`;
+        
+        records.forEach((record, index) => {
+            const percentage = record.Percentage || 0;
+            const isWatched = percentage >= 85;
+            const statusColor = isWatched ? '#16a34a' : (percentage > 0 ? '#f59e0b' : '#ef4444');
+            const statusIcon = isWatched ? '✅' : (percentage > 0 ? '⏳' : '❌');
+            
+            let proofScreenshot = record.ProofScreenshot || '';
+            
+            let screenshotHtml = '';
+            if (proofScreenshot) {
+                const isValidImage = proofScreenshot.startsWith('http://') || 
+                                   proofScreenshot.startsWith('https://') || 
+                                   proofScreenshot.startsWith('data:image');
+                
+                if (isValidImage) {
+                    screenshotHtml = `
+                        <div class="mt-2 bg-gray-50 rounded-xl p-2 border border-[#211F1F]/10">
+                            <img src="${proofScreenshot}" 
+                                 alt="Screenshot ${index + 1}" 
+                                 class="proof-screenshot w-full rounded-lg border-2 border-[#211F1F]/15 max-h-[250px] object-contain cursor-pointer"
+                                 onclick="window.open('${record.ProofScreenshotRaw || proofScreenshot}', '_blank')"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <div style="display:none;" class="text-center py-2">
+                                <p class="text-xs text-muted">Could not load image</p>
+                                <button onclick="window.open('${record.ProofScreenshotRaw || proofScreenshot}', '_blank')" class="mt-1 btn-outline px-3 py-1 rounded-lg text-xs">
+                                    🔗 Open Image Directly
+                                </button>
+                            </div>
+                        </div>
+                    `;
                 }
             }
-            await refreshStats();
-            checkCheating();
-            calcStats();
-            filtered = [];
-            applyFilter();
-            showToast(data.newStatus === 'Watched' ? '✅ Verified! Task marked as Watched.' : data.message || 'Still not verified — keep watching.');
-        } else {
-            showToast(data.message || 'Could not recheck task.', true);
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        }
+            
+            const playDisplay = record.PlaySecondsDisplay || formatMinutes(record.PlaySeconds) || '0 sec';
+            const stopDisplay = record.StopSecondsDisplay || formatMinutes(record.StopSeconds) || '0 sec';
+            const timestamp = record.Timestamp ? new Date(record.Timestamp).toLocaleString() : '—';
+            
+            proofsHtml += `
+                <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-purple-700 text-sm">📹 Record #${index + 1}</span>
+                            <span class="text-xs font-semibold" style="color:${statusColor}">${statusIcon} ${percentage}%</span>
+                            <span class="text-xs text-muted">${record.VideoDurationDisplay || '—'}</span>
+                        </div>
+                        <span class="text-xs text-muted">${timestamp}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-xs bg-gray-50 rounded-xl p-3 border border-[#211F1F]/10">
+                        <div>
+                            <span class="text-muted">▶ Play:</span>
+                            <span class="font-semibold">${playDisplay}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">⏹ Stop:</span>
+                            <span class="font-semibold">${stopDisplay}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">📊 Progress:</span>
+                            <span class="font-semibold" style="color:${statusColor}">${percentage}%</span>
+                        </div>
+                    </div>
+                    
+                    ${screenshotHtml}
+                </div>
+            `;
+        });
+        
+        proofsHtml += `</div>`;
+        content.innerHTML = proofsHtml;
+        modal.scrollTop = 0;
+        
     } catch (e) {
-        showToast('Connection error.', true);
-        btnEl.disabled = false;
-        btnEl.innerHTML = originalHTML;
+        content.innerHTML = `
+            <div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center">
+                <p class="text-red-600">Connection error. Please try again.</p>
+                <p class="text-xs text-muted mt-2">${e.message}</p>
+            </div>
+        `;
+        console.error('Proof fetch error:', e);
     }
 }
 
-/* ────────────────────────────────────────
-   DETAIL MODAL
-──────────────────────────────────────── */
-function openDetail(taskId) {
-    const t = allTasks.find(x => x.TaskID === taskId);
-    if (!t) return;
+function closeProofModal() {
+    document.getElementById('proofModal').classList.remove('open');
+}
 
-    const sc = STATUS_CFG[t.Status] || { text: '', label: t.Status };
+async function openDetailModal(taskId) {
+    const validation = await validateTaskBeforeAction(taskId, 'View Details');
+    if (!validation.valid) return;
+    
+    const t = validation.task;
+
+    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', label: t.Status };
+    const videoUrl = buildVideoUrl(t);
+    const chanLink = getChannelLink(t);
 
     let partnerLabel = '—';
     let partnerClass = 'text-muted';
@@ -1978,84 +2349,58 @@ function openDetail(taskId) {
         }
     } else {
         partnerLabel = 'Awaiting Your Action';
+        partnerClass = 'text-muted';
     }
 
     const issueText = t.Issue || '';
 
     document.getElementById('detailBody').innerHTML = `
         <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Task ID</div>
-                <div class="font-mono font-semibold text-[#211F1F]">${t.TaskID}</div>
+                <div class="font-mono font-semibold text-purple-700">${t.TaskID}</div>
             </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Your Status</div>
                 <div class="font-semibold ${sc.text}">${sc.label}</div>
             </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">You (Worker)</div>
-                <div class="font-semibold">${t.UserCode || '—'}</div>
-            </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Target Member</div>
-                <div class="font-semibold text-[#211F1F]">${t.TargetUserCode || '—'}</div>
-            </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4 col-span-2">
-                <div class="text-muted text-xs mb-1">Channel</div>
-                <div class="font-semibold">${t.TargetChannelName || '—'}</div>
-                ${t.TargetChannelLink ? `<a href="${t.TargetChannelLink}" target="_blank" rel="noopener" class="text-[#211F1F] text-xs underline font-semibold">Open Channel →</a>` : '<span class="text-muted text-xs">No channel link available</span>'}
-            </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4 col-span-2">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2">
                 <div class="text-muted text-xs mb-1">Video</div>
                 <div class="font-semibold">${t.VideoTitle || '—'}</div>
                 <div class="font-mono text-xs text-muted mt-0.5">${t.VideoID || '—'}</div>
+                ${t.VideoMinutes ? `<div class="text-xs text-muted">⏱ ${t.VideoMinutes} min</div>` : ''}
             </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Required Minutes</div>
-                <div class="font-semibold">${(t.VideoMinutes !== undefined && t.VideoMinutes !== null && t.VideoMinutes !== '') ? t.VideoMinutes + ' min' : '—'}</div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2">
+                <div class="text-muted text-xs mb-1">Target Channel</div>
+                <div class="font-semibold">${t.TargetChannelName || '—'}</div>
+                ${t.TargetChannelHandle ? `<div class="font-mono text-xs text-purple-700 mt-0.5">${t.TargetChannelHandle}</div>` : ''}
             </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Watched Minutes</div>
-                <div class="font-semibold">${t.WatchedMinutes || '—'}</div>
-            </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Matched Gap</div>
-                <div class="font-semibold">${t.MatchedGapMinutes !== undefined ? t.MatchedGapMinutes + ' min' : '—'}</div>
-            </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Match Type</div>
-                <div class="font-semibold">${t.MatchType || '—'}</div>
-            </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Partner Watch Status</div>
                 <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
             </div>
-            <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Issue</div>
                 <div class="${issueText ? 'text-red-600' : 'text-muted'} text-xs">${issueText || 'None'}</div>
             </div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Matched Gap</div>
+                <div class="font-semibold">${t.MatchedGapMinutes !== undefined ? t.MatchedGapMinutes + ' min' : '—'}</div>
+            </div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Match Type</div>
+                <div class="font-semibold">${t.MatchType || '—'}</div>
+            </div>
         </div>
 
-        ${t.VideoUrl ? `
-        <a href="${t.VideoUrl}" target="_blank" rel="noopener"
+        <a href="${videoUrl}" target="_blank" rel="noopener"
             class="btn-purple w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-1">
             ▶ Open Video on YouTube
-        </a>` : ''}
+        </a>
 
-        <div class="grid grid-cols-2 gap-2 mt-2">
-            <button onclick="openVideoSearch('${t.TaskID}')"
-                class="btn-outline w-full py-3 rounded-2xl text-sm font-semibold text-center">
-                Search Video
-            </button>
-            <button onclick="copyVideoTitle('${t.TaskID}')"
-                class="btn-outline w-full py-3 rounded-2xl text-sm font-semibold text-center">
-                Copy Title
-            </button>
-        </div>
-
-        ${t.TargetChannelLink ? `
-        <a href="${t.TargetChannelLink}" target="_blank" rel="noopener"
-            class="btn-outline w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-2 no-underline">
+        ${chanLink ? `
+        <a href="${chanLink}" target="_blank" rel="noopener"
+            class="btn-outline w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-2">
             📺 Open Channel
         </a>` : ''}
 
@@ -2064,10 +2409,11 @@ function openDetail(taskId) {
             ⚠ Report / Update Issue
         </button>
 
-        <div class="text-xs text-muted space-y-1.5 pt-4 border-t-2 border-[#211F1F]/10">
+        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#211F1F]/15">
             <div>Created: ${fmtDate(t.CreatedDate)}</div>
             ${t.WorkedDate ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>` : ''}
             ${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}
+            ${t.WatchedMinutes ? `<div>Watched: ${t.WatchedMinutes} min</div>` : ''}
         </div>`;
 
     document.getElementById('detailModal').classList.add('open');
@@ -2077,9 +2423,192 @@ function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('open');
 }
 
-/* ────────────────────────────────────────
-   MATCH PREFERENCES MODAL
-──────────────────────────────────────── */
+async function doMarkWatched(taskId, btnEl) {
+    const validation = await validateTaskBeforeAction(taskId, 'Mark Watched');
+    if (!validation.valid) {
+        if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = '✓ Mark Watched';
+        }
+        return;
+    }
+    
+    if (hasCheating) {
+        showToast('You must resolve your cheating tasks first.', true);
+        return;
+    }
+
+    const originalHTML = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Checking Proof...
+        </span>
+    `;
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'markVideoWatched', taskId, userCode: USER_CODE })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            const now = new Date().toISOString();
+            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+            if (myTask) {
+                myTask.Status = 'Watched';
+                myTask.WorkedDate = now;
+                myTask.PairedStatus = data.pairedStatus || (data.bothWatched ? 'Watched' : 'NotWorkYet');
+                myTask.WatchedMinutes = data.watchedSeconds ? Math.round((data.watchedSeconds / 60) * 10) / 10 : myTask.WatchedMinutes;
+            }
+            
+            showToast(data.bothWatched ? '🎉 Both watched! Exchange complete!' : '✅ Video marked as Watched!');
+            
+            const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
+            const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+            if (cachedIndex !== -1) {
+                cachedTasks[cachedIndex] = myTask || cachedTasks[cachedIndex];
+                localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+            }
+            
+            btnEl.innerHTML = '✅ Done';
+            btnEl.className = 'btn-watched px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-70';
+            btnEl.disabled = true;
+            
+            await refreshTasks();
+            renderStats();
+            renderList();
+            
+        } else if (data.proofMissing) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+            
+            Swal.fire({
+                icon: 'warning',
+                title: '⚠️ Proof Not Found',
+                html: `
+                    <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                        <p style="margin-bottom:12px;">No watching proof was found for this task.</p>
+                        <p style="margin-bottom:12px;">Please follow these steps:</p>
+                        <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
+                            <li style="margin-bottom:6px;">Open the video on YouTube</li>
+                            <li style="margin-bottom:6px;">Watch the video using the <strong style="color:#0d9488;">Exsub Extension</strong></li>
+                            <li style="margin-bottom:6px;">Then click <strong style="color:#211F1F;">Mark Watched</strong> again</li>
+                        </ol>
+                        <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
+                            ⚠ The extension captures your watch time. You must watch at least 85% of the video.
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Got It',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+            
+        } else if (data.insufficient) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+            
+            Swal.fire({
+                icon: 'info',
+                title: '⏳ Not Enough Watch Time',
+                html: `
+                    <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                        <p style="margin-bottom:12px;">${data.message || 'You have not watched enough of the video.'}</p>
+                        <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+                            <p style="font-weight:600;color:#f59e0b;margin-bottom:4px;">📋 Requirements:</p>
+                            <p style="color:#4b5563;">You need to watch at least <strong style="color:#6d28d9;">85% of the video</strong>.</p>
+                        </div>
+                        <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+                            <p style="font-weight:600;color:#16a34a;margin-bottom:4px;">✅ How to fix:</p>
+                            <ol style="margin-left:16px;list-style:decimal;color:#4b5563;">
+                                <li style="margin-bottom:4px;">Open the video on YouTube</li>
+                                <li style="margin-bottom:4px;">Watch more of the video</li>
+                                <li style="margin-bottom:4px;">Make sure the Exsub Extension is running</li>
+                                <li style="margin-bottom:4px;">Click <strong style="color:#0d9488;">Mark Watched</strong> again</li>
+                            </ol>
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Understood',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+            
+        } else {
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+            showToast(data.message || 'Update failed.', true);
+        }
+        
+    } catch (e) {
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalHTML;
+        showToast('Connection error. Please try again.', true);
+        console.error('Mark watched error:', e);
+    }
+}
+
+async function doRetryTask(taskId, btnEl) {
+    const originalHTML = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-1">
+            <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Rechecking...
+        </span>
+    `;
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'retryVideoTask', taskId, userCode: USER_CODE })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+            if (myTask) {
+                myTask.Status = data.newStatus || 'NotWorkYet';
+                if (data.newStatus === 'Watched') {
+                    myTask.WorkedDate = data.workedDate || new Date().toISOString();
+                    myTask.WatchedMinutes = data.watchedSeconds ? Math.round((data.watchedSeconds / 60) * 10) / 10 : myTask.WatchedMinutes;
+                    myTask.PairedStatus = data.pairedStatus || 'NotWorkYet';
+                } else {
+                    myTask.WorkedDate = '';
+                    myTask.WatchedMinutes = '';
+                }
+            }
+            
+            await refreshTasks();
+            renderStats();
+            renderList();
+            checkCheatingAndEnforcePriority();
+            
+            showToast(data.newStatus === 'Watched' ? '✅ Verified! Task marked as Watched.' : data.message || 'Task reset. Please watch the video again.');
+            
+        } else {
+            showToast(data.message || 'Could not recheck task.', true);
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHTML;
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalHTML;
+    }
+}
+
 async function loadPreferenceOptions() {
     if (interestOptions.length && countryOptions.length) return;
     try {
@@ -2089,7 +2618,7 @@ async function loadPreferenceOptions() {
             interestOptions = data.interests || [];
             countryOptions = data.countries || [];
         }
-    } catch (e) { /* silent */ }
+    } catch (e) {}
 }
 
 function openPreferencesModal() {
@@ -2135,6 +2664,7 @@ function renderPrefPills() {
 
 function togglePrefPill(kind, value) {
     const arr = kind === 'interest' ? selectedInterests : selectedCountries;
+
     const idx = arr.indexOf(value);
     if (idx !== -1) {
         arr.splice(idx, 1);
@@ -2150,8 +2680,18 @@ function togglePrefPill(kind, value) {
 
 async function doSavePreferences() {
     const btn = document.getElementById('doSavePrefsBtn');
-    btn.textContent = 'Saving…';
+    const originalHTML = btn.innerHTML;
+    
     btn.disabled = true;
+    btn.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Saving...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -2171,106 +2711,38 @@ async function doSavePreferences() {
         if (data.success) {
             myPreferences = { interests: data.interests || [], countries: data.countries || [] };
             box.textContent = '✅ Preferences saved! New tasks will now prioritize matching members.';
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-100 border-2 border-green-400 text-green-700';
+            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             showToast('Match preferences saved!');
             setTimeout(closePreferencesModal, 1400);
         } else {
             box.textContent = data.message || 'Could not save preferences.';
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
+            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Save Preferences';
+    btn.textContent = originalHTML;
     btn.disabled = false;
 }
 
-/* ────────────────────────────────────────
-   WATCH SETTINGS MODAL
-──────────────────────────────────────── */
-function openSettingsModal() {
-    const s = mySettings || DEFAULT_SETTINGS;
-    document.getElementById('set-input-min').value = s.MinVideoMinutes;
-    document.getElementById('set-input-max').value = s.MaxVideoMinutes;
-    document.getElementById('set-input-gap').value = s.AllowedGapMinutes;
-    document.getElementById('set-input-maxpairs').value = s.MaxPairsPerRun;
-    document.getElementById('settingsResultBox').classList.add('hidden');
-    document.getElementById('settingsModal').classList.add('open');
-}
-
-function closeSettingsModal() {
-    document.getElementById('settingsModal').classList.remove('open');
-}
-
-async function doSaveSettings() {
-    const min = parseInt(document.getElementById('set-input-min').value) || DEFAULT_SETTINGS.MinVideoMinutes;
-    const max = parseInt(document.getElementById('set-input-max').value) || DEFAULT_SETTINGS.MaxVideoMinutes;
-    const gap = parseInt(document.getElementById('set-input-gap').value) ?? DEFAULT_SETTINGS.AllowedGapMinutes;
-    const maxPairs = parseInt(document.getElementById('set-input-maxpairs').value) || DEFAULT_SETTINGS.MaxPairsPerRun;
-
-    const box = document.getElementById('settingsResultBox');
-
-    if (min >= max) {
-        box.classList.remove('hidden');
-        box.textContent = 'Min video length must be less than max video length.';
-        box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
-        return;
-    }
-
-    const btn = document.getElementById('doSaveSettingsBtn');
-    btn.textContent = 'Saving…';
-    btn.disabled = true;
-
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'saveVideoSettings',
-                userCode: USER_CODE,
-                minVideoMinutes: min,
-                maxVideoMinutes: max,
-                allowedGapMinutes: gap,
-                maxPairsPerRun: maxPairs
-            })
-        });
-        const data = await res.json();
-        box.classList.remove('hidden');
-
-        if (data.success) {
-            mySettings = data.settings;
-            renderSettingsCard();
-            box.textContent = '✅ Watch settings saved!';
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-100 border-2 border-green-400 text-green-700';
-            showToast('Watch settings saved!');
-            setTimeout(closeSettingsModal, 1200);
-        } else {
-            box.textContent = data.message || 'Could not save settings.';
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-    }
-
-    btn.textContent = 'Save Settings';
-    btn.disabled = false;
-}
-
-/* ────────────────────────────────────────
-   CREATE TASKS MODAL
-──────────────────────────────────────── */
 function openCreateModal() {
     if (isBlocked) { showToast('Your account is restricted from this group.', true); return; }
-    if (hasCheating) { showToast('Resolve your flagged tasks first.', true); return; }
+    if (hasCheating) { showToast('Resolve your cheating tasks first.', true); return; }
 
     const pending = allTasks.filter(t => (t.Status === 'NotWorkYet' || t.Status === 'Pending') && t.UserCode === USER_CODE).length;
     document.getElementById('modalPendingCount').textContent = pending;
 
     const canCreate = pending < 5;
     const canEl = document.getElementById('modalCanCreate');
-    canEl.textContent = canCreate ? 'Yes — tasks will be created' : 'No — complete your pending tasks first';
-    canEl.className = `font-semibold ${canCreate ? 'text-green-600' : 'text-red-600'}`;
+    
+    if (pending >= 5) {
+        canEl.textContent = 'No — complete your pending tasks first';
+        canEl.className = 'font-semibold text-red-600';
+    } else {
+        canEl.textContent = 'Yes — tasks will be created';
+        canEl.className = 'font-semibold text-green-600';
+    }
 
     const btn = document.getElementById('doCreateBtn');
     btn.disabled = !canCreate;
@@ -2286,8 +2758,18 @@ function closeCreateModal() {
 
 async function doCreateTasks() {
     const btn = document.getElementById('doCreateBtn');
-    btn.textContent = 'Creating…';
+    const originalHTML = btn.innerHTML;
+    
     btn.disabled = true;
+    btn.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Creating Tasks...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -2300,36 +2782,36 @@ async function doCreateTasks() {
         box.classList.remove('hidden');
 
         if (data.success) {
-            box.textContent = `✅ ${data.created} new task(s) created! (${data.pairs} paired tasks created for other members too)`;
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-100 border-2 border-green-400 text-green-700';
-            await refreshStats();
-            calcStats();
-            enforceTaskPriorityTabs();
-            filtered = [];
-            await loadPage(currentPage);
+            box.textContent = `✅ ${data.created} new task(s) created!`;
+            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            
+            await refreshTasks();
+            renderStats();
+            renderList();
+            
             showToast(`${data.created} task(s) created!`);
+            setTimeout(() => closeCreateModal(), 1500);
+            
         } else {
-            if (data.message && (data.message.includes('no ready videos') || data.message.includes('at least one video'))) {
-                box.innerHTML = `❌ <strong>Channel Setup Error:</strong> You have no ready videos on your channel. You must add at least one video first under the <a href="channels.html" class="text-[#211F1F] font-bold underline">Channels</a> tab before generating matching pairs.`;
-            } else {
-                box.textContent = data.message || 'Could not create tasks.';
-            }
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-100 border-2 border-red-400 text-red-700';
+            box.textContent = data.message || 'Could not create tasks.';
+            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Generate Tasks';
+    btn.textContent = originalHTML;
     btn.disabled = false;
 }
 
-/* ────────────────────────────────────────
-   REPORT ISSUE MODAL
-──────────────────────────────────────── */
 let selectedIssuePill = '';
 
-function openIssueModal(taskId) {
+async function openIssueModal(taskId) {
+    const validation = await validateTaskBeforeAction(taskId, 'Report Issue');
+    if (!validation.valid) return;
+    
+    const t = validation.task;
+    
     selectedIssuePill = '';
     document.getElementById('issueTaskId').value = taskId;
     document.getElementById('issueCustomText').value = '';
@@ -2337,10 +2819,8 @@ function openIssueModal(taskId) {
     document.getElementById('issueResultBox').classList.add('hidden');
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
 
-    const task = getTaskById(taskId);
-    const existing = task?.Issue || '';
-    if (existing) {
-        document.getElementById('issueCustomText').value = existing;
+    if (t && t.Issue) {
+        document.getElementById('issueCustomText').value = t.Issue;
     }
 
     document.getElementById('issueModal').classList.add('open');
@@ -2380,15 +2860,25 @@ async function doSubmitIssue() {
 
     const targetUserCode = task.TargetUserCode;
     const btn = document.getElementById('doIssueBtn');
-    btn.textContent = 'Submitting…';
+    const originalHTML = btn.innerHTML;
+    
     btn.disabled = true;
+    btn.innerHTML = `
+        <span class="inline-flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Submitting...
+        </span>
+    `;
 
     try {
         const res = await fetch(SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
-                action: 'reportIssue',
+                action: 'reportVideoIssue',
                 taskId,
                 reporterCode: USER_CODE,
                 targetUserCode,
@@ -2403,23 +2893,54 @@ async function doSubmitIssue() {
 
         if (data.success) {
             box.textContent = `✅ Issue reported: "${issueTitle}"`;
-            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-green-100 border-2 border-green-400 text-green-700';
-            task.Issue = data.issue || (issueTitle + (issueDescription ? ` — ${issueDescription}` : ''));
+            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            task.Issue = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
             showToast('Issue reported successfully.');
-            filtered = [];
-            applyFilter();
+            renderList();
+            
+            const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
+            const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+            if (cachedIndex !== -1) {
+                cachedTasks[cachedIndex] = task;
+                localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+            }
+            
             setTimeout(closeIssueModal, 1600);
         } else {
             box.textContent = data.message || 'Could not submit issue.';
-            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-red-100 border-2 border-red-400 text-red-700';
+            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Submit Issue';
+    btn.textContent = originalHTML;
     btn.disabled = false;
 }
+
+function startPeriodicValidation() {
+    if (validationInterval) {
+        clearInterval(validationInterval);
+    }
+    validationInterval = setInterval(async () => {
+        if (allTasks.length > 0) {
+            console.log('🔄 Periodic video validation check...');
+            await refreshTasksInBackground();
+        }
+    }, 30000);
+}
+
+function stopPeriodicValidation() {
+    if (validationInterval) {
+        clearInterval(validationInterval);
+        validationInterval = null;
+    }
+}
+
+window.addEventListener('beforeunload', function() {
+    stopPeriodicValidation();
+});
 </script>
+
 </body>
 </html>

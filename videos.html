@@ -9,18 +9,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-
-/* ══════════════════════════════════════════════════════════════
-   PROMOTIONAL VIDEOS — LIGHT THEME (matches Analytics / Video Tasks)
-   Palette: bg #F5F4EB · ink #211F1F · mint #ACD1C0 · sand #DBD4B7
-   ══════════════════════════════════════════════════════════════ */
-
 :root {
     --bg: #F5F4EB;
     --ink: #211F1F;
@@ -32,11 +25,7 @@
 
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-
 body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
-body::before { content: none; }
-
-.gradient-text { color: #211F1F; -webkit-text-fill-color: #211F1F; }
 
 .card {
     background: #F5F4EB;
@@ -54,168 +43,103 @@ body::before { content: none; }
     overflow: hidden;
 }
 .video-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
-
 .video-card.notready-card { border-color: #b45309; background: #fffbeb; }
 .video-card.notready-card:hover { box-shadow: 6px 6px 0px 0px #b45309; }
-
 .video-card.deleted-card { border-color: #9ca3af; background: #f9fafb; opacity: 0.85; }
 .video-card.deleted-card:hover { transform: none; box-shadow: 4px 4px 0px 0px #9ca3af; }
 
 .text-muted { color: var(--muted); }
 
-.btn-purple {
-    background: #211F1F; color: #ffffff; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
-}
-.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-purple { background:#211F1F; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; }
+.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+.btn-purple:disabled { opacity:.4; box-shadow:none; transform:none; cursor:not-allowed; }
 
-.btn-outline {
-    background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F;
-    border-radius: 14px; transition: 0.15s; cursor: pointer;
-}
+.btn-outline { background:#F5F4EB; border:2px solid #211F1F; color:#211F1F; border-radius:14px; transition:.15s; cursor:pointer; }
 .btn-outline:hover:not(:disabled) { background: var(--sand); }
-.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-outline:disabled { opacity:.4; cursor:not-allowed; }
 
-.btn-teal {
-    background: var(--mint); color: #211F1F; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
-}
-.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-teal:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-teal { background:var(--mint); color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; }
+.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+.btn-teal:disabled { opacity:.4; box-shadow:none; transform:none; cursor:not-allowed; }
 
-.btn-amber {
-    background: #fbbf24; color: #211F1F; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
-}
-.btn-amber:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-amber:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+.btn-amber { background:#fbbf24; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; }
+.btn-amber:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+.btn-amber:disabled { opacity:.4; box-shadow:none; transform:none; cursor:not-allowed; }
 
-.btn-red {
-    background: #ef4444; color: white; border: 2px solid #211F1F;
-    border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F;
-    transition: 0.15s; cursor: pointer;
-}
-.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
-.btn-red:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
-
-.filter-tab {
-    background: #ffffff; border: 2px solid #211F1F; transition: 0.2s;
-    color: var(--ink); cursor: pointer; white-space: nowrap;
-}
+.filter-tab { background:#ffffff; border:2px solid #211F1F; transition:.2s; color:var(--ink); cursor:pointer; white-space:nowrap; }
 .filter-tab:hover { background: var(--sand); }
-.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
+.filter-tab.active { background:#211F1F; border-color:#211F1F; color:#fff; }
 
-.status-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; padding: 3px 10px; border-radius: 999px;
-    font-weight: 700; border: 1px solid rgba(33,31,31,0.15);
-}
+.status-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700; border:1px solid rgba(33,31,31,0.15); }
 .status-ready    { background:#dcfce7; color:#166534; }
 .status-notready { background:#fef3c7; color:#92400e; }
 .status-deleted  { background:#e5e7eb; color:#374151; }
 
-.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
 
-.modal-bg {
-    position: fixed; inset: 0; background: rgba(33,31,31,0.55);
-    backdrop-filter: blur(4px); z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s;
-}
-.modal-bg.open { opacity: 1; visibility: visible; }
+.modal-bg { position:fixed; inset:0; background:rgba(33,31,31,0.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; opacity:0; visibility:hidden; transition:.25s; }
+.modal-bg.open { opacity:1; visibility:visible; }
+.modal-box { background:#F5F4EB; border:2px solid #211F1F; border-radius:24px; box-shadow:6px 6px 0 0 #211F1F; padding:28px; width:100%; max-width:460px; transform:scale(0.96); transition:.25s; max-height:90vh; overflow-y:auto; }
+.modal-bg.open .modal-box { transform:scale(1); }
 
-.modal-box {
-    background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px;
-    box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px;
-    width: 100%; max-width: 460px; transform: scale(0.96); transition: 0.25s;
-    max-height: 90vh; overflow-y: auto;
-}
-.modal-bg.open .modal-box { transform: scale(1); }
+.skeleton { background:linear-gradient(90deg,#eceadd 25%,#ddd9c4 50%,#eceadd 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:24px; }
+@keyframes shimmer { 0% { background-position:200% 0 } 100% { background-position:-200% 0 } }
 
-.skeleton {
-    background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%);
-    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px;
-}
-@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+#toast { position:fixed; bottom:24px; right:24px; z-index:999; background:#211F1F; color:#fff; padding:13px 22px; border-radius:14px; font-size:13px; font-weight:600; transform:translateY(80px); opacity:0; transition:.3s; pointer-events:none; max-width:320px; border:2px solid #211F1F; }
+#toast.show { transform:translateY(0); opacity:1; }
+#toast.error { background:#b91c1c; }
 
-#toast {
-    position: fixed; bottom: 24px; right: 24px; z-index: 999;
-    background: #211F1F; color: white; padding: 13px 22px; border-radius: 14px;
-    font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0;
-    transition: 0.3s; pointer-events: none; max-width: 320px; border: 2px solid #211F1F;
-}
-#toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: #b91c1c; }
+.spinner { width:40px; height:40px; border-radius:50%; border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F; animation:spin .7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-.spinner{
-  width:40px; height:40px; border-radius:50%;
-  border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F;
-  animation:spin 0.7s linear infinite;
-}
-@keyframes spin{ to{ transform:rotate(360deg); } }
+.video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#e8e5d8; border-bottom:2px solid #211F1F; overflow:hidden; }
+.video-thumb-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+.video-thumb-wrap .play-badge { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(33,31,31,0.08); font-size:30px; }
+.duration-chip { position:absolute; bottom:8px; right:8px; background:#211F1F; color:#fff; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:6px; }
 
-.video-thumb-wrap {
-    position: relative; width: 100%; aspect-ratio: 16/9;
-    background: #e8e5d8; border-bottom: 2px solid #211F1F; overflow: hidden;
-}
-.video-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display:block; }
-.video-thumb-wrap .play-badge {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: rgba(33,31,31,0.08); font-size: 30px;
-}
-.duration-chip {
-    position: absolute; bottom: 8px; right: 8px; background: #211F1F; color: white;
-    font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
-}
-
-.toggle-switch {
-    position: relative; width: 46px; height: 26px; border-radius: 999px;
-    background: #e5e7eb; border: 2px solid #211F1F; cursor: pointer; flex-shrink: 0;
-    transition: 0.2s; padding: 0;
-}
+.toggle-switch { position:relative; width:46px; height:26px; border-radius:999px; background:#e5e7eb; border:2px solid #211F1F; cursor:pointer; flex-shrink:0; transition:.2s; padding:0; }
 .toggle-switch.on { background: var(--mint); }
-.toggle-switch .knob {
-    position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%;
-    background: #211F1F; transition: 0.2s;
-}
-.toggle-switch.on .knob { transform: translateX(20px); }
-.toggle-switch:disabled { opacity: 0.4; cursor: not-allowed; }
+.toggle-switch .knob { position:absolute; top:1px; left:1px; width:18px; height:18px; border-radius:50%; background:#211F1F; transition:.2s; }
+.toggle-switch.on .knob { transform:translateX(20px); }
+.toggle-switch:disabled { opacity:.4; cursor:not-allowed; }
 
-.progress-track { background: #ffffff; border: 2px solid #211F1F; height: 14px; border-radius: 999px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 999px; transition: width 0.8s ease; }
+.progress-track { background:#ffffff; border:2px solid #211F1F; height:14px; border-radius:999px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:999px; transition:width .8s ease; }
 
-/* SweetAlert2 light theme overrides */
-.swal2-popup {
-    background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important;
-    border-radius: 24px !important; font-family: 'Inter', sans-serif !important;
-    box-shadow: 6px 6px 0px 0px #211F1F !important;
+/* SweetAlert2 neo-brutalist theme */
+.swal2-popup { background:#F5F4EB !important; border:2px solid #211F1F !important; color:#211F1F !important; border-radius:24px !important; font-family:'Inter',sans-serif !important; box-shadow:6px 6px 0 0 #211F1F !important; }
+.swal2-title { color:#211F1F !important; font-family:'Inter',sans-serif !important; }
+.swal2-html-container { color:#4b5563 !important; font-family:'Inter',sans-serif !important; }
+.swal2-confirm { background:#211F1F !important; border-radius:14px !important; font-weight:700 !important; }
+.swal2-cancel { background:transparent !important; border:2px solid #211F1F !important; color:#211F1F !important; border-radius:14px !important; }
+.swal2-deny { background:var(--mint) !important; color:#211F1F !important; border-radius:14px !important; font-weight:700 !important; }
+
+/* Hashtag note callout */
+.hashtag-callout {
+    background: #fef3c7;
+    border: 2px solid #d97706;
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 0 #d97706;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
 }
-.swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
-.swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
-.swal2-confirm { background: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
-.swal2-cancel {
-    background: transparent !important; border: 2px solid #211F1F !important; color: #211F1F !important;
-    border-radius: 14px !important;
-}
-.swal2-deny { background: var(--mint) !important; color: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+.hashtag-callout .icon { font-size: 24px; flex-shrink: 0; }
+.hashtag-callout .text { font-size: 13px; line-height: 1.5; color: #78350f; }
+.hashtag-callout .text strong { color: #92400e; }
 </style>
 <base target="_blank">
 </head>
 <body>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
-<!-- NAVBAR -->
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
 
-<!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
@@ -237,7 +161,6 @@ body::before { content: none; }
   <!-- DASHBOARD -->
   <div id="dashContent" class="hidden">
 
-    <!-- ── HEADER ── -->
     <div class="nb-dashboard-header">
       <div class="nb-badge-container">
         <div class="nb-status-card nb-status-static">
@@ -261,18 +184,25 @@ body::before { content: none; }
       </div>
       <h1 class="text-4xl font-black text-[#211F1F]">Long Videos</h1>
       <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: auto;">
-          Manage which long video from your promotional channel are eligible for the Video Watch-Time Exchange.
+          Manage which long videos from your promotional channel are eligible for the Video Watch-Time Exchange.
           Videos marked <strong class="text-[#211F1F]">Ready</strong> can be matched into tasks — mark any video
           <strong class="text-[#211F1F]">Not Ready</strong> at any time to pull it out of matching.
       </div>
     </div>
 
+    <!-- Hashtag reminder callout -->
+    <div class="hashtag-callout" style="margin-top: 16px;">
+      <span class="icon">⚠️</span>
+      <div class="text">
+        <strong>Important for Shorts:</strong> Add <strong>#shorts</strong> or <strong>#short</strong> in your YouTube Shorts video title so our system can detect them correctly.
+        Videos without this hashtag may be classified as Long Videos by mistake.
+      </div>
+    </div>
+
     <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- SIDEBAR -->
     <aside class="w-full lg:w-[280px] xl:w-[300px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
 
-        <!-- NO CHANNEL STATE -->
         <div id="noChannelCard" class="hidden card rounded-3xl p-6 text-center">
             <div class="text-4xl mb-3">📺</div>
             <h3 class="font-semibold text-base mb-2">No Promotional Channel</h3>
@@ -280,7 +210,6 @@ body::before { content: none; }
             <a href="channels.html?view=promotional" class="btn-purple px-5 py-2.5 rounded-2xl font-semibold text-xs inline-block">+ Add Channel</a>
         </div>
 
-        <!-- CHANNEL CARD -->
         <div id="channelCard" class="hidden card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-3">Channel</h2>
             <div class="flex items-center gap-3 mb-3">
@@ -293,8 +222,6 @@ body::before { content: none; }
             <a id="chanLink" href="#" class="text-xs text-[#211F1F] underline font-semibold">Open Channel →</a>
         </div>
 
-        <!-- VIDEO STATS -->
-      <!-- VIDEO STATS -->
         <div id="statsCard" class="hidden card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-4">Video Stats</h2>
             <div class="space-y-3 text-sm mb-4">
@@ -310,18 +237,12 @@ body::before { content: none; }
                     <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-400"></span>Removed / Deleted</span>
                     <span id="st-deleted" class="font-bold">—</span>
                 </div>
-                <!-- ── NEW TYPE COUNTERS ── -->
-                <div class="border-t border-[#211F1F]/10 pt-2 flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Long Videos</span>
-                    <span id="st-long" class="font-bold">—</span>
-                </div>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Short Videos</span>
-                    <span id="st-short" class="font-bold">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-purple-400"></span>Not Confirmed</span>
+                    <span id="st-notconfirmed" class="font-bold">—</span>
                 </div>
-                <!-- ─────────────────────── -->
                 <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between">
-                    <span class="text-muted">Total Videos</span>
+                    <span class="text-muted">Total Long Videos</span>
                     <span id="st-total" class="font-bold text-[#211F1F]">—</span>
                 </div>
             </div>
@@ -336,7 +257,6 @@ body::before { content: none; }
             <p class="text-[11px] text-muted leading-relaxed mt-2">Need at least <strong class="text-[#211F1F]">5 Ready videos</strong> before you can generate video-watch tasks.</p>
         </div>
 
-        <!-- BULK ACTIONS -->
         <div id="bulkCard" class="hidden card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-3">Bulk Actions</h2>
             <div class="space-y-2.5">
@@ -344,29 +264,25 @@ body::before { content: none; }
                 <button id="bulkNotReadyBtn" onclick="bulkSetStatus('NotReady')" class="btn-amber w-full py-2.5 rounded-2xl text-xs font-semibold">⏸️ Mark All Not Ready</button>
             </div>
             <div class="border-t-2 border-[#211F1F]/10 mt-4 pt-4 space-y-2.5">
-                <button id="syncBtn" onclick="doSyncVideos()" class="btn-outline w-full py-2.5 rounded-2xl text-xs font-semibold">🔄 Sync With YouTube</button>
+                <button id="syncBtn" onclick="doSyncVideos()" class="btn-outline w-full py-2.5 rounded-2xl text-xs font-semibold">🔄 Sync Long Videos</button>
                 <button id="fixBtn" onclick="doFixVideos()" class="btn-outline w-full py-2.5 rounded-2xl text-xs font-semibold">🧹 Remove Deleted</button>
             </div>
         </div>
 
     </aside>
 
-    <!-- CONTENT -->
     <main class="flex-1 min-w-0">
 
-        <!-- TOP BAR -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-                <h2 class="text-2xl font-bold">My Videos</h2>
-                <p class="text-muted mt-1 text-sm">Toggle individual videos in or out of task matching</p>
+                <h2 class="text-2xl font-bold">My Long Videos</h2>
+                <p class="text-muted mt-1 text-sm">Toggle individual long videos in or out of task matching</p>
             </div>
             <button id="importBtn" onclick="doImportVideos()" class="btn-purple px-5 rounded-2xl font-semibold h-[46px] flex items-center justify-center gap-2 text-sm">
-                ⬇️ Import New Videos
+                ⬇️ Import Long Videos
             </button>
         </div>
 
-        <!-- FILTER TABS -->
-  <!-- FILTER TABS -->
         <div class="flex flex-wrap gap-2 mb-6">
             <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setTab('All',this)">All</button>
             <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Ready" onclick="setTab('Ready',this)">
@@ -376,32 +292,29 @@ body::before { content: none; }
                 <span class="dot bg-amber-400 mr-1"></span>Not Ready
             </button>
             <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="NotConfirmed" onclick="setTab('NotConfirmed',this)">
-                <span class="dot bg-purple-400 mr-1"></span>Not Confirmed <!-- <-- ADD THIS LINE -->
+                <span class="dot bg-purple-400 mr-1"></span>Not Confirmed
             </button>
             <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Deleted" onclick="setTab('Deleted',this)">
                 <span class="dot bg-gray-400 mr-1"></span>Removed
             </button>
         </div>
 
-        <!-- VIDEO GRID -->
         <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             <div class="skeleton h-[280px]"></div>
             <div class="skeleton h-[280px]"></div>
             <div class="skeleton h-[280px]"></div>
         </div>
 
-        <!-- EMPTY STATE -->
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
             <div class="text-5xl mb-4">🎞️</div>
-            <h3 class="text-xl font-semibold mb-2">No Videos Found</h3>
+            <h3 class="text-xl font-semibold mb-2">No Long Videos Found</h3>
             <p class="text-muted text-sm mb-7 leading-relaxed">
-                We haven't imported any videos from your promotional channel yet.<br>
-                Click <strong class="text-[#211F1F]">Import New Videos</strong> to pull them in from YouTube.
+                We haven't imported any long videos from your promotional channel yet.<br>
+                Click <strong class="text-[#211F1F]">Import Long Videos</strong> to pull them in from YouTube.
             </p>
-            <button onclick="doImportVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">⬇️ Import New Videos</button>
+            <button onclick="doImportVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">⬇️ Import Long Videos</button>
         </div>
 
-        <!-- PAGINATION -->
         <div id="paginationBar" class="hidden flex items-center justify-between mt-8 gap-4">
             <button id="prevBtn" onclick="changePage(-1)" class="btn-outline px-6 py-3 rounded-2xl text-sm font-medium">← Previous</button>
             <span id="pageInfo" class="text-muted text-sm text-center">Page 1 of 1</span>
@@ -411,13 +324,12 @@ body::before { content: none; }
     </main>
     </div>
 
-  </div><!-- /dashContent -->
+  </div>
 
 </div>
 </main>
 </main>
 
-<!-- VIDEO DETAIL MODAL -->
 <div id="detailModal" class="modal-bg" onclick="if(event.target===this)closeDetailModal()">
     <div class="modal-box">
         <div class="flex items-center justify-between mb-5">
@@ -428,83 +340,11 @@ body::before { content: none; }
     </div>
 </div>
 
-<!-- SCRIPTS -->
 <script>
-
-// Add this helper function at the top of your script block
-function formatDuration(v) {
-    if (!v || v.VideoDurationSeconds === undefined) return '0 sec';
-    
-    // Force conversion to a clean string
-    let raw = String(v.VideoDurationSeconds).trim();
-    let totalSeconds = 0;
-    
-    // 1. If it's a timestamp string from Google Sheets (e.g., "1899-12-29T19:37:48.000Z")
-    if (raw.includes('T') && raw.includes('Z')) {
-        try {
-            let timePart = raw.split('T')[1].split('.')[0]; // Extracts "19:37:48"
-            let parts = timePart.split(':');
-            let seconds = parseInt(parts[2], 10) || 0;
-            
-            // If the time zone shifted the seconds into minutes (e.g. 19:36:48 instead of 19:37:48)
-            // we calculate the difference to find the raw seconds remainder.
-            totalSeconds = seconds; 
-            
-            // Fallback safety check: If it didn't align cleanly, use the last 2 digits before the 'Z'
-            if (isNaN(totalSeconds) || totalSeconds === 0) {
-                totalSeconds = parseInt(timePart.slice(-2), 10) || 0;
-            }
-        } catch(e) {
-            totalSeconds = 0;
-        }
-    } else {
-        // 2. If it's already a clean integer raw number (like 40, 50, 70)
-        totalSeconds = parseInt(raw.replace(/[^\d]/g, ''), 10) || 0;
-    }
-    
-    // 3. Format output exactly as requested (e.g., "40 sec", "1 min 10 sec")
-    if (totalSeconds < 60) {
-        return totalSeconds + " sec";
-    } else {
-        let mins = Math.floor(totalSeconds / 60);
-        let secs = totalSeconds % 60;
-        return secs > 0 ? `${mins} min ${secs} sec` : `${mins} min`;
-    }
-}
-
-async function confirmVideoType(videoUrl, selectedType) {
-    const result = await Swal.fire({
-        icon: 'question',
-        title: `Confirm as ${selectedType} Video?`,
-        text: `This will mark the video type as ${selectedType} and automatically update its status to Ready.`,
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Confirm',
-        cancelButtonText: 'Cancel',
-        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
-    });
-    if (!result.isConfirmed) return;
-
-    try {
-        const data = await callApi('setVideoType', { videoUrl, newType: selectedType });
-        if (data.status === 'success') {
-            showToast(data.message || 'Video type confirmed.');
-            await loadVideos(); // Refresh layout arrays & counters
-        } else {
-            showToast(data.message || 'Could not update video type.', true);
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-    }
-}
 
 /* ────────────────────────────────────────
    AUTH
 ──────────────────────────────────────── */
-function logoutUser() {
-    localStorage.clear();
-    window.location.href = "signin.html";
-}
-
 const USERNAME = localStorage.getItem("username") || "";
 const PASSWORD = localStorage.getItem("password") || "";
 
@@ -512,16 +352,20 @@ if (!USERNAME || !PASSWORD) {
     window.location.href = "signin.html";
 }
 
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
+}
+
 /* ────────────────────────────────────────
-   CONFIG — replace with your deployed Web App URL
-   (same backend as channels.html / promotional channel actions)
+   CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl1Usv1aeK1ql1m7SLgeyEAhheIvpq2LiKJNfE2fARxvKU222UxA3ol3hybSqdr3KKtA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzW35QQipw-AkUOPL3qn3OEabgioI8nNeKF1bgejpAJTjiwW5OboZ-YIb4zjBI5IZs9kg/exec';
 
 /* ────────────────────────────────────────
    STATE
 ──────────────────────────────────────── */
-let myChannel   = null;   // { ChannelId, ChannelName, ChannelHandle, ChannelLink, ChannelImage, ... }
+let myChannel   = null;
 let allVideos   = [];
 let filtered    = [];
 let activeTab   = 'All';
@@ -529,7 +373,7 @@ let currentPage = 1;
 const PER_PAGE  = 12;
 
 /* ────────────────────────────────────────
-   DOM SHOW/HIDE HELPERS
+   HELPERS
 ──────────────────────────────────────── */
 function show(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
 function hide(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
@@ -541,13 +385,122 @@ function showToast(msg, isError = false) {
     setTimeout(() => { t.className = ''; }, 3200);
 }
 
+function escapeAttr(s) {
+    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+}
+
+/* Case-insensitive, trim-safe VideoType normalizer */
+function normalizeType(raw) {
+    const s = String(raw || '').trim().toLowerCase();
+    if (s === 'short' || s === 'shorts') return 'Short';
+    if (s === 'long')                   return 'Long';
+    if (s === 'notconfirmed')           return 'NotConfirmed';
+    return 'Long'; // fallback
+}
+
+/* Case-insensitive status normalizer */
+function normalizeStatus(raw) {
+    const s = String(raw || '').trim().toLowerCase();
+    if (s === 'ready')    return 'Ready';
+    if (s === 'notready') return 'NotReady';
+    if (s === 'deleted')  return 'Deleted';
+    return 'Ready';
+}
+
+function statusOf(v) {
+    const type = normalizeType(v.VideoType);
+    if (type === 'NotConfirmed') return 'NotConfirmed';
+    return normalizeStatus(v.VideoStatus);
+}
+
+function isShortRow(v) {
+    return normalizeType(v.VideoType) === 'Short';
+}
+
 /* ────────────────────────────────────────
-   API HELPER (this backend uses GET + username/password)
+   API
 ──────────────────────────────────────── */
 async function callApi(action, params = {}) {
     const qs = new URLSearchParams({ action, username: USERNAME, password: PASSWORD, ...params });
     const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
     return res.json();
+}
+
+/* ────────────────────────────────────────
+   HASHTAG REMINDER — SHOW ONCE
+──────────────────────────────────────── */
+const HASHTAG_ALERT_KEY = 'exsub_hashtag_alert_videos_dismissed';
+
+async function maybeShowHashtagAlert() {
+    // Only show if not previously dismissed
+    if (localStorage.getItem(HASHTAG_ALERT_KEY) === 'yes') return;
+
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: '⚠️ Important: Add #shorts to your Shorts!',
+        html: `
+            <div style="text-align:left; line-height:1.7; font-size:14px; color:#4b5563;">
+                <p style="margin-bottom:12px;">Our system uses YouTube's video data to classify videos as <strong>Long</strong> or <strong>Short</strong>. To make sure your <strong>Shorts</strong> are detected correctly, please:</p>
+
+                <ol style="margin-left:20px; list-style:decimal; margin-bottom:14px;">
+                    <li style="margin-bottom:8px;">Open <strong>YouTube Studio</strong> on your channel.</li>
+                    <li style="margin-bottom:8px;">Edit each of your <strong>Short videos</strong>.</li>
+                    <li style="margin-bottom:8px;">Add <strong style="color:#6d28d9;">#shorts</strong> or <strong style="color:#6d28d9;">#short</strong> at the end of the video <strong>title</strong> or in the <strong>description</strong>.</li>
+                    <li style="margin-bottom:8px;">Save changes.</li>
+                    <li style="margin-bottom:8px;">Come back here and click <strong>Sync Long Videos</strong> — new Shorts will move to the Short Videos page.</li>
+                </ol>
+
+                <div style="background:rgba(239,68,68,0.08); border:2px solid #dc2626; border-radius:12px; padding:12px 14px; font-size:13px; color:#b91c1c;">
+                    <strong>⚠️ Why?</strong> Videos without <strong>#shorts</strong> may be classified as Long Videos by mistake. This affects how they are matched in task exchange.
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '✅ I Understand',
+        cancelButtonText: 'Remind Me Later',
+        confirmButtonColor: '#211F1F',
+        cancelButtonColor: '#6b7280',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        width: 520
+    });
+
+    if (result.isConfirmed) {
+        // User accepted — don't show again
+        localStorage.setItem(HASHTAG_ALERT_KEY, 'yes');
+    }
+    // If "Remind Me Later" → alert will show again next visit
+}
+
+/* ────────────────────────────────────────
+   DURATION FORMATTER
+──────────────────────────────────────── */
+function formatDuration(v) {
+    if (!v || v.VideoDurationSeconds === undefined) return '0 sec';
+
+    let raw = String(v.VideoDurationSeconds).trim();
+    let totalSeconds = 0;
+
+    if (raw.includes('T') && raw.includes('Z')) {
+        try {
+            let timePart = raw.split('T')[1].split('.')[0];
+            let parts = timePart.split(':');
+            let seconds = parseInt(parts[2], 10) || 0;
+            totalSeconds = seconds;
+            if (isNaN(totalSeconds) || totalSeconds === 0) {
+                totalSeconds = parseInt(timePart.slice(-2), 10) || 0;
+            }
+        } catch(e) {
+            totalSeconds = 0;
+        }
+    } else {
+        totalSeconds = parseInt(raw.replace(/[^\d]/g, ''), 10) || 0;
+    }
+
+    if (totalSeconds < 60) return totalSeconds + " sec";
+    let mins = Math.floor(totalSeconds / 60);
+    let secs = totalSeconds % 60;
+    return secs > 0 ? `${mins} min ${secs} sec` : `${mins} min`;
 }
 
 /* ────────────────────────────────────────
@@ -557,6 +510,9 @@ window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     show('loadingState'); hide('errorState'); hide('dashContent');
+
+    // ★ Show hashtag reminder (only once per browser until dismissed)
+    maybeShowHashtagAlert();
 
     try {
         const chanData = await callApi('getMyChannel');
@@ -586,23 +542,22 @@ async function init() {
         document.getElementById('errorMsg').textContent = e.message || 'Network error. Please try again.';
     }
 }
+
 async function loadVideos() {
-    const data = await callApi('getMyVideos');
+    const data = await callApi('getMyVideos');   // ← Long-only backend endpoint
     if (data.status !== 'success') throw new Error(data.message || 'Could not load videos');
 
     allVideos = data.videos || [];
-    
-    // Compute status and type counts simultaneously
     const counts = recomputeCounts();
-    
+
     updateStats(
-        data.readyCount || counts.ready, 
-        data.notReadyCount || counts.notReady, 
-        data.deletedCount || counts.deleted, 
-        data.total || allVideos.length,
-        counts.long,
-        counts.short
+        counts.ready,
+        counts.notReady,
+        counts.deleted,
+        counts.total,
+        counts.notConfirmed
     );
+
     applyFilter();
 }
 
@@ -616,15 +571,12 @@ function renderChannelCard() {
 /* ────────────────────────────────────────
    STATS
 ──────────────────────────────────────── */
-function updateStats(readyCount, notReadyCount, deletedCount, total, longCount = 0, shortCount = 0) {
-    document.getElementById('st-ready').textContent    = readyCount;
-    document.getElementById('st-notready').textContent = notReadyCount;
-    document.getElementById('st-deleted').textContent  = deletedCount;
-    document.getElementById('st-total').textContent    = total;
-    
-    // Update the new DOM elements for types
-    document.getElementById('st-long').textContent     = longCount;
-    document.getElementById('st-short').textContent    = shortCount;
+function updateStats(readyCount, notReadyCount, deletedCount, total, notConfirmedCount) {
+    document.getElementById('st-ready').textContent         = readyCount;
+    document.getElementById('st-notready').textContent      = notReadyCount;
+    document.getElementById('st-deleted').textContent       = deletedCount;
+    document.getElementById('st-notconfirmed').textContent  = notConfirmedCount;
+    document.getElementById('st-total').textContent         = total;
 
     document.getElementById('badgeReady').textContent    = readyCount;
     document.getElementById('badgeNotReady').textContent = notReadyCount;
@@ -637,9 +589,23 @@ function updateStats(readyCount, notReadyCount, deletedCount, total, longCount =
     document.getElementById('readyBar').style.background = readyEnough ? '#ACD1C0' : '#fbbf24';
 }
 
-/* ────────────────────────────────────────
-   FILTER + TABS
-──────────────────────────────────────── */
+function recomputeCounts() {
+    let ready = 0, notReady = 0, deleted = 0, notConfirmed = 0;
+
+    allVideos.forEach(v => {
+        const s = statusOf(v);
+        if (s === 'Ready')             ready++;
+        else if (s === 'NotReady')     notReady++;
+        else if (s === 'NotConfirmed') notConfirmed++;
+        else                           deleted++;
+    });
+
+    return {
+        ready, notReady, deleted, notConfirmed,
+        total: allVideos.length
+    };
+}
+
 /* ────────────────────────────────────────
    FILTER + TABS
 ──────────────────────────────────────── */
@@ -651,32 +617,19 @@ function setTab(tab, btn) {
     applyFilter();
 }
 
-function statusOf(v) {
-    if ((v.VideoType || '').toLowerCase() === 'notconfirmed') return 'NotConfirmed';
-    const s = (v.VideoStatus || 'Ready').toLowerCase();
-    if (s === 'notready') return 'NotReady';
-    if (s === 'deleted')  return 'Deleted';
-    return 'Ready';
-}
-
 function applyFilter() {
-    // 1. First, apply the strict Front-End type filter:
-    //    Allow "Long" or empty types, hide "Short" videos completely.
-    let baseFiltered = allVideos.filter(v => {
-        const type = (v.VideoType || 'Long').toLowerCase(); // fallback to 'Long' if undefined
-        if (type === 'short') return false; // Don't allow Short videos
-        return true; // Allow everything else (Long, NotConfirmed, etc.)
-    });
+    // Long page = show everything EXCEPT Shorts
+    let baseFiltered = allVideos.filter(v => !isShortRow(v));
 
-    // 2. Then, apply your existing status tab filters on top of it
     if (activeTab === 'All') {
         filtered = baseFiltered;
     } else {
         filtered = baseFiltered.filter(v => statusOf(v) === activeTab);
     }
-    
+
     renderGrid();
 }
+
 /* ────────────────────────────────────────
    RENDER GRID
 ──────────────────────────────────────── */
@@ -693,17 +646,17 @@ function renderGrid() {
     }
     empty.classList.add('hidden');
 
-    const total = Math.ceil(filtered.length / PER_PAGE);
-    currentPage = Math.min(currentPage, total);
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+    currentPage = Math.min(currentPage, totalPages);
     const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
     grid.innerHTML = slice.map(videoCard).join('');
 
     if (filtered.length > PER_PAGE) {
         pages.classList.remove('hidden');
-        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${total}`;
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
         document.getElementById('prevBtn').disabled = currentPage === 1;
-        document.getElementById('nextBtn').disabled = currentPage === total;
+        document.getElementById('nextBtn').disabled = currentPage === totalPages;
     } else {
         pages.classList.add('hidden');
     }
@@ -725,10 +678,6 @@ function fmtDate(v) {
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-function escapeAttr(s) {
-    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
-}
-
 function getVideoByUrl(url) {
     return allVideos.find(v => v.VideoUrl === url);
 }
@@ -739,15 +688,23 @@ function getVideoByUrl(url) {
 function videoCard(v) {
     const status = statusOf(v);
     const isNC = status === 'NotConfirmed';
-    
-    const cardCls  = isNC ? 'border-purple-500 bg-purple-50/40' : (status === 'NotReady' ? 'notready-card' : (status === 'Deleted' ? 'deleted-card' : ''));
-    const badgeCls = isNC ? 'bg-purple-100 text-purple-700' : (status === 'NotReady' ? 'status-notready' : (status === 'Deleted' ? 'status-deleted' : 'status-ready'));
-    const badgeDot = isNC ? 'bg-purple-500' : (status === 'NotReady' ? 'bg-amber-400' : (status === 'Deleted' ? 'bg-gray-400' : 'bg-green-400'));
-    const badgeLbl = isNC ? 'Unconfirmed (3 min)' : (status === 'NotReady' ? 'Not Ready' : (status === 'Deleted' ? 'Removed' : 'Ready'));
 
-    const url    = escapeAttr(v.VideoUrl);
-    const isOn   = status === 'Ready';
-    const isDel  = status === 'Deleted';
+    const cardCls  = isNC ? 'border-purple-500 bg-purple-50/40'
+                    : (status === 'NotReady' ? 'notready-card'
+                    : (status === 'Deleted' ? 'deleted-card' : ''));
+    const badgeCls = isNC ? 'bg-purple-100 text-purple-700'
+                    : (status === 'NotReady' ? 'status-notready'
+                    : (status === 'Deleted' ? 'status-deleted' : 'status-ready'));
+    const badgeDot = isNC ? 'bg-purple-500'
+                    : (status === 'NotReady' ? 'bg-amber-400'
+                    : (status === 'Deleted' ? 'bg-gray-400' : 'bg-green-400'));
+    const badgeLbl = isNC ? 'Unconfirmed (3 min)'
+                    : (status === 'NotReady' ? 'Not Ready'
+                    : (status === 'Deleted' ? 'Removed' : 'Ready'));
+
+    const url = escapeAttr(v.VideoUrl);
+    const isOn = status === 'Ready';
+    const isDel = status === 'Deleted';
 
     let toggleHtml = '';
     if (isDel) {
@@ -758,7 +715,6 @@ function videoCard(v) {
         toggleHtml = `<button class="toggle-switch ${isOn ? 'on' : ''}" onclick="toggleVideo('${url}')" title="${isOn ? 'Turn Not Ready' : 'Turn Ready'}"><span class="knob"></span></button>`;
     }
 
-    // Append type action buttons right above the action row if it's NotConfirmed
     const confirmationActions = isNC ? `
         <div class="bg-purple-100/70 border border-purple-200 rounded-xl p-2 mb-3 text-center">
             <div class="text-[11px] font-semibold text-purple-900 mb-1.5">Confirm Video Type:</div>
@@ -773,7 +729,7 @@ function videoCard(v) {
     <div class="video-card ${cardCls} rounded-3xl">
         <div class="video-thumb-wrap">
             ${v.VideoThumbnail ? `<img src="${v.VideoThumbnail}" alt="">` : `<div class="play-badge">🎬</div>`}
-<span class="duration-chip">${formatDuration(v)}</span>
+            <span class="duration-chip">${formatDuration(v)}</span>
         </div>
         <div class="p-4">
             <div class="flex items-center justify-between gap-2 mb-2">
@@ -783,7 +739,7 @@ function videoCard(v) {
             <div class="text-sm font-semibold text-[#211F1F] leading-snug mb-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${v.VideoTitle || 'Untitled video'}</div>
             <div class="flex flex-wrap gap-3 text-[11px] text-muted mb-3">
                 <span>Added: ${fmtDate(v.CreatedDate)}</span>
-                <span class="font-medium text-gray-700">Type: ${v.VideoType || 'Long'}</span>
+                <span class="font-medium text-gray-700">Type: ${normalizeType(v.VideoType)}</span>
             </div>
             ${confirmationActions}
             <div class="flex gap-2">
@@ -793,8 +749,9 @@ function videoCard(v) {
         </div>
     </div>`;
 }
+
 /* ────────────────────────────────────────
-   TOGGLE READY / NOTREADY (single video)
+   TOGGLE / CONFIRM / BULK
 ──────────────────────────────────────── */
 async function toggleVideo(videoUrl) {
     const v = getVideoByUrl(videoUrl);
@@ -812,7 +769,7 @@ async function toggleVideo(videoUrl) {
         if (data.status === 'success') {
             v.VideoStatus = data.newStatus;
             const counts = recomputeCounts();
-            updateStats(counts.ready, counts.notReady, counts.deleted, allVideos.length);
+            updateStats(counts.ready, counts.notReady, counts.deleted, counts.total, counts.notConfirmed);
             applyFilter();
             showToast(newStatus === 'Ready' ? '✅ Video marked Ready.' : '⏸️ Video marked Not Ready.');
         } else {
@@ -822,40 +779,40 @@ async function toggleVideo(videoUrl) {
         showToast('Connection error.', true);
     }
 }
-function recomputeCounts() {
-    let ready = 0, notReady = 0, deleted = 0;
-    let long = 0, short = 0;
 
-    allVideos.forEach(v => {
-        // 1. Check Status
-        const s = statusOf(v);
-        if (s === 'Ready') ready++;
-        else if (s === 'NotReady') notReady++;
-        else deleted++;
-
-        // 2. Check Type (Fallback to 'Long' if field is blank/missing)
-        const type = (v.VideoType || 'Long').toLowerCase();
-        if (type === 'short') {
-            short++;
-        } else {
-            long++; // Counts 'Long' and default 'NotConfirmed' before choice
-        }
+async function confirmVideoType(videoUrl, selectedType) {
+    const result = await Swal.fire({
+        icon: 'question',
+        title: `Confirm as ${selectedType} Video?`,
+        text: `This will mark the video type as ${selectedType} and automatically update its status to Ready.`,
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Confirm',
+        cancelButtonText: 'Cancel',
+        background: '#F5F4EB', color: '#211F1F', confirmButtonColor: '#211F1F'
     });
+    if (!result.isConfirmed) return;
 
-    return { ready, notReady, deleted, long, short };
+    try {
+        const data = await callApi('setVideoType', { videoUrl, newType: selectedType });
+        if (data.status === 'success') {
+            showToast(data.message || 'Video type confirmed.');
+            await loadVideos();
+        } else {
+            showToast(data.message || 'Could not update video type.', true);
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
 }
 
-/* ────────────────────────────────────────
-   BULK READY / NOTREADY
-──────────────────────────────────────── */
 async function bulkSetStatus(newStatus) {
     const label = newStatus === 'Ready' ? 'Ready' : 'Not Ready';
     const result = await Swal.fire({
         icon: 'question',
-        title: `Mark all videos as ${label}?`,
+        title: `Mark all long videos as ${label}?`,
         text: newStatus === 'Ready'
-            ? 'Every eligible video will become available for task matching.'
-            : 'Every eligible video will be pulled out of task matching until you turn it back on.',
+            ? 'Every eligible long video will become available for task matching.'
+            : 'Every eligible long video will be pulled out of task matching until you turn it back on.',
         showCancelButton: true,
         confirmButtonText: `Yes, mark all ${label}`,
         cancelButtonText: 'Cancel',
@@ -868,15 +825,16 @@ async function bulkSetStatus(newStatus) {
     btn.disabled = true; btn.textContent = 'Updating…';
 
     try {
-        const data = await callApi('bulkSetVideoStatus', { newStatus });
+        // Pass videoType=Long so backend only updates longs
+        const data = await callApi('bulkSetVideoStatus', { newStatus, videoType: 'Long' });
         if (data.status === 'success') {
             allVideos.forEach(v => {
-                if (statusOf(v) !== 'Deleted') v.VideoStatus = newStatus;
+                if (!isShortRow(v) && statusOf(v) !== 'Deleted') v.VideoStatus = newStatus;
             });
             const counts = recomputeCounts();
-            updateStats(counts.ready, counts.notReady, counts.deleted, allVideos.length);
+            updateStats(counts.ready, counts.notReady, counts.deleted, counts.total, counts.notConfirmed);
             applyFilter();
-            showToast(`${data.updated} video(s) marked ${label}.`);
+            showToast(`${data.updated} long video(s) marked ${label}.`);
         } else {
             showToast(data.message || 'Could not update videos.', true);
         }
@@ -891,28 +849,23 @@ async function bulkSetStatus(newStatus) {
    IMPORT / SYNC / FIX
 ──────────────────────────────────────── */
 async function doImportVideos() {
-    if (!myChannel) { 
-        showToast('Please add a promotional channel first.', true); 
-        return; 
+    if (!myChannel) {
+        showToast('Please add a promotional channel first.', true);
+        return;
     }
 
     const btn = document.getElementById('importBtn');
     if (!btn) return;
-    
+
     const originalText = btn.innerHTML;
     btn.disabled = true;
     btn.textContent = 'Importing from YouTube...';
 
     try {
-        const data = await callApi('importVideos', {
-            // username/password usually handled by callApi session
-        });
-
+        const data = await callApi('importVideos');   // ← Long-only endpoint
         if (data.status === 'success') {
-            showToast(data.message || `Imported ${data.addedCount || 0} videos.`);
-            await loadVideos();           // Refresh the video table
-            // Optionally refresh channel meta too
-            if (typeof loadMyChannel === 'function') await loadMyChannel();
+            showToast(data.message || `Imported ${data.addedCount || 0} long video(s).`);
+            await loadVideos();
         } else {
             showToast(data.message || 'Failed to import videos.', true);
         }
@@ -924,10 +877,6 @@ async function doImportVideos() {
         btn.innerHTML = originalText;
     }
 }
-
-
-
-
 
 async function doSyncVideos() {
     if (!myChannel) { showToast('Add a promotional channel first.', true); return; }
@@ -956,7 +905,7 @@ async function doFixVideos() {
     const result = await Swal.fire({
         icon: 'warning',
         title: 'Remove deleted videos?',
-        text: 'This permanently removes rows for videos that no longer exist on YouTube.',
+        text: 'This permanently removes long-video rows that no longer exist on YouTube.',
         showCancelButton: true,
         confirmButtonText: 'Yes, remove them',
         cancelButtonText: 'Cancel',
@@ -1013,7 +962,7 @@ function openDetail(videoUrl) {
         <div class="grid grid-cols-2 gap-3 text-sm mt-3">
             <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-3">
                 <div class="text-muted mb-0.5">Duration metric</div>
-<div class="font-semibold">${formatDuration(v)}</div>
+                <div class="font-semibold">${formatDuration(v)}</div>
             </div>
             <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-3">
                 <div class="text-muted text-xs mb-1">Added</div>
@@ -1037,8 +986,6 @@ function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('open');
 }
 
-
 </script>
-
 </body>
 </html>

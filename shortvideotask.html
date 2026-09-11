@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coming Soon — Exsub Group</title>
+<title>Shorts Tasks — Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,294 +13,83 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-:root {
-  --charcoal: #211F1F;
-  --sand: #DBD4B7;
-  --mint: #ACD1C0;
-  --bg: #F5F4EB;
-  --white: #FFFFFF;
-}
+:root { --bg: #F5F4EB; --ink: #211F1F; --mint: #ACD1C0; --sand: #DBD4B7; --card: #F5F4EB; --muted: #6b7280; }
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+.card { background: #F5F4EB; border-radius: 20px; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; }
+.shorts-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
+.shorts-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.shorts-card.playing { border-color: #ACD1C0; box-shadow: 4px 4px 0px 0px #ACD1C0; }
+.shorts-card.watched { border-color: #22c55e; background: #f0fdf4; opacity: 0.7; }
 
-body {
-  background: var(--bg);
-  font-family: 'Inter', sans-serif;
-}
+.text-muted { color: var(--muted); }
 
-/* ── Loading Overlay ──────────────────────────────────────────── */
-#loadingOverlay {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  transition: opacity 0.5s ease;
-}
-#loadingOverlay.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-.loader-ring {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(33,31,31,0.15);
-  border-top-color: var(--charcoal);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-.loader-dots {
-  display: flex;
-  gap: 8px;
-}
-.loader-dots span {
-  width: 10px;
-  height: 10px;
-  background: var(--charcoal);
-  border-radius: 50%;
-  animation: dotPulse 1.4s infinite ease-in-out both;
-}
-.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
-.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+.btn-purple { background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-purple:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-outline { background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-outline:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+
+.btn-teal { background: #ACD1C0; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+
+.btn-red { background: #ef4444; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(33,31,31,0.55); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s; }
+.modal-bg.open { opacity: 1; visibility: visible; }
+.modal-box { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px; box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px; width: 100%; max-width: 500px; transform: scale(0.95); transition: 0.25s; max-height: 90vh; overflow-y: auto; }
+.modal-bg.open .modal-box { transform: scale(1); }
+
+.skeleton { background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 20px; border: 2px solid #211F1F; }
+@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #211F1F; color: #DBD4B7; padding: 13px 22px; border-radius: 14px; font-size: 13px; font-weight: 700; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3); transform: translateY(80px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; }
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: #ef4444; color: #ffffff; }
+
+#pageLoader { position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+#pageLoader.hidden { opacity: 0; pointer-events: none; }
+#pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(33,31,31,0.15); border-top-color: #211F1F; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes dotPulse {
-  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
-  40% { transform: scale(1); opacity: 1; }
-}
 
-/* ── Coming Soon Card ──────────────────────────────────────────── */
-.coming-soon-card {
-  background: var(--white);
-  border: 3px solid var(--charcoal);
-  border-radius: 24px;
-  box-shadow: 8px 8px 0px 0px var(--charcoal);
-  padding: 48px 40px;
-  text-align: center;
-  max-width: 640px;
-  margin: 0 auto;
-}
+/* ── Shorts Player Modal ── */
+#playerModal .modal-box { max-width: 420px; padding: 0; overflow: hidden; }
+.player-header { background: #211F1F; color: #DBD4B7; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+.player-body { padding: 0; background: #000; position: relative; }
+.player-iframe-wrap { position: relative; width: 100%; aspect-ratio: 9 / 16; max-height: 70vh; background: #000; }
+.player-iframe-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.player-footer { padding: 14px 18px; background: #F5F4EB; border-top: 2px solid #211F1F; }
 
-.coming-soon-icon {
-  font-size: 72px;
-  margin-bottom: 20px;
-  display: block;
-}
+/* Progress ring around timer */
+.timer-ring { position: relative; width: 60px; height: 60px; }
+.timer-ring svg { transform: rotate(-90deg); }
+.timer-ring .bg { fill: none; stroke: rgba(33,31,31,0.15); stroke-width: 4; }
+.timer-ring .fg { fill: none; stroke: #ACD1C0; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.25s linear; }
+.timer-ring .txt { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #211F1F; }
 
-.coming-soon-title {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--charcoal);
-  margin-bottom: 12px;
-}
+/* Live stats */
+.live-stat { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #F5F4EB; border: 1px solid #211F1F; }
 
-.coming-soon-subtitle {
-  font-size: 16px;
-  color: #6b7280;
-  font-weight: 500;
-  line-height: 1.6;
-  max-width: 440px;
-  margin: 0 auto 20px;
-}
-
-.coming-soon-divider {
-  width: 60px;
-  height: 4px;
-  background: var(--mint);
-  border-radius: 999px;
-  margin: 16px auto;
-}
-
-.coming-soon-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin: 24px 0 32px;
-}
-
-.coming-soon-feature {
-  background: var(--bg);
-  border: 2px solid var(--charcoal);
-  border-radius: 16px;
-  padding: 16px 12px;
-  transition: 0.15s ease;
-}
-
-.coming-soon-feature:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px 0px var(--charcoal);
-}
-
-.coming-soon-feature .emoji {
-  font-size: 28px;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.coming-soon-feature .label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--charcoal);
-}
-
-.coming-soon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 32px;
-  background: var(--charcoal);
-  color: var(--sand);
-  border: 3px solid var(--charcoal);
-  border-radius: 16px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.12s ease;
-  text-decoration: none;
-  box-shadow: 4px 4px 0px 0px var(--charcoal);
-  font-family: 'Inter', sans-serif;
-}
-
-.coming-soon-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--charcoal);
-}
-
-.coming-soon-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--charcoal);
-}
-
-.coming-soon-btn-secondary {
-  background: var(--sand);
-  color: var(--charcoal);
-  border-color: var(--charcoal);
-}
-
-.coming-soon-btn-secondary:hover {
-  background: #c9c2a4;
-}
-
-/* ── Status Badge ──────────────────────────────────────────────── */
-.status-badge-coming {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 2px solid var(--charcoal);
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.status-badge-coming .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #d97706;
-  animation: pulse-dot 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(0.7); }
-}
-
-/* ── Responsive ────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .coming-soon-card {
-    padding: 32px 20px;
-  }
-  .coming-soon-title {
-    font-size: 24px;
-  }
-  .coming-soon-icon {
-    font-size: 48px;
-  }
-  .coming-soon-features {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .coming-soon-feature {
-    padding: 12px 8px;
-  }
-  .coming-soon-feature .emoji {
-    font-size: 20px;
-  }
-  .coming-soon-btn {
-    padding: 12px 24px;
-    font-size: 13px;
-    width: 100%;
-    justify-content: center;
-  }
-  .coming-soon-btn-group {
-    flex-direction: column;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 400px) {
-  .coming-soon-features {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* ── SweetAlert2 Overrides ────────────────────────────────────── */
-.swal2-popup {
-  background: var(--bg) !important;
-  border: 3px solid var(--charcoal) !important;
-  border-radius: 24px !important;
-  box-shadow: 8px 8px 0px 0px var(--charcoal) !important;
-  font-family: 'Inter', sans-serif !important;
-  color: var(--charcoal) !important;
-}
-.swal2-title {
-  color: var(--charcoal) !important;
-  font-weight: 800 !important;
-}
-.swal2-html-container {
-  color: #4b5563 !important;
-}
-.swal2-confirm {
-  background: var(--charcoal) !important;
-  color: var(--sand) !important;
-  border-radius: 14px !important;
-  border: 3px solid var(--charcoal) !important;
-  font-weight: 700 !important;
-  box-shadow: 4px 4px 0px 0px var(--charcoal) !important;
-}
-.swal2-cancel {
-  background: var(--white) !important;
-  border: 3px solid var(--charcoal) !important;
-  color: var(--charcoal) !important;
-  border-radius: 14px !important;
-  font-weight: 700 !important;
-  box-shadow: 4px 4px 0px 0px var(--charcoal) !important;
-}
+.batch-progress { width: 100%; height: 8px; background: rgba(33,31,31,0.1); border-radius: 999px; overflow: hidden; }
+.batch-progress .fill { height: 100%; background: linear-gradient(90deg, #ACD1C0, #9bc2b1); transition: width 0.3s; }
 </style>
 </head>
 <body>
 
-<!-- LOADING OVERLAY -->
-<div id="loadingOverlay">
-  <div class="loader-ring"></div>
-  <p style="color:#6b7280;font-size:14px;font-weight:500;">Loading...</p>
-  <div class="loader-dots">
-    <span></span><span></span><span></span>
-  </div>
+<!-- FULL-PAGE LOADER -->
+<div id="pageLoader">
+    <div class="spin"></div>
+    <p style="color: var(--muted); font-size: 14px;">Loading your shorts tasks…</p>
 </div>
 
-<!-- NAVBAR -->
+<!-- TOAST -->
+<div id="toast"></div>
+
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
@@ -308,203 +97,916 @@ body {
 <!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
-
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- PAGE HEADER -->
-  <div class="nb-dashboard-header">
-    <div class="nb-badge-container">
-      <div class="nb-status-card nb-status-static">
-        <span class="nb-card-title">🚀 Coming Soon</span>
+    <!-- PAGE HEADER -->
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-title">📱 Shorts Tasks</span>
+        </div>
+        <a href="shortstaskproofs.html" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">🎥</span>
+          <span class="nb-card-title">View Proofs</span>
+        </a>
       </div>
-      <div class="status-badge-coming">
-        <span class="dot"></span>
-        In Development
-      </div>
-    </div>
-    <h1 class="text-4xl font-black text-[#211F1F]" id="pageTitle">Coming Soon</h1>
-    <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">
-      We're working on something exciting. Stay tuned!
-    </div>
-  </div>
-
-  <!-- COMING SOON CARD -->
-  <div class="coming-soon-card mt-8">
-    <span class="coming-soon-icon" id="featureIcon">🔧</span>
-    <h2 class="coming-soon-title" id="featureTitle">Feature Coming Soon</h2>
-    <div class="coming-soon-divider"></div>
-    <p class="coming-soon-subtitle" id="featureDescription">
-      We're hard at work building this feature to help you grow your channel even faster.
-      Check back soon for updates!
-    </p>
-
-    <!-- Feature Preview -->
-    <div class="coming-soon-features" id="featurePreview">
-      <div class="coming-soon-feature">
-        <span class="emoji">⚡</span>
-        <span class="label">Fast & Reliable</span>
-      </div>
-      <div class="coming-soon-feature">
-        <span class="emoji">🚀</span>
-        <span class="label">Boost Growth</span>
-      </div>
-      <div class="coming-soon-feature">
-        <span class="emoji">🤝</span>
-        <span class="label">Community Powered</span>
+      <h1 class="text-4xl font-black text-[#211F1F]">Shorts Tasks</h1>
+      <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
+        Watch short videos automatically. Each short must be played for at least 40 seconds.
+        The system auto-closes and opens the next short — no manual marking needed.
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="flex flex-wrap items-center justify-center gap-4 coming-soon-btn-group">
-      <a href="javascript:history.back()" class="coming-soon-btn coming-soon-btn-secondary">
-        ← Go Back
-      </a>
-      <a href="analytics.html" class="coming-soon-btn">
-        📊 Dashboard
-      </a>
-    </div>
+    <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- Notify Me -->
-    <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
-      💡 Want to be notified when this feature launches?
-      <a href="support.html" style="color: var(--charcoal); font-weight: 700; text-decoration: underline; text-underline-offset: 2px;">
-        Contact Support
-      </a>
-    </p>
-  </div>
+    <!-- SIDEBAR -->
+    <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
+
+        <div class="card rounded-3xl p-5">
+            <div class="space-y-3">
+                <button id="createBtn" onclick="openCreateModal()"
+                    class="btn-purple w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Create Shorts Tasks
+                </button>
+                <button id="toggleStatsBtn" onclick="toggleStats()"
+                    class="btn-teal w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    📊 My Shorts Stats
+                </button>
+                <button id="startAutoBtn" onclick="startAutoPlayBatch()"
+                    class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    ▶ Start Auto-Play
+                </button>
+            </div>
+        </div>
+
+        <!-- SHORTS RULES -->
+        <div class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">📏 Shorts Rules</h2>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-muted">Watch Time</span>
+                    <span id="rule-watch" class="font-bold text-purple-700">—</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-muted">Max Batch</span>
+                    <span id="rule-max" class="font-bold text-purple-700">—</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-muted">Reuse Policy</span>
+                    <span class="font-bold text-purple-700">Once</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS PANEL -->
+        <div id="statsPanel" class="card rounded-3xl p-5 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-semibold text-base">📊 My Shorts Stats</h2>
+                <button onclick="toggleStats()" class="text-muted hover:text-[#211F1F] text-lg">✕</button>
+            </div>
+            <div class="space-y-3 text-sm">
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Watched</span>
+                    <span id="st-nowork" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
+                    <span id="st-watched" class="font-bold">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Rejected</span>
+                    <span id="st-rejected" class="font-bold">—</span>
+                </div>
+                <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
+                    <span class="text-muted">Total Tasks</span>
+                    <span id="st-total" class="font-bold text-purple-700">—</span>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
+                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Pending To Others</span>
+                    <span id="st-pto" class="font-bold text-blue-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Pending From Others</span>
+                    <span id="st-pfo" class="font-bold text-teal-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Total Given</span>
+                    <span id="st-given" class="font-bold text-green-600">—</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-purple-400"></span>Total Received</span>
+                    <span id="st-received" class="font-bold text-purple-600">—</span>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="flex-1 min-w-0">
+
+        <!-- BANNERS -->
+        <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
+                <div>
+                    <h3 class="font-semibold text-red-600 mb-1">Access Restricted</h3>
+                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account is restricted.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTO-PLAY STATUS BAR -->
+        <div id="autoPlayBar" class="hidden mb-6 rounded-3xl p-5" style="background:#ACD1C0;border:2px solid #211F1F;box-shadow:4px 4px 0px 0px #211F1F;">
+            <div class="flex items-center justify-between gap-4 flex-wrap">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-[#211F1F] flex items-center justify-center text-[#DBD4B7] text-lg flex-shrink-0 animate-pulse">▶</div>
+                    <div>
+                        <h3 class="font-semibold text-sm">Auto-Playing Batch</h3>
+                        <p class="text-xs text-muted" id="autoPlayStatus">Starting…</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+                    <div class="batch-progress flex-1">
+                        <div class="fill" id="batchProgressFill" style="width:0%"></div>
+                    </div>
+                    <span id="batchProgressText" class="text-xs font-bold whitespace-nowrap">0/0</span>
+                </div>
+                <button onclick="stopAutoPlayBatch()" class="btn-red px-4 py-2 rounded-2xl text-xs font-bold">⏹ Stop</button>
+            </div>
+        </div>
+
+        <!-- TOP BAR -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
+            <div>
+                <h2 class="text-2xl font-bold" id="taskSectionTitle">My Shorts Tasks</h2>
+                <p id="taskStatusDesc" class="text-muted mt-1 text-sm">Showing <span id="statusLabel">Not Watched</span> tasks</p>
+                <p id="taskCounter" class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> tasks</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="refreshTasks()" class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- HOW IT WORKS -->
+        <div class="card rounded-3xl p-5 mb-6">
+            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Shorts Tasks Work</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="flex items-start gap-3">
+                    <div class="step-num">1</div>
+                    <div class="text-sm text-muted leading-relaxed">Click <strong class="text-[#211F1F]">Create Shorts Tasks</strong> to generate paired tasks</div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="step-num">2</div>
+                    <div class="text-sm text-muted leading-relaxed">Click <strong class="text-[#211F1F]">Start Auto-Play</strong> — each short plays 40s then auto-closes</div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="step-num">3</div>
+                    <div class="text-sm text-muted leading-relaxed">Each video is used only <strong class="text-[#211F1F]">once</strong> — no duplicates</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK LIST -->
+        <div id="taskList" class="space-y-4">
+            <div class="skeleton h-[120px]"></div>
+            <div class="skeleton h-[120px]"></div>
+            <div class="skeleton h-[120px]"></div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">📱</div>
+            <h3 class="text-xl font-semibold mb-2">No Shorts Tasks</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                You don't have any shorts tasks yet.<br>
+                Click <strong class="text-[#211F1F]">Create Shorts Tasks</strong> to generate paired tasks.
+            </p>
+            <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Shorts Tasks</button>
+        </div>
+
+    </main>
+</div>
 
 </div>
 </main>
 </main>
 
+<!-- CREATE MODAL -->
+<div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">Create Shorts Tasks</h2>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
+        </div>
+        <p class="text-muted text-sm mb-5 leading-relaxed">
+            The system will find up to <strong class="text-[#211F1F]">10 members</strong> with available
+            short videos and create paired tasks. Each of your shorts can only be used <strong class="text-[#211F1F]">once</strong>.
+        </p>
+        <div class="instructions-box mb-5">
+            <p class="text-xs text-purple-700 leading-relaxed">
+                🎬 Every short is unique — once paired, it's locked and cannot be reused in future tasks.
+            </p>
+        </div>
+        <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 mb-5 space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Your Pending Tasks</span>
+                <span id="modalPendingCount" class="font-bold text-lg">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Your Eligible Shorts</span>
+                <span id="modalShortsCount" class="font-semibold">—</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-muted">Can Create</span>
+                <span id="modalCanCreate" class="font-semibold">—</span>
+            </div>
+        </div>
+        <div id="createResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
+        <div class="flex gap-3">
+            <button onclick="closeCreateModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doCreateBtn" onclick="doCreateTasks()" class="btn-purple flex-1 py-3 rounded-2xl text-sm font-semibold">Generate Tasks</button>
+        </div>
+    </div>
+</div>
+
+<!-- PLAYER MODAL -->
+<div id="playerModal" class="modal-bg" onclick="if(event.target===this)closePlayer()">
+    <div class="modal-box">
+        <div class="player-header">
+            <div>
+                <p class="text-xs opacity-70">Now Playing</p>
+                <p id="playerTaskId" class="font-bold text-sm">SHT-0001</p>
+            </div>
+            <button onclick="closePlayer()" class="w-8 h-8 rounded-full bg-[#DBD4B7]/20 flex items-center justify-center hover:bg-[#DBD4B7]/40 transition text-sm">✕</button>
+        </div>
+        <div class="player-body">
+            <div class="player-iframe-wrap">
+                <iframe id="playerIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="player-footer">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                    <p id="playerVideoTitle" class="font-semibold text-sm truncate">—</p>
+                    <p id="playerChannel" class="text-xs text-muted truncate">—</p>
+                </div>
+                <div class="timer-ring">
+                    <svg width="60" height="60" viewBox="0 0 60 60">
+                        <circle class="bg" cx="30" cy="30" r="26"/>
+                        <circle class="fg" id="timerRing" cx="30" cy="30" r="26"
+                            stroke-dasharray="163.36" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="txt" id="playerTimer">40</div>
+                </div>
+            </div>
+            <div class="mt-3 flex items-center gap-2 flex-wrap">
+                <span class="live-stat">⏱ <span id="playerElapsed">0</span>s / <span id="playerTarget">40</span>s</span>
+                <span class="live-stat">📊 <span id="playerProgress">0</span>%</span>
+                <span class="live-stat" id="playerStatusBadge">● Playing</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REPORT ISSUE MODAL -->
+<div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
+    <div class="modal-box max-w-[480px]">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-bold text-red-600">⚠ Report Issue</h2>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted text-lg">✕</button>
+        </div>
+        <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message.</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Short not playing')">▶ Short not playing</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Video deleted')">🗑 Video deleted</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Video is private')">🔒 Video private</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Age restricted')">🔞 Age restricted</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Region blocked')">🌍 Region blocked</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate</button>
+        </div>
+        <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
+        <textarea id="issueCustomText" rows="3" placeholder="Describe the issue…"
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
+        <input type="hidden" id="issueTaskId">
+        <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
+        <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
+        <div class="flex gap-3">
+            <button onclick="closeIssueModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="doIssueBtn" onclick="doSubmitIssue()" class="btn-red flex-1 py-3 rounded-2xl text-sm font-semibold">Submit Issue</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
 <script>
-/* =========================================================
-   AUTH CHECK
-========================================================= */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLXNwmJnXtZar2Pas5v3nRXgwMmDzPdEmKW1oJNjQH6O3i8U0ObsA3gHIFW8Y4vMcHWA/exec';
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
-const savedUserCode = localStorage.getItem("usercode") || "";
+const USER_CODE = localStorage.getItem("usercode") || "";
 
 if (!savedUsername || !savedPassword) {
-  window.location.href = "signin.html";
+    window.location.href = "signin.html";
 }
 
-/* =========================================================
-   PAGE CONFIG — Customize per page
-========================================================= */
-const PAGE_CONFIG = {
-  // Default values
-  icon: '🔧',
-  title: 'Feature Coming Soon',
-  description: "We're hard at work building this feature to help you grow your channel even faster. Check back soon for updates!",
-  features: [
-    { emoji: '⚡', label: 'Fast & Reliable' },
-    { emoji: '🚀', label: 'Boost Growth' },
-    { emoji: '🤝', label: 'Community Powered' }
-  ]
-};
+// ── STATE ──
+let allTasks = [];
+let member = null;
+let perfStats = null;
+let isLoading = false;
+let stats = { total: 0, notWorkYet: 0, watched: 0, rejected: 0 };
+let watchSeconds = 40;
+let maxBatch = 50;
 
-// You can customize per page by checking the URL or adding a query param
-// Example: comingsoon.html?feature=adwatching
+// ── AUTO-PLAY STATE ──
+let autoPlayQueue = [];
+let autoPlayIndex = 0;
+let autoPlayActive = false;
+let currentTimer = null;
+let currentElapsed = 0;
+let currentTask = null;
+let iframeLoadTimer = null;
+let currentIframe = null;
 
-function getPageConfig() {
-  const params = new URLSearchParams(window.location.search);
-  const feature = params.get('feature') || '';
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', async () => {
+    await init();
+});
 
-  const configs = {
-    'adwatching': {
-      icon: '💰',
-      title: 'Ad Watching Tasks',
-      description: 'Earn rewards by watching ads from fellow creators. Support the community while earning. Coming soon!',
-      features: [
-        { emoji: '💰', label: 'Earn Rewards' },
-        { emoji: '👀', label: 'Watch Ads' },
-        { emoji: '📈', label: 'Passive Income' }
-      ]
-    },
-    'shorttasks': {
-      icon: '📱',
-      title: 'Short Video Tasks',
-      description: 'Boost your short-form content engagement and algorithm reach with specialized engagement pools.',
-      features: [
-        { emoji: '📱', label: 'Short Videos' },
-        { emoji: '🚀', label: 'Go Viral' },
-        { emoji: '🎯', label: 'Targeted Growth' }
-      ]
-    },
-    'likecomment': {
-      icon: '❤️',
-      title: 'Like & Comment Tasks',
-      description: 'Get more likes, comments and interactions from supportive creators and members.',
-      features: [
-        { emoji: '❤️', label: 'More Likes' },
-        { emoji: '💬', label: 'More Comments' },
-        { emoji: '📊', label: 'Better Engagement' }
-      ]
-    },
-    'analytics': {
-      icon: '📊',
-      title: 'Advanced Analytics',
-      description: 'Deep insights into your channel performance, audience growth, and engagement metrics.',
-      features: [
-        { emoji: '📈', label: 'Growth Tracking' },
-        { emoji: '🎯', label: 'Audience Insights' },
-        { emoji: '📊', label: 'Performance Metrics' }
-      ]
+async function init() {
+    try {
+        const cached = loadCache();
+        if (cached) {
+            applyData(cached);
+            hideLoader();
+            renderList();
+            renderStats();
+            return;
+        }
+        await fetchTasks();
+        hideLoader();
+    } catch (e) {
+        hideLoader();
+        showToast('Could not connect.', true);
+        console.error(e);
     }
-  };
-
-  return configs[feature] || PAGE_CONFIG;
 }
 
-/* =========================================================
-   RENDER PAGE
-========================================================= */
-function renderPage() {
-  const config = getPageConfig();
-  
-  document.getElementById('pageTitle').textContent = config.title;
-  document.getElementById('featureIcon').textContent = config.icon;
-  document.getElementById('featureTitle').textContent = config.title;
-  document.getElementById('featureDescription').textContent = config.description;
-  
-  // Update subtitle
-  document.getElementById('welcomeSubtitle').textContent = 
-    `🚧 ${config.title} — Coming Soon`;
+// ── CACHE ──
+const CACHE_KEY = 'shorts_tasks_data';
+const CACHE_TS  = 'shorts_tasks_ts';
+const CACHE_TTL = 5 * 60 * 1000;
 
-  // Update features
-  const preview = document.getElementById('featurePreview');
-  preview.innerHTML = config.features.map(f => `
-    <div class="coming-soon-feature">
-      <span class="emoji">${f.emoji}</span>
-      <span class="label">${f.label}</span>
-    </div>
-  `).join('');
+function saveCache(data) {
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TS, String(Date.now()));
+    } catch (e) {}
+}
+function loadCache() {
+    try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        const ts  = localStorage.getItem(CACHE_TS);
+        if (!raw || !ts) return null;
+        if (Date.now() - parseInt(ts) > CACHE_TTL) return null;
+        return JSON.parse(raw);
+    } catch (e) { return null; }
 }
 
-/* =========================================================
-   HIDE LOADING
-========================================================= */
-function hideLoading() {
-  const overlay = document.getElementById('loadingOverlay');
-  overlay.classList.add('hide');
-  setTimeout(() => overlay.style.display = 'none', 500);
+function applyData(data) {
+    member = data.member || null;
+    perfStats = data.perfStats || null;
+    stats = data.fullStats || data.stats || stats;
+    allTasks = data.tasks || [];
+    watchSeconds = data.watchSeconds || 40;
+    maxBatch = data.maxBatch || 50;
+    updateRules();
 }
 
-/* =========================================================
-   INIT
-========================================================= */
-renderPage();
-hideLoading();
+function updateRules() {
+    document.getElementById('rule-watch').textContent = watchSeconds + 's';
+    document.getElementById('rule-max').textContent = maxBatch;
+}
 
-/* ── Mobile Nav Active State ── */
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
-  });
-})();
+// ── FETCH TASKS ──
+async function fetchTasks() {
+    document.getElementById('taskList').innerHTML = `
+        <div class="skeleton h-[120px]"></div>
+        <div class="skeleton h-[120px]"></div>
+        <div class="skeleton h-[120px]"></div>
+    `;
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getShortsTasks&userCode=${encodeURIComponent(USER_CODE)}`);
+        const data = await res.json();
+
+        if (!data.success) {
+            if (data.notEnrolled) return showNotEnrolled(data.message);
+            if (data.notActive)    return showNotActive(data.message);
+            if (data.suspended)    return showSuspended(data.message);
+            if (data.notFound)     return showMemberNotFound(data.message);
+            showToast(data.message || 'Error', true);
+            return;
+        }
+
+        applyData(data);
+        saveCache(data);
+        checkBlocked();
+        renderStats();
+        renderList();
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+}
+
+async function refreshTasks() {
+    if (isLoading) return;
+    isLoading = true;
+    await fetchTasks();
+    showToast('✅ Refreshed');
+    isLoading = false;
+}
+
+// ── RENDER LIST ──
+function renderList() {
+    const list = document.getElementById('taskList');
+    const empty = document.getElementById('emptyState');
+
+    if (allTasks.length === 0) {
+        list.innerHTML = '';
+        empty.classList.remove('hidden');
+        document.getElementById('showingCount').textContent = '0';
+        return;
+    }
+    empty.classList.add('hidden');
+    list.innerHTML = allTasks.map(cardHTML).join('');
+    document.getElementById('showingCount').textContent = allTasks.length;
+}
+
+function cardHTML(t) {
+    const dur = t.VideoDuration || 0;
+    const channel = t.TargetChannelName || t.TargetUserCode || '—';
+    const handle = t.TargetChannelHandle || '';
+
+    return `
+    <div class="shorts-card rounded-3xl p-5" data-task-id="${t.TaskID}">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+            <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
+            <span class="status-badge bg-yellow-500/15 text-yellow-700"><span class="dot bg-yellow-400"></span>Not Watched</span>
+            <span class="status-badge bg-purple-500/15 text-purple-700">⏱ ${dur}s short</span>
+            <span class="status-badge bg-blue-500/15 text-blue-700">🎯 Watch ${watchSeconds}s</span>
+            <span class="status-badge bg-teal-500/15 text-teal-700">🔒 Unique Pair</span>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+                ${t.TargetChannelImage
+                    ? `<img src="${t.TargetChannelImage}" class="w-12 h-12 rounded-xl object-cover border border-[#211F1F]/15" onerror="this.style.display='none'">`
+                    : `<div class="w-12 h-12 rounded-xl bg-white border border-[#211F1F]/15 flex items-center justify-center text-lg">📱</div>`}
+                <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm truncate">${channel}</p>
+                    ${handle ? `<p class="text-xs text-purple-700 font-mono">${handle}</p>` : ''}
+                    <p class="text-xs text-muted mt-1">Video: <span class="font-mono">${t.VideoId}</span></p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 sm:w-auto">
+                <button onclick="playSingle('${t.TaskID}')" class="btn-teal px-4 py-2.5 rounded-2xl text-xs font-bold flex-1 sm:flex-none">
+                    ▶ Play
+                </button>
+                <a href="${t.VideoUrl}" target="_blank" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium flex-1 sm:flex-none text-center">
+                    ↗ Open
+                </a>
+                <button onclick="openIssueModal('${t.TaskID}')" class="btn-outline px-3 py-2.5 rounded-2xl text-xs" title="Report issue">
+                    ⚠
+                </button>
+            </div>
+        </div>
+    </div>`;
+}
+
+// ── STATS ──
+function renderStats() {
+    document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
+    document.getElementById('st-watched').textContent = stats.watched || 0;
+    document.getElementById('st-rejected').textContent = stats.rejected || 0;
+    document.getElementById('st-total').textContent = stats.total || 0;
+
+    if (perfStats) {
+        document.getElementById('st-pto').textContent = perfStats.PendingShortsViewsToOthers || 0;
+        document.getElementById('st-pfo').textContent = perfStats.PendingShortsViewsFromOthers || 0;
+        document.getElementById('st-given').textContent = perfStats.TotalShortsViewsGiven || 0;
+        document.getElementById('st-received').textContent = perfStats.TotalShortsViewsReceived || 0;
+    }
+}
+
+function toggleStats() {
+    document.getElementById('statsPanel').classList.toggle('hidden');
+}
+
+// ── BLOCK CHECK ──
+function checkBlocked() {
+    if (!member) return;
+    const suspended = member.ViolationFlag === 'Suspended';
+    const disabled = member.ShortsPromotionActive === 'No';
+
+    if (suspended || disabled) {
+        document.getElementById('blockedBanner').classList.remove('hidden');
+        document.getElementById('blockedMsg').textContent = suspended
+            ? `Account suspended until ${member.SuspendedUntil || 'further notice'}.`
+            : 'Shorts promotion is disabled.';
+    } else {
+        document.getElementById('blockedBanner').classList.add('hidden');
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// AUTO-PLAY SYSTEM
+// ════════════════════════════════════════════════════════════════
+
+function startAutoPlayBatch() {
+    if (allTasks.length === 0) {
+        showToast('No tasks to play.', true);
+        return;
+    }
+    autoPlayQueue = [...allTasks];
+    autoPlayIndex = 0;
+    autoPlayActive = true;
+
+    document.getElementById('autoPlayBar').classList.remove('hidden');
+    updateBatchProgress();
+
+    playNextInQueue();
+}
+
+function stopAutoPlayBatch() {
+    autoPlayActive = false;
+    autoPlayQueue = [];
+    autoPlayIndex = 0;
+    clearCurrentTimer();
+    closePlayer();
+    document.getElementById('autoPlayBar').classList.add('hidden');
+    showToast('Auto-play stopped.');
+}
+
+function playNextInQueue() {
+    if (!autoPlayActive) return;
+    if (autoPlayIndex >= autoPlayQueue.length) {
+        stopAutoPlayBatch();
+        showToast('🎉 Batch complete!');
+        return;
+    }
+    const task = autoPlayQueue[autoPlayIndex];
+    playSingle(task.TaskID, true);
+}
+
+function updateBatchProgress() {
+    const done = autoPlayIndex;
+    const total = autoPlayQueue.length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('batchProgressFill').style.width = pct + '%';
+    document.getElementById('batchProgressText').textContent = `${done}/${total}`;
+    document.getElementById('autoPlayStatus').textContent = `Playing ${done + 1} of ${total}…`;
+}
+
+// ── PLAY SINGLE SHORT ──
+function playSingle(taskId, autoMode = false) {
+    const task = allTasks.find(t => t.TaskID === taskId);
+    if (!task) { showToast('Task not found.', true); return; }
+
+    currentTask = task;
+    currentElapsed = 0;
+    document.getElementById('playerTaskId').textContent = task.TaskID;
+    document.getElementById('playerVideoTitle').textContent = task.VideoId;
+    document.getElementById('playerChannel').textContent = task.TargetChannelName || task.TargetUserCode || '';
+    document.getElementById('playerTarget').textContent = watchSeconds;
+    document.getElementById('playerElapsed').textContent = '0';
+    document.getElementById('playerProgress').textContent = '0';
+    document.getElementById('playerTimer').textContent = watchSeconds;
+    document.getElementById('playerStatusBadge').innerHTML = '● Playing';
+
+    const ring = document.getElementById('timerRing');
+    const circumference = 2 * Math.PI * 26;
+    ring.style.strokeDasharray = circumference;
+    ring.style.strokeDashoffset = 0;
+
+    const embedUrl = `https://www.youtube.com/embed/${task.VideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${task.VideoId}&modestbranding=1&rel=0&playsinline=1`;
+
+    const iframe = document.getElementById('playerIframe');
+    iframe.src = embedUrl;
+
+    document.getElementById('playerModal').classList.add('open');
+
+    startCurrentTimer();
+}
+
+function startCurrentTimer() {
+    clearCurrentTimer();
+    currentElapsed = 0;
+
+    const circumference = 2 * Math.PI * 26;
+
+    currentTimer = setInterval(() => {
+        currentElapsed += 1;
+        const remaining = Math.max(0, watchSeconds - currentElapsed);
+        const pct = Math.min(100, Math.round((currentElapsed / watchSeconds) * 100));
+
+        document.getElementById('playerElapsed').textContent = currentElapsed;
+        document.getElementById('playerProgress').textContent = pct;
+        document.getElementById('playerTimer').textContent = remaining;
+
+        const offset = circumference * (currentElapsed / watchSeconds);
+        document.getElementById('timerRing').style.strokeDashoffset = offset;
+
+        if (currentElapsed >= watchSeconds) {
+            clearCurrentTimer();
+            onShortComplete();
+        }
+    }, 1000);
+}
+
+function clearCurrentTimer() {
+    if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
+}
+
+// ── WHEN SHORT COMPLETES 40s ──
+async function onShortComplete() {
+    if (!currentTask) return;
+
+    const task = currentTask;
+    document.getElementById('playerStatusBadge').innerHTML = '✅ Watched';
+
+    task.Status = 'Watched';
+    task.WatchedSeconds = watchSeconds;
+    stats.notWorkYet = Math.max(0, stats.notWorkYet - 1);
+    stats.watched = (stats.watched || 0) + 1;
+
+    try {
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'autoMarkShortsWatched',
+                taskId: task.TaskID,
+                userCode: USER_CODE,
+                targetUserCode: task.TargetUserCode,
+                videoId: task.VideoId,
+                watchedSeconds: watchSeconds
+            })
+        });
+    } catch (e) {
+        console.warn('Server mark failed', e);
+    }
+
+    allTasks = allTasks.filter(t => t.TaskID !== task.TaskID);
+    renderList();
+    renderStats();
+
+    setTimeout(() => {
+        closePlayer(true);
+        if (autoPlayActive) {
+            autoPlayIndex++;
+            updateBatchProgress();
+            setTimeout(playNextInQueue, 800);
+        }
+    }, 1200);
+}
+
+function closePlayer(skipStop = false) {
+    if (!skipStop) {
+        clearCurrentTimer();
+        if (autoPlayActive) {
+            autoPlayActive = false;
+            document.getElementById('autoPlayBar').classList.add('hidden');
+        }
+    }
+    document.getElementById('playerModal').classList.remove('open');
+    const iframe = document.getElementById('playerIframe');
+    iframe.src = 'about:blank';
+    currentTask = null;
+}
+
+// ════════════════════════════════════════════════════════════════
+// CREATE TASKS
+// ════════════════════════════════════════════════════════════════
+
+function openCreateModal() {
+    const pending = allTasks.length;
+    const canCreate = pending < 5;
+
+    document.getElementById('modalPendingCount').textContent = pending;
+    document.getElementById('modalShortsCount').textContent = '—';
+    document.getElementById('modalCanCreate').textContent = canCreate ? 'Yes' : 'No — complete pending first';
+    document.getElementById('modalCanCreate').className = canCreate ? 'font-semibold text-green-600' : 'font-semibold text-red-600';
+
+    document.getElementById('doCreateBtn').disabled = !canCreate;
+    document.getElementById('createResultBox').classList.add('hidden');
+
+    document.getElementById('createModal').classList.add('open');
+}
+
+function closeCreateModal() {
+    document.getElementById('createModal').classList.remove('open');
+}
+
+async function doCreateTasks() {
+    const btn = document.getElementById('doCreateBtn');
+    btn.textContent = 'Creating…';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'createShortsTasks', userCode: USER_CODE })
+        });
+        const data = await res.json();
+        const box = document.getElementById('createResultBox');
+        box.classList.remove('hidden');
+
+        if (data.success) {
+            box.textContent = `✅ ${data.created} task(s) created!`;
+            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            showToast(`${data.created} task(s) created!`);
+            setTimeout(async () => {
+                closeCreateModal();
+                await refreshTasks();
+            }, 1200);
+        } else {
+            box.textContent = data.message || 'Could not create tasks.';
+            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.textContent = 'Generate Tasks';
+    btn.disabled = false;
+}
+
+// ════════════════════════════════════════════════════════════════
+// ISSUE REPORTING
+// ════════════════════════════════════════════════════════════════
+
+let selectedIssuePill = '';
+
+function openIssueModal(taskId) {
+    selectedIssuePill = '';
+    document.getElementById('issueTaskId').value = taskId;
+    document.getElementById('issueCustomText').value = '';
+    document.getElementById('issuePillSelected').textContent = '';
+    document.getElementById('issueResultBox').classList.add('hidden');
+    document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
+    document.getElementById('issueModal').classList.add('open');
+}
+
+function closeIssueModal() {
+    document.getElementById('issueModal').classList.remove('open');
+}
+
+function toggleIssuePill(btn, label) {
+    const wasSelected = btn.classList.contains('selected');
+    document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
+    if (wasSelected) {
+        selectedIssuePill = '';
+        document.getElementById('issuePillSelected').textContent = '';
+    } else {
+        btn.classList.add('selected');
+        selectedIssuePill = label;
+        document.getElementById('issuePillSelected').textContent = `Selected: ${label}`;
+    }
+}
+
+async function doSubmitIssue() {
+    const taskId = document.getElementById('issueTaskId').value;
+    const customText = (document.getElementById('issueCustomText').value || '').trim();
+    const issueTitle = selectedIssuePill || customText;
+
+    if (!issueTitle) { showToast('Please select or write an issue.', true); return; }
+
+    const task = allTasks.find(x => x.TaskID === taskId);
+    if (!task) { showToast('Task not found.', true); return; }
+
+    const btn = document.getElementById('doIssueBtn');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'reportShortsIssue',
+                taskId,
+                reporterCode: USER_CODE,
+                targetUserCode: task.TargetUserCode,
+                issueTitle,
+                issueDescription: customText
+            })
+        });
+        const data = await res.json();
+        const box = document.getElementById('issueResultBox');
+        box.classList.remove('hidden');
+        if (data.success) {
+            box.textContent = `✅ Issue reported: "${issueTitle}"`;
+            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            setTimeout(closeIssueModal, 1500);
+        } else {
+            box.textContent = data.message || 'Could not submit.';
+            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
+        }
+    } catch (e) {
+        showToast('Connection error.', true);
+    }
+
+    btn.textContent = 'Submit Issue';
+    btn.disabled = false;
+}
+
+// ════════════════════════════════════════════════════════════════
+// STATUS PAGES
+// ════════════════════════════════════════════════════════════════
+
+function showNotEnrolled(message) {
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="card rounded-3xl p-12 text-center max-w-[600px]">
+                <div class="text-6xl mb-4">📢</div>
+                <h2 class="text-2xl font-bold mb-2">Not Enrolled in Shorts Group</h2>
+                <p class="text-muted text-sm mb-6">${message}</p>
+                <a href="groups.html" class="btn-purple px-8 py-3 rounded-2xl inline-block">👥 Go to Groups</a>
+            </div>
+        </div>`;
+    hideLoader();
+}
+
+function showNotActive(message) {
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="card rounded-3xl p-12 text-center max-w-[600px]" style="border-color:#dc2626;box-shadow:4px 4px 0 0 #dc2626;">
+                <div class="text-6xl mb-4">⛔</div>
+                <h2 class="text-2xl font-bold mb-2 text-red-600">Account Inactive</h2>
+                <p class="text-muted text-sm mb-6">${message}</p>
+                <a href="support.html" class="btn-red px-8 py-3 rounded-2xl inline-block">📞 Contact Support</a>
+            </div>
+        </div>`;
+    hideLoader();
+}
+
+function showSuspended(message) {
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="card rounded-3xl p-12 text-center max-w-[600px]" style="border-color:#dc2626;box-shadow:4px 4px 0 0 #dc2626;">
+                <div class="text-6xl mb-4">🚫</div>
+                <h2 class="text-2xl font-bold mb-2 text-red-600">Account Suspended</h2>
+                <p class="text-muted text-sm mb-6">${message}</p>
+                <a href="support.html" class="btn-red px-8 py-3 rounded-2xl inline-block">📞 Contact Support</a>
+            </div>
+        </div>`;
+    hideLoader();
+}
+
+function showMemberNotFound(message) {
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="card rounded-3xl p-12 text-center max-w-[600px]" style="border-color:#d97706;box-shadow:4px 4px 0 0 #d97706;">
+                <div class="text-6xl mb-4">❓</div>
+                <h2 class="text-2xl font-bold mb-2 text-orange-600">Member Not Found</h2>
+                <p class="text-muted text-sm mb-6">${message}</p>
+                <button onclick="logoutUser()" class="btn-purple px-8 py-3 rounded-2xl">🔑 Sign In Again</button>
+            </div>
+        </div>`;
+    hideLoader();
+}
+
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
+}
+
+// ── HELPERS ──
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+
+function hideLoader() {
+    const l = document.getElementById('pageLoader');
+    l.classList.add('hidden');
+    setTimeout(() => l.style.display = 'none', 400);
+}
 </script>
-
 </body>
 </html>

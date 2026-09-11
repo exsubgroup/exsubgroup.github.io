@@ -1,6 +1,7 @@
 /* ══════════════════════════════════════════════
-   NAVBAR.CSS — Left sidebar layout (Exsub Group)
-   NEO-BRUTALIST DESIGN
+   NAVBAR.CSS — Left sidebar (Exsub Group)
+   MATCHES WEBSITE STYLE: neo-brutalist
+   Tokens: ink #211F1F | mint #ACD1C0 | sand #DBD4B7 | bg #F5F4EB
    Desktop: fixed left sidebar, content pushed right.
    Mobile:  sidebar becomes a slide-in drawer, slim top bar shown instead.
    ══════════════════════════════════════════════ */
@@ -12,6 +13,7 @@
   --mint: #ACD1C0;
   --sand: #DBD4B7;
   --bg: #F5F4EB;
+  --mint-hover: #9bc2b1;
 }
 
 svg {
@@ -25,8 +27,8 @@ svg {
   top:0; left:0;
   width:var(--sidebar-w);
   height:100vh;
-  background: #F5F4EB; /* Neo-brutalist light bg */
-  box-shadow: 6px 0 0 0 #211F1F; /* Hard shadow offset */
+  background: #F5F4EB;
+  box-shadow: 6px 0 0 0 #211F1F;
   z-index:100;
   display:flex;
   flex-direction:column;
@@ -38,10 +40,10 @@ svg {
 
 @media (min-width:768px){
   .sidebar{ transform:translateX(0); }
-  #sidebarCloseBtn{ display:none; }
+  #sidebarCloseBtn{ display:none !important; }
 }
 
-/* Scrollbar styling for neo-brutalist */
+/* Scrollbar — matches website's thin scrollbar */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
@@ -54,6 +56,7 @@ svg {
   border: 1px solid #211F1F;
 }
 
+/* ── BRAND ── */
 .sidebar-brand{
   display:flex; 
   align-items:center; 
@@ -61,7 +64,7 @@ svg {
   gap:8px; 
   padding:20px 18px;
   border-bottom: 3px solid #211F1F;
-  background: #ACD1C0; /* Mint accent */
+  background: #ACD1C0;
 }
 .sidebar-brand-left{ 
   display:flex; 
@@ -97,15 +100,16 @@ svg {
   box-shadow: 3px 3px 0px 0px #211F1F;
 }
 #sidebarCloseBtn:hover{ 
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px #211F1F;
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px #211F1F;
 }
 
+/* ── NAV ── */
 .sidebar-nav{ 
   display:flex; 
   flex-direction:column; 
-  gap: 3px; 
-  padding: 14px 10px; 
+  gap: 6px; 
+  padding: 14px 12px; 
   flex:1; 
 }
 
@@ -126,17 +130,18 @@ svg {
   text-align:left; 
   cursor:pointer;
   transition: 0.15s ease;
+  box-sizing: border-box;
 }
 .sidebar-link:hover{ 
   background: #DBD4B7;
   border-color: #211F1F;
   transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 .sidebar-link.active{ 
   background: #ACD1C0;
   border: 2px solid #211F1F;
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 .sidebar-link .chev{ 
   transition:transform .25s; 
@@ -146,19 +151,22 @@ svg {
   transform:rotate(180deg); 
 }
 
-/* Submenu styles */
+/* ── SUBMENU ── */
 .sidebar-submenu{
   max-height:0; 
   overflow:hidden;
   display:flex; 
   flex-direction:column;
-  transition:max-height .3s ease;
+  gap: 4px;
+  transition:max-height .3s ease, padding .3s ease;
   padding-left: 10px;
   margin-left: 8px;
   border-left: 3px solid #DBD4B7;
 }
 .sidebar-submenu.open{ 
-  max-height:500px; 
+  max-height:600px; 
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 .sidebar-submenu a{
   display:flex; 
@@ -172,21 +180,20 @@ svg {
   font-weight: 600; 
   border: 2px solid transparent;
   transition: 0.15s ease;
-  margin: 1px 0;
 }
 .sidebar-submenu a:hover{ 
   background: #DBD4B7;
   border-color: #211F1F;
   transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 .sidebar-submenu a.active {
   background: #ACD1C0;
   border: 2px solid #211F1F;
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 
-/* Disabled state */
+/* ── DISABLED ── */
 .nav-disabled{
   opacity: 0.35 !important;
   pointer-events:none !important;
@@ -195,9 +202,9 @@ svg {
   text-decoration:line-through;
 }
 
-/* ── USER PROFILE SECTION ── */
+/* ── USER PROFILE PANEL ── */
 .sidebar-user-panel {
-  padding: 0px 5px;
+  padding: 10px 12px;
   border-bottom: 3px solid #211F1F;
   position: relative;
   background: #F5F4EB;
@@ -217,20 +224,22 @@ svg {
   background: #DBD4B7;
   border-color: #211F1F;
   transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 .user-profile-trigger.expanded {
   background: #ACD1C0;
   border: 2px solid #211F1F;
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 
 #navProfilePic {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #211F1F;
+  background: #ACD1C0;
+  flex-shrink: 0;
 }
 
 .user-info {
@@ -262,17 +271,18 @@ svg {
   transform: rotate(180deg);
 }
 
-/* Profile Dropdown */
+/* ── PROFILE DROPDOWN ── */
 .profile-dropdown {
   max-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  gap: 4px;
   transition: max-height 0.25s ease, margin-top 0.25s ease;
   padding: 0 4px;
 }
 .profile-dropdown.open {
-  max-height: 120px;
+  max-height: 140px;
   margin-top: 8px;
 }
 
@@ -292,12 +302,13 @@ svg {
   text-align: left;
   cursor: pointer;
   transition: 0.15s ease;
+  box-sizing: border-box;
 }
 .dropdown-item:hover {
   background: #DBD4B7;
   border-color: #211F1F;
   transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px 0px #211F1F;
+  box-shadow: 4px 4px 0px 0px #211F1F;
 }
 .dropdown-item svg {
   color: #211F1F;
@@ -354,8 +365,8 @@ svg {
   transition: 0.15s ease;
 }
 #mobileTopBar button:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px #211F1F;
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px #211F1F;
 }
 #mobileTopBar .mobile-brand{ 
   display:flex; 
@@ -489,4 +500,14 @@ svg {
 .link-icon-wrap svg{
   flex-shrink:0;
   opacity:0.85;
+}
+
+/* ── DESKTOP: HIDE CLOSE BTN ── */
+@media (min-width: 768px) {
+  #sidebarCloseBtn {
+    display: none !important;
+  }
+  .sidebar-brand {
+    justify-content: flex-start;
+  }
 }

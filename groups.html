@@ -173,9 +173,9 @@
 /* ── Ad Watching Special Card ────────────────────────────────── */
 .card-adwatching {
   background: #211F1F;
-    border: 3px solid #fbbf24;
-    box-shadow: 8px 8px 0px 0px #fbbf24;
-    color: #ffffff;
+  border: 3px solid #fbbf24;
+  box-shadow: 8px 8px 0px 0px #fbbf24;
+  color: #ffffff;
 }
 .card-adwatching .group-icon {
   background: #fbbf24;
@@ -263,6 +263,39 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ── Stats Bar ────────────────────────────────────────────────── */
+.stats-bar {
+  background: #FFFFFF;
+  border: 3px solid #211F1F;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px 0px #211F1F;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.stats-bar .stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.stats-bar .stat-item .stat-number {
+  font-weight: 800;
+  font-size: 18px;
+}
+.stats-bar .stat-item .stat-label {
+  color: #6b7280;
+}
+.stats-bar .stat-divider {
+  width: 2px;
+  height: 30px;
+  background: #e5e7eb;
+}
 </style>
 </head>
 <body>
@@ -300,6 +333,39 @@
       </div>
     </div>
 
+    <!-- ── STATS BAR ── -->
+    <div id="statsBar" class="stats-bar hidden">
+      <div class="stat-item">
+        <span class="stat-number" id="statTotalMembers">0</span>
+        <span class="stat-label">Total Members</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number text-green-600" id="statActiveMembers">0</span>
+        <span class="stat-label">Active</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number text-blue-600" id="statInGroups">0</span>
+        <span class="stat-label">In Groups</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number text-red-500" id="statNotInAnyGroup">0</span>
+        <span class="stat-label">Not in any group</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number text-orange-500" id="statActiveNotInGroup">0</span>
+        <span class="stat-label">Active not in group</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number text-purple-600" id="statExtensionReady">0</span>
+        <span class="stat-label">Extension Ready</span>
+      </div>
+    </div>
+
     <!-- GROUPS GRID -->
     <div id="groupsContainer" class="relative">
 
@@ -324,7 +390,7 @@
           <div class="flex items-center justify-between mt-8">
             <div>
               <div class="text-sm font-semibold" id="count-subscribers">— Members</div>
-              <div class="text-xs text-muted mt-1">Highly Active</div>
+              <div class="text-xs text-muted mt-1" id="sub-stats-subscribers">Active: —</div>
             </div>
             <button class="join-btn" id="btn-subscribers" data-group="subscribers">Join Group</button>
           </div>
@@ -350,7 +416,7 @@
           <div class="flex items-center justify-between mt-8">
             <div>
               <div class="text-sm font-semibold" id="count-video">— Members</div>
-              <div class="text-xs text-muted mt-1">Fast Growing</div>
+              <div class="text-xs text-muted mt-1" id="sub-stats-video">Active: —</div>
             </div>
             <button class="join-btn" id="btn-video" data-group="video">Join Group</button>
           </div>
@@ -376,7 +442,7 @@
           <div class="flex items-center justify-between mt-8">
             <div>
               <div class="text-sm font-semibold" id="count-watchtime">— Members</div>
-              <div class="text-xs text-muted mt-1">Daily Tasks</div>
+              <div class="text-xs text-muted mt-1" id="sub-stats-watchtime">Active: —</div>
             </div>
             <button class="join-btn" id="btn-watchtime" data-group="watchtime">Join Group</button>
           </div>
@@ -401,7 +467,7 @@
           <div class="flex items-center justify-between mt-8">
             <div>
               <div class="text-sm font-semibold" id="count-engagement">— Members</div>
-              <div class="text-xs text-muted mt-1">Community Support</div>
+              <div class="text-xs text-muted mt-1" id="sub-stats-engagement">Active: —</div>
             </div>
             <button class="join-btn" id="btn-engagement" data-group="engagement">Join Group</button>
           </div>
@@ -428,7 +494,7 @@
           <div class="flex items-center justify-between mt-8">
             <div>
               <div class="text-sm font-semibold" id="count-shorts">— Members</div>
-              <div class="text-xs text-muted mt-1">Viral Growth</div>
+              <div class="text-xs text-muted mt-1" id="sub-stats-shorts">Active: —</div>
             </div>
             <button class="join-btn" id="btn-shorts" data-group="shorts">Join Group</button>
           </div>
@@ -437,50 +503,49 @@
         </div>
 
         <!-- GROUP: AD WATCHING - SPECIAL STYLING -->
-        <!-- GROUP: AD WATCHING - SPECIAL STYLING -->
-      <div class="card card-adwatching card-hover rounded-3xl p-6" id="group-card-adwatching">
-        <div class="flex items-start justify-between gap-4">
-          <div class="group-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="14" rx="2"/>
-              <polygon points="10 9 16 12 10 15 10 9"/>
-              <path d="M8 20h8"/>
-              <path d="M12 18v2"/>
-            </svg>
+        <div class="card card-adwatching card-hover rounded-3xl p-6" id="group-card-adwatching">
+          <div class="flex items-start justify-between gap-4">
+            <div class="group-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="14" rx="2"/>
+                <polygon points="10 9 16 12 10 15 10 9"/>
+                <path d="M8 20h8"/>
+                <path d="M12 18v2"/>
+              </svg>
+            </div>
+            <div class="tinygroupbills" id="badge-adwatching">⭐ Premium</div>
           </div>
-          <div class="tinygroupbills" id="badge-adwatching">⭐ Premium</div>
-        </div>
-        <h2 class="text-2xl font-bold mt-6">Ad Watching Group</h2>
-        <p class="text-muted mt-3 leading-7 text-sm">
-          💰 Earn rewards by watching ads from fellow creators. Support the community while earning.
-        </p>
-        
-        <!-- Requirements Section -->
-        <div class="mt-4 p-3 bg-black/20 rounded-xl border border-yellow-500/30">
-          <p class="text-xs font-semibold text-yellow-400 mb-2">📋 Requirements to Join:</p>
-          <ul class="text-xs text-gray-300 space-y-1.5">
-            <li class="flex items-start gap-2">
-              <span class="text-yellow-400">•</span>
-              <span>⚠️ Add a <strong class="text-white">working channel</strong> to join this group</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-yellow-400">•</span>
-              <span>⚠️ Update <strong class="text-white">Monetized</strong> status to <strong class="text-yellow-400">Yes</strong> in your Promotional Channel</span>
-            </li>
-            
-          </ul>
-        </div>
-        
-        <div class="flex items-center justify-between mt-6">
-          <div>
-            <div class="text-sm font-semibold text-white" id="count-adwatching">— Members</div>
-            <div class="text-xs text-gray-400 mt-1">🎯 Earning Community</div>
+          <h2 class="text-2xl font-bold mt-6">Ad Watching Group</h2>
+          <p class="text-muted mt-3 leading-7 text-sm">
+            💰 Earn rewards by watching ads from fellow creators. Support the community while earning.
+          </p>
+          
+          <!-- Requirements Section -->
+          <div class="mt-4 p-3 bg-black/20 rounded-xl border border-yellow-500/30">
+            <p class="text-xs font-semibold text-yellow-400 mb-2">📋 Requirements to Join:</p>
+            <ul class="text-xs text-gray-300 space-y-1.5">
+              <li class="flex items-start gap-2">
+                <span class="text-yellow-400">•</span>
+                <span>⚠️ Add a <strong class="text-white">working channel</strong> to join this group</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-yellow-400">•</span>
+                <span>⚠️ Update <strong class="text-white">Monetized</strong> status to <strong class="text-yellow-400">Yes</strong> in your Promotional Channel</span>
+              </li>
+            </ul>
           </div>
-          <button class="join-btn" id="btn-adwatching" data-group="adwatching">Join Group</button>
+          
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <div class="text-sm font-semibold text-white" id="count-adwatching">— Members</div>
+              <div class="text-xs text-gray-400 mt-1" id="sub-stats-adwatching">Active: —</div>
+            </div>
+            <button class="join-btn" id="btn-adwatching" data-group="adwatching">Join Group</button>
+          </div>
+          <div id="reason-adwatching" class="hidden mt-3 text-xs leading-5" style="color: #fca5a5;"></div>
+          <button class="leave-link hidden" id="leave-adwatching" data-group="adwatching">Leave Group</button>
         </div>
-        <div id="reason-adwatching" class="hidden mt-3 text-xs leading-5" style="color: #fca5a5;"></div>
-        <button class="leave-link hidden" id="leave-adwatching" data-group="adwatching">Leave Group</button>
-      </div>
+
       </div><!-- /groupsGrid -->
 
       <!-- ERROR STATE -->
@@ -516,7 +581,7 @@ if (!usercode || !username || !userpassword) {
 /* =========================================================
    GROUPS BACKEND WIRING
 ========================================================= */
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxTPnd47PBeK-fjqv_FtMknqNzFfbGLBSQjPZrhnAl_dU4BrN60-DUAE8vhtIF4icum/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbycvWtwlmLpeK4vyaRbGsxYfKzlybs72jxd11yhtXHX8YkfLwLxO4HhRWW1sRNWCQn4/exec";
 
 const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement", "shorts", "adwatching"];
 
@@ -700,6 +765,44 @@ function showGroupsError(message) {
   }
 }
 
+// ── UPDATE STATS BAR ──
+function updateStatsBar(globalStats) {
+  const statsBar = document.getElementById('statsBar');
+  if (!globalStats || Object.keys(globalStats).length === 0) {
+    statsBar.classList.add('hidden');
+    return;
+  }
+  
+  statsBar.classList.remove('hidden');
+  
+  // 🔥 FIX: Use totalSystemMembers for Total Members
+  document.getElementById('statTotalMembers').textContent = globalStats.totalSystemMembers || globalStats.total || 0;
+  document.getElementById('statActiveMembers').textContent = globalStats.active || 0;
+  
+  // 🔥 NEW: Show "In Groups" stat (sum of all group memberships)
+  document.getElementById('statInGroups').textContent = globalStats.total || 0;
+  
+  document.getElementById('statNotInAnyGroup').textContent = globalStats.notInAnyGroup || 0;
+  document.getElementById('statActiveNotInGroup').textContent = globalStats.activeNotInAnyGroup || 0;
+  document.getElementById('statExtensionReady').textContent = globalStats.extensionReady || 0;
+}
+
+// ── UPDATE GROUP CARD WITH ANALYTICS ──
+function updateGroupCard(groupKey, groupData, analytics) {
+  const countEl = document.getElementById('count-' + groupKey);
+  const subStatsEl = document.getElementById('sub-stats-' + groupKey);
+  
+  if (countEl && groupData) {
+    const memberCount = groupData.memberCount || 0;
+    countEl.textContent = formatMemberCount(memberCount);
+  }
+  
+  if (subStatsEl && analytics && analytics[groupKey]) {
+    const data = analytics[groupKey];
+    subStatsEl.textContent = `Active: ${data.active || 0} | Not in group: ${data.notInThisGroup || 0}`;
+  }
+}
+
 async function loadGroupsStatus() {
   const overlay = document.getElementById('loadingOverlay');
   if (overlay) overlay.classList.remove('hide');
@@ -733,6 +836,10 @@ async function loadGroupsStatus() {
     }
 
     const visibleGroups = res.data.visibleGroups || [];
+    const analytics = res.data.counts || {};
+
+    // ── Update Stats Bar ──
+    updateStatsBar(res.data.globalStats);
 
     GROUP_KEYS.forEach(key => {
       const btn = document.getElementById("btn-" + key);
@@ -754,10 +861,8 @@ async function loadGroupsStatus() {
 
       if (g) setLeaveButtonState(key, g);
 
-      const countEl = document.getElementById("count-" + key);
-      if (countEl && res.data.counts) {
-        countEl.textContent = formatMemberCount(res.data.counts[key] || 0);
-      }
+      // ── Update with analytics data ──
+      updateGroupCard(key, g, analytics);
     });
 
     showGroupsGrid();
@@ -792,7 +897,6 @@ async function handleJoinClick(e) {
       // Show detailed error
       let errorMessage = res.message || "Could not join group.";
       
-      // If there's additional error data, include it
       if (res.error) {
         errorMessage += `\n\nError: ${res.error}`;
       }
@@ -815,7 +919,6 @@ async function handleJoinClick(e) {
   } catch (err) {
     console.error("[groups] Join failed:", err);
     
-    // Capture full error details
     let errorDetails = "Please try again.";
     if (err.message) {
       errorDetails = err.message;
@@ -835,6 +938,7 @@ async function handleJoinClick(e) {
     btn.textContent = originalText;
   }
 }
+
 async function handleLeaveClick(e) {
   const btn = e.currentTarget;
   const groupKey = btn.dataset.group;

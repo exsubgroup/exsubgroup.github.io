@@ -1,6 +1,5 @@
 /* ══════════════════════════════════════════════
-   NAVBAR.JS — Left sidebar (Exsub Group)
-   Updated: Simple username display without profile pic
+   NAVBAR.JS — Neo-Brutalist (Exsub Group)
    ══════════════════════════════════════════════ */
 'use strict';
 
@@ -11,7 +10,7 @@ const NAVBAR_TEMPLATE = `
     <img src="images/logo.svg" alt="Logo">
     <span>Exsub Group</span>
   </div>
-  <div style="width:38px"></div>
+  <div style="width:44px"></div>
 </div>
 
 <div id="sidebarOverlay"></div>
@@ -20,28 +19,28 @@ const NAVBAR_TEMPLATE = `
   <div class="sidebar-brand">
     <div class="sidebar-brand-left">
       <img src="images/logo.svg" alt="Logo">
-      <span style="padding-left:10px">Exsub Group</span>
+      <span>Exsub Group</span>
     </div>
     <button id="sidebarCloseBtn" aria-label="Close menu">✕</button>
   </div>
 
   <div class="sidebar-user-panel">
     <div class="user-profile-trigger" onclick="toggleProfileDropdown()">
-      <div class="user-info" style="padding: 8px 4px;">
-        <span id="navUsername" class="username" style="font-size: 16px;">Loading...</span>
-        <span class="user-status">Verified Member</span>
+      <img id="navProfilePic" src="https://api.dicebear.com/10.x/notionists/svg?seed=wbzp58hw&backgroundColor=ACD1C0" alt="Profile">
+      <div class="user-info">
+        <span id="navUsername" class="username">Loading...</span>
+        <span class="user-status">Verified</span>
       </div>
       <svg class="chev-profile" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </div>
     
     <div id="profileDropdown" class="profile-dropdown">
       <a href="profile.html" target="_self" class="dropdown-item">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         Open Profile
       </a>
-      <hr class="dropdown-divider">
       <button id="lnkLogout" class="dropdown-item logout-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </button>
     </div>
@@ -51,21 +50,21 @@ const NAVBAR_TEMPLATE = `
 
     <a id="lnkDashboard" href="analytics.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
         Dashboard
       </span>
     </a>
 
     <a id="lnkMembers" href="members.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
         Members
       </span>
     </a>
 
     <a id="lnkGroups" href="groups.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
         Groups
       </span>
     </a>
@@ -73,34 +72,34 @@ const NAVBAR_TEMPLATE = `
     <div>
       <button id="lnkChannelsToggle" class="sidebar-link" onclick="toggleSidebarGroup('channelsGroup', this)">
         <span class="link-icon-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>
           Channels
         </span>
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
       <div id="channelsGroup" class="sidebar-submenu">
         <a href="channels.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
           Promotional Channel
         </a>
         <a href="videos.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>
           Long Videos
         </a>
         <a href="shortvideos.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
           Short Videos
         </a>
         <a href="playlists.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
           Playlists
         </a>
         <a href="workingchannel.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
           Working Channel
         </a>
         <a href="settings.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
           Settings
         </a>
       </div>
@@ -109,34 +108,34 @@ const NAVBAR_TEMPLATE = `
     <div>
       <button id="lnkTasksToggle" class="sidebar-link" onclick="toggleSidebarGroup('tasksGroup', this)">
         <span class="link-icon-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
           Tasks
         </span>
         <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
       <div id="tasksGroup" class="sidebar-submenu">
         <a href="subscriberstask.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
           Subscriber Tasks
         </a>
         <a href="videotask.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg>
           Long Video Tasks
         </a>
         <a href="shortvideotask.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
           Short Video Tasks
         </a>
         <a href="playlisttask.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
           Playlist Tasks
         </a>
         <a href="likeandcommentstasks.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           Like &amp; Comment Tasks
         </a>
         <a href="adwatchingtask.html" target="_self">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"></rect><polygon points="10 9 16 12 10 15 10 9"></polygon><path d="M8 20h8"></path><path d="M12 18v2"></path></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"></rect><polygon points="10 9 16 12 10 15 10 9"></polygon><path d="M8 20h8"></path><path d="M12 18v2"></path></svg>
           Ad Watching Tasks
         </a>
       </div>
@@ -144,28 +143,28 @@ const NAVBAR_TEMPLATE = `
 
     <a id="AccountIssues" href="issues.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
         Issues
       </span>
     </a>
 
     <a id="lnkHowTo" href="howtowork.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
         How To Work
       </span>
     </a>
 
     <a id="lnkExtension" href="exsubextension.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
         Exsub Extension
       </span>
     </a>
 
     <a id="lnkSupport" href="support.html" target="_self" class="sidebar-link">
       <span class="link-icon-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
         Contact &amp; Support
       </span>
     </a>
@@ -174,7 +173,7 @@ const NAVBAR_TEMPLATE = `
 </aside>
 `;
 
-/* ── PROFILE DROPDOWN TOGGLE ── */
+/* ── PROFILE DROPDOWN ── */
 window.toggleProfileDropdown = function() {
   const dropdown = document.getElementById("profileDropdown");
   const trigger = document.querySelector(".user-profile-trigger");
@@ -183,7 +182,6 @@ window.toggleProfileDropdown = function() {
   if (trigger) trigger.classList.toggle("expanded");
 };
 
-/* Close profile menu if clicking outside */
 document.addEventListener("click", function(e) {
   const panel = document.querySelector(".sidebar-user-panel");
   if (panel && !panel.contains(e.target)) {
@@ -194,7 +192,7 @@ document.addEventListener("click", function(e) {
   }
 });
 
-/* ── ACCORDION SUBMENUS (Channels / Tasks) ── */
+/* ── ACCORDION SUBMENUS ── */
 window.toggleSidebarGroup = function(groupId, btnEl) {
   const submenu = document.getElementById(groupId);
   if (!submenu) return;
@@ -202,10 +200,9 @@ window.toggleSidebarGroup = function(groupId, btnEl) {
   btnEl.classList.toggle("expanded");
 };
 
-/* ── ACTIVE LINK HIGHLIGHTING ── */
+/* ── ACTIVE LINK ── */
 function highlightActiveNavLinks() {
   const current = window.location.pathname.split("/").pop() || "analytics.html";
-
   document.querySelectorAll(".sidebar-link[href], .sidebar-submenu a").forEach(a => {
     const href = a.getAttribute("href");
     if (href && href.split("?")[0] === current) {
@@ -220,7 +217,7 @@ function highlightActiveNavLinks() {
   });
 }
 
-/* ── DRAWER OPEN/CLOSE (mobile) ── */
+/* ── MOBILE DRAWER ── */
 function wireSidebarDrawer() {
   const sidebar  = document.getElementById("sidebar");
   const overlay  = document.getElementById("sidebarOverlay");
@@ -246,28 +243,32 @@ function wireSidebarDrawer() {
   });
 }
 
-/* ── SIMPLE USERNAME DISPLAY (No API call, just localStorage) ── */
-function displayUsername() {
+/* ── USER PROFILE DISPLAY ── */
+function displayUserProfile() {
   const usernameEl = document.getElementById("navUsername");
+  const profilePicEl = document.getElementById("navProfilePic");
   if (!usernameEl) return;
 
-  // Get username from localStorage
   const username = localStorage.getItem("username") || "Guest";
-  
-  // Display: "Hi, {username}"
   let displayName = username.trim();
   if (displayName === "Guest") {
-    usernameEl.textContent = "Hi, Guest";
+    usernameEl.textContent = "Guest";
   } else {
-    // If username is too long, truncate it
-    if (displayName.length > 20) {
-      displayName = displayName.substring(0, 18) + "..";
+    if (displayName.length > 20) displayName = displayName.substring(0, 18) + "..";
+    usernameEl.textContent = displayName;
+  }
+
+  if (profilePicEl) {
+    const savedProfilePic = localStorage.getItem("profilePicture");
+    if (savedProfilePic && (savedProfilePic.startsWith("http") || savedProfilePic.startsWith("data:image"))) {
+      profilePicEl.src = savedProfilePic;
+    } else {
+      profilePicEl.src = "https://api.dicebear.com/10.x/notionists/svg?seed=wbzp58hw&backgroundColor=ACD1C0";
     }
-    usernameEl.textContent = `Hi, ${displayName}`;
   }
 }
 
-/* ── INITIALIZATION ── */
+/* ── INIT ── */
 function initNavbar() {
   const root = document.getElementById("navbar-root");
   if (!root) {
@@ -275,38 +276,25 @@ function initNavbar() {
     return;
   }
   root.innerHTML = NAVBAR_TEMPLATE;
-  
+
   wireSidebarDrawer();
   highlightActiveNavLinks();
-  
-  // Display username from localStorage
-  displayUsername();
+  displayUserProfile();
 
-  // Initialize session manager (for logout functionality)
   if (typeof sessionManager !== 'undefined' && sessionManager) {
-    sessionManager.init().catch(() => {
-      // Silent fail - session manager is optional for this navbar
-    });
+    sessionManager.init().catch(() => {});
   }
 
-  // Setup logout handler
   const logoutBtn = document.getElementById("lnkLogout");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function(e) {
       e.preventDefault();
-      
-      // ONLY clear session data - KEEP the saved credentials (username/password)
       if (typeof sessionManager !== 'undefined' && sessionManager) {
-        // Use clearSession() which only removes session data, not credentials
         sessionManager.clearSession();
       } else {
-        // Fallback: only remove session-related items
         localStorage.removeItem('sessionData');
         localStorage.removeItem('usercode');
-        // DO NOT remove 'username' and 'password' - these are for "Remember Me"
       }
-      
-      // Clear member data but KEEP username and password for Remember Me
       localStorage.removeItem('memberData');
       localStorage.removeItem('status');
       localStorage.removeItem('profilePicture');
@@ -327,14 +315,10 @@ function initNavbar() {
       localStorage.removeItem('violationFlag');
       localStorage.removeItem('violationReason');
       localStorage.removeItem('suspendedUntil');
-      
-      // Redirect to login page
       window.location.href = "signin.html";
     });
   }
 }
 
-// Make displayUsername available globally for any updates
-window.displayUsername = displayUsername;
-
+window.displayUserProfile = displayUserProfile;
 document.addEventListener("DOMContentLoaded", initNavbar);
