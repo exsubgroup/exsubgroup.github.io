@@ -21,7 +21,6 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 .shorts-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
 .shorts-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
 .shorts-card.playing { border-color: #ACD1C0; box-shadow: 4px 4px 0px 0px #ACD1C0; }
-.shorts-card.watched { border-color: #22c55e; background: #f0fdf4; opacity: 0.7; }
 
 .text-muted { color: var(--muted); }
 
@@ -36,6 +35,10 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 .btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
 .btn-red { background: #ef4444; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+
+.btn-yellow { background: #EBE492; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-yellow:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-yellow:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
@@ -57,49 +60,63 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 #pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(33,31,31,0.15); border-top-color: #211F1F; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Shorts Player Modal ── */
-#playerModal .modal-box { max-width: 420px; padding: 0; overflow: hidden; }
-.player-header { background: #211F1F; color: #DBD4B7; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
-.player-body { padding: 0; background: #000; position: relative; }
-.player-iframe-wrap { position: relative; width: 100%; aspect-ratio: 9 / 16; max-height: 70vh; background: #000; }
-.player-iframe-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.player-footer { padding: 14px 18px; background: #F5F4EB; border-top: 2px solid #211F1F; }
-
-/* Progress ring around timer */
-.timer-ring { position: relative; width: 60px; height: 60px; }
-.timer-ring svg { transform: rotate(-90deg); }
-.timer-ring .bg { fill: none; stroke: rgba(33,31,31,0.15); stroke-width: 4; }
-.timer-ring .fg { fill: none; stroke: #ACD1C0; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.25s linear; }
-.timer-ring .txt { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #211F1F; }
-
-/* Live stats */
 .live-stat { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #F5F4EB; border: 1px solid #211F1F; }
 
 .batch-progress { width: 100%; height: 8px; background: rgba(33,31,31,0.1); border-radius: 999px; overflow: hidden; }
 .batch-progress .fill { height: 100%; background: linear-gradient(90deg, #ACD1C0, #9bc2b1); transition: width 0.3s; }
+
+.issue-pill { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.15s; color: #211F1F; }
+.issue-pill:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 0 #211F1F; }
+.issue-pill.selected { background: #ef4444; color: #ffffff; box-shadow: 3px 3px 0 0 #211F1F; }
+
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: #211F1F; color: #DBD4B7; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; border: 2px solid #211F1F; }
+
+.instructions-box { background: #DBD4B7; border: 2px dashed #211F1F; border-radius: 16px; padding: 12px 16px; }
+
+.shorts-thumb { width: 92px; height: 164px; border-radius: 16px; overflow: hidden; border: 2px solid #211F1F; background: #211F1F; box-shadow: 3px 3px 0 0 #211F1F; position: relative; flex-shrink: 0; }
+.shorts-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.shorts-thumb .play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.shorts-thumb .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #ACD1C0; border: 2px solid #211F1F; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 0 #211F1F; }
+.shorts-thumb .duration-tag { position: absolute; bottom: 6px; right: 6px; background: #211F1F; color: #DBD4B7; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+
+#autoPlayBar .ap-timer {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    color: #211F1F;
+    min-width: 96px;
+    text-align: center;
+}
+#autoPlayBar .ap-timer-sub {
+    font-size: 10px;
+    font-weight: 700;
+    color: #211F1F;
+    opacity: 0.75;
+    text-align: center;
+    margin-top: 2px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
 </style>
 </head>
 <body>
 
-<!-- FULL-PAGE LOADER -->
 <div id="pageLoader">
     <div class="spin"></div>
     <p style="color: var(--muted); font-size: 14px;">Loading your shorts tasks…</p>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
 
-<!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-    <!-- PAGE HEADER -->
     <div class="nb-dashboard-header">
       <div class="nb-badge-container">
         <div class="nb-status-card nb-status-static">
@@ -112,14 +129,13 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
       </div>
       <h1 class="text-4xl font-black text-[#211F1F]">Shorts Tasks</h1>
       <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
-        Watch short videos automatically. Each short must be played for at least 40 seconds.
-        The system auto-closes and opens the next short — no manual marking needed.
+        Watch short videos automatically. Each short plays for its own duration, then the system
+        opens the next short.
       </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- SIDEBAR -->
     <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
 
         <div class="card rounded-3xl p-5">
@@ -138,18 +154,21 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
                 </button>
                 <button id="startAutoBtn" onclick="startAutoPlayBatch()"
                     class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
-                    ▶ Start Auto-Play
+                    ▶ Start Auto-Play (YouTube)
+                </button>
+                <button id="checkProofBtn" onclick="checkProofAndMarkWatched()"
+                    class="btn-yellow w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                    ✅ Check Proof & Mark Watched
                 </button>
             </div>
         </div>
 
-        <!-- SHORTS RULES -->
         <div class="card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-3">📏 Shorts Rules</h2>
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
                     <span class="text-muted">Watch Time</span>
-                    <span id="rule-watch" class="font-bold text-purple-700">—</span>
+                    <span id="rule-watch" class="font-bold text-purple-700">Auto (Short duration)</span>
                 </div>
                 <div class="flex justify-between">
                     <span class="text-muted">Max Batch</span>
@@ -162,7 +181,6 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
             </div>
         </div>
 
-        <!-- STATS PANEL -->
         <div id="statsPanel" class="card rounded-3xl p-5 hidden">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="font-semibold text-base">📊 My Shorts Stats</h2>
@@ -209,10 +227,8 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
     </aside>
 
-    <!-- CONTENT -->
     <main class="flex-1 min-w-0">
 
-        <!-- BANNERS -->
         <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
@@ -223,15 +239,18 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
             </div>
         </div>
 
-        <!-- AUTO-PLAY STATUS BAR -->
         <div id="autoPlayBar" class="hidden mb-6 rounded-3xl p-5" style="background:#ACD1C0;border:2px solid #211F1F;box-shadow:4px 4px 0px 0px #211F1F;">
             <div class="flex items-center justify-between gap-4 flex-wrap">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-2xl bg-[#211F1F] flex items-center justify-center text-[#DBD4B7] text-lg flex-shrink-0 animate-pulse">▶</div>
                     <div>
-                        <h3 class="font-semibold text-sm">Auto-Playing Batch</h3>
+                        <h3 class="font-semibold text-sm">Auto-Playing on YouTube</h3>
                         <p class="text-xs text-muted" id="autoPlayStatus">Starting…</p>
                     </div>
+                </div>
+                <div>
+                    <div class="ap-timer" id="apTimer">00:00</div>
+                    <div class="ap-timer-sub" id="apTimerLabel">Waiting…</div>
                 </div>
                 <div class="flex items-center gap-3 flex-1 min-w-[200px]">
                     <div class="batch-progress flex-1">
@@ -243,7 +262,6 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
             </div>
         </div>
 
-        <!-- TOP BAR -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
             <div>
                 <h2 class="text-2xl font-bold" id="taskSectionTitle">My Shorts Tasks</h2>
@@ -257,7 +275,6 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
             </div>
         </div>
 
-        <!-- HOW IT WORKS -->
         <div class="card rounded-3xl p-5 mb-6">
             <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Shorts Tasks Work</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -267,23 +284,21 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
                 </div>
                 <div class="flex items-start gap-3">
                     <div class="step-num">2</div>
-                    <div class="text-sm text-muted leading-relaxed">Click <strong class="text-[#211F1F]">Start Auto-Play</strong> — each short plays 40s then auto-closes</div>
+                    <div class="text-sm text-muted leading-relaxed">Click <strong class="text-[#211F1F]">Start Auto-Play</strong> — YouTube opens, plays each short for its own duration, closes, opens next</div>
                 </div>
                 <div class="flex items-start gap-3">
                     <div class="step-num">3</div>
-                    <div class="text-sm text-muted leading-relaxed">Each video is used only <strong class="text-[#211F1F]">once</strong> — no duplicates</div>
+                    <div class="text-sm text-muted leading-relaxed">Or click <strong class="text-[#211F1F]">Check Proof & Mark Watched</strong> to bulk-mark cached tasks</div>
                 </div>
             </div>
         </div>
 
-        <!-- TASK LIST -->
         <div id="taskList" class="space-y-4">
-            <div class="skeleton h-[120px]"></div>
-            <div class="skeleton h-[120px]"></div>
-            <div class="skeleton h-[120px]"></div>
+            <div class="skeleton h-[180px]"></div>
+            <div class="skeleton h-[180px]"></div>
+            <div class="skeleton h-[180px]"></div>
         </div>
 
-        <!-- EMPTY STATE -->
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
             <div class="text-5xl mb-4">📱</div>
             <h3 class="text-xl font-semibold mb-2">No Shorts Tasks</h3>
@@ -301,16 +316,14 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 </main>
 </main>
 
-<!-- CREATE MODAL -->
 <div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Create Shorts Tasks</h2>
             <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
         </div>
-        <p class="text-muted text-sm mb-5 leading-relaxed">
-            The system will find up to <strong class="text-[#211F1F]">10 members</strong> with available
-            short videos and create paired tasks. Each of your shorts can only be used <strong class="text-[#211F1F]">once</strong>.
+        <p class="text-muted text-sm mb-5 leading-relaxed" id="createModalIntro">
+            The system will pair your shorts with eligible members' shorts. Each of your shorts can only be used <strong class="text-[#211F1F]">once</strong>.
         </p>
         <div class="instructions-box mb-5">
             <p class="text-xs text-purple-700 leading-relaxed">
@@ -339,46 +352,6 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
     </div>
 </div>
 
-<!-- PLAYER MODAL -->
-<div id="playerModal" class="modal-bg" onclick="if(event.target===this)closePlayer()">
-    <div class="modal-box">
-        <div class="player-header">
-            <div>
-                <p class="text-xs opacity-70">Now Playing</p>
-                <p id="playerTaskId" class="font-bold text-sm">SHT-0001</p>
-            </div>
-            <button onclick="closePlayer()" class="w-8 h-8 rounded-full bg-[#DBD4B7]/20 flex items-center justify-center hover:bg-[#DBD4B7]/40 transition text-sm">✕</button>
-        </div>
-        <div class="player-body">
-            <div class="player-iframe-wrap">
-                <iframe id="playerIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-        </div>
-        <div class="player-footer">
-            <div class="flex items-center justify-between gap-4">
-                <div class="flex-1 min-w-0">
-                    <p id="playerVideoTitle" class="font-semibold text-sm truncate">—</p>
-                    <p id="playerChannel" class="text-xs text-muted truncate">—</p>
-                </div>
-                <div class="timer-ring">
-                    <svg width="60" height="60" viewBox="0 0 60 60">
-                        <circle class="bg" cx="30" cy="30" r="26"/>
-                        <circle class="fg" id="timerRing" cx="30" cy="30" r="26"
-                            stroke-dasharray="163.36" stroke-dashoffset="0"/>
-                    </svg>
-                    <div class="txt" id="playerTimer">40</div>
-                </div>
-            </div>
-            <div class="mt-3 flex items-center gap-2 flex-wrap">
-                <span class="live-stat">⏱ <span id="playerElapsed">0</span>s / <span id="playerTarget">40</span>s</span>
-                <span class="live-stat">📊 <span id="playerProgress">0</span>%</span>
-                <span class="live-stat" id="playerStatusBadge">● Playing</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- REPORT ISSUE MODAL -->
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
@@ -407,9 +380,15 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
     </div>
 </div>
 
-<!-- SCRIPTS -->
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLXNwmJnXtZar2Pas5v3nRXgwMmDzPdEmKW1oJNjQH6O3i8U0ObsA3gHIFW8Y4vMcHWA/exec';
+// ════════════════════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxG9-yFV9fAtKD8SPxEbzx0lfcsf6ZxGY-pihREdh7LY2MDZyQcHE4GLb6_ETn6865i/exec';
+
+// ⭐ Minimum duration used only when VideoDuration is missing (fallback)
+const MIN_SHORT_DURATION = 10;
+
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
 const USER_CODE = localStorage.getItem("usercode") || "";
@@ -424,20 +403,24 @@ let member = null;
 let perfStats = null;
 let isLoading = false;
 let stats = { total: 0, notWorkYet: 0, watched: 0, rejected: 0 };
-let watchSeconds = 40;
 let maxBatch = 50;
+let pendingLimit = 5;
+let availableShortsCount = 0;
+let tasksPerCreate = 10;
 
 // ── AUTO-PLAY STATE ──
+let autoPlayActive = false;
 let autoPlayQueue = [];
 let autoPlayIndex = 0;
-let autoPlayActive = false;
-let currentTimer = null;
-let currentElapsed = 0;
+let pageTimerInterval = null;
+let pageTimerStart = 0;
+let pageTimerDuration = 0;
 let currentTask = null;
-let iframeLoadTimer = null;
-let currentIframe = null;
+let countdownFallbackTimeout = null;
 
-// ── INIT ──
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', async () => {
     await init();
 });
@@ -487,22 +470,23 @@ function applyData(data) {
     perfStats = data.perfStats || null;
     stats = data.fullStats || data.stats || stats;
     allTasks = data.tasks || [];
-    watchSeconds = data.watchSeconds || 40;
     maxBatch = data.maxBatch || 50;
+    pendingLimit = data.pendingLimit || 5;
+    availableShortsCount = data.availableShortsCount || 0;
+    tasksPerCreate = data.tasksPerCreate || 10;
     updateRules();
 }
 
 function updateRules() {
-    document.getElementById('rule-watch').textContent = watchSeconds + 's';
     document.getElementById('rule-max').textContent = maxBatch;
 }
 
 // ── FETCH TASKS ──
 async function fetchTasks() {
     document.getElementById('taskList').innerHTML = `
-        <div class="skeleton h-[120px]"></div>
-        <div class="skeleton h-[120px]"></div>
-        <div class="skeleton h-[120px]"></div>
+        <div class="skeleton h-[180px]"></div>
+        <div class="skeleton h-[180px]"></div>
+        <div class="skeleton h-[180px]"></div>
     `;
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getShortsTasks&userCode=${encodeURIComponent(USER_CODE)}`);
@@ -552,9 +536,21 @@ function renderList() {
 }
 
 function cardHTML(t) {
-    const dur = t.VideoDuration || 0;
+    const dur = parseInt(t.VideoDuration) || MIN_SHORT_DURATION;
     const channel = t.TargetChannelName || t.TargetUserCode || '—';
     const handle = t.TargetChannelHandle || '';
+    const title = t.VideoTitle || '';
+    const thumb = t.VideoThumbnail || '';
+    const safeTitle = String(title).replace(/"/g, '&quot;');
+    const fallbackYt = t.VideoId ? `https://i.ytimg.com/vi/${t.VideoId}/hqdefault.jpg` : '';
+
+    const imgTag = thumb || fallbackYt
+        ? `<img src="${thumb || fallbackYt}"
+                alt="Short thumbnail"
+                loading="lazy"
+                data-fb="${fallbackYt}"
+                onerror="if(!this.dataset.tried && this.dataset.fb && this.src!==this.dataset.fb){this.dataset.tried='1';this.src=this.dataset.fb;}else{this.onerror=null;this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:#DBD4B7;&quot;>📱</div>';}">`
+        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:#DBD4B7;">📱</div>`;
 
     return `
     <div class="shorts-card rounded-3xl p-5" data-task-id="${t.TaskID}">
@@ -562,30 +558,44 @@ function cardHTML(t) {
             <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge bg-yellow-500/15 text-yellow-700"><span class="dot bg-yellow-400"></span>Not Watched</span>
             <span class="status-badge bg-purple-500/15 text-purple-700">⏱ ${dur}s short</span>
-            <span class="status-badge bg-blue-500/15 text-blue-700">🎯 Watch ${watchSeconds}s</span>
+            <span class="status-badge bg-blue-500/15 text-blue-700">🎯 Watch ${dur}s</span>
             <span class="status-badge bg-teal-500/15 text-teal-700">🔒 Unique Pair</span>
         </div>
+
         <div class="flex flex-col sm:flex-row gap-4">
-            <div class="flex items-center gap-3 flex-1 min-w-0">
-                ${t.TargetChannelImage
-                    ? `<img src="${t.TargetChannelImage}" class="w-12 h-12 rounded-xl object-cover border border-[#211F1F]/15" onerror="this.style.display='none'">`
-                    : `<div class="w-12 h-12 rounded-xl bg-white border border-[#211F1F]/15 flex items-center justify-center text-lg">📱</div>`}
-                <div class="min-w-0 flex-1">
-                    <p class="font-semibold text-sm truncate">${channel}</p>
-                    ${handle ? `<p class="text-xs text-purple-700 font-mono">${handle}</p>` : ''}
-                    <p class="text-xs text-muted mt-1">Video: <span class="font-mono">${t.VideoId}</span></p>
+            <div class="shorts-thumb mx-auto sm:mx-0">
+                ${imgTag}
+                <div class="play-overlay">
+                    <div class="play-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#211F1F">
+                            <polygon points="6,4 20,12 6,20" />
+                        </svg>
+                    </div>
                 </div>
+                <div class="duration-tag">${dur}s</div>
             </div>
-            <div class="flex items-center gap-2 sm:w-auto">
-                <button onclick="playSingle('${t.TaskID}')" class="btn-teal px-4 py-2.5 rounded-2xl text-xs font-bold flex-1 sm:flex-none">
-                    ▶ Play
-                </button>
-                <a href="${t.VideoUrl}" target="_blank" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium flex-1 sm:flex-none text-center">
-                    ↗ Open
-                </a>
-                <button onclick="openIssueModal('${t.TaskID}')" class="btn-outline px-3 py-2.5 rounded-2xl text-xs" title="Report issue">
-                    ⚠
-                </button>
+
+            <div class="flex-1 min-w-0 flex flex-col justify-between">
+                <div class="flex items-start gap-3 mb-3">
+                    ${t.TargetChannelImage
+                        ? `<img src="${t.TargetChannelImage}" class="w-10 h-10 rounded-xl object-cover border border-[#211F1F]/15 flex-shrink-0" onerror="this.style.display='none'">`
+                        : `<div class="w-10 h-10 rounded-xl bg-white border border-[#211F1F]/15 flex items-center justify-center text-lg flex-shrink-0">📺</div>`}
+                    <div class="min-w-0 flex-1">
+                        <p class="font-semibold text-sm truncate">${channel}</p>
+                        ${handle ? `<p class="text-xs text-purple-700 font-mono truncate">${handle}</p>` : ''}
+                        ${title ? `<p class="text-xs text-muted mt-1 truncate" title="${safeTitle}">📹 ${title}</p>` : ''}
+                        <p class="text-xs text-muted mt-1">Video: <span class="font-mono">${t.VideoId}</span></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    <a href="${t.VideoUrl}" target="_blank" class="btn-teal px-4 py-2.5 rounded-2xl text-xs font-bold flex-1 sm:flex-none text-center">
+                        ▶ Play on YouTube
+                    </a>
+                    <button onclick="openIssueModal('${t.TaskID}')" class="btn-outline px-3 py-2.5 rounded-2xl text-xs" title="Report issue">
+                        ⚠
+                    </button>
+                </div>
             </div>
         </div>
     </div>`;
@@ -610,7 +620,6 @@ function toggleStats() {
     document.getElementById('statsPanel').classList.toggle('hidden');
 }
 
-// ── BLOCK CHECK ──
 function checkBlocked() {
     if (!member) return;
     const suspended = member.ViolationFlag === 'Suspended';
@@ -627,7 +636,7 @@ function checkBlocked() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// AUTO-PLAY SYSTEM
+// TAB-BASED AUTO-PLAY — uses the ACTUAL VideoDuration per task
 // ════════════════════════════════════════════════════════════════
 
 function startAutoPlayBatch() {
@@ -635,35 +644,153 @@ function startAutoPlayBatch() {
         showToast('No tasks to play.', true);
         return;
     }
+
     autoPlayQueue = [...allTasks];
     autoPlayIndex = 0;
     autoPlayActive = true;
 
     document.getElementById('autoPlayBar').classList.remove('hidden');
     updateBatchProgress();
+    setPageTimer(0, 0, 'Starting…');
 
-    playNextInQueue();
+    openCurrentShort();
 }
 
 function stopAutoPlayBatch() {
     autoPlayActive = false;
     autoPlayQueue = [];
     autoPlayIndex = 0;
-    clearCurrentTimer();
-    closePlayer();
+
+    clearInterval(pageTimerInterval);
+    pageTimerInterval = null;
+
+    if (countdownFallbackTimeout) {
+        clearTimeout(countdownFallbackTimeout);
+        countdownFallbackTimeout = null;
+    }
+
     document.getElementById('autoPlayBar').classList.add('hidden');
     showToast('Auto-play stopped.');
 }
 
-function playNextInQueue() {
+function openCurrentShort() {
     if (!autoPlayActive) return;
     if (autoPlayIndex >= autoPlayQueue.length) {
         stopAutoPlayBatch();
         showToast('🎉 Batch complete!');
         return;
     }
-    const task = autoPlayQueue[autoPlayIndex];
-    playSingle(task.TaskID, true);
+
+    currentTask = autoPlayQueue[autoPlayIndex];
+
+    // ⭐ Use the Short's actual duration (fallback to 10s if missing)
+    const dur = parseInt(currentTask.VideoDuration) || MIN_SHORT_DURATION;
+    const url = `https://www.youtube.com/shorts/${currentTask.VideoId}`;
+
+    updateBatchProgress();
+    document.getElementById('autoPlayStatus').textContent =
+        `Opening YouTube (${autoPlayIndex + 1}/${autoPlayQueue.length}) — ${currentTask.VideoId} · ${dur}s`;
+
+    // Open the YouTube tab via a synthetic <a> click.
+    try {
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (e) {
+        try { window.open(url, '_blank'); } catch (e2) {}
+    }
+
+    // Start the visible page timer for exactly this Short's duration
+    setPageTimer(dur, dur, `Short duration: ${dur}s`);
+    startPageCountdown(currentTask, dur);
+}
+
+function startPageCountdown(task, durationSec) {
+    stopPageTimer();
+
+    pageTimerStart = Date.now();
+    pageTimerDuration = durationSec;
+
+    pageTimerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - pageTimerStart) / 1000);
+        const remaining = Math.max(0, durationSec - elapsed);
+
+        updatePageTimerDisplay(remaining);
+
+        if (remaining <= 0) {
+            stopPageTimer();
+            countdownFallbackTimeout = setTimeout(() => {
+                if (autoPlayActive && autoPlayQueue[autoPlayIndex]?.TaskID === task.TaskID) {
+                    advanceToNext(task);
+                }
+            }, 1200);
+        }
+    }, 1000);
+}
+
+function stopPageTimer() {
+    if (pageTimerInterval) {
+        clearInterval(pageTimerInterval);
+        pageTimerInterval = null;
+    }
+}
+
+function setPageTimer(totalSec, remainingSec, label) {
+    pageTimerDuration = totalSec;
+    updatePageTimerDisplay(remainingSec);
+    document.getElementById('apTimerLabel').textContent = label || '';
+}
+
+function updatePageTimerDisplay(remainingSec) {
+    const m = String(Math.floor(remainingSec / 60)).padStart(2, '0');
+    const s = String(remainingSec % 60).padStart(2, '0');
+    document.getElementById('apTimer').textContent = `${m}:${s}`;
+}
+
+async function advanceToNext(task) {
+    if (!autoPlayActive) return;
+
+    stopPageTimer();
+
+    // ⭐ Watched seconds = exactly what the page-side timer ran
+    const watched = pageTimerDuration || parseInt(task.VideoDuration) || MIN_SHORT_DURATION;
+    await markTaskWatched(task, watched);
+
+    autoPlayIndex++;
+    updateBatchProgress();
+
+    setTimeout(() => {
+        if (autoPlayActive) openCurrentShort();
+    }, 900);
+}
+
+async function markTaskWatched(task, watchedSecondsValue) {
+    try {
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'autoMarkShortsWatched',
+                taskId: task.TaskID,
+                userCode: USER_CODE,
+                targetUserCode: task.TargetUserCode,
+                videoId: task.VideoId,
+                watchedSeconds: watchedSecondsValue
+            })
+        });
+    } catch (e) {
+        console.warn('Mark failed', e);
+    }
+
+    allTasks = allTasks.filter(t => t.TaskID !== task.TaskID);
+    stats.notWorkYet = Math.max(0, stats.notWorkYet - 1);
+    stats.watched = (stats.watched || 0) + 1;
+    renderList();
+    renderStats();
 }
 
 function updateBatchProgress() {
@@ -675,138 +802,135 @@ function updateBatchProgress() {
     document.getElementById('autoPlayStatus').textContent = `Playing ${done + 1} of ${total}…`;
 }
 
-// ── PLAY SINGLE SHORT ──
-function playSingle(taskId, autoMode = false) {
-    const task = allTasks.find(t => t.TaskID === taskId);
-    if (!task) { showToast('Task not found.', true); return; }
+// ════════════════════════════════════════════════════════════════
+// CHECK PROOF & MARK WATCHED
+// ════════════════════════════════════════════════════════════════
+async function checkProofAndMarkWatched() {
+    if (allTasks.length === 0) {
+        showToast('No pending tasks to mark.', true);
+        return;
+    }
 
-    currentTask = task;
-    currentElapsed = 0;
-    document.getElementById('playerTaskId').textContent = task.TaskID;
-    document.getElementById('playerVideoTitle').textContent = task.VideoId;
-    document.getElementById('playerChannel').textContent = task.TargetChannelName || task.TargetUserCode || '';
-    document.getElementById('playerTarget').textContent = watchSeconds;
-    document.getElementById('playerElapsed').textContent = '0';
-    document.getElementById('playerProgress').textContent = '0';
-    document.getElementById('playerTimer').textContent = watchSeconds;
-    document.getElementById('playerStatusBadge').innerHTML = '● Playing';
+    const btn = document.getElementById('checkProofBtn');
+    btn.disabled = true;
+    btn.textContent = '🔎 Checking proofs…';
 
-    const ring = document.getElementById('timerRing');
-    const circumference = 2 * Math.PI * 26;
-    ring.style.strokeDasharray = circumference;
-    ring.style.strokeDashoffset = 0;
+    const proofsByVideo = {};
 
-    const embedUrl = `https://www.youtube.com/embed/${task.VideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${task.VideoId}&modestbranding=1&rel=0&playsinline=1`;
-
-    const iframe = document.getElementById('playerIframe');
-    iframe.src = embedUrl;
-
-    document.getElementById('playerModal').classList.add('open');
-
-    startCurrentTimer();
-}
-
-function startCurrentTimer() {
-    clearCurrentTimer();
-    currentElapsed = 0;
-
-    const circumference = 2 * Math.PI * 26;
-
-    currentTimer = setInterval(() => {
-        currentElapsed += 1;
-        const remaining = Math.max(0, watchSeconds - currentElapsed);
-        const pct = Math.min(100, Math.round((currentElapsed / watchSeconds) * 100));
-
-        document.getElementById('playerElapsed').textContent = currentElapsed;
-        document.getElementById('playerProgress').textContent = pct;
-        document.getElementById('playerTimer').textContent = remaining;
-
-        const offset = circumference * (currentElapsed / watchSeconds);
-        document.getElementById('timerRing').style.strokeDashoffset = offset;
-
-        if (currentElapsed >= watchSeconds) {
-            clearCurrentTimer();
-            onShortComplete();
-        }
-    }, 1000);
-}
-
-function clearCurrentTimer() {
-    if (currentTimer) { clearInterval(currentTimer); currentTimer = null; }
-}
-
-// ── WHEN SHORT COMPLETES 40s ──
-async function onShortComplete() {
-    if (!currentTask) return;
-
-    const task = currentTask;
-    document.getElementById('playerStatusBadge').innerHTML = '✅ Watched';
-
-    task.Status = 'Watched';
-    task.WatchedSeconds = watchSeconds;
-    stats.notWorkYet = Math.max(0, stats.notWorkYet - 1);
-    stats.watched = (stats.watched || 0) + 1;
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith('exsub_last_proof_')) continue;
+        try {
+            const proof = JSON.parse(localStorage.getItem(key) || '{}');
+            const vid = proof.videoId || key.replace('exsub_last_proof_', '');
+            if (!vid) continue;
+            const prev = proofsByVideo[vid];
+            if (!prev || (proof.watchedSeconds || 0) > (prev.watchedSeconds || 0)) {
+                proofsByVideo[vid] = proof;
+            }
+        } catch (e) {}
+    }
 
     try {
-        await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'autoMarkShortsWatched',
-                taskId: task.TaskID,
-                userCode: USER_CODE,
-                targetUserCode: task.TargetUserCode,
-                videoId: task.VideoId,
-                watchedSeconds: watchSeconds
-            })
-        });
-    } catch (e) {
-        console.warn('Server mark failed', e);
+        const log = JSON.parse(localStorage.getItem('exsub_proof_log') || '[]');
+        if (Array.isArray(log)) {
+            log.forEach(proof => {
+                const vid = proof.videoId;
+                if (!vid) return;
+                const prev = proofsByVideo[vid];
+                if (!prev || (proof.watchedSeconds || 0) > (prev.watchedSeconds || 0)) {
+                    proofsByVideo[vid] = proof;
+                }
+            });
+        }
+    } catch (e) {}
+
+    // ⭐ Eligible = any proof with watchedSeconds >= 10 (the minimum short duration)
+    const eligibleTasks = allTasks.filter(t => {
+        const p = proofsByVideo[t.VideoId];
+        if (!p) return false;
+        const ws = parseInt(p.watchedSeconds) || 0;
+        const taskDur = parseInt(t.VideoDuration) || MIN_SHORT_DURATION;
+        return ws >= Math.min(taskDur, MIN_SHORT_DURATION) && ws >= MIN_SHORT_DURATION;
+    });
+
+    if (eligibleTasks.length === 0) {
+        btn.disabled = false;
+        btn.textContent = '✅ Check Proof & Mark Watched';
+        showToast('No cached proofs found for your tasks.', true);
+        return;
     }
 
-    allTasks = allTasks.filter(t => t.TaskID !== task.TaskID);
-    renderList();
-    renderStats();
+    let okCount = 0;
+    let failCount = 0;
 
-    setTimeout(() => {
-        closePlayer(true);
-        if (autoPlayActive) {
-            autoPlayIndex++;
-            updateBatchProgress();
-            setTimeout(playNextInQueue, 800);
-        }
-    }, 1200);
-}
+    for (const task of eligibleTasks) {
+        const proof = proofsByVideo[task.VideoId];
+        const watched = parseInt(proof.watchedSeconds) || parseInt(task.VideoDuration) || MIN_SHORT_DURATION;
 
-function closePlayer(skipStop = false) {
-    if (!skipStop) {
-        clearCurrentTimer();
-        if (autoPlayActive) {
-            autoPlayActive = false;
-            document.getElementById('autoPlayBar').classList.add('hidden');
+        try {
+            const res = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'autoMarkShortsWatched',
+                    taskId: task.TaskID,
+                    userCode: USER_CODE,
+                    targetUserCode: task.TargetUserCode,
+                    videoId: task.VideoId,
+                    watchedSeconds: watched
+                })
+            });
+            const data = await res.json();
+            if (data.success) okCount++;
+            else failCount++;
+        } catch (e) {
+            failCount++;
         }
     }
-    document.getElementById('playerModal').classList.remove('open');
-    const iframe = document.getElementById('playerIframe');
-    iframe.src = 'about:blank';
-    currentTask = null;
+
+    await fetchTasks();
+
+    btn.disabled = false;
+    btn.textContent = '✅ Check Proof & Mark Watched';
+
+    showToast(`✅ Marked ${okCount} task(s)` + (failCount ? ` · ${failCount} failed` : ''));
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Proof Verified',
+        html: `<b>${okCount}</b> task(s) marked as Watched.<br>` +
+              (failCount ? `<span style="color:#ef4444;">${failCount} failed to mark.</span>` : ''),
+        confirmButtonColor: '#211F1F'
+    });
 }
 
 // ════════════════════════════════════════════════════════════════
 // CREATE TASKS
 // ════════════════════════════════════════════════════════════════
-
 function openCreateModal() {
-    const pending = allTasks.length;
-    const canCreate = pending < 5;
+    const pending = (stats && stats.notWorkYet) ? stats.notWorkYet : 0;
+    const remaining = Math.max(0, pendingLimit - pending);
+    const canCreate = remaining > 0 && availableShortsCount > 0;
 
-    document.getElementById('modalPendingCount').textContent = pending;
-    document.getElementById('modalShortsCount').textContent = '—';
-    document.getElementById('modalCanCreate').textContent = canCreate ? 'Yes' : 'No — complete pending first';
-    document.getElementById('modalCanCreate').className = canCreate ? 'font-semibold text-green-600' : 'font-semibold text-red-600';
+    document.getElementById('modalPendingCount').textContent = `${pending} / ${pendingLimit}`;
+    document.getElementById('modalShortsCount').textContent = availableShortsCount;
+    document.getElementById('modalCanCreate').textContent =
+        canCreate
+            ? `Up to ${Math.min(tasksPerCreate, availableShortsCount, remaining)} task(s)`
+            : (availableShortsCount === 0
+                ? 'No eligible shorts left'
+                : `Pending limit reached (${pending}/${pendingLimit})`);
+    document.getElementById('modalCanCreate').className =
+        canCreate ? 'font-semibold text-green-600' : 'font-semibold text-red-600';
 
     document.getElementById('doCreateBtn').disabled = !canCreate;
     document.getElementById('createResultBox').classList.add('hidden');
+
+    const intro = document.getElementById('createModalIntro');
+    if (intro) {
+        intro.innerHTML = `The system will pair your shorts with eligible members' shorts — up to <strong class="text-[#211F1F]">${tasksPerCreate}</strong> task(s) per batch. Each of your shorts can only be used <strong class="text-[#211F1F]">once</strong>.`;
+    }
 
     document.getElementById('createModal').classList.add('open');
 }
@@ -831,13 +955,32 @@ async function doCreateTasks() {
         box.classList.remove('hidden');
 
         if (data.success) {
-            box.textContent = `✅ ${data.created} task(s) created!`;
+            let html = `<p class="font-bold text-green-700 mb-2">✅ ${data.created} task(s) created!</p>`;
+
+            if (data.pairedSummary) {
+                const rows = Object.entries(data.pairedSummary)
+                    .map(([code, n]) => `<li>→ <b>${code}</b>: ${n} pair${n > 1 ? 's' : ''}</li>`)
+                    .join('');
+                html += `<p class="text-xs text-green-700 mt-2 mb-1"><b>Paired with:</b></p>
+                         <ul class="text-xs text-green-700 list-disc list-inside space-y-0.5">${rows}</ul>`;
+            }
+            if (data.newPairs && data.newPairs.length) {
+                html += `<p class="text-xs text-green-600 mt-2">🆕 New members: ${data.newPairs.join(', ')}</p>`;
+            }
+            if (data.existingPairs && Object.keys(data.existingPairs).length) {
+                const ex = Object.entries(data.existingPairs)
+                    .map(([c, n]) => `${c} (${n})`).join(', ');
+                html += `<p class="text-xs text-green-600 mt-1">🔁 Repeated: ${ex}</p>`;
+            }
+
+            box.innerHTML = html;
             box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             showToast(`${data.created} task(s) created!`);
+
             setTimeout(async () => {
                 closeCreateModal();
                 await refreshTasks();
-            }, 1200);
+            }, 1800);
         } else {
             box.textContent = data.message || 'Could not create tasks.';
             box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
@@ -853,7 +996,6 @@ async function doCreateTasks() {
 // ════════════════════════════════════════════════════════════════
 // ISSUE REPORTING
 // ════════════════════════════════════════════════════════════════
-
 let selectedIssuePill = '';
 
 function openIssueModal(taskId) {
@@ -932,7 +1074,6 @@ async function doSubmitIssue() {
 // ════════════════════════════════════════════════════════════════
 // STATUS PAGES
 // ════════════════════════════════════════════════════════════════
-
 function showNotEnrolled(message) {
     const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
     if (c) c.innerHTML = `
