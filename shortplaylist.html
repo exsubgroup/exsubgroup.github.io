@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shorts Playlist — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+<style>
+:root {
+    --bg: #F5F4EB;
+    --ink: #211F1F;
+    --mint: #ACD1C0;
+    --sand: #DBD4B7;
+    --muted: #6b7280;
+}
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; }
+.text-muted { color: var(--muted); }
+
+.btn-purple { background: #211F1F; color: white; border: 2px solid #211F1F; border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; }
+.btn-purple:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-purple:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-outline { background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F; border-radius: 14px; transition: 0.15s; cursor: pointer; }
+.btn-outline:hover:not(:disabled) { background: var(--sand); }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-teal { background: var(--mint); color: #211F1F; border: 2px solid #211F1F; border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; }
+.btn-teal:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-teal:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.btn-red { background: #ef4444; color: white; border: 2px solid #211F1F; border-radius: 14px; box-shadow: 3px 3px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; }
+.btn-red:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.btn-red:disabled { opacity: 0.4; box-shadow: none; transform:none; cursor: not-allowed; }
+
+.filter-tab { background: #ffffff; border: 2px solid #211F1F; transition: 0.2s; color: var(--ink); cursor: pointer; white-space: nowrap; }
+.filter-tab:hover { background: var(--sand); }
+.filter-tab.active { background: #211F1F; border-color: #211F1F; color: white; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.spinner { width: 40px; height: 40px; border-radius: 50%; border: 3px solid rgba(33,31,31,0.15); border-top-color: #211F1F; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #211F1F; color: white; padding: 13px 22px; border-radius: 14px; font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; border: 2px solid #211F1F; }
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: #b91c1c; }
+
+.skeleton { background: linear-gradient(90deg, #eceadd 25%, #ddd9c4 50%, #eceadd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 24px; }
+@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+.cat-tabs-wrap { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; -ms-overflow-style: none; scrollbar-width: none; }
+.cat-tabs-wrap::-webkit-scrollbar { display: none; }
+.cat-tab { flex-shrink: 0; display: flex; align-items: center; gap: 8px; background: #ffffff; border: 2px solid #211F1F; border-radius: 16px; padding: 10px 16px; cursor: pointer; transition: 0.15s; box-shadow: 3px 3px 0px 0px #211F1F; }
+.cat-tab:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0px 0px #211F1F; }
+.cat-tab.active { background: #211F1F; color: #F5F4EB; }
+.cat-tab-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #211F1F; flex-shrink: 0; }
+.cat-tab-label { font-weight: 800; font-size: 13px; }
+.cat-tab-range { font-size: 10.5px; opacity: 0.7; font-weight: 600; white-space: nowrap; }
+.cat-tab-status { font-size: 13px; margin-left: 2px; }
+
+.meter-track { position: relative; height: 22px; border-radius: 999px; background: #ffffff; border: 2px solid #211F1F; overflow: hidden; }
+.meter-fill { height: 100%; border-radius: 999px 0 0 999px; transition: width 0.5s cubic-bezier(.4,0,.2,1), background 0.3s; }
+.meter-band { position: absolute; top: -2px; bottom: -2px; border-left: 2px dashed rgba(33,31,31,0.55); border-right: 2px dashed rgba(33,31,31,0.55); }
+
+.pick-card { background: #ffffff; border: 2px solid #211F1F; border-radius: 18px; box-shadow: 4px 4px 0px 0px #211F1F; overflow: hidden; transition: 0.2s ease; cursor: pointer; position: relative; }
+.pick-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.pick-card.selected { background: #ACD1C0; }
+.pick-card.locked { cursor: default; }
+.pick-card.locked:hover { transform: none; box-shadow: 4px 4px 0px 0px #211F1F; }
+.pick-thumb-wrap { position: relative; width: 100%; aspect-ratio: 9/16; background: #e8e5d8; border-bottom: 2px solid #211F1F; overflow: hidden; }
+.pick-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pick-thumb-wrap .play-badge { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(33,31,31,0.08); font-size: 26px; }
+.duration-chip { position: absolute; bottom: 8px; right: 8px; background: #211F1F; color: white; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+.type-chip { position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.92); color: #211F1F; font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; border: 1px solid #211F1F; text-transform: uppercase; letter-spacing: 0.03em; }
+.pick-check { position: absolute; top: 8px; left: 8px; width: 26px; height: 26px; border-radius: 8px; background: #ffffff; border: 2px solid #211F1F; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: transparent; transition: 0.15s; }
+.pick-card.selected .pick-check { background: #211F1F; color: #ACD1C0; }
+.also-in-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.also-in-chip { display: inline-flex; align-items: center; gap: 3px; font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px; border: 1px solid #211F1F; background: #F5F4EB; }
+.also-in-chip .dot { width: 6px; height: 6px; }
+
+.name-plate { background: #211F1F; color: #F5F4EB; border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.name-plate .plate-name { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; letter-spacing: 0.02em; color: #ACD1C0; }
+.copy-btn { background: #ACD1C0; color: #211F1F; border: none; border-radius: 10px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.copy-btn:hover { background: #9bc2b1; }
+
+.step-row { display: flex; gap: 12px; align-items: flex-start; }
+.step-num { width: 26px; height: 26px; border-radius: 50%; background: #211F1F; color: #F5F4EB; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+.estimate-box { background: #F5F4EB; border: 1.5px dashed #211F1F; border-radius: 14px; padding: 10px 12px; font-size: 11.5px; color: #4b5563; line-height: 1.5; font-weight: 600; }
+
+/* ── Search + sort bar ── */
+.tools-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.search-wrap { position: relative; flex: 1 1 220px; min-width: 180px; }
+.search-wrap input {
+    width: 100%;
+    background: #ffffff;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    padding: 10px 14px 10px 38px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #211F1F;
+    outline: none;
+    transition: 0.15s;
+}
+.search-wrap input:focus { box-shadow: 4px 4px 0px 0px #211F1F; transform: translate(-1px,-1px); }
+.search-wrap .search-icon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 14px; pointer-events: none; opacity: 0.55;
+}
+.sort-select {
+    background: #ffffff;
+    border: 2px solid #211F1F;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #211F1F;
+    cursor: pointer;
+    outline: none;
+}
+.sort-select:focus { box-shadow: 4px 4px 0px 0px #211F1F; }
+
+.swal2-popup { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 24px !important; font-family: 'Inter', sans-serif !important; box-shadow: 6px 6px 0px 0px #211F1F !important; }
+.swal2-title { color: #211F1F !important; }
+.swal2-html-container { color: #4b5563 !important; }
+.swal2-confirm { background: #211F1F !important; border-radius: 14px !important; font-weight: 700 !important; }
+.swal2-cancel { background: transparent !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 14px !important; }
+
+.mobile-tracker { position: fixed; bottom: 22px; left: 20px; right: 20px; z-index: 50; background: #ACD1C0; border: 3px solid #211F1F; box-shadow: 0 -4px 20px rgba(33, 31, 31, 0.15); padding: 10px; border-radius: 20px; }
+</style>
+</head>
+<body class="pb-24 lg:pb-0">
+
+<div id="toast"></div>
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+<script src="session-manager.js"></script>
+
+<main class="page-content relative z-10 pb-20 px-4">
+<main class="relative z-10 pt-5 pb-20 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
+    <div class="spinner"></div>
+    <div class="text-gray-500 text-sm">Loading your shorts playlists…</div>
+  </div>
+
+  <div id="errorState" class="hidden text-center py-32">
+    <div class="text-5xl mb-4">⚠️</div>
+    <div class="text-xl font-bold mb-2">Could not load data</div>
+    <div id="errorMsg" class="text-gray-500 text-sm mb-6"></div>
+    <button onclick="init()" class="btn-purple px-6 py-3 rounded-xl font-semibold text-sm">Retry</button>
+  </div>
+
+  <div id="dashContent" class="hidden">
+
+    <div class="nb-dashboard-header">
+      <div class="nb-badge-container">
+        <div class="nb-status-card nb-status-static">
+          <span class="nb-card-icon">📱</span>
+          <span class="nb-card-title">Shorts Playlist</span>
+        </div>
+        <div id="badgePlaylistStatus" class="nb-status-card">
+          <span id="statusIcon" class="nb-card-icon">🕓</span>
+          <span id="statusLabel" class="nb-card-title">Not Started</span>
+        </div>
+        <a href="channels.html?view=promotional" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">📢</span>
+          <span class="nb-card-title">Channel Settings</span>
+        </a>
+      </div>
+      <h1 class="text-4xl font-black text-[#211F1F]">Shorts Playlists</h1>
+      <div class="text-gray-500 text-sm mt-1 leading-6" style="width: 100%;">
+        Build up to <strong class="text-[#211F1F]">5 shorts playlists</strong> — one per duration category — from your
+        promotional <strong>Shorts</strong> videos. Other members watch your shorts playlist to boost views and engagement.
+      </div>
+    </div>
+
+    <div class="cat-tabs-wrap mb-6" id="categoryTabs"></div>
+
+    <div id="noChannelWrap" class="hidden card rounded-3xl p-14 text-center">
+        <div class="text-5xl mb-4">📺</div>
+        <h3 class="text-xl font-semibold mb-2">No Promotional Channel</h3>
+        <p class="text-muted text-sm mb-7 leading-relaxed">Add a promotional channel first, then come back here to build your shorts playlists.</p>
+        <a href="channels.html?view=promotional" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Add Channel</a>
+    </div>
+
+    <div id="mainLayout" class="hidden flex flex-col lg:flex-row gap-6">
+
+    <aside class="w-full lg:w-[300px] xl:w-[320px] space-y-5 lg:sticky lg:top-6 lg:self-start flex-shrink-0">
+
+        <div id="channelCard" class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Channel</h2>
+            <div class="flex items-center gap-3 mb-3">
+                <img id="chanImage" src="" alt="" class="w-11 h-11 rounded-full object-cover border-2 border-[#211F1F]" onerror="this.style.display='none'">
+                <div class="min-w-0">
+                    <div id="chanName" class="font-bold text-sm truncate">—</div>
+                    <div id="chanHandle" class="text-xs text-muted font-mono truncate">—</div>
+                </div>
+            </div>
+            <a id="chanLink" href="#" target="_blank" rel="noopener" class="text-xs text-[#211F1F] underline font-semibold">Open Channel →</a>
+        </div>
+
+        <div id="progressCard" class="card rounded-3xl p-5">
+            <h2 id="progressCatLabel" class="font-semibold text-base mb-1">Total Duration</h2>
+            <div class="flex items-end justify-between mb-3">
+                <span id="totalDurationTxt" class="text-2xl font-black mono">0:00</span>
+                <span id="targetRangeTxt" class="text-[11px] text-muted font-semibold">Target: —</span>
+            </div>
+            <div class="meter-track mb-2">
+                <div id="meterBand" class="meter-band"></div>
+                <div id="meterFill" class="meter-fill" style="width:0%;background:#fbbf24;"></div>
+            </div>
+            <div id="meterHint" class="text-[11px] font-semibold text-amber-700 leading-relaxed mb-3">Select shorts to reach the target.</div>
+            <div id="estimateBox" class="estimate-box mb-3">Add some shorts to your channel to see an estimate.</div>
+            <div class="border-t-2 border-[#211F1F]/10 pt-3 flex items-center justify-between text-sm">
+                <span class="text-muted">Shorts selected</span>
+                <span id="selectedCountTxt" class="font-bold">0</span>
+            </div>
+        </div>
+
+        <div id="actionsCard" class="card rounded-3xl p-5">
+            <h2 class="font-semibold text-base mb-3">Actions</h2>
+            <div class="space-y-2.5">
+                <button id="createPlaylistBtn" onclick="doCreatePlaylist()" class="btn-teal w-full py-2.5 rounded-2xl text-xs font-semibold" disabled>🎬 Create Playlist Name</button>
+                <button id="verifyPlaylistBtn" onclick="doVerifyPlaylist()" class="btn-purple w-full py-2.5 rounded-2xl text-xs font-semibold hidden">✅ Verify &amp; Set For Group</button>
+                <button id="deletePlaylistBtn" onclick="doDeletePlaylist()" class="btn-red w-full py-2.5 rounded-2xl text-xs font-semibold hidden">🗑️ Delete &amp; Start Over</button>
+            </div>
+        </div>
+
+    </aside>
+
+    <main class="flex-1 min-w-0 space-y-6">
+
+        <div id="namePlateWrap" class="hidden">
+          <div class="name-plate">
+            <div>
+              <div class="text-[11px] font-bold uppercase tracking-wider text-[#DBD4B7] mb-1">Your Shorts Playlist Name</div>
+              <div id="plateName" class="plate-name">—</div>
+            </div>
+            <button class="copy-btn" onclick="copyPlaylistName()">📋 Copy Name</button>
+          </div>
+          <div class="card rounded-2xl p-5 mt-4 space-y-3">
+            <div class="step-row"><div class="step-num">1</div><div class="text-sm leading-relaxed">On YouTube Studio, create a new playlist and name it <strong class="mono">exactly</strong> as shown above (case-sensitive).</div></div>
+            <div class="step-row"><div class="step-num">2</div><div class="text-sm leading-relaxed">Make sure this playlist is <strong class="mono" style="color:#4ADE80;">Public</strong>.</div></div>
+            <div class="step-row"><div class="step-num">3</div><div class="text-sm leading-relaxed">Add the same <strong>Shorts</strong> you selected below into that YouTube playlist, in any order.</div></div>
+            <div class="step-row"><div class="step-num">4</div><div class="text-sm leading-relaxed">Come back here and click <strong>Verify &amp; Set For Group</strong> — we'll pull the real playlist from YouTube and confirm it.</div></div>
+          </div>
+        </div>
+
+        <div id="confirmedBanner" class="hidden card rounded-3xl p-6" style="background:#ACD1C0;">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-3xl">✅</span>
+                <div>
+                    <div class="font-black text-lg">Shorts Playlist Confirmed</div>
+                    <div id="confirmedSub" class="text-xs font-semibold text-[#211F1F]/70">This playlist is live for the group.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 id="pickerTitle" class="text-2xl font-bold">Choose Shorts</h2>
+                <p id="pickerSub" class="text-muted mt-1 text-sm">Tap shorts from your channel to add or remove them from this category's playlist.</p>
+            </div>
+        </div>
+
+        <!-- ── Filter tabs ── -->
+        <div class="flex flex-wrap gap-2">
+            <button id="tab-all" class="filter-tab active px-4 py-2 rounded-2xl text-sm font-medium" data-tab="All" onclick="setVideoTab('All',this)">All</button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Selected" onclick="setVideoTab('Selected',this)">
+                <span class="dot bg-green-500 mr-1" style="display:inline-block;"></span>Selected
+            </button>
+            <button class="filter-tab px-4 py-2 rounded-2xl text-sm font-medium" data-tab="Available" onclick="setVideoTab('Available',this)">Not Selected</button>
+        </div>
+
+        <!-- ── Search + Sort + Bulk action bar ── -->
+        <div class="tools-bar">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input id="searchInput" type="text" placeholder="Search shorts by title…" oninput="onSearchInput()">
+            </div>
+            <select id="sortSelect" class="sort-select" onchange="onSortChange()">
+                <option value="newest">↕ Newest first</option>
+                <option value="oldest">↕ Oldest first</option>
+                <option value="shortest">⏱ Shortest first</option>
+                <option value="longest">⏱ Longest first</option>
+                <option value="title">🔤 Title A→Z</option>
+            </select>
+            <button id="selectAllBtn" onclick="doSelectAll()" class="btn-teal px-4 py-2 rounded-2xl text-sm font-semibold">⚡ Select All</button>
+            <button id="deselectAllBtn" onclick="doDeselectAll()" class="btn-red px-4 py-2 rounded-2xl text-sm font-semibold">🧹 Deselect All</button>
+        </div>
+
+        <div id="gridCounter" class="text-xs text-muted font-semibold">Showing 0 shorts</div>
+
+        <div id="videoGrid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5">
+            <div class="skeleton h-[300px]"></div>
+            <div class="skeleton h-[300px]"></div>
+            <div class="skeleton h-[300px]"></div>
+        </div>
+
+        <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+            <div class="text-5xl mb-4">📱</div>
+            <h3 class="text-xl font-semibold mb-2">No Shorts Available</h3>
+            <p class="text-muted text-sm mb-7 leading-relaxed">
+                Only <strong>Shorts</strong> can be added to shorts playlists. 
+                Import shorts from your promotional channel first, then come back to build your playlists.
+            </p>
+            <a href="videotask.html" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">Go To Videos →</a>
+        </div>
+
+    </main>
+    </div>
+
+  </div>
+</div>
+</main>
+</main>
+
+<div id="mobileTrackerWidget" class="mobile-tracker lg:hidden hidden">
+    <div class="flex items-center justify-between gap-3 mb-1.5">
+        <div class="flex items-baseline gap-1.5">
+            <span id="mobileCatLabel" class="text-xs font-bold uppercase tracking-wider text-gray-500">Duration:</span>
+            <span id="mobileDurationTxt" class="text-lg font-black mono text-[#211F1F]">0:00</span>
+        </div>
+        <div id="mobileHintBadge" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-[#211F1F]">0 mins</div>
+    </div>
+    <div class="meter-track h-3">
+        <div id="mobileMeterBand" class="meter-band"></div>
+        <div id="mobileMeterFill" class="meter-fill" style="width:0%;"></div>
+    </div>
+</div>
+
+<script>
+/* ────────────────────────────────────────
+   AUTH
+──────────────────────────────────────── */
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
+}
+const USERNAME = localStorage.getItem("username") || "";
+const PASSWORD = localStorage.getItem("password") || "";
+if (!USERNAME || !PASSWORD) window.location.href = "signin.html";
+
+/* ────────────────────────────────────────
+   CONFIG
+──────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9YCtGGrY9JaYVHVK1MxDoD0D1TEVm8yGbEUAlVLxeEOqqfDWBFnwzc9kDEAcfhg4/exec';
+
+/* ────────────────────────────────────────
+   CATEGORY META
+──────────────────────────────────────── */
+const CATEGORY_ORDER = ['E', 'D', 'C', 'B', 'A'];
+const CATEGORY_META = {
+    E: { emoji: '🟢', color: '#4ade80' },
+    D: { emoji: '🔵', color: '#38bdf8' },
+    C: { emoji: '🟣', color: '#a78bfa' },
+    B: { emoji: '🟠', color: '#fb923c' },
+    A: { emoji: '🔴', color: '#f87171' }
+};
+
+let myChannel = null;
+let allVideos = [];
+let catMap = {};
+let activeCategory = 'E';
+let activeVideoFilter = 'All';
+let searchQuery = '';
+let sortMode = 'newest';
+
+/* ────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────── */
+function show(id) { const el = document.getElementById(id); if (el) el.classList.remove('hidden'); }
+function hide(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isError ? 'error show' : 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+async function callApi(action, params = {}) {
+    const qs = new URLSearchParams({ action, username: USERNAME, password: PASSWORD, ...params });
+    const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
+    return res.json();
+}
+function parseVideoSeconds(v) {
+    const n = Number(v.VideoDurationSeconds);
+    return isNaN(n) ? 0 : Math.max(0, Math.floor(n));
+}
+function formatSecs(totalSeconds) {
+    const s = Math.max(0, Math.round(totalSeconds || 0));
+    const h = Math.floor(s / 3600);
+    const mins = Math.floor((s % 3600) / 60);
+    const secs = s % 60;
+    if (h > 0) return h + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    return mins + ':' + String(secs).padStart(2, '0');
+}
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+function escapeAttr(s) {
+    return String(s || '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+}
+function escapeHtml(s) {
+    return String(s || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ────────────────────────────────────────
+   BOOT
+──────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    show('loadingState'); hide('errorState'); hide('dashContent'); hide('mobileTrackerWidget');
+    try {
+        const chanData = await callApi('getMyChannel');
+        if (chanData.status !== 'success') throw new Error(chanData.message || 'Could not load channel data');
+        myChannel = (chanData.channels && chanData.channels[0]) || null;
+        show('dashContent');
+        if (!myChannel) {
+            show('noChannelWrap');
+            hide('mainLayout'); hide('mobileTrackerWidget');
+            document.getElementById('categoryTabs').innerHTML = '';
+            hide('loadingState');
+            return;
+        }
+        hide('noChannelWrap'); show('mainLayout');
+        renderChannelCard();
+        await loadEverything();
+        hide('loadingState');
+    } catch (e) {
+        hide('loadingState'); show('errorState'); hide('mobileTrackerWidget');
+        document.getElementById('errorMsg').textContent = e.message || 'Network error. Please try again.';
+    }
+}
+
+async function loadEverything() {
+    const [vidData, plData] = await Promise.all([
+        callApi('getMyShortsVideos'),
+        callApi('getMyShortsPlaylist')
+    ]);
+    if (vidData.status !== 'success') throw new Error(vidData.message || 'Could not load shorts');
+    if (plData.status !== 'success') throw new Error(plData.message || 'Could not load playlists');
+
+    const videoUrlsInSheet = new Set();
+    (vidData.videos || []).forEach(v => videoUrlsInSheet.add(v.VideoUrl));
+
+    allVideos = (vidData.videos || [])
+        .filter(v => String(v.VideoStatus || '').toLowerCase() !== 'deleted')
+        .map(v => { v.Seconds = parseVideoSeconds(v); return v; });
+
+    let categories = plData.categories || [];
+    let videosRemovedFromPlaylists = 0;
+
+    categories = categories.map(c => {
+        const urls = c.selectedVideoUrls || [];
+        const validUrls = urls.filter(url => videoUrlsInSheet.has(url));
+        const removed = urls.length - validUrls.length;
+        if (removed > 0) {
+            videosRemovedFromPlaylists += removed;
+            c.totalSeconds = Math.max(0, c.totalSeconds - calculateRemovedSeconds(urls, validUrls, vidData.videos || []));
+        }
+        c.selectedVideoUrls = validUrls;
+        return c;
+    });
+
+    function calculateRemovedSeconds(allUrls, validUrls, videos) {
+        const removedUrls = allUrls.filter(u => !validUrls.includes(u));
+        let total = 0;
+        removedUrls.forEach(url => {
+            const v = videos.find(x => x.VideoUrl === url);
+            if (v) total += parseVideoSeconds(v);
+        });
+        return total;
+    }
+
+    if (videosRemovedFromPlaylists > 0) {
+        setTimeout(() => showToast('⚠️ ' + videosRemovedFromPlaylists + ' short(s) removed (no longer available).', true), 500);
+    }
+
+    catMap = {};
+    categories.forEach(c => {
+        const urlSet = new Set(c.selectedVideoUrls || []);
+        const playlist = c.playlist || null;
+        const isConfirmed = playlist && String(playlist.HasPlaylistReady).toLowerCase() === 'yes';
+        const meta = {
+            E: { minSeconds: 600,  maxSeconds: 900  },
+            D: { minSeconds: 900,  maxSeconds: 1500 },
+            C: { minSeconds: 1500, maxSeconds: 2100 },
+            B: { minSeconds: 2100, maxSeconds: 2700 },
+            A: { minSeconds: 2700, maxSeconds: 3600 }
+        }[c.id] || { minSeconds: 600, maxSeconds: 900 };
+
+        const totalSeconds = c.totalSeconds || 0;
+        const isValid = totalSeconds >= meta.minSeconds && totalSeconds <= meta.maxSeconds;
+        if (isConfirmed && !isValid && playlist) {
+            playlist.HasPlaylistReady = 'No';
+            setTimeout(() => showToast('⚠️ ' + c.label + ' unconfirmed: duration now ' + formatSecs(totalSeconds), true), 1000);
+        }
+
+        catMap[c.id] = {
+            id: c.id, label: c.label || c.id, rangeText: c.rangeText || '10–15 min',
+            minSeconds: meta.minSeconds, maxSeconds: meta.maxSeconds,
+            playlist: playlist, selectedUrls: urlSet, totalSeconds,
+            isUnlocked: c.isUnlocked !== undefined ? c.isUnlocked : (c.id === 'E'),
+            isConfirmed: isConfirmed && isValid
+        };
+    });
+
+    CATEGORY_ORDER.forEach(id => {
+        if (!catMap[id]) {
+            const m = getCategoryMeta(id);
+            catMap[id] = {
+                id, label: id, rangeText: m.rangeText,
+                minSeconds: m.minSeconds, maxSeconds: m.maxSeconds,
+                playlist: null, selectedUrls: new Set(),
+                totalSeconds: 0, isUnlocked: (id === 'E'), isConfirmed: false
+            };
+        }
+    });
+
+    let firstUnlocked = CATEGORY_ORDER.find(id => catMap[id].isUnlocked);
+    activeCategory = firstUnlocked || 'E';
+
+    renderCategoryTabs();
+    renderState();
+}
+
+function getCategoryMeta(id) {
+    const meta = {
+        E: { rangeText: '10–15 min', minSeconds: 600,  maxSeconds: 900  },
+        D: { rangeText: '15–25 min', minSeconds: 900,  maxSeconds: 1500 },
+        C: { rangeText: '25–35 min', minSeconds: 1500, maxSeconds: 2100 },
+        B: { rangeText: '35–45 min', minSeconds: 2100, maxSeconds: 2700 },
+        A: { rangeText: '45–60 min', minSeconds: 2700, maxSeconds: 3600 }
+    };
+    return meta[id] || null;
+}
+
+function renderChannelCard() {
+    document.getElementById('chanImage').src = myChannel.ChannelImage || '';
+    document.getElementById('chanName').textContent = myChannel.ChannelName || '—';
+    document.getElementById('chanHandle').textContent = myChannel.ChannelHandle || '—';
+    document.getElementById('chanLink').href = myChannel.ChannelLink || '#';
+}
+
+/* ────────────────────────────────────────
+   STATE MACHINE
+──────────────────────────────────────── */
+function categoryMode(id) {
+    const c = catMap[id];
+    if (!c || !c.playlist) return 'NONE';
+    return String(c.playlist.HasPlaylistReady).toLowerCase() === 'yes' ? 'CONFIRMED' : 'PENDING';
+}
+
+function switchCategory(id) {
+    if (!catMap[id]) return;
+    const isUnlocked = catMap[id].isUnlocked !== undefined ? catMap[id].isUnlocked : true;
+    if (!isUnlocked) {
+        showToast('🔒 Category ' + id + ' is locked. Complete ' + getPreviousCategory(id) + ' first!', true);
+        return;
+    }
+    activeCategory = id;
+    activeVideoFilter = 'All';
+    searchQuery = '';
+    const si = document.getElementById('searchInput');
+    if (si) si.value = '';
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    const allBtn = document.getElementById('tab-all');
+    if (allBtn) allBtn.classList.add('active');
+    renderCategoryTabs();
+    renderState();
+}
+
+function getPreviousCategory(catId) {
+    const i = CATEGORY_ORDER.indexOf(catId);
+    return i > 0 ? CATEGORY_ORDER[i - 1] : null;
+}
+function getNextCategoryInOrder(catId) {
+    const i = CATEGORY_ORDER.indexOf(catId);
+    return i < CATEGORY_ORDER.length - 1 ? CATEGORY_ORDER[i + 1] : null;
+}
+function isCategoryNext(catId) {
+    const i = CATEGORY_ORDER.indexOf(catId);
+    if (i === 0) return true;
+    const prevCat = CATEGORY_ORDER[i - 1];
+    const prevState = catMap[prevCat];
+    if (!prevState) return false;
+    return categoryMode(prevCat) === 'CONFIRMED';
+}
+
+/* ────────────────────────────────────────
+   RENDER CATEGORY TABS
+──────────────────────────────────────── */
+function renderCategoryTabs() {
+    const wrap = document.getElementById('categoryTabs');
+    wrap.innerHTML = CATEGORY_ORDER.map(id => {
+        const c = catMap[id];
+        if (!c) return '';
+        const meta = CATEGORY_META[id];
+        const mode = categoryMode(id);
+        const isUnlocked = c.isUnlocked !== undefined ? c.isUnlocked : true;
+        const isConfirmed = mode === 'CONFIRMED';
+
+        let icon = '🔒', style = '', isActive = false;
+        let clickHandler = `showToast('Complete ${getPreviousCategory(id)} first to unlock ${id}!', true)`;
+
+        if (isConfirmed) {
+            icon = '✅';
+            clickHandler = `switchCategory('${id}')`;
+            isActive = (id === activeCategory);
+        } else if (isUnlocked) {
+            icon = '🟢';
+            clickHandler = `switchCategory('${id}')`;
+            isActive = (id === activeCategory);
+        } else {
+            style = 'opacity:0.5; cursor:not-allowed;';
+        }
+
+        return `<button class="cat-tab ${isActive ? 'active' : ''}" onclick="${clickHandler}" style="${style}">
+            <span class="cat-tab-dot" style="background:${meta.color}"></span>
+            <span class="flex flex-col items-start leading-tight">
+                <span class="cat-tab-label">${c.label}</span>
+                <span class="cat-tab-range">${c.rangeText}</span>
+            </span>
+            <span class="cat-tab-status">${icon}</span>
+        </button>`;
+    }).join('');
+}
+
+/* ────────────────────────────────────────
+   RENDER MAIN STATE
+──────────────────────────────────────── */
+function renderState() {
+    const cState = catMap[activeCategory];
+    if (!cState) return;
+
+    const mode = categoryMode(activeCategory);
+    const totalSeconds = cState.totalSeconds;
+    const minSeconds = cState.minSeconds;
+    const maxSeconds = cState.maxSeconds;
+    const inBand = totalSeconds >= minSeconds && totalSeconds <= maxSeconds;
+    const isUnlocked = cState.isUnlocked !== undefined ? cState.isUnlocked : true;
+
+    const statusIcon = document.getElementById('statusIcon');
+    const statusLabel = document.getElementById('statusLabel');
+    const badge = document.getElementById('badgePlaylistStatus');
+    badge.style.background = '#F5F4EB';
+    if (mode === 'CONFIRMED') { statusIcon.textContent='✅'; statusLabel.textContent='Confirmed'; badge.style.background='#ACD1C0'; }
+    else if (mode === 'PENDING') { statusIcon.textContent='🟡'; statusLabel.textContent='Awaiting YouTube Setup'; }
+    else { statusIcon.textContent='🕓'; statusLabel.textContent='Not Started'; }
+
+    // ── Bulk button / tools visibility ──
+    const toolsBar = document.querySelector('.tools-bar');
+    const saBtn = document.getElementById('selectAllBtn');
+    const daBtn = document.getElementById('deselectAllBtn');
+    const searchWrapEl = document.querySelector('.search-wrap');
+    const sortEl = document.getElementById('sortSelect');
+    const gridCounter = document.getElementById('gridCounter');
+
+    if (!isUnlocked) {
+        document.getElementById('progressCatLabel').textContent = cState.label + ' — 🔒 Locked';
+        document.getElementById('targetRangeTxt').textContent = 'Target: ' + cState.rangeText;
+        document.getElementById('totalDurationTxt').textContent = '🔒';
+        document.getElementById('selectedCountTxt').textContent = '—';
+        const fill = document.getElementById('meterFill');
+        fill.style.width = '0%'; fill.style.background = '#94a3b8';
+        const band = document.getElementById('meterBand');
+        band.style.left = '0%'; band.style.right = '0%';
+        const hint = document.getElementById('meterHint');
+        hint.className = 'text-[11px] font-semibold text-gray-500 leading-relaxed mb-3';
+        hint.textContent = '🔒 Complete and confirm Category ' + getPreviousCategory(activeCategory) + ' first.';
+        document.getElementById('estimateBox').textContent = '🔒 This category is locked.';
+        document.getElementById('mobileTrackerWidget').classList.add('hidden');
+        hide('createPlaylistBtn'); hide('verifyPlaylistBtn'); hide('deletePlaylistBtn');
+        hide('namePlateWrap'); hide('confirmedBanner');
+
+        if (saBtn) saBtn.classList.add('hidden');
+        if (daBtn) daBtn.classList.add('hidden');
+        if (toolsBar) toolsBar.classList.add('hidden');
+        if (gridCounter) gridCounter.classList.add('hidden');
+
+        document.getElementById('pickerTitle').textContent = '🔒 ' + cState.label + ' — Locked';
+        document.getElementById('pickerSub').textContent = 'Complete Category ' + getPreviousCategory(activeCategory) + ' first.';
+        document.getElementById('videoGrid').innerHTML = '<div class="col-span-full text-center py-20"><div class="text-6xl mb-4">🔒</div><div class="text-xl font-bold mb-2">Category Locked</div><div class="text-muted text-sm">Complete Category ' + getPreviousCategory(activeCategory) + ' first.</div></div>';
+        document.getElementById('emptyState').classList.add('hidden');
+        return;
+    }
+
+    // Unlocked → show tools
+    if (toolsBar) toolsBar.classList.remove('hidden');
+    if (gridCounter) gridCounter.classList.remove('hidden');
+    if (saBtn) saBtn.classList.toggle('hidden', mode === 'CONFIRMED');
+    if (daBtn) daBtn.classList.toggle('hidden', mode === 'CONFIRMED');
+
+    document.getElementById('progressCatLabel').textContent = cState.label + ' — Total Duration';
+    document.getElementById('targetRangeTxt').textContent = 'Target: ' + cState.rangeText;
+    document.getElementById('totalDurationTxt').textContent = formatSecs(totalSeconds);
+    document.getElementById('selectedCountTxt').textContent = cState.selectedUrls.size;
+
+    const pct = Math.min(100, Math.round((totalSeconds / maxSeconds) * 100));
+    const fill = document.getElementById('meterFill');
+    fill.style.width = pct + '%';
+    fill.style.background = inBand ? '#4ade80' : (totalSeconds > maxSeconds ? '#ef4444' : '#fbbf24');
+
+    const bandStartPct = (minSeconds / maxSeconds) * 100;
+    const band = document.getElementById('meterBand');
+    band.style.left = bandStartPct + '%'; band.style.right = '0%';
+
+    const hint = document.getElementById('meterHint');
+    if (mode === 'CONFIRMED') { hint.className='text-[11px] font-semibold text-emerald-700 leading-relaxed mb-3'; hint.textContent='✅ Confirmed from your live YouTube playlist.'; }
+    else if (inBand) { hint.className='text-[11px] font-semibold text-emerald-700 leading-relaxed mb-3'; hint.textContent='✅ Within ' + cState.rangeText + ' target — ready.'; }
+    else if (totalSeconds > maxSeconds) { hint.className='text-[11px] font-semibold text-red-600 leading-relaxed mb-3'; hint.textContent='⚠️ Over the max — remove a short.'; }
+    else { hint.className='text-[11px] font-semibold text-amber-700 leading-relaxed mb-3'; hint.textContent='Select shorts to reach ' + cState.rangeText + '.'; }
+
+    renderEstimateBox(cState, totalSeconds, minSeconds, maxSeconds, mode);
+
+    const mobileTracker = document.getElementById('mobileTrackerWidget');
+    if (mode === 'CONFIRMED' || !myChannel) {
+        mobileTracker.classList.add('hidden');
+    } else {
+        mobileTracker.classList.remove('hidden');
+        document.getElementById('mobileCatLabel').textContent = cState.label + ':';
+        document.getElementById('mobileDurationTxt').textContent = formatSecs(totalSeconds);
+        const mobFill = document.getElementById('mobileMeterFill');
+        mobFill.style.width = pct + '%';
+        mobFill.style.background = inBand ? '#4ade80' : (totalSeconds > maxSeconds ? '#ef4444' : '#fbbf24');
+        const mobBand = document.getElementById('mobileMeterBand');
+        mobBand.style.left = bandStartPct + '%'; mobBand.style.right = '0%';
+        const mobHintBadge = document.getElementById('mobileHintBadge');
+        if (inBand) { mobHintBadge.textContent='Target Reached ✅'; mobHintBadge.style.background='#dcfce7'; mobHintBadge.style.color='#166534'; }
+        else if (totalSeconds > maxSeconds) { mobHintBadge.textContent='Over limit ⚠️'; mobHintBadge.style.background='#fee2e2'; mobHintBadge.style.color='#991b1b'; }
+        else { const needMin = Math.max(0, Math.ceil((minSeconds - totalSeconds) / 60)); mobHintBadge.textContent='Need ' + needMin + ' min more'; mobHintBadge.style.background='#fef3c7'; mobHintBadge.style.color='#92400e'; }
+    }
+
+    if (mode === 'NONE') {
+        show('createPlaylistBtn'); hide('verifyPlaylistBtn'); hide('deletePlaylistBtn');
+        document.getElementById('createPlaylistBtn').disabled = !inBand;
+        document.getElementById('createPlaylistBtn').textContent = '🎬 Create ' + cState.label + ' Playlist';
+        hide('namePlateWrap'); hide('confirmedBanner');
+    } else if (mode === 'PENDING') {
+        hide('createPlaylistBtn'); show('verifyPlaylistBtn'); show('deletePlaylistBtn');
+        document.getElementById('verifyPlaylistBtn').textContent = '✅ Verify & Set ' + cState.label + ' For Group';
+        document.getElementById('deletePlaylistBtn').textContent = '🗑️ Delete ' + cState.label + ' & Start Over';
+        show('namePlateWrap'); hide('confirmedBanner');
+        document.getElementById('plateName').textContent = cState.playlist.ShortPlaylistName || '—';
+    } else {
+        hide('createPlaylistBtn'); hide('verifyPlaylistBtn'); show('deletePlaylistBtn');
+        document.getElementById('deletePlaylistBtn').textContent = '🗑️ Delete ' + cState.label + ' & Start Over';
+        hide('namePlateWrap'); show('confirmedBanner');
+        document.getElementById('confirmedSub').textContent =
+            '✅ ' + cState.label + ' locked in at ' + formatSecs(cState.playlist.ShortPlaylistSize) + ' (' + (cState.playlist.VideoCount || 0) + ' shorts) · Name: ' + (cState.playlist.ShortPlaylistName || '—');
+    }
+
+    document.getElementById('pickerTitle').textContent = 'Choose Shorts — ' + cState.label;
+    const pickerSub = document.getElementById('pickerSub');
+    if (mode === 'CONFIRMED') pickerSub.textContent = '✅ ' + cState.label + ' confirmed! Next: ' + getNextCategoryInOrder(cState.id) + '.';
+    else if (isCategoryNext(cState.id) && mode === 'NONE') pickerSub.textContent = '🎯 Build your ' + cState.label + ' shorts playlist! Reach ' + cState.rangeText + '.';
+    else pickerSub.textContent = 'Tap shorts from your channel to add/remove from ' + cState.label + '\'s playlist.';
+
+    renderGrid();
+}
+
+function renderEstimateBox(cState, totalSeconds, minSeconds, maxSeconds, mode) {
+    const box = document.getElementById('estimateBox');
+    if (mode === 'CONFIRMED') { box.textContent = '✅ Confirmed with ' + (cState.playlist.VideoCount || cState.selectedUrls.size) + ' short(s).'; return; }
+    if (!allVideos.length) { box.textContent = 'Add shorts to your channel to see an estimate.'; return; }
+    const avgSeconds = allVideos.reduce((s, v) => s + v.Seconds, 0) / allVideos.length;
+    if (avgSeconds <= 0) { box.textContent = 'Shorts with valid duration needed.'; return; }
+    if (totalSeconds >= minSeconds && totalSeconds <= maxSeconds) { box.textContent = '✅ Enough — ' + cState.selectedUrls.size + ' short(s) selected.'; return; }
+    if (totalSeconds > maxSeconds) { box.textContent = '⚠️ Over the max — remove some shorts.'; return; }
+    const remaining = minSeconds - totalSeconds;
+    const neededCount = Math.max(1, Math.ceil(remaining / avgSeconds));
+    box.textContent = '📊 Based on ~' + formatSecs(avgSeconds) + ' avg, you need ~' + neededCount + ' more short(s).';
+}
+
+/* ────────────────────────────────────────
+   SEARCH & SORT
+──────────────────────────────────────── */
+function onSearchInput() {
+    const el = document.getElementById('searchInput');
+    searchQuery = (el?.value || '').trim().toLowerCase();
+    renderGrid();
+}
+function onSortChange() {
+    const el = document.getElementById('sortSelect');
+    sortMode = el?.value || 'newest';
+    renderGrid();
+}
+
+function sortVideos(list) {
+    const arr = [...list];
+    switch (sortMode) {
+        case 'oldest':
+            arr.sort((a, b) => new Date(a.CreatedDate || 0) - new Date(b.CreatedDate || 0));
+            break;
+        case 'shortest':
+            arr.sort((a, b) => a.Seconds - b.Seconds);
+            break;
+        case 'longest':
+            arr.sort((a, b) => b.Seconds - a.Seconds);
+            break;
+        case 'title':
+            arr.sort((a, b) => String(a.VideoTitle || '').localeCompare(String(b.VideoTitle || '')));
+            break;
+        case 'newest':
+        default:
+            arr.sort((a, b) => new Date(b.CreatedDate || 0) - new Date(a.CreatedDate || 0));
+    }
+    return arr;
+}
+
+/* ────────────────────────────────────────
+   VIDEO FILTER TABS
+──────────────────────────────────────── */
+function setVideoTab(tab, btn) {
+    activeVideoFilter = tab;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderGrid();
+}
+
+/* ────────────────────────────────────────
+   RENDER VIDEO GRID
+──────────────────────────────────────── */
+function renderGrid() {
+    const grid = document.getElementById('videoGrid');
+    const empty = document.getElementById('emptyState');
+    const counter = document.getElementById('gridCounter');
+    const cState = catMap[activeCategory];
+    if (!cState) return;
+
+    const isUnlocked = cState.isUnlocked !== undefined ? cState.isUnlocked : true;
+    if (!isUnlocked) { grid.innerHTML = ''; empty.classList.add('hidden'); if (counter) counter.textContent = ''; return; }
+    if (allVideos.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); if (counter) counter.textContent = ''; return; }
+    empty.classList.add('hidden');
+
+    // Filter by tab
+    let list = allVideos;
+    if (activeVideoFilter === 'Selected') list = allVideos.filter(v => cState.selectedUrls.has(v.VideoUrl));
+    else if (activeVideoFilter === 'Available') list = allVideos.filter(v => !cState.selectedUrls.has(v.VideoUrl));
+
+    // Filter by search
+    if (searchQuery) {
+        list = list.filter(v => String(v.VideoTitle || '').toLowerCase().includes(searchQuery));
+    }
+
+    // Sort
+    list = sortVideos(list);
+
+    if (counter) {
+        counter.textContent = 'Showing ' + list.length + ' of ' + allVideos.length +
+            ' shorts · ' + cState.selectedUrls.size + ' selected' +
+            (searchQuery ? ' · search: "' + searchQuery + '"' : '');
+    }
+
+    if (list.length === 0) {
+        let msg = 'Nothing to show.';
+        if (searchQuery) msg = 'No shorts match "' + searchQuery + '".';
+        else if (activeVideoFilter === 'Selected') msg = 'No shorts selected for ' + cState.label + ' yet.';
+        else if (activeVideoFilter === 'All') msg = 'All shorts already selected.';
+        grid.innerHTML = '<div class="col-span-full text-center py-10 text-muted text-sm">' + escapeHtml(msg) + '</div>';
+        return;
+    }
+
+    grid.innerHTML = list.map(pickCard).join('');
+}
+
+function pickCard(v) {
+    const cState = catMap[activeCategory];
+    const isSelected = cState.selectedUrls.has(v.VideoUrl);
+    const locked = categoryMode(activeCategory) === 'CONFIRMED';
+    const url = escapeAttr(v.VideoUrl);
+    const allSelectedCats = CATEGORY_ORDER.filter(id => catMap[id] && catMap[id].selectedUrls.has(v.VideoUrl));
+    const otherCats = allSelectedCats.filter(id => id !== activeCategory);
+    const usageCount = allSelectedCats.length;
+    const otherChips = otherCats.map(id => {
+        const meta = CATEGORY_META[id];
+        return `<span class="also-in-chip"><span class="dot" style="background:${meta.color}"></span>${catMap[id].label}</span>`;
+    }).join('');
+    const usageBadge = usageCount > 1 ? `<span class="also-in-chip" style="background:#211F1F;color:white;border-color:#211F1F;">📊 Used in ${usageCount}</span>` : '';
+
+    return `
+    <div class="pick-card ${isSelected ? 'selected' : ''} ${locked ? 'locked' : ''}" ${locked ? '' : `onclick="toggleVideo('${url}')"`}>
+        <div class="pick-thumb-wrap">
+            ${v.VideoThumbnail ? `<img src="${escapeAttr(v.VideoThumbnail)}" alt="">` : `<div class="play-badge">📱</div>`}
+            <span class="type-chip">Short</span>
+            <span class="duration-chip">${formatSecs(v.Seconds)}</span>
+            <div class="pick-check">${isSelected ? '✓' : ''}</div>
+        </div>
+        <div class="p-3">
+            <div class="text-sm font-semibold text-[#211F1F] leading-snug mb-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(v.VideoTitle || 'Untitled short')}</div>
+            <div class="text-[11px] text-muted">Added: ${fmtDate(v.CreatedDate)}</div>
+            <div class="flex flex-wrap gap-1 mt-1">${usageBadge}</div>
+            ${otherChips ? `<div class="also-in-row">${otherChips}</div>` : ''}
+        </div>
+    </div>`;
+}
+
+/* ────────────────────────────────────────
+   TOGGLE VIDEO
+──────────────────────────────────────── */
+async function toggleVideo(videoUrl) {
+    const catId = activeCategory;
+    if (categoryMode(catId) === 'CONFIRMED') { showToast('Playlist confirmed. Delete to make changes.', true); return; }
+    const v = allVideos.find(x => x.VideoUrl === videoUrl);
+    if (!v) return;
+    const cState = catMap[catId];
+    const isSelected = cState.selectedUrls.has(videoUrl);
+
+    Swal.fire({ title: 'Loading...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    try {
+        let data;
+        if (isSelected) data = await callApi('removeShortsVideoFromPlaylist', { videoUrl, category: catId });
+        else data = await callApi('addShortsVideoToPlaylist', { videoUrl, videoSeconds: v.Seconds, category: catId });
+        Swal.close();
+
+        if (data.status === 'success') {
+            if (isSelected) cState.selectedUrls.delete(videoUrl);
+            else cState.selectedUrls.add(videoUrl);
+            cState.totalSeconds = data.totalSeconds;
+            renderCategoryTabs();
+            renderState();
+        } else {
+            showToast(data.message || 'Could not update.', true);
+        }
+    } catch (e) {
+        Swal.close();
+        showToast('Connection error.', true);
+    }
+}
+
+/* ────────────────────────────────────────
+   SELECT ALL
+──────────────────────────────────────── */
+async function doSelectAll() {
+    const catId = activeCategory;
+    const cState = catMap[catId];
+    if (!cState) return;
+    if (categoryMode(catId) === 'CONFIRMED') { showToast('Playlist confirmed. Delete to make changes.', true); return; }
+    if (!allVideos.length) { showToast('No shorts available.', true); return; }
+
+    const unselected = allVideos.filter(v => !cState.selectedUrls.has(v.VideoUrl));
+    if (unselected.length === 0) { showToast('All shorts are already selected.', true); return; }
+
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Select all Shorts?',
+        html:
+            '<div style="text-align:left;font-size:14px;color:#4b5563;line-height:1.6;">' +
+            '<p style="margin-bottom:8px;">We\'ll add your unselected Shorts to <strong>' + cState.label + '</strong> until the category max is reached.</p>' +
+            '<div style="background:#F5F4EB;border:1.5px dashed #211F1F;border-radius:12px;padding:10px 12px;font-size:12px;margin-bottom:8px;">' +
+            '🎯 Category target: <strong>' + cState.rangeText + '</strong><br>' +
+            '📊 Currently selected: <strong>' + cState.selectedUrls.size + '</strong> short(s) (' + formatSecs(cState.totalSeconds) + ')<br>' +
+            '➕ Not yet selected: <strong>' + unselected.length + '</strong>' +
+            '</div>' +
+            '<p style="font-size:12px;color:#6b7280;">We\'ll stop adding automatically once the max is reached.</p>' +
+            '</div>',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, select all',
+        cancelButtonText: 'Cancel'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = document.getElementById('selectAllBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Adding…';
+
+    try {
+        const data = await callApi('addAllShortsToPlaylist', { category: catId });
+        if (data.status === 'success') {
+            await loadEverything();
+            const msg = '✅ Added ' + data.addedCount + ' short(s). New total: ' + formatSecs(data.totalSeconds) +
+                (data.skippedForMax > 0 ? ' · ' + data.skippedForMax + ' skipped (would exceed max)' : '');
+            showToast(msg, false);
+            if (!data.inBand && data.totalSeconds < data.minSeconds) {
+                setTimeout(() => showToast('📊 Still below minimum — add a few more manually.', true), 1200);
+            }
+        } else {
+            showToast(data.message || 'Could not select all.', true);
+        }
+    } catch (e) { showToast('Connection error.', true); }
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+}
+
+/* ────────────────────────────────────────
+   DESELECT ALL
+──────────────────────────────────────── */
+async function doDeselectAll() {
+    const catId = activeCategory;
+    const cState = catMap[catId];
+    if (!cState) return;
+    if (categoryMode(catId) === 'CONFIRMED') { showToast('Playlist confirmed. Delete to make changes.', true); return; }
+    if (cState.selectedUrls.size === 0) { showToast('Nothing to clear.', true); return; }
+
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: 'Clear all selected Shorts?',
+        text: 'This will remove ' + cState.selectedUrls.size + ' short(s) from ' + cState.label + '.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, clear all',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#dc2626'
+    });
+    if (!result.isConfirmed) return;
+
+    const btn = document.getElementById('deselectAllBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Clearing…';
+
+    try {
+        const data = await callApi('removeAllShortsFromPlaylist', { category: catId });
+        if (data.status === 'success') {
+            await loadEverything();
+            showToast('🧹 Cleared ' + data.removedCount + ' short(s) from ' + cState.label + '.', false);
+        } else {
+            showToast(data.message || 'Could not clear.', true);
+        }
+    } catch (e) { showToast('Connection error.', true); }
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+}
+
+/* ────────────────────────────────────────
+   CREATE PLAYLIST NAME
+──────────────────────────────────────── */
+async function doCreatePlaylist() {
+    const cState = catMap[activeCategory];
+    const totalSeconds = cState.totalSeconds;
+    if (totalSeconds < cState.minSeconds || totalSeconds > cState.maxSeconds) {
+        showToast('Selected shorts must total within ' + cState.rangeText + '.', true);
+        return;
+    }
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Generate your ' + cState.label + ' playlist name?',
+        html: 'We\'ll give you a unique name to create on YouTube (' + formatSecs(totalSeconds) + ').',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, generate name',
+        cancelButtonText: 'Cancel'
+    });
+    if (!result.isConfirmed) return;
+    const btn = document.getElementById('createPlaylistBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Generating…';
+    try {
+        const data = await callApi('createShortsPlaylistRow', { category: activeCategory });
+        if (data.status === 'success') {
+            showToast(cState.label + ' name generated: ' + data.playlistName);
+            await loadEverything();
+        } else showToast(data.message || 'Could not create.', true);
+    } catch (e) { showToast('Connection error.', true); }
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   VERIFY & SET FOR GROUP
+──────────────────────────────────────── */
+async function doVerifyPlaylist() {
+    if (!myChannel) { showToast('No promotional channel found.', true); return; }
+    const cState = catMap[activeCategory];
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Verify your YouTube playlist?',
+        html: 'Make sure you\'ve created a playlist named exactly <strong class="mono">' + (cState.playlist ? cState.playlist.ShortPlaylistName : '') + '</strong> with your selected shorts.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, verify',
+        cancelButtonText: 'Not yet'
+    });
+    if (!result.isConfirmed) return;
+    const btn = document.getElementById('verifyPlaylistBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Verifying…';
+    try {
+        const data = await callApi('setShortsPlaylistForGroup', { channelId: myChannel.ChannelId, category: activeCategory });
+        if (data.status === 'success') showToast(data.message || 'Playlist confirmed!');
+        else showToast(data.message || 'Could not verify.', true);
+        await loadEverything();
+    } catch (e) { showToast('Connection error.', true); }
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   DELETE & START OVER
+──────────────────────────────────────── */
+async function doDeletePlaylist() {
+    const cState = catMap[activeCategory];
+    const mode = categoryMode(activeCategory);
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: 'Delete this playlist?',
+        text: mode === 'CONFIRMED' ? 'Removes your confirmed ' + cState.label + ' playlist.' : 'Clears your selection for ' + cState.label + '.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#dc2626'
+    });
+    if (!result.isConfirmed) return;
+    const btn = document.getElementById('deletePlaylistBtn');
+    const originalText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Deleting…';
+    try {
+        const data = await callApi('deleteShortsPlaylist', { category: activeCategory });
+        if (data.status === 'success') showToast(cState.label + ' deleted.');
+        else showToast(data.message || 'Could not delete.', true);
+        await loadEverything();
+    } catch (e) { showToast('Connection error.', true); }
+    btn.disabled = false; btn.textContent = originalText;
+}
+
+/* ────────────────────────────────────────
+   COPY NAME
+──────────────────────────────────────── */
+function copyPlaylistName() {
+    const cState = catMap[activeCategory];
+    if (!cState || !cState.playlist || !cState.playlist.ShortPlaylistName) return;
+    navigator.clipboard.writeText(cState.playlist.ShortPlaylistName).then(() => showToast('Name copied.'))
+      .catch(() => showToast('Could not copy.', true));
+}
+</script>
+</body>
+</html>

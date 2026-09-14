@@ -13,91 +13,73 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-:root { --bg: #F5F4EB; --ink: #211F1F; --mint: #ACD1C0; --sand: #DBD4B7; --card: #F5F4EB; --muted: #6b7280; }
+:root { --bg: #F5F4EB; --ink: #211F1F; --mint: #ACD1C0; --sand: #DBD4B7; --muted: #6b7280; }
 * { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
-.card { background: #F5F4EB; border-radius: 20px; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; }
-.shorts-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
-.shorts-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
-.shorts-card.playing { border-color: #ACD1C0; box-shadow: 4px 4px 0px 0px #ACD1C0; }
+.card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; }
+.task-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
+.task-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.task-card.cheating-card { border-color: #dc2626; background: #fef2f2; box-shadow: 4px 4px 0px 0px #dc2626; }
+.task-card.watched-card { border-color: #16a34a; background: #f0fdf4; box-shadow: 4px 4px 0px 0px #16a34a; }
 
 .text-muted { color: var(--muted); }
 
-.btn-purple { background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-purple { background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; border-radius: 14px; }
 .btn-purple:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 .btn-purple:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.btn-outline { background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-outline { background: #F5F4EB; border: 2px solid #211F1F; color: #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; border-radius: 14px; }
 .btn-outline:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-teal { background: #ACD1C0; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-teal { background: #ACD1C0; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; border-radius: 14px; }
 .btn-teal:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.btn-red { background: #ef4444; color: #ffffff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
+.btn-red { background: #ef4444; color: #fff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; border-radius: 14px; }
+.btn-red:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.btn-yellow { background: #EBE492; color: #211F1F; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; }
-.btn-yellow:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
-.btn-yellow:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-watched { background: #16a34a; color: #fff; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.15s; cursor: pointer; font-weight: 700; border-radius: 14px; }
+.btn-watched:hover:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
+.btn-watched:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; border: 1px solid #211F1F; }
 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
 .modal-bg { position: fixed; inset: 0; background: rgba(33,31,31,0.55); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; visibility: hidden; transition: 0.25s; }
 .modal-bg.open { opacity: 1; visibility: visible; }
-.modal-box { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px; box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px; width: 100%; max-width: 500px; transform: scale(0.95); transition: 0.25s; max-height: 90vh; overflow-y: auto; }
-.modal-bg.open .modal-box { transform: scale(1); }
+.modal-box { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 24px; box-shadow: 6px 6px 0px 0px #211F1F; padding: 28px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
 
 .skeleton { background: linear-gradient(90deg, #EAE9DF 25%, #DBD4B7 50%, #EAE9DF 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 20px; border: 2px solid #211F1F; }
 @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
-#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #211F1F; color: #DBD4B7; padding: 13px 22px; border-radius: 14px; font-size: 13px; font-weight: 700; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px rgba(33,31,31,0.3); transform: translateY(80px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; }
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #211F1F; color: #DBD4B7; padding: 13px 22px; border-radius: 14px; font-size: 13px; font-weight: 700; border: 2px solid #211F1F; transform: translateY(80px); opacity: 0; transition: 0.3s; pointer-events: none; max-width: 320px; }
 #toast.show { transform: translateY(0); opacity: 1; }
-#toast.error { background: #ef4444; color: #ffffff; }
+#toast.error { background: #ef4444; color: #fff; }
 
-#pageLoader { position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease; }
+#pageLoader { position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s; }
 #pageLoader.hidden { opacity: 0; pointer-events: none; }
 #pageLoader .spin { width: 44px; height: 44px; border: 3px solid rgba(33,31,31,0.15); border-top-color: #211F1F; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.live-stat { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #F5F4EB; border: 1px solid #211F1F; }
+.instructions-box { background: #ACD1C0; border: 2px solid #211F1F; border-radius: 14px; padding: 10px 14px; }
+.issue-box { background: #fee2e2; border: 2px solid #211F1F; border-radius: 14px; padding: 10px 14px; }
+.cheating-box { background: #fecaca; border: 2px solid #dc2626; border-radius: 14px; padding: 10px 14px; }
 
-.batch-progress { width: 100%; height: 8px; background: rgba(33,31,31,0.1); border-radius: 999px; overflow: hidden; }
-.batch-progress .fill { height: 100%; background: linear-gradient(90deg, #ACD1C0, #9bc2b1); transition: width 0.3s; }
+.issue-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 2px solid #211F1F; background: #F5F4EB; color: #b91c1c; cursor: pointer; transition: 0.2s; font-weight: 600; }
+.issue-pill:hover { background: #fee2e2; }
+.issue-pill.selected { background: #ef4444; color: #fff; }
 
-.issue-pill { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.15s; color: #211F1F; }
-.issue-pill:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 0 #211F1F; }
-.issue-pill.selected { background: #ef4444; color: #ffffff; box-shadow: 3px 3px 0 0 #211F1F; }
+.step-item { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--muted); }
+.step-num { width: 20px; height: 20px; border-radius: 50%; background: #ACD1C0; border: 1px solid #211F1F; color: #211F1F; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 
-.step-num { width: 28px; height: 28px; border-radius: 50%; background: #211F1F; color: #DBD4B7; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; border: 2px solid #211F1F; }
+.proof-screenshot { cursor: pointer; transition: 0.2s; border: 2px solid rgba(33,31,31,0.15); border-radius: 12px; }
+.proof-screenshot:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-.instructions-box { background: #DBD4B7; border: 2px dashed #211F1F; border-radius: 16px; padding: 12px 16px; }
-
-.shorts-thumb { width: 92px; height: 164px; border-radius: 16px; overflow: hidden; border: 2px solid #211F1F; background: #211F1F; box-shadow: 3px 3px 0 0 #211F1F; position: relative; flex-shrink: 0; }
-.shorts-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.shorts-thumb .play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-.shorts-thumb .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #ACD1C0; border: 2px solid #211F1F; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0 0 #211F1F; }
-.shorts-thumb .duration-tag { position: absolute; bottom: 6px; right: 6px; background: #211F1F; color: #DBD4B7; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
-
-#autoPlayBar .ap-timer {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 28px;
-    font-weight: 900;
-    line-height: 1;
-    color: #211F1F;
-    min-width: 96px;
-    text-align: center;
-}
-#autoPlayBar .ap-timer-sub {
-    font-size: 10px;
-    font-weight: 700;
-    color: #211F1F;
-    opacity: 0.75;
-    text-align: center;
-    margin-top: 2px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
+.swal2-popup { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 20px !important; box-shadow: 6px 6px 0px 0px #211F1F !important; }
+.swal2-title, .swal2-html-container { color: #211F1F !important; }
+.swal2-confirm { background: #211F1F !important; color: #DBD4B7 !important; border-radius: 12px !important; font-weight: 700 !important; }
+.swal2-cancel { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 12px !important; font-weight: 700 !important; }
 </style>
 </head>
 <body>
@@ -117,66 +99,53 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
+
     <div class="nb-dashboard-header">
       <div class="nb-badge-container">
         <div class="nb-status-card nb-status-static">
           <span class="nb-card-title">📱 Shorts Tasks</span>
         </div>
-        <a href="shortstaskproofs.html" class="nb-status-card nb-status-link">
+        <a href="shortstaskproofs.html" target="_blank" class="nb-status-card nb-status-link">
           <span class="nb-card-icon">🎥</span>
           <span class="nb-card-title">View Proofs</span>
         </a>
       </div>
       <h1 class="text-4xl font-black text-[#211F1F]">Shorts Tasks</h1>
       <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
-        Watch short videos automatically. Each short plays for its own duration, then the system
-        opens the next short.
+        Watch members' Shorts playlists and earn Shorts watches back. Use the Exsub Extension to record proofs automatically.
       </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
 
     <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
-
         <div class="card rounded-3xl p-5">
             <div class="space-y-3">
                 <button id="createBtn" onclick="openCreateModal()"
                     class="btn-purple w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    Create Shorts Tasks
+                    ➕ Create Shorts Tasks
                 </button>
                 <button id="toggleStatsBtn" onclick="toggleStats()"
                     class="btn-teal w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
                     📊 My Shorts Stats
                 </button>
-                <button id="startAutoBtn" onclick="startAutoPlayBatch()"
-                    class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
-                    ▶ Start Auto-Play (YouTube)
-                </button>
-                <button id="checkProofBtn" onclick="checkProofAndMarkWatched()"
-                    class="btn-yellow w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
-                    ✅ Check Proof & Mark Watched
-                </button>
             </div>
         </div>
 
         <div class="card rounded-3xl p-5">
-            <h2 class="font-semibold text-base mb-3">📏 Shorts Rules</h2>
+            <h2 class="font-semibold text-base mb-3">📏 Rules</h2>
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
-                    <span class="text-muted">Watch Time</span>
-                    <span id="rule-watch" class="font-bold text-purple-700">Auto (Short duration)</span>
+                    <span class="text-muted">Min Watch/Short</span>
+                    <span id="rule-min" class="font-bold text-purple-700">50%</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-muted">Max Batch</span>
-                    <span id="rule-max" class="font-bold text-purple-700">—</span>
+                    <span class="text-muted">Pending Limit</span>
+                    <span id="rule-pending" class="font-bold text-purple-700">5</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-muted">Reuse Policy</span>
-                    <span class="font-bold text-purple-700">Once</span>
+                    <span class="text-muted">Tasks / Create</span>
+                    <span id="rule-tasks" class="font-bold text-purple-700">10</span>
                 </div>
             </div>
         </div>
@@ -184,20 +153,20 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
         <div id="statsPanel" class="card rounded-3xl p-5 hidden">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="font-semibold text-base">📊 My Shorts Stats</h2>
-                <button onclick="toggleStats()" class="text-muted hover:text-[#211F1F] text-lg">✕</button>
+                <button onclick="toggleStats()" class="text-muted text-lg">✕</button>
             </div>
             <div class="space-y-3 text-sm">
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Watched</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
                     <span id="st-nowork" class="font-bold">—</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Watched</span>
-                    <span id="st-watched" class="font-bold">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                    <span id="st-pending" class="font-bold">—</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Rejected</span>
-                    <span id="st-rejected" class="font-bold">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Cheating</span>
+                    <span id="st-cheating" class="font-bold">—</span>
                 </div>
                 <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
                     <span class="text-muted">Total Tasks</span>
@@ -205,26 +174,21 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
-                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange</p>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Pending To Others</span>
-                    <span id="st-pto" class="font-bold text-blue-600">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Their Watch</span>
+                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Pending From Others</span>
-                    <span id="st-pfo" class="font-bold text-teal-600">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Watched</span>
+                    <span id="st-both" class="font-bold text-teal-600">—</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Total Given</span>
-                    <span id="st-given" class="font-bold text-green-600">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-purple-400"></span>Total Received</span>
-                    <span id="st-received" class="font-bold text-purple-600">—</span>
+                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Their Pending</span>
+                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
                 </div>
             </div>
         </div>
-
     </aside>
 
     <main class="flex-1 min-w-0">
@@ -233,40 +197,29 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
                 <div>
-                    <h3 class="font-semibold text-red-600 mb-1">Access Restricted</h3>
-                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account is restricted.</p>
+                    <h3 class="font-semibold text-red-600 mb-1">Group Access Restricted</h3>
+                    <p id="blockedMsg" class="text-red-600/80 text-sm leading-relaxed">Your account has been restricted.</p>
                 </div>
             </div>
         </div>
 
-        <div id="autoPlayBar" class="hidden mb-6 rounded-3xl p-5" style="background:#ACD1C0;border:2px solid #211F1F;box-shadow:4px 4px 0px 0px #211F1F;">
-            <div class="flex items-center justify-between gap-4 flex-wrap">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-[#211F1F] flex items-center justify-center text-[#DBD4B7] text-lg flex-shrink-0 animate-pulse">▶</div>
-                    <div>
-                        <h3 class="font-semibold text-sm">Auto-Playing on YouTube</h3>
-                        <p class="text-xs text-muted" id="autoPlayStatus">Starting…</p>
-                    </div>
+        <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-red-600 mb-1">You Have Cheating Flags!</h3>
+                    <p class="text-red-600/80 text-sm leading-relaxed">
+                        You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged as cheating. Resolve them first.
+                    </p>
                 </div>
-                <div>
-                    <div class="ap-timer" id="apTimer">00:00</div>
-                    <div class="ap-timer-sub" id="apTimerLabel">Waiting…</div>
-                </div>
-                <div class="flex items-center gap-3 flex-1 min-w-[200px]">
-                    <div class="batch-progress flex-1">
-                        <div class="fill" id="batchProgressFill" style="width:0%"></div>
-                    </div>
-                    <span id="batchProgressText" class="text-xs font-bold whitespace-nowrap">0/0</span>
-                </div>
-                <button onclick="stopAutoPlayBatch()" class="btn-red px-4 py-2 rounded-2xl text-xs font-bold">⏹ Stop</button>
             </div>
         </div>
 
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
             <div>
                 <h2 class="text-2xl font-bold" id="taskSectionTitle">My Shorts Tasks</h2>
-                <p id="taskStatusDesc" class="text-muted mt-1 text-sm">Showing <span id="statusLabel">Not Watched</span> tasks</p>
-                <p id="taskCounter" class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> tasks</p>
+                <p class="text-muted mt-1 text-sm">Showing <span id="statusLabel">Not Started</span> tasks</p>
+                <p class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> tasks</p>
             </div>
             <div class="flex flex-wrap gap-3">
                 <button onclick="refreshTasks()" class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
@@ -276,34 +229,33 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
         </div>
 
         <div class="card rounded-3xl p-5 mb-6">
-            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Shorts Tasks Work</h3>
+            <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How It Works</h3>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="flex items-start gap-3">
+                <div class="step-item">
                     <div class="step-num">1</div>
-                    <div class="text-sm text-muted leading-relaxed">Click <strong class="text-[#211F1F]">Create Shorts Tasks</strong> to generate paired tasks</div>
+                    <div>Open the target <strong class="text-[#211F1F]">channel</strong>, go to their <strong class="text-[#211F1F]">Shorts Playlist</strong></div>
                 </div>
-                <div class="flex items-start gap-3">
+                <div class="step-item">
                     <div class="step-num">2</div>
-                    <div class="text-sm text-muted leading-relaxed">Click <strong class="text-[#211F1F]">Start Auto-Play</strong> — YouTube opens, plays each short for its own duration, closes, opens next</div>
+                    <div>Watch each short ≥ <strong class="text-[#211F1F]">50%</strong> using the <strong class="text-[#211F1F]">Exsub Extension</strong></div>
                 </div>
-                <div class="flex items-start gap-3">
+                <div class="step-item">
                     <div class="step-num">3</div>
-                    <div class="text-sm text-muted leading-relaxed">Or click <strong class="text-[#211F1F]">Check Proof & Mark Watched</strong> to bulk-mark cached tasks</div>
+                    <div><strong class="text-[#211F1F]">Complete the playlist</strong>, then click <em>Mark Watched</em></div>
                 </div>
             </div>
         </div>
 
         <div id="taskList" class="space-y-4">
-            <div class="skeleton h-[180px]"></div>
-            <div class="skeleton h-[180px]"></div>
-            <div class="skeleton h-[180px]"></div>
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
+            <div class="skeleton h-[200px]"></div>
         </div>
 
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
-            <div class="text-5xl mb-4">📱</div>
-            <h3 class="text-xl font-semibold mb-2">No Shorts Tasks</h3>
+            <div class="text-5xl mb-4">📋</div>
+            <h3 class="text-xl font-semibold mb-2">No Shorts Tasks Yet</h3>
             <p class="text-muted text-sm mb-7 leading-relaxed">
-                You don't have any shorts tasks yet.<br>
                 Click <strong class="text-[#211F1F]">Create Shorts Tasks</strong> to generate paired tasks.
             </p>
             <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Shorts Tasks</button>
@@ -316,30 +268,32 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 </main>
 </main>
 
+
+<!-- CREATE MODAL -->
 <div id="createModal" class="modal-bg" onclick="if(event.target===this)closeCreateModal()">
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Create Shorts Tasks</h2>
-            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted text-lg">✕</button>
         </div>
-        <p class="text-muted text-sm mb-5 leading-relaxed" id="createModalIntro">
-            The system will pair your shorts with eligible members' shorts. Each of your shorts can only be used <strong class="text-[#211F1F]">once</strong>.
+        <p class="text-muted text-sm mb-5 leading-relaxed">
+            The system will find members you haven't worked with and pair you by <strong class="text-[#211F1F]">matching playlist category</strong>.
         </p>
         <div class="instructions-box mb-5">
             <p class="text-xs text-purple-700 leading-relaxed">
-                🎬 Every short is unique — once paired, it's locked and cannot be reused in future tasks.
+                🎯 Your Category-E playlist gets paired with another Category-E member. Same for D, C, B, A.
             </p>
         </div>
         <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 mb-5 space-y-3 text-sm">
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between">
                 <span class="text-muted">Your Pending Tasks</span>
                 <span id="modalPendingCount" class="font-bold text-lg">—</span>
             </div>
-            <div class="flex justify-between items-center">
-                <span class="text-muted">Your Eligible Shorts</span>
-                <span id="modalShortsCount" class="font-semibold">—</span>
+            <div class="flex justify-between">
+                <span class="text-muted">Available Playlists</span>
+                <span id="modalPlaylistCount" class="font-bold text-purple-700">—</span>
             </div>
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between">
                 <span class="text-muted">Can Create</span>
                 <span id="modalCanCreate" class="font-semibold">—</span>
             </div>
@@ -352,24 +306,42 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
     </div>
 </div>
 
+<!-- PROOF MODAL -->
+<div id="proofModal" class="modal-bg" onclick="if(event.target===this)closeProofModal()">
+    <div class="modal-box max-w-[780px]">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold">🎥 Watching Proof</h2>
+            <button onclick="closeProofModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted text-lg">✕</button>
+        </div>
+        <div id="proofModalContent" class="space-y-4">
+            <div class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
+                <p class="text-muted text-sm mt-3">Loading proof data...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ISSUE MODAL -->
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
             <h2 class="text-lg font-bold text-red-600">⚠ Report Issue</h2>
             <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted text-lg">✕</button>
         </div>
-        <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message.</p>
+        <p class="text-muted text-sm mb-4">Select the issue type or write a custom message.</p>
         <div class="flex flex-wrap gap-2 mb-4">
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Short not playing')">▶ Short not playing</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Video deleted')">🗑 Video deleted</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Video is private')">🔒 Video private</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Age restricted')">🔞 Age restricted</button>
-            <button class="issue-pill" onclick="toggleIssuePill(this,'Region blocked')">🌍 Region blocked</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Shorts playlist not found')">📭 Playlist not found</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Shorts playlist is private')">🔒 Playlist private</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Shorts not available')">📹 Shorts unavailable</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Shorts playlist empty')">📭 Playlist empty</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Shorts duration mismatch')">⏱ Duration mismatch</button>
             <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate</button>
+            <button class="issue-pill" onclick="toggleIssuePill(this,'Shorts not playing')">⚡ Not playing</button>
         </div>
         <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
         <textarea id="issueCustomText" rows="3" placeholder="Describe the issue…"
-            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 resize-none mb-4"></textarea>
         <input type="hidden" id="issueTaskId">
         <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
         <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
@@ -381,239 +353,411 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════════════
-// CONFIG
-// ════════════════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxG9-yFV9fAtKD8SPxEbzx0lfcsf6ZxGY-pihREdh7LY2MDZyQcHE4GLb6_ETn6865i/exec';
-
-// ⭐ Minimum duration used only when VideoDuration is missing (fallback)
-const MIN_SHORT_DURATION = 10;
-
+// ── AUTH ──
+function logoutUser() {
+    localStorage.clear();
+    window.location.href = "signin.html";
+}
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
 const USER_CODE = localStorage.getItem("usercode") || "";
+if (!savedUsername || !savedPassword) window.location.href = "signin.html";
 
-if (!savedUsername || !savedPassword) {
-    window.location.href = "signin.html";
-}
+// ── CONFIG ──
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxH1-BCJfg4Il8VyJsn6cg2jNZdTzLc5tb192Tr3jL7kKpMQFJmjUmVHUqYLtAE2ItOHw/exec';
 
 // ── STATE ──
 let allTasks = [];
 let member = null;
 let perfStats = null;
+let myPlaylists = [];
 let isLoading = false;
-let stats = { total: 0, notWorkYet: 0, watched: 0, rejected: 0 };
-let maxBatch = 50;
-let pendingLimit = 5;
-let availableShortsCount = 0;
-let tasksPerCreate = 10;
+let stats = { total: 0, notWorkYet: 0, pending: 0, watched: 0, cheating: 0, rejected: 0 };
+let exchangeStats = { awaiting: 0, both: 0, theirPending: 0 };
+let settings = { pendingLimit: 5, minWatchPercentage: 50, tasksPerCreate: 10 };
+let focusedStatus = 'NotWorkYet';
+let hasCheating = false;
+let channelNames = {}, channelHandles = {}, channelImages = {}, channelIds = {};
 
-// ── AUTO-PLAY STATE ──
-let autoPlayActive = false;
-let autoPlayQueue = [];
-let autoPlayIndex = 0;
-let pageTimerInterval = null;
-let pageTimerStart = 0;
-let pageTimerDuration = 0;
-let currentTask = null;
-let countdownFallbackTimeout = null;
+// ── CACHE KEYS (v3 — forces clean slate after backend fix) ──
+const CACHE_KEY_TASKS     = 'shorts_tasks_data_v3';
+const CACHE_KEY_STATS     = 'shorts_tasks_stats_v3';
+const CACHE_KEY_EXCHANGE  = 'shorts_tasks_exchange_v3';
+const CACHE_KEY_PERF      = 'shorts_tasks_perf_v3';
+const CACHE_KEY_MEMBER    = 'shorts_tasks_member_v3';
+const CACHE_KEY_PLAYLISTS = 'shorts_tasks_playlists_v3';
+const CACHE_KEY_TIMESTAMP = 'shorts_tasks_timestamp_v3';
+const CACHE_KEY_FOCUSED   = 'shorts_tasks_focusedStatus_v3';
+const CACHE_KEY_CHEAT_CNT = 'shorts_tasks_cheatCount_v3';
+const CACHE_KEY_HAS_CHEAT = 'shorts_tasks_hasCheat_v3';
+const CACHE_KEY_CH_NAMES  = 'shorts_tasks_channelNames_v3';
+const CACHE_KEY_CH_HANDLES= 'shorts_tasks_channelHandles_v3';
+const CACHE_KEY_CH_IMAGES = 'shorts_tasks_channelImages_v3';
+const CACHE_KEY_CH_IDS    = 'shorts_tasks_channelIds_v3';
+const CACHE_KEY_SETTINGS  = 'shorts_tasks_settings_v3';
+const CACHE_TTL           = 5 * 60 * 1000;
 
-// ════════════════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', async () => {
-    await init();
-});
+// ── BOOT ──
+window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-    try {
-        const cached = loadCache();
-        if (cached) {
-            applyData(cached);
-            hideLoader();
-            renderList();
-            renderStats();
-            return;
-        }
-        await fetchTasks();
+    // 1) Try cache — show instantly
+    const cached = loadTasksFromCache();
+    if (cached) {
+        console.log('📦 Using cached shorts tasks');
+        applyFromCache(cached);
         hideLoader();
+        renderAll();
+
+        // 2) Revalidate against server in background
+        validateAndRefreshInBackground();
+        return;
+    }
+
+    // 3) No cache — fetch fresh
+    try {
+        await fetchTasks();
     } catch (e) {
         hideLoader();
         showToast('Could not connect.', true);
         console.error(e);
     }
+    hideLoader();
 }
 
-// ── CACHE ──
-const CACHE_KEY = 'shorts_tasks_data';
-const CACHE_TS  = 'shorts_tasks_ts';
-const CACHE_TTL = 5 * 60 * 1000;
-
-function saveCache(data) {
+/* ────────────────────────────────────────
+   CACHE — save / load / clear
+──────────────────────────────────────── */
+function saveTasksToCache(data) {
     try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        localStorage.setItem(CACHE_TS, String(Date.now()));
-    } catch (e) {}
-}
-function loadCache() {
-    try {
-        const raw = localStorage.getItem(CACHE_KEY);
-        const ts  = localStorage.getItem(CACHE_TS);
-        if (!raw || !ts) return null;
-        if (Date.now() - parseInt(ts) > CACHE_TTL) return null;
-        return JSON.parse(raw);
-    } catch (e) { return null; }
-}
+        // ⭐ Strip Watched and Rejected — they don't belong in the list
+        const activeTasks = (data.tasks || []).filter(t =>
+            t.Status !== 'Watched' && t.Status !== 'Rejected'
+        );
 
-function applyData(data) {
-    member = data.member || null;
-    perfStats = data.perfStats || null;
-    stats = data.fullStats || data.stats || stats;
-    allTasks = data.tasks || [];
-    maxBatch = data.maxBatch || 50;
-    pendingLimit = data.pendingLimit || 5;
-    availableShortsCount = data.availableShortsCount || 0;
-    tasksPerCreate = data.tasksPerCreate || 10;
-    updateRules();
-}
+        localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(activeTasks));
+        localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(data.fullStats || data.stats || {}));
+        localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
+        localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(data.perfStats || {}));
+        localStorage.setItem(CACHE_KEY_MEMBER, JSON.stringify(data.member || {}));
+        localStorage.setItem(CACHE_KEY_PLAYLISTS, JSON.stringify(data.playlists || []));
+        localStorage.setItem(CACHE_KEY_TIMESTAMP, String(Date.now()));
+        localStorage.setItem(CACHE_KEY_FOCUSED, data.focusedStatus || 'NotWorkYet');
+        localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(data.hasCheating || false));
+        localStorage.setItem(CACHE_KEY_CHEAT_CNT, String(data.cheatCount || 0));
 
-function updateRules() {
-    document.getElementById('rule-max').textContent = maxBatch;
-}
+        if (data.channelNames)   localStorage.setItem(CACHE_KEY_CH_NAMES, JSON.stringify(data.channelNames));
+        if (data.channelHandles) localStorage.setItem(CACHE_KEY_CH_HANDLES, JSON.stringify(data.channelHandles));
+        if (data.channelImages)  localStorage.setItem(CACHE_KEY_CH_IMAGES, JSON.stringify(data.channelImages));
+        if (data.channelIds)     localStorage.setItem(CACHE_KEY_CH_IDS, JSON.stringify(data.channelIds));
+        if (data.settings)       localStorage.setItem(CACHE_KEY_SETTINGS, JSON.stringify(data.settings));
 
-// ── FETCH TASKS ──
-async function fetchTasks() {
-    document.getElementById('taskList').innerHTML = `
-        <div class="skeleton h-[180px]"></div>
-        <div class="skeleton h-[180px]"></div>
-        <div class="skeleton h-[180px]"></div>
-    `;
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getShortsTasks&userCode=${encodeURIComponent(USER_CODE)}`);
-        const data = await res.json();
-
-        if (!data.success) {
-            if (data.notEnrolled) return showNotEnrolled(data.message);
-            if (data.notActive)    return showNotActive(data.message);
-            if (data.suspended)    return showSuspended(data.message);
-            if (data.notFound)     return showMemberNotFound(data.message);
-            showToast(data.message || 'Error', true);
-            return;
-        }
-
-        applyData(data);
-        saveCache(data);
-        checkBlocked();
-        renderStats();
-        renderList();
+        console.log('✅ Shorts tasks cached:', activeTasks.length);
     } catch (e) {
-        showToast('Connection error.', true);
+        console.warn('Cache save failed:', e);
     }
 }
 
-async function refreshTasks() {
-    if (isLoading) return;
-    isLoading = true;
-    await fetchTasks();
-    showToast('✅ Refreshed');
-    isLoading = false;
+function loadTasksFromCache() {
+    try {
+        const tasksRaw = localStorage.getItem(CACHE_KEY_TASKS);
+        const ts       = localStorage.getItem(CACHE_KEY_TIMESTAMP);
+        if (!tasksRaw || !ts) return null;
+
+        const age = Date.now() - parseInt(ts);
+        if (age > CACHE_TTL) {
+            console.log('⏰ Shorts cache expired');
+            clearShortsCache();
+            return null;
+        }
+
+        return {
+            tasks:          JSON.parse(tasksRaw || '[]'),
+            stats:          JSON.parse(localStorage.getItem(CACHE_KEY_STATS) || '{}'),
+            exchangeStats:  JSON.parse(localStorage.getItem(CACHE_KEY_EXCHANGE) || '{}'),
+            perfStats:      JSON.parse(localStorage.getItem(CACHE_KEY_PERF) || '{}'),
+            member:         JSON.parse(localStorage.getItem(CACHE_KEY_MEMBER) || '{}'),
+            playlists:      JSON.parse(localStorage.getItem(CACHE_KEY_PLAYLISTS) || '[]'),
+            focusedStatus:  localStorage.getItem(CACHE_KEY_FOCUSED) || 'NotWorkYet',
+            hasCheating:    localStorage.getItem(CACHE_KEY_HAS_CHEAT) === 'true',
+            cheatCount:     parseInt(localStorage.getItem(CACHE_KEY_CHEAT_CNT) || '0'),
+            channelNames:   JSON.parse(localStorage.getItem(CACHE_KEY_CH_NAMES) || '{}'),
+            channelHandles: JSON.parse(localStorage.getItem(CACHE_KEY_CH_HANDLES) || '{}'),
+            channelImages:  JSON.parse(localStorage.getItem(CACHE_KEY_CH_IMAGES) || '{}'),
+            channelIds:     JSON.parse(localStorage.getItem(CACHE_KEY_CH_IDS) || '{}'),
+            settings:       JSON.parse(localStorage.getItem(CACHE_KEY_SETTINGS) || '{}')
+        };
+    } catch (e) {
+        console.warn('Cache load failed:', e);
+        return null;
+    }
 }
 
-// ── RENDER LIST ──
+function clearShortsCache() {
+    [
+        CACHE_KEY_TASKS, CACHE_KEY_STATS, CACHE_KEY_EXCHANGE, CACHE_KEY_PERF,
+        CACHE_KEY_MEMBER, CACHE_KEY_PLAYLISTS, CACHE_KEY_TIMESTAMP,
+        CACHE_KEY_FOCUSED, CACHE_KEY_HAS_CHEAT, CACHE_KEY_CHEAT_CNT,
+        CACHE_KEY_CH_NAMES, CACHE_KEY_CH_HANDLES, CACHE_KEY_CH_IMAGES,
+        CACHE_KEY_CH_IDS, CACHE_KEY_SETTINGS
+    ].forEach(k => localStorage.removeItem(k));
+    console.log('🗑️ Shorts cache cleared');
+}
+
+function applyFromCache(c) {
+    // ⭐ Always strip Watched/Rejected from cached tasks
+    allTasks      = (c.tasks || []).filter(t => t.Status !== 'Watched' && t.Status !== 'Rejected');
+    stats         = c.stats || stats;
+    exchangeStats = c.exchangeStats || exchangeStats;
+    perfStats     = c.perfStats || null;
+    member        = c.member || null;
+    myPlaylists   = c.playlists || [];
+    focusedStatus = c.focusedStatus || 'NotWorkYet';
+    hasCheating   = c.hasCheating || false;
+    if (c.settings) settings = { ...settings, ...c.settings };
+
+    channelNames   = c.channelNames || {};
+    channelHandles = c.channelHandles || {};
+    channelImages  = c.channelImages || {};
+    channelIds     = c.channelIds || {};
+
+    if (c.cheatCount > 0) {
+        document.getElementById('cheatCount').textContent = c.cheatCount;
+    }
+    document.getElementById('rule-min').textContent     = (settings.minWatchPercentage || 50) + '%';
+    document.getElementById('rule-pending').textContent = settings.pendingLimit || 5;
+    document.getElementById('rule-tasks').textContent   = settings.tasksPerCreate || 10;
+}
+
+async function validateAndRefreshInBackground() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getShortsMemberAndTasks&userCode=${encodeURIComponent(USER_CODE)}`);
+        const data = await res.json();
+        if (!data.success) return;
+
+        applyData(data);
+        saveTasksToCache(data);
+        renderAll();
+        console.log('🔄 Shorts tasks revalidated');
+    } catch (e) {
+        console.warn('Background revalidate failed:', e);
+    }
+}
+
+/* ────────────────────────────────────────
+   DATA PIPELINE
+──────────────────────────────────────── */
+function applyData(data) {
+    member = data.member || null;
+    perfStats = data.perfStats || null;
+    myPlaylists = data.playlists || [];
+
+    // ⭐ Strip Watched / Rejected
+    allTasks = (data.tasks || []).filter(t =>
+        t.Status !== 'Watched' && t.Status !== 'Rejected'
+    );
+
+    stats = data.fullStats || data.stats || stats;
+    exchangeStats = data.exchangeStats || exchangeStats;
+    focusedStatus = data.focusedStatus || 'NotWorkYet';
+    hasCheating = data.hasCheating || false;
+    if (data.settings) settings = { ...settings, ...data.settings };
+    if (data.channelNames)   channelNames   = data.channelNames;
+    if (data.channelHandles) channelHandles = data.channelHandles;
+    if (data.channelImages)  channelImages  = data.channelImages;
+    if (data.channelIds)     channelIds     = data.channelIds;
+
+    document.getElementById('rule-min').textContent     = (settings.minWatchPercentage || 50) + '%';
+    document.getElementById('rule-pending').textContent = settings.pendingLimit || 5;
+    document.getElementById('rule-tasks').textContent   = settings.tasksPerCreate || 10;
+    if (data.cheatCount > 0) document.getElementById('cheatCount').textContent = data.cheatCount;
+}
+
+async function fetchTasks() {
+    document.getElementById('taskList').innerHTML = `
+        <div class="skeleton h-[200px]"></div>
+        <div class="skeleton h-[200px]"></div>
+        <div class="skeleton h-[200px]"></div>
+    `;
+    const res = await fetch(`${SCRIPT_URL}?action=getShortsMemberAndTasks&userCode=${encodeURIComponent(USER_CODE)}`);
+    const data = await res.json();
+
+    if (!data.success) {
+        if (data.notEnrolled) return showNotEnrolled(data.message);
+        if (data.notActive)    return showNotActive(data.message);
+        if (data.suspended)    return showSuspended(data.message);
+        if (data.notFound)     return showMemberNotFound(data.message);
+        showToast(data.message || 'Error', true);
+        return;
+    }
+
+    applyData(data);
+    saveTasksToCache(data);
+    renderAll();
+}
+
+function renderAll() {
+    checkBlocked();
+    checkCheating();
+    renderStats();
+    renderList();
+}
+
+/* ────────────────────────────────────────
+   RENDER LIST
+──────────────────────────────────────── */
 function renderList() {
     const list = document.getElementById('taskList');
     const empty = document.getElementById('emptyState');
 
-    if (allTasks.length === 0) {
+    const activeTasks = allTasks.filter(t => t.Status !== 'Watched' && t.Status !== 'Rejected');
+
+    if (activeTasks.length === 0) {
         list.innerHTML = '';
         empty.classList.remove('hidden');
         document.getElementById('showingCount').textContent = '0';
         return;
     }
     empty.classList.add('hidden');
-    list.innerHTML = allTasks.map(cardHTML).join('');
-    document.getElementById('showingCount').textContent = allTasks.length;
+
+    const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2 };
+    const sorted = [...activeTasks].sort((a, b) => (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9));
+
+    list.innerHTML = sorted.map(cardHTML).join('');
+    document.getElementById('showingCount').textContent = sorted.length;
+    document.getElementById('statusLabel').textContent = {
+        'Cheating': 'Cheating',
+        'Pending': 'Pending',
+        'NotWorkYet': 'Not Started'
+    }[focusedStatus] || 'Not Started';
 }
 
 function cardHTML(t) {
-    const dur = parseInt(t.VideoDuration) || MIN_SHORT_DURATION;
-    const channel = t.TargetChannelName || t.TargetUserCode || '—';
-    const handle = t.TargetChannelHandle || '';
-    const title = t.VideoTitle || '';
-    const thumb = t.VideoThumbnail || '';
-    const safeTitle = String(title).replace(/"/g, '&quot;');
-    const fallbackYt = t.VideoId ? `https://i.ytimg.com/vi/${t.VideoId}/hqdefault.jpg` : '';
+    const sc = {
+        'NotWorkYet': { bg: 'bg-yellow-500/15', text: 'text-yellow-700', dot: 'bg-yellow-400', label: 'Not Started' },
+        'Pending':    { bg: 'bg-orange-500/15', text: 'text-orange-600', dot: 'bg-orange-400', label: 'Pending' },
+        'Watched':    { bg: 'bg-green-500/15',  text: 'text-green-600',  dot: 'bg-green-400',  label: 'Watched' },
+        'Cheating':   { bg: 'bg-red-500/15',    text: 'text-red-600',    dot: 'bg-red-400',    label: 'Cheating' },
+        'Rejected':   { bg: 'bg-gray-500/15',   text: 'text-gray-600',   dot: 'bg-gray-400',   label: 'Rejected' }
+    }[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
 
-    const imgTag = thumb || fallbackYt
-        ? `<img src="${thumb || fallbackYt}"
-                alt="Short thumbnail"
-                loading="lazy"
-                data-fb="${fallbackYt}"
-                onerror="if(!this.dataset.tried && this.dataset.fb && this.src!==this.dataset.fb){this.dataset.tried='1';this.src=this.dataset.fb;}else{this.onerror=null;this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:#DBD4B7;&quot;>📱</div>';}">`
-        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:#DBD4B7;">📱</div>`;
+    const isCheating = t.Status === 'Cheating';
+    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !hasCheating;
+
+    const cat = t.PlaylistCategory || '—';
+    const catColor = { 'A':'#f87171', 'B':'#fb923c', 'C':'#a78bfa', 'D':'#38bdf8', 'E':'#4ade80' }[cat] || '#6b7280';
+
+    const chanName = t.TargetChannelName || t.TargetUserCode;
+    const handle = t.TargetChannelHandle || '';
+    const chanImage = t.TargetChannelImage || '';
+    const chanUrl = t.TargetChannelId ? `https://www.youtube.com/channel/${t.TargetChannelId}` : '#';
+
+    const playlistName = t.ShortPlaylistName || 'Shorts Playlist';
+    const videoCount = t.VideoCount || 0;
+    const requiredMin = t.RequiredMinutes || 0;
+
+    const pairedBadge = (() => {
+        if (t.Status !== 'Watched') return '';
+        if (t.PairedStatus === 'Watched') return `<span class="status-badge bg-teal-500/15 text-teal-600">✓ They Watched Back</span>`;
+        if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') return `<span class="status-badge bg-orange-500/15 text-orange-600">⏳ Their Watch: Pending</span>`;
+        return `<span class="status-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Watch</span>`;
+    })();
+
+    const cheatingBlock = isCheating ? `
+        <div class="cheating-box mt-3">
+            <p class="text-xs text-red-600 font-semibold mb-1">🚫 Cheating Detected</p>
+            <p class="text-xs text-red-600/80 leading-relaxed">This task has been flagged. Resolve it before continuing.</p>
+        </div>` : '';
+
+    const issueSection = !isCheating ? `
+        <div class="issue-box mt-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-red-600/80 font-medium">⚠ Report Issue with this task</span>
+                <button onclick="openIssueModal('${t.TaskID}')" class="text-xs text-red-600 underline">${t.Issue ? 'Update Issue' : 'Report'}</button>
+            </div>
+            ${t.Issue ? `<p class="text-xs text-red-600/70 mt-1">Current: ${t.Issue}</p>` : ''}
+        </div>` : '';
+
+    let actionButtons = '';
+    if (isCheating) {
+        actionButtons = `
+            <button onclick="viewWatchingProof('${t.TaskID}')" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium flex-1">🎥 Proof</button>
+            <div class="px-4 py-2.5 rounded-2xl text-xs bg-red-500/10 border border-red-500/20 text-red-600 flex-1 text-center">🔒 Locked</div>`;
+    } else if (canMark) {
+        actionButtons = `
+            <a href="${chanUrl}" target="_blank" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex-1">▶ Open Channel</a>
+            <button onclick="viewWatchingProof('${t.TaskID}')" class="btn-teal px-4 py-2.5 rounded-2xl text-xs font-medium flex-1">🎥 Proof</button>
+            <button onclick="doMarkWatched('${t.TaskID}', this)" class="btn-watched px-4 py-2.5 rounded-2xl text-xs font-semibold flex-1">✓ Mark Watched</button>`;
+    } else {
+        actionButtons = `
+            <a href="${chanUrl}" target="_blank" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex-1">▶ Open Channel</a>
+            <button onclick="viewWatchingProof('${t.TaskID}')" class="btn-teal px-4 py-2.5 rounded-2xl text-xs font-medium flex-1">🎥 Proof</button>
+            <button class="btn-outline px-4 py-2.5 rounded-2xl text-xs opacity-60 flex-1" disabled>✓ Done</button>`;
+    }
+
+    const cardClass = isCheating ? 'task-card cheating-card' : (t.Status === 'Watched' ? 'task-card watched-card' : 'task-card');
 
     return `
-    <div class="shorts-card rounded-3xl p-5" data-task-id="${t.TaskID}">
-        <div class="flex flex-wrap items-center gap-2 mb-3">
+    <div class="${cardClass} rounded-3xl p-5">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
             <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
-            <span class="status-badge bg-yellow-500/15 text-yellow-700"><span class="dot bg-yellow-400"></span>Not Watched</span>
-            <span class="status-badge bg-purple-500/15 text-purple-700">⏱ ${dur}s short</span>
-            <span class="status-badge bg-blue-500/15 text-blue-700">🎯 Watch ${dur}s</span>
-            <span class="status-badge bg-teal-500/15 text-teal-700">🔒 Unique Pair</span>
+            <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
+            <span class="status-badge" style="background:${catColor}22;color:${catColor};border-color:#211F1F;">📂 CAT-${cat}</span>
+            ${pairedBadge}
+            ${t.Issue ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>` : ''}
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4">
-            <div class="shorts-thumb mx-auto sm:mx-0">
-                ${imgTag}
-                <div class="play-overlay">
-                    <div class="play-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#211F1F">
-                            <polygon points="6,4 20,12 6,20" />
-                        </svg>
+        <div class="flex flex-col xl:flex-row gap-5">
+            <div class="flex-1 min-w-0">
+                <div class="instructions-box mb-3">
+                    <p class="text-xs text-purple-700 font-semibold mb-2">🎵 Target Shorts Playlist:</p>
+                    <div class="flex items-center gap-3">
+                        ${chanImage
+                            ? `<img src="${chanImage}" class="w-11 h-11 rounded-xl object-cover border border-[#211F1F]/15 flex-shrink-0" onerror="this.style.display='none'">`
+                            : `<div class="w-11 h-11 rounded-xl bg-white border border-[#211F1F]/15 flex items-center justify-center text-lg flex-shrink-0">📺</div>`}
+                        <div class="min-w-0 flex-1">
+                            <div class="font-semibold text-sm truncate">${chanName}</div>
+                            ${handle ? `<div class="text-xs text-purple-700 font-mono mt-0.5">${handle}</div>` : ''}
+                            <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                <span class="font-semibold text-[#211F1F] text-sm">🎵 ${playlistName}</span>
+                            </div>
+                            <div class="flex gap-4 text-xs text-muted mt-1">
+                                ${videoCount ? `<span>📹 ${videoCount} shorts</span>` : ''}
+                                ${requiredMin ? `<span>⏱ ${requiredMin} min</span>` : ''}
+                                ${t.ShortPlaylistId ? `<span class="font-mono text-[10px]">ID: ${t.ShortPlaylistId}</span>` : ''}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="duration-tag">${dur}s</div>
+
+                ${cheatingBlock}
+                ${issueSection}
+
+                <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
+                    <span>Member: <span class="text-[#211F1F]/70">${t.TargetUserCode || '—'}</span></span>
+                    <span>Created: <span class="text-[#211F1F]/70">${fmtDate(t.CreatedDate)}</span></span>
+                    ${t.WorkedDate ? `<span>Worked: <span class="text-[#211F1F]/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
+                </div>
             </div>
 
-            <div class="flex-1 min-w-0 flex flex-col justify-between">
-                <div class="flex items-start gap-3 mb-3">
-                    ${t.TargetChannelImage
-                        ? `<img src="${t.TargetChannelImage}" class="w-10 h-10 rounded-xl object-cover border border-[#211F1F]/15 flex-shrink-0" onerror="this.style.display='none'">`
-                        : `<div class="w-10 h-10 rounded-xl bg-white border border-[#211F1F]/15 flex items-center justify-center text-lg flex-shrink-0">📺</div>`}
-                    <div class="min-w-0 flex-1">
-                        <p class="font-semibold text-sm truncate">${channel}</p>
-                        ${handle ? `<p class="text-xs text-purple-700 font-mono truncate">${handle}</p>` : ''}
-                        ${title ? `<p class="text-xs text-muted mt-1 truncate" title="${safeTitle}">📹 ${title}</p>` : ''}
-                        <p class="text-xs text-muted mt-1">Video: <span class="font-mono">${t.VideoId}</span></p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                    <a href="${t.VideoUrl}" target="_blank" class="btn-teal px-4 py-2.5 rounded-2xl text-xs font-bold flex-1 sm:flex-none text-center">
-                        ▶ Play on YouTube
-                    </a>
-                    <button onclick="openIssueModal('${t.TaskID}')" class="btn-outline px-3 py-2.5 rounded-2xl text-xs" title="Report issue">
-                        ⚠
-                    </button>
-                </div>
+            <div class="flex flex-wrap xl:flex-col items-center xl:items-stretch gap-2 xl:w-[200px] flex-shrink-0">
+                ${actionButtons}
             </div>
         </div>
     </div>`;
 }
 
-// ── STATS ──
+/* ────────────────────────────────────────
+   STATS / BANNERS
+──────────────────────────────────────── */
 function renderStats() {
     document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
-    document.getElementById('st-watched').textContent = stats.watched || 0;
-    document.getElementById('st-rejected').textContent = stats.rejected || 0;
+    document.getElementById('st-pending').textContent = stats.pending || 0;
+    document.getElementById('st-cheating').textContent = stats.cheating || 0;
     document.getElementById('st-total').textContent = stats.total || 0;
-
-    if (perfStats) {
-        document.getElementById('st-pto').textContent = perfStats.PendingShortsViewsToOthers || 0;
-        document.getElementById('st-pfo').textContent = perfStats.PendingShortsViewsFromOthers || 0;
-        document.getElementById('st-given').textContent = perfStats.TotalShortsViewsGiven || 0;
-        document.getElementById('st-received').textContent = perfStats.TotalShortsViewsReceived || 0;
-    }
+    document.getElementById('st-awaiting').textContent = exchangeStats.awaiting || 0;
+    document.getElementById('st-both').textContent = exchangeStats.both || 0;
+    document.getElementById('st-theirpending').textContent = exchangeStats.theirPending || 0;
 }
 
 function toggleStats() {
@@ -624,314 +768,170 @@ function checkBlocked() {
     if (!member) return;
     const suspended = member.ViolationFlag === 'Suspended';
     const disabled = member.ShortsPromotionActive === 'No';
+    const notEnrolled = member.InShortsViralWork !== 'Yes';
+    const banner = document.getElementById('blockedBanner');
+    const createBtn = document.getElementById('createBtn');
 
-    if (suspended || disabled) {
-        document.getElementById('blockedBanner').classList.remove('hidden');
+    const hasPending = allTasks.some(t => t.Status === 'NotWorkYet' || t.Status === 'Pending');
+    const shouldShow = suspended || notEnrolled || (disabled && !hasPending);
+
+    if (shouldShow) {
+        banner.classList.remove('hidden');
         document.getElementById('blockedMsg').textContent = suspended
             ? `Account suspended until ${member.SuspendedUntil || 'further notice'}.`
-            : 'Shorts promotion is disabled.';
+            : (notEnrolled ? 'You are not enrolled in the Shorts Viral Group.' : 'Shorts promotion is disabled. Complete pending tasks.');
+        if (createBtn) { createBtn.disabled = true; createBtn.classList.add('opacity-40'); }
     } else {
-        document.getElementById('blockedBanner').classList.add('hidden');
+        banner.classList.add('hidden');
+        if (createBtn) { createBtn.disabled = false; createBtn.classList.remove('opacity-40'); }
     }
 }
 
-// ════════════════════════════════════════════════════════════════
-// TAB-BASED AUTO-PLAY — uses the ACTUAL VideoDuration per task
-// ════════════════════════════════════════════════════════════════
-
-function startAutoPlayBatch() {
-    if (allTasks.length === 0) {
-        showToast('No tasks to play.', true);
-        return;
+function checkCheating() {
+    const cheats = allTasks.filter(t => t.Status === 'Cheating').length;
+    hasCheating = cheats > 0;
+    const banner = document.getElementById('cheatingBanner');
+    if (hasCheating) {
+        banner.classList.remove('hidden');
+        document.getElementById('cheatCount').textContent = cheats;
+        const btn = document.getElementById('createBtn');
+        if (btn) { btn.disabled = true; btn.classList.add('opacity-40'); }
+    } else {
+        banner.classList.add('hidden');
     }
-
-    autoPlayQueue = [...allTasks];
-    autoPlayIndex = 0;
-    autoPlayActive = true;
-
-    document.getElementById('autoPlayBar').classList.remove('hidden');
-    updateBatchProgress();
-    setPageTimer(0, 0, 'Starting…');
-
-    openCurrentShort();
 }
 
-function stopAutoPlayBatch() {
-    autoPlayActive = false;
-    autoPlayQueue = [];
-    autoPlayIndex = 0;
+/* ────────────────────────────────────────
+   MARK WATCHED
+──────────────────────────────────────── */
+async function doMarkWatched(taskId, btnEl) {
+    if (hasCheating) { showToast('Resolve cheating tasks first.', true); return; }
 
-    clearInterval(pageTimerInterval);
-    pageTimerInterval = null;
+    const orig = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = `<span class="inline-flex items-center gap-2"><svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>Checking…</span>`;
 
-    if (countdownFallbackTimeout) {
-        clearTimeout(countdownFallbackTimeout);
-        countdownFallbackTimeout = null;
-    }
-
-    document.getElementById('autoPlayBar').classList.add('hidden');
-    showToast('Auto-play stopped.');
-}
-
-function openCurrentShort() {
-    if (!autoPlayActive) return;
-    if (autoPlayIndex >= autoPlayQueue.length) {
-        stopAutoPlayBatch();
-        showToast('🎉 Batch complete!');
-        return;
-    }
-
-    currentTask = autoPlayQueue[autoPlayIndex];
-
-    // ⭐ Use the Short's actual duration (fallback to 10s if missing)
-    const dur = parseInt(currentTask.VideoDuration) || MIN_SHORT_DURATION;
-    const url = `https://www.youtube.com/shorts/${currentTask.VideoId}`;
-
-    updateBatchProgress();
-    document.getElementById('autoPlayStatus').textContent =
-        `Opening YouTube (${autoPlayIndex + 1}/${autoPlayQueue.length}) — ${currentTask.VideoId} · ${dur}s`;
-
-    // Open the YouTube tab via a synthetic <a> click.
     try {
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    } catch (e) {
-        try { window.open(url, '_blank'); } catch (e2) {}
-    }
-
-    // Start the visible page timer for exactly this Short's duration
-    setPageTimer(dur, dur, `Short duration: ${dur}s`);
-    startPageCountdown(currentTask, dur);
-}
-
-function startPageCountdown(task, durationSec) {
-    stopPageTimer();
-
-    pageTimerStart = Date.now();
-    pageTimerDuration = durationSec;
-
-    pageTimerInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - pageTimerStart) / 1000);
-        const remaining = Math.max(0, durationSec - elapsed);
-
-        updatePageTimerDisplay(remaining);
-
-        if (remaining <= 0) {
-            stopPageTimer();
-            countdownFallbackTimeout = setTimeout(() => {
-                if (autoPlayActive && autoPlayQueue[autoPlayIndex]?.TaskID === task.TaskID) {
-                    advanceToNext(task);
-                }
-            }, 1200);
-        }
-    }, 1000);
-}
-
-function stopPageTimer() {
-    if (pageTimerInterval) {
-        clearInterval(pageTimerInterval);
-        pageTimerInterval = null;
-    }
-}
-
-function setPageTimer(totalSec, remainingSec, label) {
-    pageTimerDuration = totalSec;
-    updatePageTimerDisplay(remainingSec);
-    document.getElementById('apTimerLabel').textContent = label || '';
-}
-
-function updatePageTimerDisplay(remainingSec) {
-    const m = String(Math.floor(remainingSec / 60)).padStart(2, '0');
-    const s = String(remainingSec % 60).padStart(2, '0');
-    document.getElementById('apTimer').textContent = `${m}:${s}`;
-}
-
-async function advanceToNext(task) {
-    if (!autoPlayActive) return;
-
-    stopPageTimer();
-
-    // ⭐ Watched seconds = exactly what the page-side timer ran
-    const watched = pageTimerDuration || parseInt(task.VideoDuration) || MIN_SHORT_DURATION;
-    await markTaskWatched(task, watched);
-
-    autoPlayIndex++;
-    updateBatchProgress();
-
-    setTimeout(() => {
-        if (autoPlayActive) openCurrentShort();
-    }, 900);
-}
-
-async function markTaskWatched(task, watchedSecondsValue) {
-    try {
-        await fetch(SCRIPT_URL, {
+        const res = await fetch(SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'autoMarkShortsWatched',
-                taskId: task.TaskID,
-                userCode: USER_CODE,
-                targetUserCode: task.TargetUserCode,
-                videoId: task.VideoId,
-                watchedSeconds: watchedSecondsValue
-            })
+            body: JSON.stringify({ action: 'markShortsWatched', taskId, userCode: USER_CODE })
         });
+        const data = await res.json();
+
+        if (data.success) {
+            showToast(data.bothWatched ? '🎉 Both watched!' : '✅ Marked Watched!');
+            clearShortsCache();           // ⭐ force fresh fetch
+            await fetchTasks();
+        } else if (data.proofMissing) {
+            btnEl.disabled = false; btnEl.innerHTML = orig;
+            Swal.fire({
+                icon: 'warning',
+                title: '⚠️ Proof Not Found',
+                html: `
+                    <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                        <p style="margin-bottom:12px;">${data.message || 'No watching proof found.'}</p>
+                        <ol style="margin-left:16px;list-style:decimal;">
+                            <li style="margin-bottom:6px;">Open the target channel on YouTube</li>
+                            <li style="margin-bottom:6px;">Go to their <strong>Shorts Playlist</strong></li>
+                            <li style="margin-bottom:6px;">Watch each short using the <strong>Exsub Extension</strong></li>
+                            <li style="margin-bottom:6px;">Then click <strong>Mark Watched</strong> again</li>
+                        </ol>
+                    </div>`,
+                confirmButtonText: 'Got It'
+            });
+        } else {
+            btnEl.disabled = false; btnEl.innerHTML = orig;
+            showToast(data.message || 'Could not mark watched.', true);
+        }
     } catch (e) {
-        console.warn('Mark failed', e);
+        btnEl.disabled = false; btnEl.innerHTML = orig;
+        showToast('Connection error.', true);
     }
-
-    allTasks = allTasks.filter(t => t.TaskID !== task.TaskID);
-    stats.notWorkYet = Math.max(0, stats.notWorkYet - 1);
-    stats.watched = (stats.watched || 0) + 1;
-    renderList();
-    renderStats();
 }
 
-function updateBatchProgress() {
-    const done = autoPlayIndex;
-    const total = autoPlayQueue.length;
-    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-    document.getElementById('batchProgressFill').style.width = pct + '%';
-    document.getElementById('batchProgressText').textContent = `${done}/${total}`;
-    document.getElementById('autoPlayStatus').textContent = `Playing ${done + 1} of ${total}…`;
-}
-
-// ════════════════════════════════════════════════════════════════
-// CHECK PROOF & MARK WATCHED
-// ════════════════════════════════════════════════════════════════
-async function checkProofAndMarkWatched() {
-    if (allTasks.length === 0) {
-        showToast('No pending tasks to mark.', true);
-        return;
-    }
-
-    const btn = document.getElementById('checkProofBtn');
-    btn.disabled = true;
-    btn.textContent = '🔎 Checking proofs…';
-
-    const proofsByVideo = {};
-
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (!key || !key.startsWith('exsub_last_proof_')) continue;
-        try {
-            const proof = JSON.parse(localStorage.getItem(key) || '{}');
-            const vid = proof.videoId || key.replace('exsub_last_proof_', '');
-            if (!vid) continue;
-            const prev = proofsByVideo[vid];
-            if (!prev || (proof.watchedSeconds || 0) > (prev.watchedSeconds || 0)) {
-                proofsByVideo[vid] = proof;
-            }
-        } catch (e) {}
-    }
+/* ────────────────────────────────────────
+   VIEW PROOF
+──────────────────────────────────────── */
+async function viewWatchingProof(taskId) {
+    const modal = document.getElementById('proofModal');
+    const content = document.getElementById('proofModalContent');
+    content.innerHTML = `<div class="text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div><p class="text-muted text-sm mt-3">Loading proof…</p></div>`;
+    modal.classList.add('open');
 
     try {
-        const log = JSON.parse(localStorage.getItem('exsub_proof_log') || '[]');
-        if (Array.isArray(log)) {
-            log.forEach(proof => {
-                const vid = proof.videoId;
-                if (!vid) return;
-                const prev = proofsByVideo[vid];
-                if (!prev || (proof.watchedSeconds || 0) > (prev.watchedSeconds || 0)) {
-                    proofsByVideo[vid] = proof;
-                }
-            });
+        const res = await fetch(`${SCRIPT_URL}?action=getShortsWatchProgress&taskId=${encodeURIComponent(taskId)}&userCode=${encodeURIComponent(USER_CODE)}`);
+        const data = await res.json();
+
+        if (!data.success) {
+            content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">${data.message || 'Could not load.'}</p></div>`;
+            return;
         }
-    } catch (e) {}
 
-    // ⭐ Eligible = any proof with watchedSeconds >= 10 (the minimum short duration)
-    const eligibleTasks = allTasks.filter(t => {
-        const p = proofsByVideo[t.VideoId];
-        if (!p) return false;
-        const ws = parseInt(p.watchedSeconds) || 0;
-        const taskDur = parseInt(t.VideoDuration) || MIN_SHORT_DURATION;
-        return ws >= Math.min(taskDur, MIN_SHORT_DURATION) && ws >= MIN_SHORT_DURATION;
-    });
-
-    if (eligibleTasks.length === 0) {
-        btn.disabled = false;
-        btn.textContent = '✅ Check Proof & Mark Watched';
-        showToast('No cached proofs found for your tasks.', true);
-        return;
-    }
-
-    let okCount = 0;
-    let failCount = 0;
-
-    for (const task of eligibleTasks) {
-        const proof = proofsByVideo[task.VideoId];
-        const watched = parseInt(proof.watchedSeconds) || parseInt(task.VideoDuration) || MIN_SHORT_DURATION;
-
-        try {
-            const res = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({
-                    action: 'autoMarkShortsWatched',
-                    taskId: task.TaskID,
-                    userCode: USER_CODE,
-                    targetUserCode: task.TargetUserCode,
-                    videoId: task.VideoId,
-                    watchedSeconds: watched
-                })
-            });
-            const data = await res.json();
-            if (data.success) okCount++;
-            else failCount++;
-        } catch (e) {
-            failCount++;
+        const records = data.highest || [];
+        if (records.length === 0) {
+            content.innerHTML = `<div class="bg-yellow-500/10 border border-yellow-500/25 rounded-2xl p-6 text-center"><p class="text-yellow-700">📭 No proof found yet.</p><p class="text-muted text-sm mt-2">Watch the playlist via the Exsub Extension to record proofs.</p></div>`;
+            return;
         }
+
+        const MIN_PCT = settings.minWatchPercentage || 50;
+        const watchedCount = records.filter(r => r.Percentage >= MIN_PCT).length;
+
+        let html = `<div class="space-y-3">`;
+        html += `<p class="text-sm text-muted">Found <strong>${records.length}</strong> short(s) with proofs · <strong class="text-green-600">${watchedCount}</strong> meet ≥${MIN_PCT}%</p><hr class="border-[#211F1F]/15">`;
+
+        const sorted = [...records].sort((a, b) => b.Percentage - a.Percentage);
+        sorted.forEach((r, i) => {
+            const ok = r.Percentage >= MIN_PCT;
+            const color = ok ? '#16a34a' : (r.Percentage > 0 ? '#f59e0b' : '#ef4444');
+            const img = r.ProofScreenshot ? `<img src="${r.ProofScreenshot}" class="proof-screenshot w-full max-h-[220px] object-contain mt-2" onclick="window.open('${r.ProofScreenshotRaw || r.ProofScreenshot}','_blank')" onerror="this.style.display='none'">` : '';
+
+            html += `
+                <div class="bg-white border-2 border-[#211F1F] rounded-2xl p-4">
+                    <div class="flex items-center justify-between flex-wrap gap-2 mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-purple-700 text-sm">📹 #${i + 1}</span>
+                            <span class="text-xs font-semibold" style="color:${color}">${ok ? '✅' : '⏳'} ${r.Percentage}%</span>
+                        </div>
+                        <span class="text-xs text-muted">${r.VideoDurationDisplay || ''}</span>
+                    </div>
+                    <div class="text-sm font-semibold text-[#211F1F] mb-2">${r.VideoTitle || r.VideoId}</div>
+                    <div class="grid grid-cols-3 gap-2 text-xs bg-gray-50 rounded-xl p-2">
+                        <div>▶ Play: <strong>${r.PlaySecondsDisplay || '0'}</strong></div>
+                        <div>⏹ Stop: <strong>${r.StopSecondsDisplay || '0'}</strong></div>
+                        <div>📊 <strong style="color:${color}">${r.Percentage}%</strong></div>
+                    </div>
+                    ${img}
+                </div>`;
+        });
+        html += `</div>`;
+        content.innerHTML = html;
+    } catch (e) {
+        content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">Connection error.</p></div>`;
     }
-
-    await fetchTasks();
-
-    btn.disabled = false;
-    btn.textContent = '✅ Check Proof & Mark Watched';
-
-    showToast(`✅ Marked ${okCount} task(s)` + (failCount ? ` · ${failCount} failed` : ''));
-
-    Swal.fire({
-        icon: 'success',
-        title: 'Proof Verified',
-        html: `<b>${okCount}</b> task(s) marked as Watched.<br>` +
-              (failCount ? `<span style="color:#ef4444;">${failCount} failed to mark.</span>` : ''),
-        confirmButtonColor: '#211F1F'
-    });
 }
 
-// ════════════════════════════════════════════════════════════════
-// CREATE TASKS
-// ════════════════════════════════════════════════════════════════
-function openCreateModal() {
-    const pending = (stats && stats.notWorkYet) ? stats.notWorkYet : 0;
-    const remaining = Math.max(0, pendingLimit - pending);
-    const canCreate = remaining > 0 && availableShortsCount > 0;
+function closeProofModal() {
+    document.getElementById('proofModal').classList.remove('open');
+}
 
-    document.getElementById('modalPendingCount').textContent = `${pending} / ${pendingLimit}`;
-    document.getElementById('modalShortsCount').textContent = availableShortsCount;
-    document.getElementById('modalCanCreate').textContent =
-        canCreate
-            ? `Up to ${Math.min(tasksPerCreate, availableShortsCount, remaining)} task(s)`
-            : (availableShortsCount === 0
-                ? 'No eligible shorts left'
-                : `Pending limit reached (${pending}/${pendingLimit})`);
-    document.getElementById('modalCanCreate').className =
-        canCreate ? 'font-semibold text-green-600' : 'font-semibold text-red-600';
+/* ────────────────────────────────────────
+   CREATE TASKS
+──────────────────────────────────────── */
+function openCreateModal() {
+    const pending = stats.notWorkYet + stats.pending;
+    const remaining = Math.max(0, (settings.pendingLimit || 5) - pending);
+    const playlistCount = myPlaylists.length;
+    const canCreate = remaining > 0 && playlistCount > 0;
+
+    document.getElementById('modalPendingCount').textContent = `${pending} / ${settings.pendingLimit || 5}`;
+    document.getElementById('modalPlaylistCount').textContent = playlistCount;
+    document.getElementById('modalCanCreate').textContent = canCreate
+        ? `Up to ${Math.min(settings.tasksPerCreate || 10, remaining)} task(s)`
+        : (playlistCount === 0 ? 'No ready playlists' : 'Pending limit reached');
 
     document.getElementById('doCreateBtn').disabled = !canCreate;
     document.getElementById('createResultBox').classList.add('hidden');
-
-    const intro = document.getElementById('createModalIntro');
-    if (intro) {
-        intro.innerHTML = `The system will pair your shorts with eligible members' shorts — up to <strong class="text-[#211F1F]">${tasksPerCreate}</strong> task(s) per batch. Each of your shorts can only be used <strong class="text-[#211F1F]">once</strong>.`;
-    }
-
     document.getElementById('createModal').classList.add('open');
 }
 
@@ -941,8 +941,9 @@ function closeCreateModal() {
 
 async function doCreateTasks() {
     const btn = document.getElementById('doCreateBtn');
-    btn.textContent = 'Creating…';
+    const orig = btn.textContent;
     btn.disabled = true;
+    btn.textContent = 'Creating…';
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -955,49 +956,31 @@ async function doCreateTasks() {
         box.classList.remove('hidden');
 
         if (data.success) {
-            let html = `<p class="font-bold text-green-700 mb-2">✅ ${data.created} task(s) created!</p>`;
-
-            if (data.pairedSummary) {
-                const rows = Object.entries(data.pairedSummary)
-                    .map(([code, n]) => `<li>→ <b>${code}</b>: ${n} pair${n > 1 ? 's' : ''}</li>`)
-                    .join('');
-                html += `<p class="text-xs text-green-700 mt-2 mb-1"><b>Paired with:</b></p>
-                         <ul class="text-xs text-green-700 list-disc list-inside space-y-0.5">${rows}</ul>`;
-            }
-            if (data.newPairs && data.newPairs.length) {
-                html += `<p class="text-xs text-green-600 mt-2">🆕 New members: ${data.newPairs.join(', ')}</p>`;
-            }
-            if (data.existingPairs && Object.keys(data.existingPairs).length) {
-                const ex = Object.entries(data.existingPairs)
-                    .map(([c, n]) => `${c} (${n})`).join(', ');
-                html += `<p class="text-xs text-green-600 mt-1">🔁 Repeated: ${ex}</p>`;
-            }
-
-            box.innerHTML = html;
+            box.innerHTML = `<p class="font-bold text-green-700 mb-1">✅ ${data.created} task(s) created!</p>`;
             box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             showToast(`${data.created} task(s) created!`);
 
+            clearShortsCache();           // ⭐ force fresh fetch
             setTimeout(async () => {
                 closeCreateModal();
-                await refreshTasks();
-            }, 1800);
+                await fetchTasks();
+            }, 1500);
         } else {
-            box.textContent = data.message || 'Could not create tasks.';
+            box.textContent = data.message || 'Could not create.';
             box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
     } catch (e) {
         showToast('Connection error.', true);
     }
 
-    btn.textContent = 'Generate Tasks';
     btn.disabled = false;
+    btn.textContent = orig;
 }
 
-// ════════════════════════════════════════════════════════════════
-// ISSUE REPORTING
-// ════════════════════════════════════════════════════════════════
+/* ────────────────────────────────────────
+   ISSUE REPORTING
+──────────────────────────────────────── */
 let selectedIssuePill = '';
-
 function openIssueModal(taskId) {
     selectedIssuePill = '';
     document.getElementById('issueTaskId').value = taskId;
@@ -1007,37 +990,25 @@ function openIssueModal(taskId) {
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
     document.getElementById('issueModal').classList.add('open');
 }
-
-function closeIssueModal() {
-    document.getElementById('issueModal').classList.remove('open');
-}
-
+function closeIssueModal() { document.getElementById('issueModal').classList.remove('open'); }
 function toggleIssuePill(btn, label) {
-    const wasSelected = btn.classList.contains('selected');
+    const was = btn.classList.contains('selected');
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
-    if (wasSelected) {
-        selectedIssuePill = '';
-        document.getElementById('issuePillSelected').textContent = '';
-    } else {
-        btn.classList.add('selected');
-        selectedIssuePill = label;
-        document.getElementById('issuePillSelected').textContent = `Selected: ${label}`;
-    }
+    if (was) { selectedIssuePill = ''; document.getElementById('issuePillSelected').textContent = ''; }
+    else { btn.classList.add('selected'); selectedIssuePill = label; document.getElementById('issuePillSelected').textContent = `Selected: ${label}`; }
 }
-
 async function doSubmitIssue() {
     const taskId = document.getElementById('issueTaskId').value;
-    const customText = (document.getElementById('issueCustomText').value || '').trim();
-    const issueTitle = selectedIssuePill || customText;
+    const custom = (document.getElementById('issueCustomText').value || '').trim();
+    const title = selectedIssuePill || custom;
+    if (!title) { showToast('Select or write an issue.', true); return; }
 
-    if (!issueTitle) { showToast('Please select or write an issue.', true); return; }
-
-    const task = allTasks.find(x => x.TaskID === taskId);
+    const task = allTasks.find(t => t.TaskID === taskId);
     if (!task) { showToast('Task not found.', true); return; }
 
     const btn = document.getElementById('doIssueBtn');
-    btn.textContent = 'Submitting…';
-    btn.disabled = true;
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Submitting…';
 
     try {
         const res = await fetch(SCRIPT_URL, {
@@ -1045,38 +1016,31 @@ async function doSubmitIssue() {
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
                 action: 'reportShortsIssue',
-                taskId,
-                reporterCode: USER_CODE,
+                taskId, reporterCode: USER_CODE,
                 targetUserCode: task.TargetUserCode,
-                issueTitle,
-                issueDescription: customText
+                issueTitle: title, issueDescription: custom
             })
         });
         const data = await res.json();
         const box = document.getElementById('issueResultBox');
         box.classList.remove('hidden');
         if (data.success) {
-            box.textContent = `✅ Issue reported: "${issueTitle}"`;
+            box.textContent = `✅ Issue reported: "${title}"`;
             box.className = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             setTimeout(closeIssueModal, 1500);
         } else {
             box.textContent = data.message || 'Could not submit.';
             box.className = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
         }
-    } catch (e) {
-        showToast('Connection error.', true);
-    }
-
-    btn.textContent = 'Submit Issue';
-    btn.disabled = false;
+    } catch (e) { showToast('Connection error.', true); }
+    btn.disabled = false; btn.textContent = orig;
 }
 
-// ════════════════════════════════════════════════════════════════
-// STATUS PAGES
-// ════════════════════════════════════════════════════════════════
+/* ────────────────────────────────────────
+   STATUS PAGES
+──────────────────────────────────────── */
 function showNotEnrolled(message) {
-    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
+    document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6').innerHTML = `
         <div class="w-full flex justify-center items-center min-h-[400px]">
             <div class="card rounded-3xl p-12 text-center max-w-[600px]">
                 <div class="text-6xl mb-4">📢</div>
@@ -1087,42 +1051,14 @@ function showNotEnrolled(message) {
         </div>`;
     hideLoader();
 }
-
-function showNotActive(message) {
-    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
-        <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="card rounded-3xl p-12 text-center max-w-[600px]" style="border-color:#dc2626;box-shadow:4px 4px 0 0 #dc2626;">
-                <div class="text-6xl mb-4">⛔</div>
-                <h2 class="text-2xl font-bold mb-2 text-red-600">Account Inactive</h2>
-                <p class="text-muted text-sm mb-6">${message}</p>
-                <a href="support.html" class="btn-red px-8 py-3 rounded-2xl inline-block">📞 Contact Support</a>
-            </div>
-        </div>`;
-    hideLoader();
-}
-
-function showSuspended(message) {
-    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
-        <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="card rounded-3xl p-12 text-center max-w-[600px]" style="border-color:#dc2626;box-shadow:4px 4px 0 0 #dc2626;">
-                <div class="text-6xl mb-4">🚫</div>
-                <h2 class="text-2xl font-bold mb-2 text-red-600">Account Suspended</h2>
-                <p class="text-muted text-sm mb-6">${message}</p>
-                <a href="support.html" class="btn-red px-8 py-3 rounded-2xl inline-block">📞 Contact Support</a>
-            </div>
-        </div>`;
-    hideLoader();
-}
-
+function showNotActive(message) { showNotEnrolled(message); }
+function showSuspended(message)  { showNotEnrolled(message); }
 function showMemberNotFound(message) {
-    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
+    document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6').innerHTML = `
         <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="card rounded-3xl p-12 text-center max-w-[600px]" style="border-color:#d97706;box-shadow:4px 4px 0 0 #d97706;">
+            <div class="card rounded-3xl p-12 text-center max-w-[600px]">
                 <div class="text-6xl mb-4">❓</div>
-                <h2 class="text-2xl font-bold mb-2 text-orange-600">Member Not Found</h2>
+                <h2 class="text-2xl font-bold mb-2">Member Not Found</h2>
                 <p class="text-muted text-sm mb-6">${message}</p>
                 <button onclick="logoutUser()" class="btn-purple px-8 py-3 rounded-2xl">🔑 Sign In Again</button>
             </div>
@@ -1130,23 +1066,33 @@ function showMemberNotFound(message) {
     hideLoader();
 }
 
-function logoutUser() {
-    localStorage.clear();
-    window.location.href = "signin.html";
-}
-
-// ── HELPERS ──
+/* ────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────── */
 function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = isError ? 'error show' : 'show';
     setTimeout(() => { t.className = ''; }, 3200);
 }
-
 function hideLoader() {
     const l = document.getElementById('pageLoader');
     l.classList.add('hidden');
     setTimeout(() => l.style.display = 'none', 400);
+}
+function fmtDate(v) {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+async function refreshTasks() {
+    if (isLoading) return;
+    isLoading = true;
+    clearShortsCache();
+    await fetchTasks();
+    showToast('✅ Refreshed');
+    isLoading = false;
 }
 </script>
 </body>

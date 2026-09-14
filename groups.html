@@ -128,16 +128,9 @@
   text-underline-offset: 2px;
   font-family: 'Inter', sans-serif;
 }
-.leave-link:hover:not(:disabled) { 
-  color: #dc2626; 
-}
-.leave-link:disabled { 
-  cursor: not-allowed; 
-  opacity: 0.6; 
-  text-decoration: none; 
-}
+.leave-link:hover:not(:disabled) { color: #dc2626; }
+.leave-link:disabled { cursor: not-allowed; opacity: 0.6; text-decoration: none; }
 
-/* ── Group Disabled / Coming Soon Overlay ── */
 .group-disabled {
   opacity: 0.6;
   position: relative;
@@ -153,11 +146,8 @@
   box-shadow: 4px 4px 0px 0px #211F1F;
 }
 
-.group-hidden {
-  display: none !important;
-}
+.group-hidden { display: none !important; }
 
-/* ── Neo-Brutalist Card ───────────────────────────────────────── */
 .card {
   background: #FFFFFF;
   border: 3px solid #211F1F;
@@ -170,7 +160,6 @@
   box-shadow: 10px 10px 0px 0px #211F1F;
 }
 
-/* ── Ad Watching Special Card ────────────────────────────────── */
 .card-adwatching {
   background: #211F1F;
   border: 3px solid #fbbf24;
@@ -181,15 +170,9 @@
   background: #fbbf24;
   border-color: #ffffff;
 }
-.card-adwatching .group-icon svg {
-  stroke: #1a1a2e;
-}
-.card-adwatching h2 {
-  color: #fbbf24;
-}
-.card-adwatching .text-muted {
-  color: #94a3b8;
-}
+.card-adwatching .group-icon svg { stroke: #1a1a2e; }
+.card-adwatching h2 { color: #fbbf24; }
+.card-adwatching .text-muted { color: #94a3b8; }
 .card-adwatching .tinygroupbills {
   background: #fbbf24;
   border-color: #ffffff;
@@ -204,20 +187,9 @@
 .card-adwatching .join-btn:hover:not(:disabled) {
   box-shadow: 6px 6px 0px 0px #ffffff;
 }
-.card-adwatching .join-btn:disabled {
-  opacity: 0.5;
-}
-.card-adwatching .leave-link {
-  color: #fca5a5;
-}
-.card-adwatching .leave-link:hover:not(:disabled) {
-  color: #ef4444;
-}
-.card-adwatching .tinygroupbills {
-  background: #fbbf24;
-  border-color: #ffffff;
-  color: #1a1a2e;
-}
+.card-adwatching .join-btn:disabled { opacity: 0.5; }
+.card-adwatching .leave-link { color: #fca5a5; }
+.card-adwatching .leave-link:hover:not(:disabled) { color: #ef4444; }
 
 .tinygroupbills {
   background: #DBD4B7;
@@ -232,11 +204,8 @@
   white-space: nowrap;
 }
 
-.text-muted {
-  color: #6b7280;
-}
+.text-muted { color: #6b7280; }
 
-/* ── Error State ──────────────────────────────────────────────── */
 #groupsError {
   display: none;
   text-align: center;
@@ -246,25 +215,13 @@
   border-radius: 24px;
   box-shadow: 8px 8px 0px 0px #211F1F;
 }
-#groupsError .error-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-#groupsError .error-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: #dc2626;
-}
+#groupsError .error-icon { font-size: 48px; margin-bottom: 12px; }
+#groupsError .error-title { font-size: 20px; font-weight: 800; color: #dc2626; }
 #groupsError .error-desc {
-  font-size: 14px;
-  color: #6b7280;
-  margin-top: 4px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  font-size: 14px; color: #6b7280; margin-top: 4px;
+  max-width: 400px; margin-left: auto; margin-right: auto;
 }
 
-/* ── Stats Bar ────────────────────────────────────────────────── */
 .stats-bar {
   background: #FFFFFF;
   border: 3px solid #211F1F;
@@ -279,45 +236,27 @@
   gap: 12px;
 }
 .stats-bar .stat-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  display: flex; align-items: center; gap: 8px; font-size: 13px;
 }
-.stats-bar .stat-item .stat-number {
-  font-weight: 800;
-  font-size: 18px;
-}
-.stats-bar .stat-item .stat-label {
-  color: #6b7280;
-}
-.stats-bar .stat-divider {
-  width: 2px;
-  height: 30px;
-  background: #e5e7eb;
-}
+.stats-bar .stat-item .stat-number { font-weight: 800; font-size: 18px; }
+.stats-bar .stat-item .stat-label { color: #6b7280; }
+.stats-bar .stat-divider { width: 2px; height: 30px; background: #e5e7eb; }
 </style>
 </head>
 <body>
 
-<!-- LOADING OVERLAY -->
 <div id="loadingOverlay">
   <div class="loader-ring"></div>
   <p style="color:#6b7280;font-size:14px;font-weight:500;">Loading groups…</p>
-  <div class="loader-dots">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
 </div>
 
-<!-- NAVBAR -->
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
 
-<!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
-
   <div class="max-w-[1200px] mx-auto">
 
     <div class="nb-dashboard-header">
@@ -326,14 +265,12 @@
           <span class="nb-card-title">Creator Communities</span>
         </div>
       </div>
-
       <h1 class="text-4xl font-black text-[#211F1F]">Explore Groups</h1>
       <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">
         Join creator communities to grow your channel, increase engagement, improve watch time and connect with active members worldwide.
       </div>
     </div>
 
-    <!-- ── STATS BAR ── -->
     <div id="statsBar" class="stats-bar hidden">
       <div class="stat-item">
         <span class="stat-number" id="statTotalMembers">0</span>
@@ -366,13 +303,10 @@
       </div>
     </div>
 
-    <!-- GROUPS GRID -->
     <div id="groupsContainer" class="relative">
-
-      <!-- GROUPS GRID -->
       <div id="groupsGrid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <!-- GROUP: SUBSCRIBERS -->
+        <!-- SUBSCRIBERS -->
         <div class="card card-hover rounded-3xl p-6" id="group-card-subscribers">
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -398,7 +332,7 @@
           <button class="leave-link hidden" id="leave-subscribers" data-group="subscribers">Leave Group</button>
         </div>
 
-        <!-- GROUP: VIDEO BOOST -->
+        <!-- VIDEO BOOST -->
         <div class="card card-hover rounded-3xl p-6" id="group-card-video">
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -424,7 +358,7 @@
           <button class="leave-link hidden" id="leave-video" data-group="video">Leave Group</button>
         </div>
 
-        <!-- GROUP: WATCH TIME -->
+        <!-- WATCH TIME -->
         <div class="card card-hover rounded-3xl p-6" id="group-card-watchtime">
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -450,7 +384,7 @@
           <button class="leave-link hidden" id="leave-watchtime" data-group="watchtime">Leave Group</button>
         </div>
 
-        <!-- GROUP: ENGAGEMENT -->
+        <!-- ENGAGEMENT -->
         <div class="card card-hover rounded-3xl p-6" id="group-card-engagement">
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -475,7 +409,7 @@
           <button class="leave-link hidden" id="leave-engagement" data-group="engagement">Leave Group</button>
         </div>
 
-        <!-- GROUP: SHORTS VIDEO VIRAL -->
+        <!-- SHORTS VIRAL -->
         <div class="card card-hover rounded-3xl p-6" id="group-card-shorts">
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -502,7 +436,7 @@
           <button class="leave-link hidden" id="leave-shorts" data-group="shorts">Leave Group</button>
         </div>
 
-        <!-- GROUP: AD WATCHING - SPECIAL STYLING -->
+        <!-- AD WATCHING -->
         <div class="card card-adwatching card-hover rounded-3xl p-6" id="group-card-adwatching">
           <div class="flex items-start justify-between gap-4">
             <div class="group-icon">
@@ -519,8 +453,7 @@
           <p class="text-muted mt-3 leading-7 text-sm">
             💰 Earn rewards by watching ads from fellow creators. Support the community while earning.
           </p>
-          
-          <!-- Requirements Section -->
+
           <div class="mt-4 p-3 bg-black/20 rounded-xl border border-yellow-500/30">
             <p class="text-xs font-semibold text-yellow-400 mb-2">📋 Requirements to Join:</p>
             <ul class="text-xs text-gray-300 space-y-1.5">
@@ -534,7 +467,7 @@
               </li>
             </ul>
           </div>
-          
+
           <div class="flex items-center justify-between mt-6">
             <div>
               <div class="text-sm font-semibold text-white" id="count-adwatching">— Members</div>
@@ -546,9 +479,8 @@
           <button class="leave-link hidden" id="leave-adwatching" data-group="adwatching">Leave Group</button>
         </div>
 
-      </div><!-- /groupsGrid -->
+      </div>
 
-      <!-- ERROR STATE -->
       <div id="groupsError">
         <div class="error-icon">⚠️</div>
         <div class="error-title">Something went wrong</div>
@@ -558,30 +490,23 @@
         </button>
       </div>
 
-    </div><!-- /groupsContainer -->
-
+    </div>
   </div>
 </main>
 </main>
 
 <script>
-/* =========================================================
-   AUTH CHECK + NAVBAR POPULATE
-========================================================= */
 var usercode = (localStorage.getItem("usercode") || "").trim();
 var username = localStorage.getItem("username") || "";
 var userpassword = localStorage.getItem("password") || "";
 
-if (!usercode || !username || !userpassword) { 
-  window.location.replace("signin.html"); 
+if (!usercode || !username || !userpassword) {
+  window.location.replace("signin.html");
 }
 </script>
 
 <script>
-/* =========================================================
-   GROUPS BACKEND WIRING
-========================================================= */
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbycvWtwlmLpeK4vyaRbGsxYfKzlybs72jxd11yhtXHX8YkfLwLxO4HhRWW1sRNWCQn4/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyLhsQ-lXQLbV2BnhCOLGApa_E7X_biVlnNCIxyXGjVkOP1XsvCOeerztR586eIfdwb/exec";
 
 const GROUP_KEYS = ["subscribers", "video", "watchtime", "engagement", "shorts", "adwatching"];
 
@@ -629,14 +554,12 @@ function formatMemberCount(n) {
 function setButtonState(btn, state, reason, groupKey, isVisible) {
   const reasonEl = groupKey ? document.getElementById("reason-" + groupKey) : null;
 
-  // Reset core styles
   btn.classList.remove("opacity-50", "cursor-not-allowed");
   btn.disabled = false;
   btn.title = "";
-  
-  // Check if it's adwatching group (special styling)
+
   const isAdWatching = groupKey === "adwatching";
-  
+
   if (!isAdWatching) {
     btn.style.boxShadow = "4px 4px 0px 0px #211F1F";
     btn.style.border = "2px solid #211F1F";
@@ -651,7 +574,6 @@ function setButtonState(btn, state, reason, groupKey, isVisible) {
     btn.style.background = "#fbbf24";
   }
 
-  // If group is not visible, force disabled state
   if (!isVisible) {
     btn.textContent = "Not Available";
     btn.style.background = "#6b7280";
@@ -671,25 +593,17 @@ function setButtonState(btn, state, reason, groupKey, isVisible) {
     btn.style.background = isAdWatching ? "#34d399" : "#ACD1C0";
     btn.disabled = true;
     if (reasonEl) reasonEl.classList.add("hidden");
-
   } else if (state === "eligible") {
     btn.textContent = "Join Group Now";
-    if (!isAdWatching) {
-      btn.style.background = "#DBD4B7";
-    } else {
-      btn.style.background = "#fbbf24";
-    }
+    btn.style.background = isAdWatching ? "#fbbf24" : "#DBD4B7";
     if (reasonEl) reasonEl.classList.add("hidden");
-
   } else {
-    // Ineligible state
     btn.textContent = "Not Eligible";
     btn.style.background = isAdWatching ? "#dc2626" : "#211F1F";
     btn.style.color = "#FFFFFF";
     btn.classList.add("opacity-50", "cursor-not-allowed");
     btn.disabled = true;
     btn.title = reason || "Requirements not met";
-    
     if (reasonEl) {
       reasonEl.textContent = "⚠ " + (reason || "Requirements not met.");
       reasonEl.classList.remove("hidden");
@@ -720,9 +634,9 @@ function setLeaveButtonState(groupKey, groupData) {
 function updateGroupVisibility(groupKey, isVisible) {
   const card = document.getElementById("group-card-" + groupKey);
   const badge = document.getElementById("badge-" + groupKey);
-  
+
   if (!card) return;
-  
+
   if (!isVisible) {
     card.classList.add("group-disabled");
     if (badge) {
@@ -757,7 +671,7 @@ function showGroupsError(message) {
   const grid = document.getElementById("groupsGrid");
   const error = document.getElementById("groupsError");
   const errorMsg = document.getElementById("groupsErrorMsg");
-  
+
   if (grid) grid.classList.add("hidden");
   if (error) {
     error.style.display = "block";
@@ -765,38 +679,32 @@ function showGroupsError(message) {
   }
 }
 
-// ── UPDATE STATS BAR ──
 function updateStatsBar(globalStats) {
   const statsBar = document.getElementById('statsBar');
   if (!globalStats || Object.keys(globalStats).length === 0) {
     statsBar.classList.add('hidden');
     return;
   }
-  
+
   statsBar.classList.remove('hidden');
-  
-  // 🔥 FIX: Use totalSystemMembers for Total Members
+
   document.getElementById('statTotalMembers').textContent = globalStats.totalSystemMembers || globalStats.total || 0;
   document.getElementById('statActiveMembers').textContent = globalStats.active || 0;
-  
-  // 🔥 NEW: Show "In Groups" stat (sum of all group memberships)
   document.getElementById('statInGroups').textContent = globalStats.total || 0;
-  
   document.getElementById('statNotInAnyGroup').textContent = globalStats.notInAnyGroup || 0;
   document.getElementById('statActiveNotInGroup').textContent = globalStats.activeNotInAnyGroup || 0;
   document.getElementById('statExtensionReady').textContent = globalStats.extensionReady || 0;
 }
 
-// ── UPDATE GROUP CARD WITH ANALYTICS ──
 function updateGroupCard(groupKey, groupData, analytics) {
   const countEl = document.getElementById('count-' + groupKey);
   const subStatsEl = document.getElementById('sub-stats-' + groupKey);
-  
+
   if (countEl && groupData) {
     const memberCount = groupData.memberCount || 0;
     countEl.textContent = formatMemberCount(memberCount);
   }
-  
+
   if (subStatsEl && analytics && analytics[groupKey]) {
     const data = analytics[groupKey];
     subStatsEl.textContent = `Active: ${data.active || 0} | Not in group: ${data.notInThisGroup || 0}`;
@@ -838,17 +746,16 @@ async function loadGroupsStatus() {
     const visibleGroups = res.data.visibleGroups || [];
     const analytics = res.data.counts || {};
 
-    // ── Update Stats Bar ──
     updateStatsBar(res.data.globalStats);
 
     GROUP_KEYS.forEach(key => {
       const btn = document.getElementById("btn-" + key);
       const g = res.data.groups ? res.data.groups[key] : null;
-      
+
       const isVisible = visibleGroups.includes(key);
-      
+
       updateGroupVisibility(key, isVisible);
-      
+
       if (btn && g) {
         if (g.joined) {
           setButtonState(btn, "joined", null, key, isVisible);
@@ -861,7 +768,6 @@ async function loadGroupsStatus() {
 
       if (g) setLeaveButtonState(key, g);
 
-      // ── Update with analytics data ──
       updateGroupCard(key, g, analytics);
     });
 
@@ -885,28 +791,21 @@ async function handleJoinClick(e) {
 
   try {
     console.log(`[groups] Attempting to join group: ${groupKey} for user: ${usercode}`);
-    
+
     const res = await callBackend("joinGroup", { usercode: usercode, group: groupKey });
-    
+
     console.log("[groups] Join response:", JSON.stringify(res, null, 2));
-    
+
     if (res.success) {
       setButtonState(btn, "joined", null, groupKey, true);
       await loadGroupsStatus();
     } else {
-      // Show detailed error
       let errorMessage = res.message || "Could not join group.";
-      
-      if (res.error) {
-        errorMessage += `\n\nError: ${res.error}`;
-      }
-      if (res.details) {
-        errorMessage += `\n\nDetails: ${JSON.stringify(res.details)}`;
-      }
-      if (res.stack) {
-        errorMessage += `\n\nStack: ${res.stack}`;
-      }
-      
+
+      if (res.error) errorMessage += `\n\nError: ${res.error}`;
+      if (res.details) errorMessage += `\n\nDetails: ${JSON.stringify(res.details)}`;
+      if (res.stack) errorMessage += `\n\nStack: ${res.stack}`;
+
       Swal.fire({
         icon: "error",
         title: "Couldn't join group",
@@ -918,16 +817,14 @@ async function handleJoinClick(e) {
     }
   } catch (err) {
     console.error("[groups] Join failed:", err);
-    
+
     let errorDetails = "Please try again.";
-    if (err.message) {
-      errorDetails = err.message;
-    }
+    if (err.message) errorDetails = err.message;
     if (err.stack) {
       console.error("[groups] Stack trace:", err.stack);
       errorDetails += `\n\nStack: ${err.stack}`;
     }
-    
+
     Swal.fire({
       icon: "error",
       title: "Something went wrong",
@@ -995,7 +892,6 @@ async function handleLeaveClick(e) {
   }
 }
 
-// ── Event Listeners ──
 document.querySelectorAll(".join-btn[data-group]").forEach(btn => {
   btn.addEventListener("click", handleJoinClick);
 });
@@ -1004,10 +900,8 @@ document.querySelectorAll(".leave-link[data-group]").forEach(btn => {
   btn.addEventListener("click", handleLeaveClick);
 });
 
-// ── INIT ──
 loadGroupsStatus();
 
-// ── Mobile Nav Active State ──
 (function(){
   const current = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll("#mobileBottomNav a").forEach(a => {
