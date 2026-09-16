@@ -129,6 +129,27 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 .hashtag-callout .icon { font-size: 24px; flex-shrink: 0; }
 .hashtag-callout .text { font-size: 13px; line-height: 1.5; color: #78350f; }
 .hashtag-callout .text strong { color: #92400e; }
+
+/* Numbered requirement list */
+.rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 6px;
+}
+.rule-item .rule-num {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #d97706;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
 </style>
 <base target="_blank">
 </head>
@@ -185,17 +206,28 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
       <h1 class="text-4xl font-black text-[#211F1F]">Long Videos</h1>
       <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: auto;">
           Manage which long videos from your promotional channel are eligible for the Video Watch-Time Exchange.
+          Only videos <strong class="text-[#211F1F]">at least 3 minutes (180 seconds)</strong> long are eligible.
           Videos marked <strong class="text-[#211F1F]">Ready</strong> can be matched into tasks — mark any video
           <strong class="text-[#211F1F]">Not Ready</strong> at any time to pull it out of matching.
       </div>
     </div>
 
-    <!-- Hashtag reminder callout -->
+    <!-- Long-video rules callout -->
     <div class="hashtag-callout" style="margin-top: 16px;">
       <span class="icon">⚠️</span>
       <div class="text">
-        <strong>Important for Shorts:</strong> Add <strong>#shorts</strong> or <strong>#short</strong> in your YouTube Shorts video title so our system can detect them correctly.
-        Videos without this hashtag may be classified as Long Videos by mistake.
+        <strong>Important — Long Video eligibility rules:</strong>
+        <div class="rule-item">
+          <span class="rule-num">1</span>
+          <span>Video must be <strong>at least 3 minutes (180 seconds)</strong> long. Shorter clips are automatically skipped by our system.</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">2</span>
+          <span>Video must NOT have <strong>#shorts</strong> or <strong>#short</strong> in the title — those are classified as Shorts and appear on the Short Videos page.</span>
+        </div>
+        <div style="margin-top: 8px; font-size: 12px; color:#78350f;">
+          Only videos that meet <strong>both</strong> rules appear in your Long Videos library.
+        </div>
       </div>
     </div>
 
@@ -307,10 +339,23 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
             <div class="text-5xl mb-4">🎞️</div>
-            <h3 class="text-xl font-semibold mb-2">No Long Videos Found</h3>
-            <p class="text-muted text-sm mb-7 leading-relaxed">
-                We haven't imported any long videos from your promotional channel yet.<br>
-                Click <strong class="text-[#211F1F]">Import Long Videos</strong> to pull them in from YouTube.
+            <h3 class="text-xl font-semibold mb-2">No Eligible Long Videos Found</h3>
+            <p class="text-muted text-sm mb-4 leading-relaxed">
+                No Long Videos meeting the eligibility rules were found on your channel yet.
+            </p>
+            <div style="text-align:left; max-width: 460px; margin: 0 auto 28px;">
+                <p style="font-weight: 700; font-size: 13px; margin-bottom: 10px; color: #211F1F;">Eligibility requirements:</p>
+                <div class="rule-item" style="margin-bottom:6px;">
+                    <span class="rule-num" style="background:#6d28d9;">1</span>
+                    <span style="font-size:13px;color:#4b5563;">Duration of <strong>at least 3 minutes (180 seconds)</strong></span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num" style="background:#6d28d9;">2</span>
+                    <span style="font-size:13px;color:#4b5563;">No <strong>#shorts</strong> / <strong>#short</strong> hashtag in the title</span>
+                </div>
+            </div>
+            <p class="text-muted text-xs mb-7 leading-relaxed">
+                Update your videos on YouTube, then click Import Long Videos.
             </p>
             <button onclick="doImportVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">⬇️ Import Long Videos</button>
         </div>
@@ -360,7 +405,20 @@ function logoutUser() {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzW35QQipw-AkUOPL3qn3OEabgioI8nNeKF1bgejpAJTjiwW5OboZ-YIb4zjBI5IZs9kg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwumi_nflQ2OgWNDYb3wsvEDnQrpWvu_OkGYqjD4pyMLsBHMMckEaF6snENuCDgdDWdpQ/exec';
+
+/* ────────────────────────────────────────
+   ★ DURATION RULES (frontend mirror)
+   - Long: ≥ 180 seconds (3 min)
+   - Short: ≥ 30 seconds
+──────────────────────────────────────── */
+const MIN_LONG_DURATION_SECONDS  = 180;
+const MIN_SHORT_DURATION_SECONDS = 30;
+
+function isLongLongEnoughSeconds(v) {
+    const n = Number(v && v.VideoDurationSeconds) || 0;
+    return n >= MIN_LONG_DURATION_SECONDS;
+}
 
 /* ────────────────────────────────────────
    STATE
@@ -427,31 +485,50 @@ async function callApi(action, params = {}) {
 }
 
 /* ────────────────────────────────────────
-   HASHTAG REMINDER — SHOW ONCE
+   REQUIREMENTS REMINDER — SHOW ONCE
 ──────────────────────────────────────── */
-const HASHTAG_ALERT_KEY = 'exsub_hashtag_alert_videos_dismissed';
+const REQUIREMENTS_ALERT_KEY = 'exsub_long_video_requirements_v2';
 
-async function maybeShowHashtagAlert() {
-    // Only show if not previously dismissed
-    if (localStorage.getItem(HASHTAG_ALERT_KEY) === 'yes') return;
+async function maybeShowRequirementsAlert() {
+    if (localStorage.getItem(REQUIREMENTS_ALERT_KEY) === 'yes') return;
 
     const result = await Swal.fire({
         icon: 'warning',
-        title: '⚠️ Important: Add #shorts to your Shorts!',
+        title: '⚠️ Important: Long Video rules',
         html: `
             <div style="text-align:left; line-height:1.7; font-size:14px; color:#4b5563;">
-                <p style="margin-bottom:12px;">Our system uses YouTube's video data to classify videos as <strong>Long</strong> or <strong>Short</strong>. To make sure your <strong>Shorts</strong> are detected correctly, please:</p>
+                <p style="margin-bottom:12px;">Our system enforces <strong>two rules</strong> for Long Videos:</p>
 
+                <div style="background:rgba(109,40,217,0.08); border:2px solid #6d28d9; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+                    <div style="display:flex; align-items:flex-start; gap:8px;">
+                        <span style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#6d28d9; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;">1</span>
+                        <div>
+                            <strong style="color:#6d28d9;">Minimum 3 minutes (180 seconds)</strong><br>
+                            Long videos shorter than 3 minutes are automatically skipped and cannot be used in tasks.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:rgba(109,40,217,0.08); border:2px solid #6d28d9; border-radius:12px; padding:12px 14px; margin-bottom:14px;">
+                    <div style="display:flex; align-items:flex-start; gap:8px;">
+                        <span style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#6d28d9; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;">2</span>
+                        <div>
+                            <strong style="color:#6d28d9;">No #shorts hashtag</strong><br>
+                            Videos with <strong>#shorts</strong> or <strong>#short</strong> in the title are classified as Shorts and moved to the Short Videos page.
+                        </div>
+                    </div>
+                </div>
+
+                <p style="margin-bottom:12px; font-weight:600; color:#211F1F;">How to fix your Long Videos:</p>
                 <ol style="margin-left:20px; list-style:decimal; margin-bottom:14px;">
-                    <li style="margin-bottom:8px;">Open <strong>YouTube Studio</strong> on your channel.</li>
-                    <li style="margin-bottom:8px;">Edit each of your <strong>Short videos</strong>.</li>
-                    <li style="margin-bottom:8px;">Add <strong style="color:#6d28d9;">#shorts</strong> or <strong style="color:#6d28d9;">#short</strong> at the end of the video <strong>title</strong> or in the <strong>description</strong>.</li>
-                    <li style="margin-bottom:8px;">Save changes.</li>
-                    <li style="margin-bottom:8px;">Come back here and click <strong>Sync Long Videos</strong> — new Shorts will move to the Short Videos page.</li>
+                    <li style="margin-bottom:6px;">Open <strong>YouTube Studio</strong> on your channel.</li>
+                    <li style="margin-bottom:6px;">Ensure the video is <strong>3 minutes or longer</strong>.</li>
+                    <li style="margin-bottom:6px;">Remove any <strong>#shorts</strong> / <strong>#short</strong> hashtags from the title.</li>
+                    <li style="margin-bottom:6px;">Save, come back here, click <strong>Import Long Videos</strong> or <strong>Sync Long Videos</strong>.</li>
                 </ol>
 
                 <div style="background:rgba(239,68,68,0.08); border:2px solid #dc2626; border-radius:12px; padding:12px 14px; font-size:13px; color:#b91c1c;">
-                    <strong>⚠️ Why?</strong> Videos without <strong>#shorts</strong> may be classified as Long Videos by mistake. This affects how they are matched in task exchange.
+                    <strong>⚠️ Why?</strong> Videos missing either requirement cannot be matched in the Long Video task exchange and won't appear here.
                 </div>
             </div>
         `,
@@ -462,14 +539,12 @@ async function maybeShowHashtagAlert() {
         cancelButtonColor: '#6b7280',
         allowOutsideClick: false,
         allowEscapeKey: false,
-        width: 520
+        width: 540
     });
 
     if (result.isConfirmed) {
-        // User accepted — don't show again
-        localStorage.setItem(HASHTAG_ALERT_KEY, 'yes');
+        localStorage.setItem(REQUIREMENTS_ALERT_KEY, 'yes');
     }
-    // If "Remind Me Later" → alert will show again next visit
 }
 
 /* ────────────────────────────────────────
@@ -511,8 +586,8 @@ window.addEventListener('DOMContentLoaded', init);
 async function init() {
     show('loadingState'); hide('errorState'); hide('dashContent');
 
-    // ★ Show hashtag reminder (only once per browser until dismissed)
-    maybeShowHashtagAlert();
+    // ★ Show requirements reminder (only once per browser until dismissed)
+    maybeShowRequirementsAlert();
 
     try {
         const chanData = await callApi('getMyChannel');
@@ -618,8 +693,8 @@ function setTab(tab, btn) {
 }
 
 function applyFilter() {
-    // Long page = show everything EXCEPT Shorts
-    let baseFiltered = allVideos.filter(v => !isShortRow(v));
+    // Long page = show only Longs that meet the 3-minute minimum.
+    let baseFiltered = allVideos.filter(v => !isShortRow(v) && isLongLongEnoughSeconds(v));
 
     if (activeTab === 'All') {
         filtered = baseFiltered;

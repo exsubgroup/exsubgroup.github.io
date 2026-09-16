@@ -130,6 +130,27 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 .hashtag-callout .icon { font-size: 24px; flex-shrink: 0; }
 .hashtag-callout .text { font-size: 13px; line-height: 1.5; color: #78350f; }
 .hashtag-callout .text strong { color: #92400e; }
+
+/* Requirement list inside callout */
+.rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 4px;
+}
+.rule-item .rule-num {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #d97706;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
 </style>
 <base target="_blank">
 </head>
@@ -186,16 +207,27 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
       <h1 class="text-4xl font-black text-[#211F1F]">Short Videos</h1>
       <div id="welcomeSubtitle" class="text-gray-500 text-sm mt-1 leading-6" style="width: auto;">
         Manage your YouTube Shorts configured for target view distributions. Only videos with
-        <strong class="text-[#211F1F]">#shorts</strong> in the title or a short duration will appear here.
+        <strong class="text-[#211F1F]">#shorts</strong> in the title <strong class="text-[#211F1F]">AND</strong> a duration of at least
+        <strong class="text-[#211F1F]">30 seconds</strong> will appear here.
       </div>
     </div>
 
-    <!-- Hashtag reminder callout -->
+    <!-- Hashtag + 30s reminder callout -->
     <div class="hashtag-callout" style="margin-top: 16px;">
       <span class="icon">⚠️</span>
       <div class="text">
-        <strong>Important for Shorts:</strong> Add <strong>#shorts</strong> or <strong>#short</strong> in your YouTube Shorts video title so our system can detect them correctly.
-        Videos without this hashtag may be classified as Long Videos by mistake.
+        <strong>Important — Shorts eligibility requirements:</strong>
+        <div class="rule-item">
+          <span class="rule-num">1</span>
+          <span>Add <strong>#shorts</strong> or <strong>#short</strong> in your YouTube Shorts video title or description.</span>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">2</span>
+          <span>The Short must be <strong>at least 30 seconds long</strong>. Shorter clips are automatically skipped by our system.</span>
+        </div>
+        <div style="margin-top: 8px; font-size: 12px; color:#78350f;">
+          Shorts that don't meet <strong>both</strong> requirements will not be added to your library and cannot be used in tasks.
+        </div>
       </div>
     </div>
 
@@ -300,10 +332,23 @@ body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
             <div class="text-5xl mb-4">⚡</div>
-            <h3 class="text-xl font-semibold mb-2">No Shorts Discovered</h3>
-            <p class="text-muted text-sm mb-7 leading-relaxed">
-                No active videos detected as <strong class="text-[#211F1F]">Shorts</strong> on your channel yet.<br>
-                Make sure your Shorts have <strong class="text-[#211F1F]">#shorts</strong> in the title, then click Import Shorts.
+            <h3 class="text-xl font-semibold mb-2">No Eligible Shorts Found</h3>
+            <p class="text-muted text-sm mb-4 leading-relaxed">
+                No Shorts meeting the eligibility rules were found on your channel yet.
+            </p>
+            <div style="text-align:left; max-width: 420px; margin: 0 auto 28px;">
+                <p style="font-weight: 700; font-size: 13px; margin-bottom: 10px; color: #211F1F;">Eligibility requirements:</p>
+                <div class="rule-item" style="margin-bottom:6px;">
+                    <span class="rule-num" style="background:#166534;">1</span>
+                    <span style="font-size:13px;color:#4b5563;"><strong>#shorts</strong> or <strong>#short</strong> in the title or description</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num" style="background:#166534;">2</span>
+                    <span style="font-size:13px;color:#4b5563;">Duration of <strong>at least 30 seconds</strong></span>
+                </div>
+            </div>
+            <p class="text-muted text-xs mb-7 leading-relaxed">
+                Update your Shorts on YouTube, then click Import Shorts.
             </p>
             <button onclick="doImportVideos()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">⬇️ Import Shorts</button>
         </div>
@@ -353,7 +398,18 @@ function logoutUser() {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzW35QQipw-AkUOPL3qn3OEabgioI8nNeKF1bgejpAJTjiwW5OboZ-YIb4zjBI5IZs9kg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUQ-Hkxvb7Kwcpawmt1usPCwYRE6KmWqMqTbxN4a3sII0-ulf7Huka1JQI_cNsxfNOeg/exec';
+
+/* ────────────────────────────────────────
+   ★ SHORTS ELIGIBILITY RULE
+   30 seconds minimum duration
+──────────────────────────────────────── */
+const MIN_SHORT_DURATION_SECONDS = 30;
+
+function isShortLongEnoughSeconds(v) {
+    const n = Number(v && v.VideoDurationSeconds) || 0;
+    return n >= MIN_SHORT_DURATION_SECONDS;
+}
 
 /* ────────────────────────────────────────
    STATE
@@ -418,31 +474,51 @@ async function callApi(action, params = {}) {
 }
 
 /* ────────────────────────────────────────
-   HASHTAG REMINDER — SHOW ONCE
+   REQUIREMENTS REMINDER — SHOW ONCE
 ──────────────────────────────────────── */
-const HASHTAG_ALERT_KEY = 'exsub_hashtag_alert_shorts_dismissed';
+const HASHTAG_ALERT_KEY = 'exsub_shorts_requirements_alert_dismissed';
 
-async function maybeShowHashtagAlert() {
+async function maybeShowRequirementsAlert() {
     // Only show if not previously dismissed
     if (localStorage.getItem(HASHTAG_ALERT_KEY) === 'yes') return;
 
     const result = await Swal.fire({
         icon: 'warning',
-        title: '⚠️ Important: Add #shorts to your Shorts!',
+        title: '⚠️ Important: Shorts eligibility rules',
         html: `
             <div style="text-align:left; line-height:1.7; font-size:14px; color:#4b5563;">
-                <p style="margin-bottom:12px;">Our system uses YouTube's video data to classify videos as <strong>Long</strong> or <strong>Short</strong>. To make sure your <strong>Shorts</strong> appear on this page, please:</p>
+                <p style="margin-bottom:12px;">Our system enforces <strong>two rules</strong> before a Short appears on this page:</p>
 
+                <div style="background:rgba(109,40,217,0.08); border:2px solid #6d28d9; border-radius:12px; padding:12px 14px; margin-bottom:10px;">
+                    <div style="display:flex; align-items:flex-start; gap:8px;">
+                        <span style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#6d28d9; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;">1</span>
+                        <div>
+                            <strong style="color:#6d28d9;">Hashtag in title</strong><br>
+                            Add <strong>#shorts</strong> or <strong>#short</strong> at the end of the video title or in the description.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:rgba(109,40,217,0.08); border:2px solid #6d28d9; border-radius:12px; padding:12px 14px; margin-bottom:14px;">
+                    <div style="display:flex; align-items:flex-start; gap:8px;">
+                        <span style="flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#6d28d9; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;">2</span>
+                        <div>
+                            <strong style="color:#6d28d9;">30+ seconds duration</strong><br>
+                            The Short must be at least <strong>30 seconds long</strong>. Shorter clips are automatically skipped.
+                        </div>
+                    </div>
+                </div>
+
+                <p style="margin-bottom:12px; font-weight:600; color:#211F1F;">How to fix your Shorts:</p>
                 <ol style="margin-left:20px; list-style:decimal; margin-bottom:14px;">
-                    <li style="margin-bottom:8px;">Open <strong>YouTube Studio</strong> on your channel.</li>
-                    <li style="margin-bottom:8px;">Edit each of your <strong>Short videos</strong>.</li>
-                    <li style="margin-bottom:8px;">Add <strong style="color:#6d28d9;">#shorts</strong> or <strong style="color:#6d28d9;">#short</strong> at the end of the video <strong>title</strong> or in the <strong>description</strong>.</li>
-                    <li style="margin-bottom:8px;">Save changes.</li>
-                    <li style="margin-bottom:8px;">Come back here and click <strong>Import Shorts</strong> — your Shorts will appear on this page.</li>
+                    <li style="margin-bottom:6px;">Open <strong>YouTube Studio</strong> on your channel.</li>
+                    <li style="margin-bottom:6px;">Edit each Short to add <strong>#shorts</strong> in the title/description.</li>
+                    <li style="margin-bottom:6px;">Make sure it's <strong>30 seconds or longer</strong>.</li>
+                    <li style="margin-bottom:6px;">Save, come back here, click <strong>Import Shorts</strong>.</li>
                 </ol>
 
                 <div style="background:rgba(239,68,68,0.08); border:2px solid #dc2626; border-radius:12px; padding:12px 14px; font-size:13px; color:#b91c1c;">
-                    <strong>⚠️ Why?</strong> Shorts without <strong>#shorts</strong> may be classified as Long Videos. Adding the hashtag guarantees correct detection.
+                    <strong>⚠️ Why?</strong> Shorts missing either requirement cannot be used in the Shorts task system and won't appear here.
                 </div>
             </div>
         `,
@@ -453,14 +529,12 @@ async function maybeShowHashtagAlert() {
         cancelButtonColor: '#6b7280',
         allowOutsideClick: false,
         allowEscapeKey: false,
-        width: 520
+        width: 540
     });
 
     if (result.isConfirmed) {
-        // User accepted — don't show again
         localStorage.setItem(HASHTAG_ALERT_KEY, 'yes');
     }
-    // If "Remind Me Later" → alert will show again next visit
 }
 
 /* ────────────────────────────────────────
@@ -502,8 +576,8 @@ window.addEventListener('DOMContentLoaded', init);
 async function init() {
     show('loadingState'); hide('errorState'); hide('dashContent');
 
-    // ★ Show hashtag reminder (only once per browser until dismissed)
-    maybeShowHashtagAlert();
+    // ★ Show requirements reminder (only once per browser until dismissed)
+    maybeShowRequirementsAlert();
 
     try {
         const chanData = await callApi('getMyChannel');
@@ -578,8 +652,8 @@ function setTab(tab, btn) {
 }
 
 function applyFilter() {
-    // Only shorts (case-insensitive, trim-safe)
-    let shortsOnly = allVideos.filter(v => isShortRow(v));
+    // ★ Only Shorts that meet BOTH the type AND 30s minimum duration rules
+    let shortsOnly = allVideos.filter(v => isShortRow(v) && isShortLongEnoughSeconds(v));
 
     let ready = 0, notReady = 0, deleted = 0;
     shortsOnly.forEach(v => {
