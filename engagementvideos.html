@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement Videos — Exsub Group</title>
+<link rel="icon" href="images/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="style.css">
+<style>
+:root { --bg:#F5F4EB; --ink:#211F1F; --mint:#ACD1C0; --sand:#DBD4B7; --muted:#6b7280; }
+* { font-family:'Inter',sans-serif; box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
+
+.card { background:#F5F4EB; border:2px solid #211F1F; border-radius:20px; box-shadow:4px 4px 0px 0px #211F1F; }
+.video-card { background:#fff; border:2px solid #211F1F; border-radius:20px; box-shadow:4px 4px 0px 0px #211F1F; transition:0.2s ease; overflow:hidden; display:flex; flex-direction:column; }
+.video-card:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0px 0px #211F1F; }
+.video-card.selected-card { border-color:#16a34a; background:#f0fdf4; box-shadow:4px 4px 0px 0px #16a34a; }
+.video-card.selected-card:hover { box-shadow:6px 6px 0px 0px #16a34a; transform:none; }
+.text-muted { color:var(--muted); }
+
+.btn-purple { background:#211F1F; color:#DBD4B7; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-purple:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+.btn-purple:disabled { opacity:.4; cursor:not-allowed; }
+
+.btn-outline { background:#F5F4EB; border:2px solid #211F1F; color:#211F1F; border-radius:14px; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-outline:hover:not(:disabled) { background:var(--sand); }
+.btn-outline:disabled { opacity:.4; cursor:not-allowed; }
+
+.btn-teal { background:var(--mint); color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-teal:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+
+.btn-amber { background:#fbbf24; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-amber:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+
+.btn-green { background:#16a34a; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-green:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+
+.btn-red { background:#ef4444; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+
+.filter-tab { background:#fff; border:2px solid #211F1F; transition:.2s; color:var(--ink); cursor:pointer; white-space:nowrap; }
+.filter-tab:hover { background:var(--sand); }
+.filter-tab.active { background:#211F1F; border-color:#211F1F; color:#fff; }
+
+.status-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700; border:1px solid #211F1F; }
+.dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
+
+.skeleton { background:linear-gradient(90deg,#eceadd 25%,#ddd9c4 50%,#eceadd 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:20px; border:2px solid #211F1F; }
+@keyframes shimmer { 0% { background-position:200% 0 } 100% { background-position:-200% 0 } }
+
+.spinner { width:44px; height:44px; border-radius:50%; border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+#toast { position:fixed; bottom:24px; right:24px; z-index:999; background:#211F1F; color:#DBD4B7; padding:13px 22px; border-radius:14px; font-size:13px; font-weight:700; border:2px solid #211F1F; transform:translateY(80px); opacity:0; transition:.3s; pointer-events:none; max-width:340px; }
+#toast.show { transform:translateY(0); opacity:1; }
+#toast.error { background:#ef4444; color:#fff; }
+
+#pageLoader { position:fixed; inset:0; background:var(--bg); z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .4s; }
+#pageLoader.hidden { opacity:0; pointer-events:none; }
+
+.video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#e8e5d8; border-bottom:2px solid #211F1F; overflow:hidden; }
+.video-thumb-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+.video-thumb-wrap .play-badge { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(33,31,31,0.08); font-size:30px; }
+.duration-chip { position:absolute; bottom:8px; right:8px; background:#211F1F; color:#fff; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:6px; }
+.type-chip { position:absolute; bottom:8px; left:8px; background:rgba(255,255,255,0.92); color:#211F1F; font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; border:1px solid #211F1F; text-transform:uppercase; }
+
+.selected-badge-corner {
+  position:absolute; top:8px; right:8px;
+  background:#16a34a; color:#fff; font-size:10px; font-weight:800;
+  padding:3px 9px; border-radius:6px; border:1px solid #211F1F;
+  letter-spacing:0.03em; text-transform:uppercase;
+}
+
+.hashtag-callout { background:#fef3c7; border:2px solid #d97706; border-radius:16px; box-shadow:4px 4px 0 0 #d97706; padding:16px 20px; margin-bottom:20px; display:flex; align-items:flex-start; gap:12px; }
+.hashtag-callout .icon { font-size:26px; flex-shrink:0; }
+.hashtag-callout .text { font-size:13px; line-height:1.55; color:#78350f; }
+.hashtag-callout .text strong { color:#92400e; }
+
+.rule-item { display:flex; align-items:flex-start; gap:8px; margin-top:6px; }
+.rule-item .rule-num { flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#d97706; color:#fff; font-weight:800; font-size:11px; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+
+.action-bar {
+  background:var(--mint);
+  border:2px solid #211F1F;
+  border-radius:16px;
+  box-shadow:4px 4px 0 0 #211F1F;
+  padding:16px 20px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.action-bar .ab-title { font-weight:800; font-size:14px; color:#211F1F; }
+.action-bar .ab-sub { font-size:12px; color:#4b5563; margin-top:2px; }
+.action-bar .ab-btns { display:flex; gap:10px; flex-wrap:wrap; }
+
+.stat-box { background:#fff; border:2px solid #211F1F; border-radius:14px; padding:12px 16px; text-align:center; min-width:110px; }
+.stat-box .k { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:4px; }
+.stat-box .v { font-size:18px; font-weight:800; color:#211F1F; }
+.stat-box .gained { font-size:11px; font-weight:700; color:#16a34a; margin-top:2px; }
+
+.countdown-bar {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:#F5F4EB; border:2px dashed #211F1F; border-radius:14px;
+  padding:10px 14px; margin-top:12px;
+}
+.countdown-bar .cd-days { font-size:22px; font-weight:900; color:#211F1F; }
+.countdown-bar .cd-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; }
+
+.history-item {
+  background:#fff; border:2px solid #211F1F; border-radius:14px;
+  padding:12px 16px; margin-bottom:10px;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.history-item .h-idx {
+  flex-shrink:0; width:28px; height:28px; border-radius:50%;
+  background:#211F1F; color:#DBD4B7; font-weight:800; font-size:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.history-item .h-body { flex:1; min-width:0; }
+.history-item .h-title { font-size:13px; font-weight:800; color:#211F1F; }
+
+.swal2-popup { background:#F5F4EB !important; border:2px solid #211F1F !important; color:#211F1F !important; border-radius:20px !important; box-shadow:6px 6px 0 0 #211F1F !important; font-family:'Inter',sans-serif !important; }
+.swal2-title { color:#211F1F !important; }
+.swal2-html-container { color:#4b5563 !important; }
+.swal2-confirm { background:#211F1F !important; color:#DBD4B7 !important; border-radius:12px !important; font-weight:700 !important; }
+.swal2-cancel { background:#F5F4EB !important; border:2px solid #211F1F !important; color:#211F1F !important; border-radius:12px !important; font-weight:700 !important; }
+</style>
+</head>
+<body>
+
+<div id="pageLoader">
+  <div class="spinner"></div>
+  <p class="text-muted text-sm">Loading your engagement videos…</p>
+</div>
+
+<div id="toast"></div>
+
+<div id="navbar-root"></div>
+<script src="navbar.js"></script>
+<script src="session-manager.js"></script>
+
+<main class="page-content relative z-10 pb-5 px-4">
+<main class="relative z-10 pt-5 pb-5 px-4">
+<div class="max-w-[1200px] mx-auto">
+
+  <!-- HEADER -->
+  <div class="nb-dashboard-header">
+    <div class="nb-badge-container">
+      <div class="nb-status-card nb-status-static">
+        <span class="nb-card-icon">💬</span>
+        <span class="nb-card-title">Engagement Videos</span>
+      </div>
+      <div class="nb-status-card">
+        <span class="nb-card-icon">🎯</span>
+        <span class="nb-card-title">Selected</span>
+        <span id="badgeSelected" class="nb-pill" style="background:#dcfce7;color:#166534;border-color:#166534;">No</span>
+      </div>
+      <a href="channels.html?view=promotional" class="nb-status-card nb-status-link">
+        <span class="nb-card-icon">📢</span>
+        <span class="nb-card-title">Channel Settings</span>
+      </a>
+    </div>
+    <h1 class="text-4xl font-black text-[#211F1F]">Engagement Videos</h1>
+    <div class="text-gray-500 text-sm mt-1 leading-6">
+      Pick <strong class="text-[#211F1F]">one video</strong> for the Engagement Group — your video will receive likes and comments from other members.
+      Once selected, your video stays locked for <strong class="text-[#211F1F]">30 days</strong>.
+    </div>
+  </div>
+
+  <!-- RULES CALLOUT -->
+  <div class="hashtag-callout">
+    <span class="icon">📌</span>
+    <div class="text">
+      <strong>Engagement Video Rules:</strong>
+      <div class="rule-item">
+        <span class="rule-num">1</span>
+        <span>You must have <strong>at least one video</strong> (long or short) on your promotional channel.</span>
+      </div>
+      <div class="rule-item">
+        <span class="rule-num">2</span>
+        <span>Only <strong>one video</strong> can be active at a time.</span>
+      </div>
+      <div class="rule-item">
+        <span class="rule-num">3</span>
+        <span>Once selected, your video is <strong>locked for 30 days</strong>. After that, you can switch.</span>
+      </div>
+      <div class="rule-item">
+        <span class="rule-num">4</span>
+        <span>You can pick <strong>Manually</strong> or let the <strong>System pick randomly</strong> for you.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button id="tab-selected" class="filter-tab active px-5 py-2.5 rounded-2xl text-sm font-medium" data-tab="selected" onclick="switchTab('selected')">🎯 My Selected Video</button>
+    <button id="tab-videos" class="filter-tab px-5 py-2.5 rounded-2xl text-sm font-medium" data-tab="videos" onclick="switchTab('videos')">🎬 My Videos</button>
+  </div>
+
+  <!-- ═══════════ TAB 1: SELECTED ═══════════ -->
+  <div id="pane-selected">
+    <div id="selectedLoading" class="skeleton h-[300px] mb-6"></div>
+
+    <div id="noSelection" class="hidden card rounded-3xl p-14 text-center">
+      <div class="text-6xl mb-4">🎯</div>
+      <h3 class="text-xl font-semibold mb-2">No Video Selected Yet</h3>
+      <p class="text-muted text-sm mb-7 leading-relaxed max-w-lg mx-auto">
+        You haven't picked an engagement video yet. Head to the <strong class="text-[#211F1F]">My Videos</strong> tab and pick one — or let the system pick randomly.
+      </p>
+      <button onclick="switchTab('videos')" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm">Choose a Video →</button>
+    </div>
+
+    <div id="selectedContent" class="hidden"></div>
+
+    <div id="historyWrap" class="hidden mt-8">
+      <h3 class="text-xl font-bold mb-4">📜 History</h3>
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 2: MY VIDEOS ═══════════ -->
+  <div id="pane-videos" class="hidden">
+
+    <!-- ACTION BAR -->
+    <div id="actionBar" class="action-bar">
+      <div>
+        <div class="ab-title">🎯 How do you want to select?</div>
+        <div class="ab-sub">Pick a specific video yourself, or let the system choose one randomly.</div>
+      </div>
+      <div class="ab-btns">
+        <button onclick="switchTab('videos')" class="btn-outline px-5 py-2.5 rounded-2xl text-sm">✋ Pick Manually (browse below)</button>
+        <button onclick="doAutoPick()" id="autoPickBtn" class="btn-purple px-5 py-2.5 rounded-2xl text-sm">🎲 Let System Pick</button>
+      </div>
+    </div>
+
+    <!-- SEARCH + FILTER -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-5">
+      <div class="relative flex-1">
+        <input id="searchInput" type="text" placeholder="Search by title…" oninput="onSearch()" style="width:100%;padding:11px 16px 11px 42px;border:2px solid #211F1F;border-radius:14px;background:#fff;font-size:13px;font-weight:600;outline:none;" />
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;opacity:0.6;">🔍</span>
+      </div>
+      <select id="typeFilter" onchange="onFilter()" style="padding:11px 16px;border:2px solid #211F1F;border-radius:14px;background:#fff;font-size:13px;font-weight:700;cursor:pointer;outline:none;">
+        <option value="All">All Types</option>
+        <option value="Long">📐 Long Only</option>
+        <option value="Short">⚡ Short Only</option>
+      </select>
+      <select id="statusFilter" onchange="onFilter()" style="padding:11px 16px;border:2px solid #211F1F;border-radius:14px;background:#fff;font-size:13px;font-weight:700;cursor:pointer;outline:none;">
+        <option value="All">All Statuses</option>
+        <option value="Ready">✅ Ready</option>
+        <option value="NotReady">⏸️ Not Ready</option>
+      </select>
+    </div>
+
+    <p class="text-muted text-xs font-semibold mb-3" id="videoCounter">Showing 0 videos</p>
+
+    <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div class="skeleton h-[280px]"></div>
+      <div class="skeleton h-[280px]"></div>
+      <div class="skeleton h-[280px]"></div>
+    </div>
+
+    <div id="emptyVideos" class="hidden card rounded-3xl p-14 text-center mt-4">
+      <div class="text-5xl mb-4">📭</div>
+      <h3 class="text-xl font-semibold mb-2">No Videos Found</h3>
+      <p class="text-muted text-sm mb-6">Import videos from your promotional channel first.</p>
+      <a href="longvideos.html" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">→ Import Videos</a>
+    </div>
+  </div>
+
+</div>
+</main>
+</main>
+
+<script>
+'use strict';
+
+/* ────────────────────────────────────────
+   AUTH
+──────────────────────────────────────── */
+const savedUsername = localStorage.getItem("username") || "";
+const savedPassword = localStorage.getItem("password") || "";
+const USER_CODE = localStorage.getItem("usercode") || "";
+if (!savedUsername || !savedPassword) window.location.href = "signin.html";
+
+/* ────────────────────────────────────────
+   CONFIG
+──────────────────────────────────────── */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhNFY4UOivSxaYNwaGe5vqDgWg24lEMsWoWuM1-41RNJALpzW2pFfgwfcQmSXmL10FzQ/exec';
+
+/* ────────────────────────────────────────
+   STATE
+──────────────────────────────────────── */
+let allVideos = [];
+let currentVideoID = '';
+let selectionData = null;
+let activeFilter = 'All';
+let searchQuery = '';
+
+/* ────────────────────────────────────────
+   HELPERS
+──────────────────────────────────────── */
+function show(id){ const el=document.getElementById(id); if(el) el.classList.remove('hidden'); }
+function hide(id){ const el=document.getElementById(id); if(el) el.classList.add('hidden'); }
+
+function showToast(msg, isError=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'error show' : 'show';
+  setTimeout(()=>{ t.className=''; }, 3200);
+}
+
+function hideLoader(){
+  const l = document.getElementById('pageLoader');
+  if (l) { l.classList.add('hidden'); setTimeout(()=>l.style.display='none', 400); }
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function fmtDate(v){
+  if (!v) return '—';
+  const d = new Date(v);
+  if (isNaN(d)) return String(v);
+  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function fmtDuration(sec){
+  const n = Number(sec) || 0;
+  if (n < 60) return n + ' sec';
+  const m = Math.floor(n / 60);
+  const s = n % 60;
+  if (m < 60) return s > 0 ? `${m} min ${s} sec` : `${m} min`;
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  return mm > 0 ? `${h} hr ${mm} min` : `${h} hr`;
+}
+
+async function callApi(action, params = {}) {
+  const qs = new URLSearchParams({ action, userCode: USER_CODE, ...params });
+  const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
+  return res.json();
+}
+
+async function callPost(body) {
+  const res = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+/* ────────────────────────────────────────
+   TABS
+──────────────────────────────────────── */
+function switchTab(tab) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+
+  if (tab === 'selected') {
+    show('pane-selected'); hide('pane-videos');
+  } else {
+    hide('pane-selected'); show('pane-videos');
+  }
+}
+
+/* ────────────────────────────────────────
+   INIT
+──────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+  try {
+    await Promise.all([loadSelected(), loadVideos()]);
+    hideLoader();
+  } catch (e) {
+    console.error(e);
+    hideLoader();
+    showToast('Could not load data.', true);
+  }
+}
+
+/* ────────────────────────────────────────
+   LOAD SELECTED
+──────────────────────────────────────── */
+async function loadSelected() {
+  const data = await callApi('getMyEngagementSelection');
+
+  if (!data.success) {
+    // Not enrolled / suspended / etc.
+    if (data.notEnrolled || data.notActive || data.suspended) {
+      document.querySelector('main').innerHTML = `
+        <div class="max-w-[700px] mx-auto text-center py-20">
+          <div class="card rounded-3xl p-12">
+            <div class="text-6xl mb-4">${data.notEnrolled ? '📢' : (data.suspended ? '🚫' : '⛔')}</div>
+            <h2 class="text-2xl font-bold mb-2">${data.notEnrolled ? 'Not Enrolled' : (data.suspended ? 'Account Suspended' : 'Account Inactive')}</h2>
+            <p class="text-muted text-sm mb-6">${escapeHtml(data.message || '')}</p>
+            <a href="groups.html" class="btn-purple px-8 py-3 rounded-2xl inline-block">👥 Go to Groups</a>
+          </div>
+        </div>`;
+      return;
+    }
+    showToast(data.message || 'Could not load selection.', true);
+    return;
+  }
+
+  selectionData = data;
+  hide('selectedLoading');
+
+  document.getElementById('badgeSelected').textContent = data.hasSelection && data.current?.IsActive ? 'Yes' : 'No';
+
+  if (!data.hasSelection) {
+    show('noSelection');
+    hide('selectedContent');
+    hide('historyWrap');
+    return;
+  }
+
+  hide('noSelection');
+  show('selectedContent');
+  renderSelected(data.current);
+
+  if (data.history && data.history.length > 0) {
+    show('historyWrap');
+    renderHistory(data.history);
+  } else {
+    hide('historyWrap');
+  }
+}
+
+function renderSelected(c) {
+  const el = document.getElementById('selectedContent');
+
+  const statusColor = c.IsActive ? '#16a34a' : '#ef4444';
+  const statusLabel = c.IsActive ? 'Active' : (c.Status === 'VideoDead' ? 'Video Dead' : 'Expired');
+  const modeBadge = c.SelectionMode === 'Auto'
+    ? `<span class="status-badge" style="background:#fef3c7;color:#92400e;">🎲 Auto-selected</span>`
+    : `<span class="status-badge" style="background:#dbeafe;color:#1e40af;">✋ You picked this</span>`;
+
+  const liveLikes = c.LiveLikes || 0;
+  const liveComments = c.LiveComments || 0;
+  const baseLikes = c.BaselineLikes || 0;
+  const baseComments = c.BaselineComments || 0;
+  const gainedLikes = c.GainedLikes || 0;
+  const gainedComments = c.GainedComments || 0;
+
+  const canSwitch = c.DaysRemaining <= 0 || !c.IsActive;
+
+  el.innerHTML = `
+    <div class="card rounded-3xl p-6">
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Thumbnail -->
+        <div style="flex-shrink:0; max-width:320px; width:100%;">
+          <div style="position:relative;width:100%;aspect-ratio:16/9;background:#e8e5d8;border:2px solid #211F1F;border-radius:16px;overflow:hidden;">
+            ${c.VideoThumbnail ? `<img src="${escapeHtml(c.VideoThumbnail)}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:44px;">🎬</div>`}
+            <span class="duration-chip">${fmtDuration(c.VideoDuration)}</span>
+            <span class="type-chip">${escapeHtml(c.VideoType || 'Long')}</span>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div style="flex:1; min-width:0;">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="status-badge" style="background:${c.IsActive ? '#dcfce7' : '#fee2e2'};color:${statusColor};border-color:${statusColor};">
+              <span class="dot" style="background:${statusColor};"></span>${statusLabel}
+            </span>
+            ${modeBadge}
+          </div>
+
+          <h2 class="text-xl font-bold mb-2" style="overflow-wrap:anywhere;">${escapeHtml(c.VideoTitle || 'Untitled Video')}</h2>
+          <div class="font-mono text-xs text-muted mb-3">${escapeHtml(c.VideoID)}</div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div class="stat-box">
+              <div class="k">❤️ Likes</div>
+              <div class="v">${liveLikes}</div>
+              <div class="gained">${gainedLikes >= 0 ? '+' : ''}${gainedLikes}</div>
+            </div>
+            <div class="stat-box">
+              <div class="k">💬 Comments</div>
+              <div class="v">${liveComments}</div>
+              <div class="gained">${gainedComments >= 0 ? '+' : ''}${gainedComments}</div>
+            </div>
+            <div class="stat-box">
+              <div class="k">📅 Selected</div>
+              <div class="v" style="font-size:12px;">${fmtDate(c.DateSelected)}</div>
+            </div>
+            <div class="stat-box">
+              <div class="k">⏰ Expires</div>
+              <div class="v" style="font-size:12px;">${fmtDate(c.ExpiresDate)}</div>
+            </div>
+          </div>
+
+          ${c.IsActive ? `
+            <div class="countdown-bar">
+              <div>
+                <div class="cd-days">${c.DaysRemaining}</div>
+                <div class="cd-label">Days Remaining</div>
+              </div>
+              <div style="flex:1; font-size:12px; color:#4b5563; max-width:340px;">
+                🔒 Your video is locked until <strong>${fmtDate(c.ExpiresDate)}</strong>. After this date, you can switch to a different video.
+              </div>
+            </div>
+          ` : `
+            <div style="background:#dcfce7; border:2px solid #16a34a; border-radius:14px; padding:12px 16px; margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div style="font-size:13px; font-weight:700; color:#166534;">
+                🔓 ${c.Status === 'VideoDead' ? 'Your video is no longer available.' : 'Your lock period has ended.'} You can select a new video now.
+              </div>
+              <button onclick="switchTab('videos')" class="btn-green px-5 py-2 rounded-xl text-xs">Pick New Video →</button>
+            </div>
+          `}
+
+          ${c.Issue ? `
+            <div style="background:#fee2e2; border:2px solid #dc2626; border-radius:12px; padding:10px 14px; margin-top:12px; font-size:12px; color:#991b1b; font-weight:600;">
+              ⚠ ${escapeHtml(c.Issue)}
+            </div>
+          ` : ''}
+
+          <div class="flex gap-2 flex-wrap mt-4">
+            <a href="https://www.youtube.com/watch?v=${escapeHtml(c.VideoID)}" target="_blank" rel="noopener" class="btn-outline px-5 py-2.5 rounded-2xl text-xs">▶ Watch on YouTube</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderHistory(history) {
+  const el = document.getElementById('historyList');
+  if (!history.length) { el.innerHTML = '<p class="text-muted text-sm">No previous selections.</p>'; return; }
+
+  el.innerHTML = history.slice().reverse().map((h, idx) => {
+    const num = history.length - idx;
+    return `
+      <div class="history-item">
+        <div class="h-idx">${num}</div>
+        <div class="h-body">
+          <div class="h-title">Video ${escapeHtml(h.VideoID)}</div>
+          <div class="text-xs text-muted mt-1">
+            Selected: <strong>${fmtDate(h.DateSelected)}</strong>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="stat-box" style="min-width:80px;padding:8px 12px;">
+            <div class="k">Final Likes</div>
+            <div class="v" style="font-size:14px;">${h.FinalLikes}</div>
+          </div>
+          <div class="stat-box" style="min-width:80px;padding:8px 12px;">
+            <div class="k">Final Comments</div>
+            <div class="v" style="font-size:14px;">${h.FinalComments}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ────────────────────────────────────────
+   LOAD VIDEOS
+──────────────────────────────────────── */
+async function loadVideos() {
+  const data = await callApi('getMyEngagementVideos');
+
+  if (!data.success) {
+    showToast(data.message || 'Could not load videos.', true);
+    return;
+  }
+
+  allVideos = data.videos || [];
+  currentVideoID = data.currentVideoID || '';
+
+  // If already has an active selection, disable the action bar
+  if (data.hasSelection && data.lockedUntil) {
+    document.getElementById('actionBar').innerHTML = `
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <div class="text-3xl">🔒</div>
+        <div>
+          <div class="ab-title">Your video is locked</div>
+          <div class="ab-sub">You can pick a new video after <strong>${fmtDate(data.lockedUntil)}</strong>.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderVideoGrid();
+}
+
+/* ────────────────────────────────────────
+   FILTERS
+──────────────────────────────────────── */
+function onSearch() {
+  searchQuery = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+  renderVideoGrid();
+}
+
+function onFilter() {
+  activeFilter = document.getElementById('typeFilter')?.value || 'All';
+  renderVideoGrid();
+}
+
+function getFilteredVideos() {
+  const typeFilter = document.getElementById('typeFilter')?.value || 'All';
+  const statusFilter = document.getElementById('statusFilter')?.value || 'All';
+
+  return allVideos.filter(v => {
+    if (typeFilter !== 'All' && v.VideoType !== typeFilter) return false;
+    if (statusFilter !== 'All' && v.VideoStatus !== statusFilter) return false;
+    if (searchQuery && !(v.VideoTitle || '').toLowerCase().includes(searchQuery)) return false;
+    return true;
+  });
+}
+
+/* ────────────────────────────────────────
+   RENDER VIDEO GRID
+──────────────────────────────────────── */
+function renderVideoGrid() {
+  const grid = document.getElementById('videoGrid');
+  const empty = document.getElementById('emptyVideos');
+  const counter = document.getElementById('videoCounter');
+
+  if (allVideos.length === 0) {
+    grid.innerHTML = '';
+    counter.textContent = 'Showing 0 videos';
+    show('emptyVideos');
+    return;
+  }
+  hide('emptyVideos');
+
+  const list = getFilteredVideos();
+  counter.textContent = `Showing ${list.length} of ${allVideos.length} videos`;
+
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="col-span-full text-center py-10 text-muted text-sm">No videos match your filters.</div>';
+    return;
+  }
+
+  grid.innerHTML = list.map(v => videoCard(v)).join('');
+}
+
+function videoCard(v) {
+  const isSelected = v.VideoID === currentVideoID;
+  const status = v.VideoStatus || 'Ready';
+  const ready = status === 'Ready';
+
+  const statusBadge = ready
+    ? '<span class="status-badge" style="background:#dcfce7;color:#166534;"><span class="dot" style="background:#16a34a;"></span>Ready</span>'
+    : '<span class="status-badge" style="background:#fef3c7;color:#92400e;"><span class="dot" style="background:#f59e0b;"></span>' + escapeHtml(status) + '</span>';
+
+  const typeBadge = v.VideoType === 'Short'
+    ? '<span class="status-badge" style="background:#fef3c7;color:#92400e;">⚡ Short</span>'
+    : '<span class="status-badge" style="background:#dbeafe;color:#1e40af;">📐 Long</span>';
+
+  const cardClass = isSelected ? 'video-card selected-card' : 'video-card';
+
+  const actionButton = isSelected
+    ? `<button class="btn-green w-full py-2.5 rounded-2xl text-xs" disabled>✓ Currently Selected</button>`
+    : (ready
+        ? `<button onclick="doSelectVideo('${escapeHtml(v.VideoID)}')" class="btn-purple w-full py-2.5 rounded-2xl text-xs">✋ Select This Video</button>`
+        : `<button class="btn-outline w-full py-2.5 rounded-2xl text-xs" disabled>Not Ready</button>`);
+
+  return `
+    <div class="${cardClass}">
+      <div class="video-thumb-wrap">
+        ${v.VideoThumbnail ? `<img src="${escapeHtml(v.VideoThumbnail)}" alt="">` : `<div class="play-badge">🎬</div>`}
+        <span class="duration-chip">${fmtDuration(v.VideoDuration)}</span>
+        <span class="type-chip">${escapeHtml(v.VideoType || 'Long')}</span>
+        ${isSelected ? '<span class="selected-badge-corner">Selected</span>' : ''}
+      </div>
+      <div class="p-4" style="flex:1; display:flex; flex-direction:column;">
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          ${statusBadge}
+          ${typeBadge}
+        </div>
+        <div class="text-sm font-semibold mb-2" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; flex:1;">
+          ${escapeHtml(v.VideoTitle || 'Untitled Video')}
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-[11px] text-muted mb-3">
+          <div>❤️ <strong style="color:#211F1F;">${v.LikeCount || 0}</strong> likes</div>
+          <div>💬 <strong style="color:#211F1F;">${v.CommentCount || 0}</strong> comments</div>
+        </div>
+        <div class="flex gap-2 mb-2">
+          <a href="${escapeHtml(v.VideoUrl)}" target="_blank" rel="noopener" class="btn-outline flex-1 py-2 rounded-xl text-xs text-center">▶ Watch</a>
+        </div>
+        ${actionButton}
+      </div>
+    </div>
+  `;
+}
+
+/* ────────────────────────────────────────
+   SELECT VIDEO (Manual)
+──────────────────────────────────────── */
+async function doSelectVideo(videoID) {
+  const video = allVideos.find(v => v.VideoID === videoID);
+  if (!video) return;
+
+  const result = await Swal.fire({
+    icon: 'question',
+    title: 'Select this video?',
+    html: `
+      <div style="text-align:left; font-size:13px; line-height:1.6; color:#4b5563;">
+        <p style="margin-bottom:10px;">You are about to select:</p>
+        <div style="background:#F5F4EB; border:2px solid #211F1F; border-radius:12px; padding:12px; margin-bottom:12px;">
+          <div style="font-weight:800; color:#211F1F;">${escapeHtml(video.VideoTitle || 'Untitled')}</div>
+          <div style="font-size:11px; color:#6b7280; margin-top:4px;">${escapeHtml(videoID)}</div>
+        </div>
+        <p style="color:#b91c1c; font-weight:700;">⚠️ This will lock your selection for 30 days.</p>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Select',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#211F1F'
+  });
+  if (!result.isConfirmed) return;
+
+  Swal.fire({ title: 'Selecting…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const data = await callPost({
+      action: 'selectEngagementVideo',
+      userCode: USER_CODE,
+      videoID: videoID
+    });
+    Swal.close();
+
+    if (data.success) {
+      showToast('✅ ' + data.message);
+      await Promise.all([loadSelected(), loadVideos()]);
+      switchTab('selected');
+    } else {
+      showToast(data.message || 'Could not select video.', true);
+    }
+  } catch (e) {
+    Swal.close();
+    showToast('Connection error.', true);
+  }
+}
+
+/* ────────────────────────────────────────
+   AUTO PICK
+──────────────────────────────────────── */
+async function doAutoPick() {
+  const result = await Swal.fire({
+    icon: 'question',
+    title: '🎲 Let the system pick for you?',
+    html: `
+      <div style="text-align:left; font-size:13px; line-height:1.6; color:#4b5563;">
+        <p style="margin-bottom:10px;">The system will <strong>randomly select</strong> one of your eligible videos.</p>
+        <p style="margin-bottom:10px;">Videos you've used before will be skipped (if you have unused ones).</p>
+        <p style="color:#b91c1c; font-weight:700;">⚠️ The pick is final and locks for 30 days.</p>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Pick Randomly',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#211F1F'
+  });
+  if (!result.isConfirmed) return;
+
+  Swal.fire({ title: 'Picking…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const data = await callPost({
+      action: 'autoSelectEngagementVideo',
+      userCode: USER_CODE
+    });
+    Swal.close();
+
+    if (data.success) {
+      const picked = data.pickedVideo;
+      await Swal.fire({
+        icon: 'success',
+        title: '🎲 Randomly Picked!',
+        html: `
+          <div style="text-align:left; font-size:13px; color:#4b5563;">
+            <div style="background:#F5F4EB; border:2px solid #211F1F; border-radius:12px; padding:14px; text-align:center;">
+              ${picked && picked.VideoThumbnail ? `<img src="${escapeHtml(picked.VideoThumbnail)}" style="width:100%; max-width:260px; border-radius:10px; border:2px solid #211F1F; margin-bottom:10px;">` : ''}
+              <div style="font-weight:800; color:#211F1F;">${escapeHtml(picked?.VideoTitle || data.videoID)}</div>
+              <div style="font-size:11px; color:#6b7280; margin-top:4px;">Locked for 30 days</div>
+            </div>
+          </div>
+        `,
+        confirmButtonText: 'Great!',
+        confirmButtonColor: '#211F1F'
+      });
+      await Promise.all([loadSelected(), loadVideos()]);
+      switchTab('selected');
+    } else {
+      showToast(data.message || 'Could not auto-select.', true);
+    }
+  } catch (e) {
+    Swal.close();
+    showToast('Connection error.', true);
+  }
+}
+</script>
+</body>
+</html>
