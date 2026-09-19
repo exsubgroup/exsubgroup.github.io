@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coming Soon — Exsub Group</title>
+<title>Engagement Tasks — Exsub Group</title>
 <link rel="icon" href="images/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,364 +13,271 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-:root {
-  --charcoal: #211F1F;
-  --sand: #DBD4B7;
-  --mint: #ACD1C0;
-  --bg: #F5F4EB;
-  --white: #FFFFFF;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--bg);
-  font-family: 'Inter', sans-serif;
-}
-
-/* ── Loading Overlay ──────────────────────────────────────────── */
-#loadingOverlay {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  transition: opacity 0.5s ease;
-}
-#loadingOverlay.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-.loader-ring {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(33,31,31,0.15);
-  border-top-color: var(--charcoal);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-.loader-dots {
-  display: flex;
-  gap: 8px;
-}
-.loader-dots span {
-  width: 10px;
-  height: 10px;
-  background: var(--charcoal);
-  border-radius: 50%;
-  animation: dotPulse 1.4s infinite ease-in-out both;
-}
-.loader-dots span:nth-child(1) { animation-delay: -0.32s; }
-.loader-dots span:nth-child(2) { animation-delay: -0.16s; }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes dotPulse {
-  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
-  40% { transform: scale(1); opacity: 1; }
-}
-
-/* ── Coming Soon Card ──────────────────────────────────────────── */
-.coming-soon-card {
-  background: var(--white);
-  border: 3px solid var(--charcoal);
+/* ── Not Enrolled Banner ── */
+.not-enrolled-banner {
+  background: #F5F4EB;
+  border: 3px solid #211F1F;
   border-radius: 24px;
-  box-shadow: 8px 8px 0px 0px var(--charcoal);
-  padding: 48px 40px;
+  box-shadow: 8px 8px 0px 0px #211F1F;
+  padding: 48px 32px;
   text-align: center;
-  max-width: 640px;
+  max-width: 700px;
   margin: 0 auto;
 }
+.not-enrolled-banner .banner-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+.not-enrolled-banner .banner-title { font-size: 24px; font-weight: 900; color: #211F1F; margin-bottom: 8px; }
+.not-enrolled-banner .banner-desc { font-size: 14px; color: #6b7280; line-height: 1.6; max-width: 480px; margin: 0 auto 20px; }
+.not-enrolled-banner .banner-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px;
+  background: #211F1F; color: #DBD4B7; border: 2px solid #211F1F;
+  border-radius: 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.12s ease; text-decoration: none;
+  box-shadow: 4px 4px 0px 0px #211F1F; font-family: 'Inter', sans-serif;
+}
+.not-enrolled-banner .banner-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
+.not-enrolled-banner .banner-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-.coming-soon-icon {
-  font-size: 72px;
-  margin-bottom: 20px;
-  display: block;
-}
+:root { --bg:#F5F4EB; --ink:#211F1F; --mint:#ACD1C0; --sand:#DBD4B7; --muted:#6b7280; }
+* { font-family:'Inter',sans-serif; box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 
-.coming-soon-title {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--charcoal);
-  margin-bottom: 12px;
-}
+.card { background:#F5F4EB; border:2px solid #211F1F; border-radius:20px; box-shadow:4px 4px 0px 0px #211F1F; }
+.task-card { background:#fff; border:2px solid #211F1F; border-radius:20px; box-shadow:4px 4px 0px 0px #211F1F; transition:.2s ease; overflow:hidden; display:flex; flex-direction:column; }
+.task-card:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0px 0px #211F1F; }
+.task-card.done-card { background:#f0fdf4; border-color:#16a34a; box-shadow:4px 4px 0px 0px #16a34a; }
+.task-card.done-card:hover { box-shadow:6px 6px 0px 0px #16a34a; transform:none; }
+.task-card.pending-card { background:#fff7ed; border-color:#f97316; box-shadow:4px 4px 0px 0px #f97316; }
+.task-card.pending-card:hover { box-shadow:6px 6px 0px 0px #f97316; }
+.task-card.cheating-card { background:#fef2f2; border-color:#dc2626; box-shadow:4px 4px 0px 0px #dc2626; }
+.task-card.cheating-card:hover { box-shadow:6px 6px 0px 0px #dc2626; transform:none; }
+.text-muted { color:var(--muted); }
 
-.coming-soon-subtitle {
-  font-size: 16px;
-  color: #6b7280;
-  font-weight: 500;
-  line-height: 1.6;
-  max-width: 440px;
-  margin: 0 auto 20px;
-}
+.btn-purple { background:#211F1F; color:#DBD4B7; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-purple:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+.btn-purple:disabled { opacity:.4; cursor:not-allowed; }
 
-.coming-soon-divider {
-  width: 60px;
-  height: 4px;
-  background: var(--mint);
-  border-radius: 999px;
-  margin: 16px auto;
-}
+.btn-outline { background:#F5F4EB; border:2px solid #211F1F; color:#211F1F; border-radius:14px; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-outline:hover:not(:disabled) { background:var(--sand); }
+.btn-outline:disabled { opacity:.4; cursor:not-allowed; }
 
-.coming-soon-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin: 24px 0 32px;
-}
+.btn-green { background:#16a34a; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-green:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
 
-.coming-soon-feature {
-  background: var(--bg);
-  border: 2px solid var(--charcoal);
-  border-radius: 16px;
-  padding: 16px 12px;
-  transition: 0.15s ease;
-}
+.btn-red { background:#ef4444; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-red:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
 
-.coming-soon-feature:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px 0px var(--charcoal);
-}
+.btn-teal { background:#ACD1C0; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-teal:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
 
-.coming-soon-feature .emoji {
-  font-size: 28px;
-  display: block;
-  margin-bottom: 6px;
-}
+.btn-amber { background:#fbbf24; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-amber:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
 
-.coming-soon-feature .label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--charcoal);
-}
+.filter-tab { background:#fff; border:2px solid #211F1F; transition:.2s; color:var(--ink); cursor:pointer; white-space:nowrap; }
+.filter-tab:hover { background:var(--sand); }
+.filter-tab.active { background:#211F1F; border-color:#211F1F; color:#fff; }
+.filter-tab.tab-cheating.active { background:#dc2626; border-color:#dc2626; color:#fff; }
+.filter-tab.tab-cheating { border-color:#dc2626; color:#dc2626; }
+.filter-tab.tab-cheating:hover { background:#fee2e2; }
 
-.coming-soon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 32px;
-  background: var(--charcoal);
-  color: var(--sand);
-  border: 3px solid var(--charcoal);
-  border-radius: 16px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.12s ease;
-  text-decoration: none;
-  box-shadow: 4px 4px 0px 0px var(--charcoal);
-  font-family: 'Inter', sans-serif;
-}
+.status-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700; border:1px solid #211F1F; }
+.dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
 
-.coming-soon-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--charcoal);
-}
+.skeleton { background:linear-gradient(90deg,#eceadd 25%,#ddd9c4 50%,#eceadd 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:20px; border:2px solid #211F1F; }
+@keyframes shimmer { 0% { background-position:200% 0 } 100% { background-position:-200% 0 } }
 
-.coming-soon-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px var(--charcoal);
-}
+.spinner { width:44px; height:44px; border-radius:50%; border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-.coming-soon-btn-secondary {
-  background: var(--sand);
-  color: var(--charcoal);
-  border-color: var(--charcoal);
-}
+#toast { position:fixed; bottom:24px; right:24px; z-index:999; background:#211F1F; color:#DBD4B7; padding:13px 22px; border-radius:14px; font-size:13px; font-weight:700; border:2px solid #211F1F; transform:translateY(80px); opacity:0; transition:.3s; pointer-events:none; max-width:340px; }
+#toast.show { transform:translateY(0); opacity:1; }
+#toast.error { background:#ef4444; color:#fff; }
 
-.coming-soon-btn-secondary:hover {
-  background: #c9c2a4;
-}
+#pageLoader { position:fixed; inset:0; background:var(--bg); z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .4s; }
+#pageLoader.hidden { opacity:0; pointer-events:none; }
 
-/* ── Status Badge ──────────────────────────────────────────────── */
-.status-badge-coming {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 2px solid var(--charcoal);
-  background: #fef3c7;
-  color: #d97706;
-}
+.video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#e8e5d8; border-bottom:2px solid #211F1F; overflow:hidden; }
+.video-thumb-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+.duration-chip { position:absolute; bottom:8px; right:8px; background:#211F1F; color:#fff; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:6px; }
+.type-chip { position:absolute; bottom:8px; left:8px; background:rgba(255,255,255,0.92); color:#211F1F; font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; border:1px solid #211F1F; text-transform:uppercase; }
 
-.status-badge-coming .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #d97706;
-  animation: pulse-dot 1.5s ease-in-out infinite;
-}
+.task-id-chip { position:absolute; top:8px; left:8px; background:#211F1F; color:#DBD4B7; font-size:10px; font-weight:800; padding:3px 9px; border-radius:6px; letter-spacing:.04em; }
 
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(0.7); }
-}
+.comment-suggestion { background:#F5F4EB; border:2px dashed #211F1F; border-radius:12px; padding:10px 12px; font-size:12px; line-height:1.5; color:#211F1F; font-style:italic; }
 
-/* ── Responsive ────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .coming-soon-card {
-    padding: 32px 20px;
-  }
-  .coming-soon-title {
-    font-size: 24px;
-  }
-  .coming-soon-icon {
-    font-size: 48px;
-  }
-  .coming-soon-features {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .coming-soon-feature {
-    padding: 12px 8px;
-  }
-  .coming-soon-feature .emoji {
-    font-size: 20px;
-  }
-  .coming-soon-btn {
-    padding: 12px 24px;
-    font-size: 13px;
-    width: 100%;
-    justify-content: center;
-  }
-  .coming-soon-btn-group {
-    flex-direction: column;
-    gap: 12px;
-  }
-}
+.cheating-box { background:#fecaca; border:2px solid #dc2626; border-radius:14px; padding:10px 14px; }
 
-@media (max-width: 400px) {
-  .coming-soon-features {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+.stats-bar { background:#fff; border:2px solid #211F1F; border-radius:18px; box-shadow:4px 4px 0 0 #211F1F; padding:14px 20px; margin-bottom:20px; display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-around; }
+.stats-bar .stat { text-align:center; min-width:80px; }
+.stats-bar .stat .v { font-size:22px; font-weight:900; color:#211F1F; }
+.stats-bar .stat .k { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-top:2px; }
 
-/* ── SweetAlert2 Overrides ────────────────────────────────────── */
-.swal2-popup {
-  background: var(--bg) !important;
-  border: 3px solid var(--charcoal) !important;
-  border-radius: 24px !important;
-  box-shadow: 8px 8px 0px 0px var(--charcoal) !important;
-  font-family: 'Inter', sans-serif !important;
-  color: var(--charcoal) !important;
+.step-list { list-style:none; padding:0; margin:0; }
+.step-list li { display:flex; align-items:flex-start; gap:10px; padding:8px 0; font-size:13px; color:#4b5563; }
+.step-list .num { flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#211F1F; color:#DBD4B7; font-weight:800; font-size:11px; display:flex; align-items:center; justify-content:center; }
+
+.swal2-popup { background:#F5F4EB !important; border:2px solid #211F1F !important; color:#211F1F !important; border-radius:20px !important; box-shadow:6px 6px 0 0 #211F1F !important; font-family:'Inter',sans-serif !important; }
+.swal2-title { color:#211F1F !important; }
+.swal2-html-container { color:#4b5563 !important; }
+.swal2-confirm { background:#211F1F !important; color:#DBD4B7 !important; border-radius:12px !important; font-weight:700 !important; }
+.swal2-cancel { background:#F5F4EB !important; border:2px solid #211F1F !important; color:#211F1F !important; border-radius:12px !important; font-weight:700 !important; }
+
+.generate-btn-pulse { position:relative; }
+.generate-btn-pulse::after {
+  content:''; position:absolute; inset:-4px; border-radius:18px;
+  border:2px solid #211F1F; opacity:0;
+  animation:pulseRing 2.4s ease-out infinite;
+  pointer-events:none;
 }
-.swal2-title {
-  color: var(--charcoal) !important;
-  font-weight: 800 !important;
-}
-.swal2-html-container {
-  color: #4b5563 !important;
-}
-.swal2-confirm {
-  background: var(--charcoal) !important;
-  color: var(--sand) !important;
-  border-radius: 14px !important;
-  border: 3px solid var(--charcoal) !important;
-  font-weight: 700 !important;
-  box-shadow: 4px 4px 0px 0px var(--charcoal) !important;
-}
-.swal2-cancel {
-  background: var(--white) !important;
-  border: 3px solid var(--charcoal) !important;
-  color: var(--charcoal) !important;
-  border-radius: 14px !important;
-  font-weight: 700 !important;
-  box-shadow: 4px 4px 0px 0px var(--charcoal) !important;
-}
+@keyframes pulseRing { 0% { opacity:.6; transform:scale(1); } 100% { opacity:0; transform:scale(1.12); } }
 </style>
 </head>
 <body>
 
-<!-- LOADING OVERLAY -->
-<div id="loadingOverlay">
-  <div class="loader-ring"></div>
-  <p style="color:#6b7280;font-size:14px;font-weight:500;">Loading...</p>
-  <div class="loader-dots">
-    <span></span><span></span><span></span>
-  </div>
+<div id="pageLoader">
+  <div class="spinner"></div>
+  <p class="text-muted text-sm">Loading your engagement tasks…</p>
 </div>
 
-<!-- NAVBAR -->
+<div id="toast"></div>
+
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
 
-<!-- MAIN -->
-<main class="page-content relative z-10 pb-20 px-4">
-<main class="relative z-10 pt-5 pb-20 px-4">
-
+<main class="page-content relative z-10 pb-5 px-4">
+<main class="relative z-10 pt-5 pb-5 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- PAGE HEADER -->
+  <!-- HEADER -->
   <div class="nb-dashboard-header">
     <div class="nb-badge-container">
       <div class="nb-status-card nb-status-static">
-        <span class="nb-card-title">🚀 Coming Soon</span>
+        <span class="nb-card-icon">💬</span>
+        <span class="nb-card-title">Engagement Tasks</span>
       </div>
-      <div class="status-badge-coming">
-        <span class="dot"></span>
-        In Development
-      </div>
+      <a href="engagement-proofs.html" class="nb-status-card nb-status-link">
+        <span class="nb-card-icon">🎥</span>
+        <span class="nb-card-title">My Proofs</span>
+      </a>
+      <a href="engagement-videos.html" class="nb-status-card nb-status-link">
+        <span class="nb-card-icon">🎯</span>
+        <span class="nb-card-title">My Video</span>
+      </a>
+      <a href="groups.html" class="nb-status-card nb-status-link">
+        <span class="nb-card-icon">👥</span>
+        <span class="nb-card-title">Groups</span>
+      </a>
     </div>
-    <h1 class="text-4xl font-black text-[#211F1F]" id="pageTitle">Coming Soon</h1>
-    <div id="welcomeSubtitle" class="text-gray-400 text-sm mt-1">
-      We're working on something exciting. Stay tuned!
+    <h1 class="text-4xl font-black text-[#211F1F]">Engagement Tasks</h1>
+    <div class="flex items-center justify-between flex-wrap gap-3 mt-2">
+      <div class="text-gray-500 text-sm leading-6" style="max-width:640px;">
+        Like &amp; comment on these videos, then paste your comment here. Admin will verify via YouTube API in <strong>7 days</strong>.
+      </div>
+      <button id="generateBtn" onclick="doGenerateTasks()"
+        class="btn-purple generate-btn-pulse px-5 py-2.5 rounded-2xl text-sm flex items-center gap-2">
+        ⚡ Generate Tasks
+      </button>
     </div>
   </div>
 
-  <!-- COMING SOON CARD -->
-  <div class="coming-soon-card mt-8">
-    <span class="coming-soon-icon" id="featureIcon">🔧</span>
-    <h2 class="coming-soon-title" id="featureTitle">Feature Coming Soon</h2>
-    <div class="coming-soon-divider"></div>
-    <p class="coming-soon-subtitle" id="featureDescription">
-      We're hard at work building this feature to help you grow your channel even faster.
-      Check back soon for updates!
-    </p>
-
-    <!-- Feature Preview -->
-    <div class="coming-soon-features" id="featurePreview">
-      <div class="coming-soon-feature">
-        <span class="emoji">⚡</span>
-        <span class="label">Fast & Reliable</span>
-      </div>
-      <div class="coming-soon-feature">
-        <span class="emoji">🚀</span>
-        <span class="label">Boost Growth</span>
-      </div>
-      <div class="coming-soon-feature">
-        <span class="emoji">🤝</span>
-        <span class="label">Community Powered</span>
+  <!-- PROMOTION PAUSED BANNER -->
+  <div id="promoDisabledBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fef3c7;border:2px solid #d97706;box-shadow:4px 4px 0px 0px #d97706;">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-2xl bg-amber-500/25 flex items-center justify-center text-xl flex-shrink-0">🔒</div>
+      <div class="flex-1">
+        <h3 class="font-semibold text-amber-700 mb-1">Promotion Paused — Complete Your Pending Work</h3>
+        <p class="text-amber-700/90 text-sm leading-relaxed mb-2">
+          Your engagement promotion is paused because you have too many pending tasks (or unresolved cheating flags).
+          <strong class="text-[#211F1F]">You can still complete your existing tasks below.</strong>
+          Once you finish them, your promotion will automatically resume.
+        </p>
+        <p class="text-xs text-amber-700/70">💡 New tasks cannot be generated until your pending work is cleared.</p>
       </div>
     </div>
+  </div>
 
-    <!-- Action Buttons -->
-    <div class="flex flex-wrap items-center justify-center gap-4 coming-soon-btn-group">
-      <a href="javascript:history.back()" class="coming-soon-btn coming-soon-btn-secondary">
-        ← Go Back
-      </a>
-      <a href="analytics.html" class="coming-soon-btn">
-        📊 Dashboard
-      </a>
+  <!-- CHEATING WARNING BANNER -->
+  <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+      <div class="flex-1">
+        <h3 class="font-semibold text-red-600 mb-1">You Have Cheating Flags!</h3>
+        <p class="text-red-600/80 text-sm leading-relaxed mb-3">
+          You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged as cheating.
+          You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
+          These tasks are pinned at the top.
+        </p>
+        <button onclick="switchTab('cheating')" class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+          ⚠️ View Cheating Tasks
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- Notify Me -->
-    <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
-      💡 Want to be notified when this feature launches?
-      <a href="support.html" style="color: var(--charcoal); font-weight: 700; text-decoration: underline; text-underline-offset: 2px;">
-        Contact Support
-      </a>
-    </p>
+  <!-- STATS BAR -->
+  <div id="statsBar" class="stats-bar hidden">
+    <div class="stat"><div class="v" id="statPending">0</div><div class="k">To Do</div></div>
+    <div class="stat"><div class="v" id="statInProgress" style="color:#f97316;">0</div><div class="k">Pending</div></div>
+    <div class="stat"><div class="v" id="statDone" style="color:#16a34a;">0</div><div class="k">Completed</div></div>
+    <div class="stat"><div class="v" id="statVerified" style="color:#0f766e;">0</div><div class="k">Verified</div></div>
+    <div class="stat"><div class="v" id="statCheating" style="color:#dc2626;">0</div><div class="k">Cheating</div></div>
+    <div class="stat"><div class="v" id="statGained" style="color:#2563eb;">0</div><div class="k">Likes Received</div></div>
+    <div class="stat"><div class="v" id="statCommentsGained" style="color:#7c3aed;">0</div><div class="k">Comments Received</div></div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="card rounded-3xl p-6 mb-6" style="background:#fef3c7; border-color:#d97706; box-shadow:4px 4px 0 0 #d97706;">
+    <div style="display:flex; align-items:flex-start; gap:14px;">
+      <span style="font-size:28px;">📌</span>
+      <div style="flex:1;">
+        <div style="font-weight:800; font-size:15px; color:#78350f; margin-bottom:8px;">How to Complete a Task</div>
+        <ol class="step-list">
+          <li><span class="num">1</span><span>Click <strong>Open on YouTube</strong> to open the video.</span></li>
+          <li><span class="num">2</span><span>Click the <strong>Like</strong> button on YouTube (👍).</span></li>
+          <li><span class="num">3</span><span>Post a <strong>genuine comment</strong> related to the video (min 5 words, no spam).</span></li>
+          <li><span class="num">4</span><span>Come back here and click <strong>Mark as Done</strong>, then <strong>paste your exact comment</strong>.</span></li>
+          <li><span class="num">5</span><span>Admin will verify your comment via YouTube API in <strong>7 days</strong>. Fake comments = Cheating.</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER TABS — with dedicated CHEATING tab -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button id="tab-pending" class="filter-tab active px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('pending')">⏳ Pending Tasks</button>
+    <button id="tab-cheating" class="filter-tab tab-cheating px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('cheating')">⚠️ Cheating <span id="cheatingTabCount" class="ml-1 font-bold"></span></button>
+    <button id="tab-done" class="filter-tab px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('done')">✅ Completed</button>
+    <button id="tab-all" class="filter-tab px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('all')">📋 All Tasks</button>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="mb-5">
+    <div class="relative">
+      <input id="searchInput" type="text" placeholder="Search by Task ID or Target UserCode…" oninput="renderTasks()"
+        style="width:100%;padding:11px 16px 11px 42px;border:2px solid #211F1F;border-radius:14px;background:#fff;font-size:13px;font-weight:600;outline:none;" />
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;opacity:0.6;">🔍</span>
+    </div>
+  </div>
+
+  <p class="text-muted text-xs font-semibold mb-3" id="taskCounter">Showing 0 tasks</p>
+
+  <!-- TASK GRID -->
+  <div id="taskGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div class="skeleton h-[340px]"></div>
+    <div class="skeleton h-[340px]"></div>
+    <div class="skeleton h-[340px]"></div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
+    <div class="text-6xl mb-4" id="emptyIcon">📭</div>
+    <h3 class="text-xl font-semibold mb-2" id="emptyTitle">No Tasks Found</h3>
+    <p class="text-muted text-sm mb-6" id="emptyMsg">You have no engagement tasks right now.</p>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <button onclick="doGenerateTasks()" class="btn-purple px-6 py-3 rounded-2xl font-semibold text-sm">⚡ Generate Tasks</button>
+      <a href="engagement-videos.html" class="btn-outline px-6 py-3 rounded-2xl font-semibold text-sm">🎯 Select a Video</a>
+    </div>
   </div>
 
 </div>
@@ -378,133 +285,1111 @@ body {
 </main>
 
 <script>
-/* =========================================================
-   AUTH CHECK
-========================================================= */
+'use strict';
+
+/* ════════════════════════════════════════════════════
+   AUTH
+   ════════════════════════════════════════════════════ */
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
-const savedUserCode = localStorage.getItem("usercode") || "";
+const USER_CODE = localStorage.getItem("usercode") || "";
+if (!savedUsername || !savedPassword) window.location.href = "signin.html";
 
-if (!savedUsername || !savedPassword) {
-  window.location.href = "signin.html";
+/* ════════════════════════════════════════════════════
+   CONFIG
+   ════════════════════════════════════════════════════ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwguPlM4vF2uboGhaPyrZoYTV2q8RVMwXV9Z6IDNXu865jOhf78X58RXePtSAISzY57/exec';
+
+/* ════════════════════════════════════════════════════
+   CACHE KEYS
+   ════════════════════════════════════════════════════ */
+const CACHE_KEY_TASKS = 'engagement_tasks_data';
+const CACHE_KEY_STATS = 'engagement_tasks_stats';
+const CACHE_KEY_EXCHANGE = 'engagement_tasks_exchange';
+const CACHE_KEY_FOCUSED = 'engagement_tasks_focused';
+const CACHE_KEY_TIMESTAMP = 'engagement_tasks_timestamp';
+const CACHE_KEY_HAS_CHEAT = 'engagement_tasks_has_cheat';
+const CACHE_KEY_CHEAT_COUNT = 'engagement_tasks_cheat_count';
+const CACHE_KEY_PERF_PRIORITY = 'engagement_tasks_perf_priority';
+const CACHE_KEY_PROMO_DISABLED = 'engagement_tasks_promo_disabled';
+const CACHE_TTL = 5 * 60 * 1000;
+
+/* ════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════ */
+let allTasks = [];
+let summary = {};
+let stats = { total:0, notWorkYet:0, pending:0, completed:0, verified:0, cheating:0, rejected:0 };
+let exchangeStats = { awaiting:0, both:0, theirPending:0 };
+let currentStatus = 'NotWorkYet';
+let hasCheating = false;
+let cheatCount = 0;
+let perfPriority = { deletedCount: 0, pendingCount: 0 };
+let promoDisabled = false;
+let activeTab = 'pending';
+let searchQuery = '';
+let isGenerating = false;
+let validationInterval = null;
+let partnerPollInterval = null;
+let isPolling = false;
+
+/* ════════════════════════════════════════════════════
+   HELPERS
+   ════════════════════════════════════════════════════ */
+function showToast(msg, isError=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'error show' : 'show';
+  setTimeout(()=>{ t.className=''; }, 3200);
+}
+function hideLoader(){
+  const l = document.getElementById('pageLoader');
+  if (l) { l.classList.add('hidden'); setTimeout(()=>l.style.display='none', 400); }
+}
+function escapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function fmtDuration(sec){
+  const n = Number(sec) || 0;
+  if (n < 60) return n + 's';
+  const m = Math.floor(n / 60), s = n % 60;
+  return s > 0 ? `${m}m ${s}s` : `${m}m`;
 }
 
-/* =========================================================
-   PAGE CONFIG — Customize per page
-========================================================= */
-const PAGE_CONFIG = {
-  // Default values
-  icon: '🔧',
-  title: 'Feature Coming Soon',
-  description: "We're hard at work building this feature to help you grow your channel even faster. Check back soon for updates!",
-  features: [
-    { emoji: '⚡', label: 'Fast & Reliable' },
-    { emoji: '🚀', label: 'Boost Growth' },
-    { emoji: '🤝', label: 'Community Powered' }
-  ]
-};
-
-// You can customize per page by checking the URL or adding a query param
-// Example: comingsoon.html?feature=adwatching
-
-function getPageConfig() {
-  const params = new URLSearchParams(window.location.search);
-  const feature = params.get('feature') || '';
-
-  const configs = {
-    'adwatching': {
-      icon: '💰',
-      title: 'Ad Watching Tasks',
-      description: 'Earn rewards by watching ads from fellow creators. Support the community while earning. Coming soon!',
-      features: [
-        { emoji: '💰', label: 'Earn Rewards' },
-        { emoji: '👀', label: 'Watch Ads' },
-        { emoji: '📈', label: 'Passive Income' }
-      ]
-    },
-    'shorttasks': {
-      icon: '📱',
-      title: 'Short Video Tasks',
-      description: 'Boost your short-form content engagement and algorithm reach with specialized engagement pools.',
-      features: [
-        { emoji: '📱', label: 'Short Videos' },
-        { emoji: '🚀', label: 'Go Viral' },
-        { emoji: '🎯', label: 'Targeted Growth' }
-      ]
-    },
-    'likecomment': {
-      icon: '❤️',
-      title: 'Like & Comment Tasks',
-      description: 'Get more likes, comments and interactions from supportive creators and members.',
-      features: [
-        { emoji: '❤️', label: 'More Likes' },
-        { emoji: '💬', label: 'More Comments' },
-        { emoji: '📊', label: 'Better Engagement' }
-      ]
-    },
-    'analytics': {
-      icon: '📊',
-      title: 'Advanced Analytics',
-      description: 'Deep insights into your channel performance, audience growth, and engagement metrics.',
-      features: [
-        { emoji: '📈', label: 'Growth Tracking' },
-        { emoji: '🎯', label: 'Audience Insights' },
-        { emoji: '📊', label: 'Performance Metrics' }
-      ]
-    }
-  };
-
-  return configs[feature] || PAGE_CONFIG;
+async function callApi(action, params = {}) {
+  const qs = new URLSearchParams({ action, userCode: USER_CODE, ...params });
+  const res = await fetch(`${SCRIPT_URL}?${qs.toString()}`);
+  return res.json();
 }
-
-/* =========================================================
-   RENDER PAGE
-========================================================= */
-function renderPage() {
-  const config = getPageConfig();
-  
-  document.getElementById('pageTitle').textContent = config.title;
-  document.getElementById('featureIcon').textContent = config.icon;
-  document.getElementById('featureTitle').textContent = config.title;
-  document.getElementById('featureDescription').textContent = config.description;
-  
-  // Update subtitle
-  document.getElementById('welcomeSubtitle').textContent = 
-    `🚧 ${config.title} — Coming Soon`;
-
-  // Update features
-  const preview = document.getElementById('featurePreview');
-  preview.innerHTML = config.features.map(f => `
-    <div class="coming-soon-feature">
-      <span class="emoji">${f.emoji}</span>
-      <span class="label">${f.label}</span>
-    </div>
-  `).join('');
-}
-
-/* =========================================================
-   HIDE LOADING
-========================================================= */
-function hideLoading() {
-  const overlay = document.getElementById('loadingOverlay');
-  overlay.classList.add('hide');
-  setTimeout(() => overlay.style.display = 'none', 500);
-}
-
-/* =========================================================
-   INIT
-========================================================= */
-renderPage();
-hideLoading();
-
-/* ── Mobile Nav Active State ── */
-(function(){
-  const current = window.location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll("#mobileBottomNav a").forEach(a => {
-    if (a.getAttribute("data-page") === current) a.classList.add("active");
+async function callPost(body) {
+  const res = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
   });
-})();
-</script>
+  return res.json();
+}
 
+/* ════════════════════════════════════════════════════
+   CACHE
+   ════════════════════════════════════════════════════ */
+function saveTasksToCache(data) {
+  try {
+    // Keep everything except Completed/Verified
+    // So Cheating tasks are cached and appear instantly
+    const cachedTasks = (data.tasks || []).filter(t => 
+      t.Status !== 'Completed' && t.Status !== 'Verified'
+    );
+    localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+    localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(data.fullStats || {}));
+    localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
+    localStorage.setItem(CACHE_KEY_FOCUSED, data.focusedStatus || 'NotWorkYet');
+    localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(data.hasCheating || false));
+    localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(data.cheatCount || 0));
+    localStorage.setItem(CACHE_KEY_PROMO_DISABLED, String(data.promoDisabled || false));
+    if (data.perfPriority) {
+      localStorage.setItem(CACHE_KEY_PERF_PRIORITY, JSON.stringify(data.perfPriority));
+    }
+    localStorage.setItem(CACHE_KEY_TIMESTAMP, String(Date.now()));
+  } catch (e) { console.warn('Cache save failed', e); }
+}
+
+function loadTasksFromCache() {
+  try {
+    const tasksData = localStorage.getItem(CACHE_KEY_TASKS);
+    const timestamp = localStorage.getItem(CACHE_KEY_TIMESTAMP);
+    if (!tasksData || !timestamp) return null;
+    const age = Date.now() - parseInt(timestamp);
+    if (age > CACHE_TTL) return null;
+    return {
+      tasks: JSON.parse(tasksData),
+      stats: JSON.parse(localStorage.getItem(CACHE_KEY_STATS) || '{}'),
+      exchangeStats: JSON.parse(localStorage.getItem(CACHE_KEY_EXCHANGE) || '{}'),
+      focusedStatus: localStorage.getItem(CACHE_KEY_FOCUSED) || 'NotWorkYet',
+      hasCheating: localStorage.getItem(CACHE_KEY_HAS_CHEAT) === 'true',
+      cheatCount: parseInt(localStorage.getItem(CACHE_KEY_CHEAT_COUNT)) || 0,
+      promoDisabled: localStorage.getItem(CACHE_KEY_PROMO_DISABLED) === 'true',
+      perfPriority: JSON.parse(localStorage.getItem(CACHE_KEY_PERF_PRIORITY) || '{"deletedCount":0,"pendingCount":0}')
+    };
+  } catch (e) { return null; }
+}
+
+function clearCache() {
+  [CACHE_KEY_TASKS, CACHE_KEY_STATS, CACHE_KEY_EXCHANGE, CACHE_KEY_FOCUSED,
+   CACHE_KEY_TIMESTAMP, CACHE_KEY_HAS_CHEAT, CACHE_KEY_CHEAT_COUNT,
+   CACHE_KEY_PERF_PRIORITY, CACHE_KEY_PROMO_DISABLED].forEach(k => {
+    localStorage.removeItem(k);
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   GROUP VISIBILITY GATE
+   ════════════════════════════════════════════════════ */
+async function checkEngagementGroupVisibility() {
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getSettings`);
+    const data = await res.json();
+
+    if (data.success && data.settings) {
+      const groupSetting = data.settings['LIKE_AND_COMMENTS_GROUP'];
+      const isEnabled = groupSetting === true ||
+                       groupSetting === 'TRUE' ||
+                       groupSetting === 'YES' ||
+                       groupSetting === '1' ||
+                       String(groupSetting).toUpperCase() === 'TRUE';
+      if (!isEnabled) {
+        showEngagementGroupDisabled();
+        return false;
+      }
+    }
+    return true;
+  } catch (e) {
+    console.error('Group visibility check error:', e);
+    showEngagementGroupDisabled('Could not verify group status. Please try again later.');
+    return false;
+  }
+}
+
+function showEngagementGroupDisabled(message) {
+  const container = document.querySelector('main');
+  if (container) {
+    container.innerHTML = `
+      <div class="max-w-[700px] mx-auto text-center py-20 px-4">
+        <div class="not-enrolled-banner">
+          <span class="banner-icon">🚫</span>
+          <h2 class="banner-title" style="color:#d97706;">Group Currently Disabled</h2>
+          <p class="banner-desc">
+            ${escapeHtml(message || 'The Engagement Group is currently not available. Please check back later or contact support for more information.')}
+          </p>
+          <a href="groups.html" class="banner-btn" style="background:#211F1F; border-color:#d97706;">
+            👥 View All Groups
+          </a>
+          <p style="margin-top:12px; font-size:12px; color:#6b7280;">
+            💡 Group availability is managed by administrators.
+          </p>
+        </div>
+      </div>
+    `;
+  }
+  hideLoader();
+}
+
+/* ════════════════════════════════════════════════════
+   TABS
+   ════════════════════════════════════════════════════ */
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  renderTasks();
+}
+
+/* ════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+  try {
+    const visible = await checkEngagementGroupVisibility();
+    if (!visible) return;
+
+    const cached = loadTasksFromCache();
+    if (cached && cached.tasks && cached.tasks.length > 0) {
+      console.log('📦 Cache hit — instant render');
+      allTasks = cached.tasks;
+      stats = cached.stats;
+      exchangeStats = cached.exchangeStats;
+      currentStatus = cached.focusedStatus;
+      hasCheating = cached.hasCheating;
+      cheatCount = cached.cheatCount;
+      promoDisabled = cached.promoDisabled || false;
+      perfPriority = cached.perfPriority || { deletedCount: 0, pendingCount: 0 };
+
+      hideLoader();
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateCheatingTabCount();
+      renderTasks();
+      startPeriodicValidation();
+      startPartnerPolling();
+
+      refreshFullDataInBackground();
+      return;
+    }
+
+    console.log('🌐 No cache — fetching from server');
+    const data = await callApi('getMyEngagementTasks');
+
+    if (!data.success) {
+      handleErrorState(data);
+      return;
+    }
+
+    applyData(data);
+    hideLoader();
+    renderTasks();
+    startPeriodicValidation();
+    startPartnerPolling();
+    refreshInBackground();
+  } catch (e) {
+    console.error(e);
+    const cached = loadTasksFromCache();
+    if (cached) {
+      allTasks = cached.tasks;
+      stats = cached.stats;
+      exchangeStats = cached.exchangeStats;
+      currentStatus = cached.focusedStatus;
+      hasCheating = cached.hasCheating;
+      cheatCount = cached.cheatCount;
+      promoDisabled = cached.promoDisabled || false;
+      perfPriority = cached.perfPriority || { deletedCount: 0, pendingCount: 0 };
+      hideLoader();
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateCheatingTabCount();
+      renderTasks();
+      startPeriodicValidation();
+      startPartnerPolling();
+      return;
+    }
+    hideLoader();
+    showToast('Could not load tasks.', true);
+  }
+}
+
+function handleErrorState(data) {
+  hideLoader();
+  if (data.notEnrolled || data.notActive || data.suspended || data.noVideo) {
+    document.querySelector('main').innerHTML = `
+      <div class="max-w-[700px] mx-auto text-center py-20">
+        <div class="card rounded-3xl p-12">
+          <div class="text-6xl mb-4">${data.noVideo ? '🎯' : (data.notEnrolled ? '📢' : (data.suspended ? '🚫' : '⛔'))}</div>
+          <h2 class="text-2xl font-bold mb-2">${data.noVideo ? 'No Video Selected' : (data.notEnrolled ? 'Not Enrolled' : (data.suspended ? 'Account Suspended' : 'Account Inactive'))}</h2>
+          <p class="text-muted text-sm mb-6">${escapeHtml(data.message || '')}</p>
+          <a href="${data.noVideo ? 'engagement-videos.html' : 'groups.html'}" class="btn-purple px-8 py-3 rounded-2xl inline-block">
+            ${data.noVideo ? '🎯 Select a Video' : '👥 Go to Groups'}
+          </a>
+        </div>
+      </div>`;
+    return;
+  }
+  showToast(data.message || 'Could not load tasks.', true);
+}
+
+function applyData(data) {
+  allTasks = data.tasks || [];
+  stats = data.fullStats || data.stats || {};
+  summary = data.summary || {};
+  exchangeStats = data.exchangeStats || {};
+  currentStatus = data.focusedStatus || 'NotWorkYet';
+  hasCheating = data.hasCheating || false;
+  cheatCount = data.cheatCount || 0;
+  promoDisabled = data.promoDisabled || false;
+  perfPriority = data.perfPriority || { deletedCount: 0, pendingCount: 0 };
+  saveTasksToCache(data);
+  renderStats();
+  renderCheatingBanner();
+  renderPromoDisabledBanner();
+  updateCheatingTabCount();
+}
+
+function renderStats() {
+  document.getElementById('statPending').textContent = stats.notWorkYet || 0;
+  document.getElementById('statInProgress').textContent = stats.pending || 0;
+  document.getElementById('statDone').textContent = stats.completed || 0;
+  document.getElementById('statVerified').textContent = stats.verified || 0;
+  document.getElementById('statCheating').textContent = stats.cheating || 0;
+  document.getElementById('statGained').textContent = summary.likesReceived || 0;
+  document.getElementById('statCommentsGained').textContent = summary.commentsReceived || 0;
+  document.getElementById('statsBar').classList.remove('hidden');
+}
+
+function renderCheatingBanner() {
+  const banner = document.getElementById('cheatingBanner');
+  if (hasCheating && cheatCount > 0) {
+    banner.classList.remove('hidden');
+    document.getElementById('cheatCount').textContent = cheatCount;
+  } else {
+    banner.classList.add('hidden');
+  }
+}
+
+function renderPromoDisabledBanner() {
+  const banner = document.getElementById('promoDisabledBanner');
+  if (promoDisabled && !hasCheating) {
+    banner.classList.remove('hidden');
+  } else {
+    banner.classList.add('hidden');
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   UPDATE CHEATING TAB COUNT BADGE
+   ════════════════════════════════════════════════════ */
+function updateCheatingTabCount() {
+  const tab = document.getElementById('cheatingTabCount');
+  if (!tab) return;
+  const count = (stats.cheating || 0);
+  if (count > 0) {
+    tab.textContent = `(${count})`;
+  } else {
+    tab.textContent = '';
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   LOAD TASKS
+   ════════════════════════════════════════════════════ */
+async function loadTasks() {
+  const data = await callApi('getMyEngagementTasks');
+  if (!data.success) { handleErrorState(data); return; }
+  applyData(data);
+  renderTasks();
+}
+
+/* ════════════════════════════════════════════════════
+   BACKGROUND REFRESH
+   ════════════════════════════════════════════════════ */
+async function refreshInBackground() {
+  try {
+    const data = await callApi('getEngagementTaskStatsOnly');
+    if (!data.success) return;
+
+    const freshStats = data.stats;
+    const hasPriority = (freshStats.cheating > 0 || freshStats.pending > 0);
+
+    if (hasPriority) {
+      await loadTasks();
+    } else {
+      stats = freshStats;
+      hasCheating = freshStats.cheating > 0;
+      cheatCount = freshStats.cheating || 0;
+      if (data.priority) {
+        perfPriority = {
+          deletedCount: data.priority.deletedCount || 0,
+          pendingCount: data.priority.pendingCount || 0
+        };
+      }
+      if (data.promoDisabled !== undefined) {
+        promoDisabled = data.promoDisabled;
+      }
+      localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+      localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(hasCheating));
+      localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(cheatCount));
+      localStorage.setItem(CACHE_KEY_PERF_PRIORITY, JSON.stringify(perfPriority));
+      localStorage.setItem(CACHE_KEY_PROMO_DISABLED, String(promoDisabled));
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateCheatingTabCount();
+      renderTasks();
+    }
+  } catch (e) { console.warn('BG refresh failed', e); }
+}
+
+async function refreshFullDataInBackground() {
+  try {
+    const data = await callApi('getMyEngagementTasks');
+    if (!data.success) return;
+
+    const newTasks = data.tasks || [];
+    const newStats = data.fullStats || data.stats || {};
+    const newHasCheat = data.hasCheating || false;
+    const newCheatCount = data.cheatCount || 0;
+    const newFocused = data.focusedStatus || 'NotWorkYet';
+    const newPromoDisabled = data.promoDisabled || false;
+
+    const priorityChanged =
+      newHasCheat !== hasCheating ||
+      newCheatCount !== cheatCount ||
+      newFocused !== currentStatus ||
+      newPromoDisabled !== promoDisabled;
+
+    if (priorityChanged || newTasks.length !== allTasks.length) {
+      applyData(data);
+      renderTasks();
+    } else {
+      stats = newStats;
+      exchangeStats = data.exchangeStats || exchangeStats;
+      summary = data.summary || summary;
+      hasCheating = newHasCheat;
+      cheatCount = newCheatCount;
+      currentStatus = newFocused;
+      promoDisabled = newPromoDisabled;
+      perfPriority = data.perfPriority || perfPriority;
+      saveTasksToCache(data);
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateCheatingTabCount();
+    }
+  } catch (e) { console.warn('BG full refresh failed', e); }
+}
+
+/* ════════════════════════════════════════════════════
+   PERIODIC VALIDATION
+   ════════════════════════════════════════════════════ */
+function startPeriodicValidation() {
+  if (validationInterval) clearInterval(validationInterval);
+  validationInterval = setInterval(async () => {
+    if (allTasks.length > 0) await validateAllTasks();
+  }, 30000);
+}
+
+async function validateAllTasks() {
+  try {
+    // Only validate tasks that are NotWorkYet or Pending
+    // Cheating / Completed / Verified should NOT be filtered out by target state
+    const targetCodes = allTasks
+      .filter(t => t.Status === 'NotWorkYet' || t.Status === 'Pending')
+      .map(t => t.TargetUserCode)
+      .filter(Boolean);
+
+    if (targetCodes.length === 0) return;
+
+    const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(targetCodes.join(','))}`);
+    const data = await res.json();
+    if (!data.success || !data.targets) return;
+
+    const before = allTasks.length;
+    allTasks = allTasks.filter(t => {
+      // Never remove Cheating / Completed / Verified via target validation
+      if (t.Status === 'Cheating' || t.Status === 'Completed' || t.Status === 'Verified') return true;
+
+      const td = data.targets[t.TargetUserCode];
+      if (!td) return true;
+      if (td.InLikeAndCommentWork !== 'Yes') return false;
+      if (td.ViolationFlag === 'Suspended') return false;
+      if (td.Status === 'Blocked') return false;
+      if (td.EngagementPromotionActive === 'No') return false;
+      return true;
+    });
+
+    if (allTasks.length < before) {
+      showToast(`🗑 ${before - allTasks.length} invalid task(s) removed.`, false);
+      saveTasksToCache({ tasks: allTasks, fullStats: stats, exchangeStats, focusedStatus: currentStatus, hasCheating, cheatCount, perfPriority, promoDisabled });
+      renderTasks();
+    }
+  } catch (e) {}
+}
+
+/* ════════════════════════════════════════════════════
+   PARTNER POLLING — 15s fast polling
+   ════════════════════════════════════════════════════ */
+function startPartnerPolling() {
+  if (partnerPollInterval) clearInterval(partnerPollInterval);
+  partnerPollInterval = setInterval(async () => {
+    if (isPolling) return;
+    isPolling = true;
+    try {
+      await checkForPartnerUpdates();
+    } finally {
+      isPolling = false;
+    }
+  }, 15000);
+}
+
+function stopPartnerPolling() {
+  if (partnerPollInterval) {
+    clearInterval(partnerPollInterval);
+    partnerPollInterval = null;
+  }
+}
+
+async function checkForPartnerUpdates() {
+  try {
+    const data = await callApi('getEngagementPriorityOnly');
+    if (!data.success) return;
+
+    const freshPending = data.priority.pendingCount || 0;
+    const freshDeleted = data.priority.deletedCount || 0;
+    const freshPromoDisabled = data.priority.promoDisabled || false;
+    const currentPending = perfPriority.pendingCount || 0;
+    const currentDeleted = perfPriority.deletedCount || 0;
+    const currentPromoDisabled = promoDisabled;
+
+    if (freshPending > currentPending) {
+      const diff = freshPending - currentPending;
+      showToast(`🤝 ${diff} partner${diff > 1 ? 's' : ''} completed their side — your turn!`, false);
+      clearCache();
+      await loadTasks();
+      notifyPartnerUpdate();
+      return;
+    }
+
+    if (freshDeleted > currentDeleted) {
+      showToast(`⚠️ You have ${freshDeleted} cheating flag(s). Check your tasks.`, true);
+      clearCache();
+      await loadTasks();
+      return;
+    }
+
+    if (freshPromoDisabled !== currentPromoDisabled) {
+      if (!freshPromoDisabled) {
+        showToast('🎉 Promotion resumed! You can now generate new tasks.', false);
+      } else {
+        showToast('🔒 Promotion paused — complete your pending tasks.', false);
+      }
+      clearCache();
+      await loadTasks();
+      return;
+    }
+
+    perfPriority = { deletedCount: freshDeleted, pendingCount: freshPending };
+    localStorage.setItem(CACHE_KEY_PERF_PRIORITY, JSON.stringify(perfPriority));
+    localStorage.setItem(CACHE_KEY_PROMO_DISABLED, String(freshPromoDisabled));
+
+    if (data.priority.hasCheating !== hasCheating) {
+      hasCheating = data.priority.hasCheating;
+      cheatCount = freshDeleted;
+      renderCheatingBanner();
+      updateCheatingTabCount();
+      localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(hasCheating));
+      localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(cheatCount));
+    }
+  } catch (e) {
+    console.warn('Partner polling failed', e);
+  }
+}
+
+function notifyPartnerUpdate() {
+  try {
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted') {
+        new Notification('🤝 Partner completed their side!', {
+          body: 'Your task is now pending — go complete yours.',
+          icon: 'images/logo.svg'
+        });
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission();
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = 880;
+    gain.gain.value = 0.05;
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    setTimeout(() => { osc.stop(); ctx.close(); }, 200);
+  } catch (e) {}
+}
+
+/* ════════════════════════════════════════════════════
+   VALIDATE BEFORE ACTION
+   ════════════════════════════════════════════════════ */
+async function validateTaskBeforeAction(taskId, actionName) {
+  const task = allTasks.find(t => t.TaskID === taskId);
+  if (!task) {
+    showToast('❌ Task not found.', true);
+    return { valid: false, task: null };
+  }
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(task.TargetUserCode)}`);
+    const data = await res.json();
+    if (data.success && data.targets) {
+      const td = data.targets[task.TargetUserCode];
+      if (td && (td.InLikeAndCommentWork !== 'Yes' || td.ViolationFlag === 'Suspended' || td.Status === 'Blocked' || td.EngagementPromotionActive === 'No')) {
+        showToast(`❌ Cannot ${actionName}: Target member is no longer eligible.`, true);
+        return { valid: false, task: null };
+      }
+    }
+  } catch (e) {}
+  return { valid: true, task };
+}
+
+/* ════════════════════════════════════════════════════
+   RENDER TASKS — with dedicated Cheating tab
+   ════════════════════════════════════════════════════ */
+function renderTasks() {
+  const grid = document.getElementById('taskGrid');
+  const empty = document.getElementById('emptyState');
+  const counter = document.getElementById('taskCounter');
+  const emptyMsg = document.getElementById('emptyMsg');
+  const emptyIcon = document.getElementById('emptyIcon');
+  const emptyTitle = document.getElementById('emptyTitle');
+
+  searchQuery = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+
+  let list = allTasks.filter(t => {
+    // ⭐ Cheating tab — only Cheating
+    if (activeTab === 'cheating') {
+      if (t.Status !== 'Cheating') return false;
+    }
+    // Pending tab — NotWorkYet + Pending
+    else if (activeTab === 'pending') {
+      if (t.Status === 'Completed' || t.Status === 'Verified' || t.Status === 'Cheating') return false;
+    }
+    // Done tab — Completed + Verified
+    else if (activeTab === 'done') {
+      if (!(t.Status === 'Completed' || t.Status === 'Verified')) return false;
+    }
+    // All tab — everything
+
+    if (searchQuery) {
+      const hay = (t.TaskID + ' ' + t.VideoID + ' ' + t.TargetUserCode).toLowerCase();
+      if (!hay.includes(searchQuery)) return false;
+    }
+    return true;
+  });
+
+  const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2, 'Completed': 3, 'Verified': 4, 'Rejected': 5 };
+  list.sort((a, b) => (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9));
+
+  counter.textContent = `Showing ${list.length} of ${allTasks.length} tasks`;
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+
+    if (activeTab === 'cheating') {
+      emptyIcon.textContent = '🎉';
+      emptyTitle.textContent = 'No Cheating Flags!';
+      emptyMsg.textContent = 'Great job! You have no cheating tasks. Keep posting genuine comments.';
+    } else if (allTasks.length === 0) {
+      emptyIcon.textContent = '📭';
+      emptyTitle.textContent = 'No Tasks Found';
+      emptyMsg.textContent = 'You have no engagement tasks right now. Click "Generate Tasks" to create some.';
+    } else {
+      emptyIcon.textContent = '📭';
+      emptyTitle.textContent = 'No Tasks Found';
+      emptyMsg.textContent = activeTab === 'done'
+        ? 'You have not completed any tasks yet.'
+        : 'No tasks match your filter.';
+    }
+
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  grid.innerHTML = list.map(t => taskCard(t)).join('');
+}
+
+/* ════════════════════════════════════════════════════
+   TASK CARD
+   ════════════════════════════════════════════════════ */
+function taskCard(t) {
+  const isDone = t.Status === 'Completed';
+  const isVerified = t.Status === 'Verified';
+  const isCheating = t.Status === 'Cheating';
+  const isPending = t.Status === 'Pending';
+
+  let cardClass = 'task-card';
+  if (isVerified) cardClass += ' done-card';
+  else if (isDone) cardClass += ' pending-card';
+  else if (isCheating) cardClass += ' cheating-card';
+  else if (isPending) cardClass += ' pending-card';
+
+  let statusColor, statusBg, statusText, statusLabel;
+  if (isVerified) {
+    statusColor = '#0f766e'; statusBg = '#ccfbf1'; statusText = '#0f766e'; statusLabel = '✓ Verified';
+  } else if (isDone) {
+    statusColor = '#f59e0b'; statusBg = '#fef3c7'; statusText = '#92400e'; statusLabel = '⏳ Pending Verification';
+  } else if (isCheating) {
+    statusColor = '#dc2626'; statusBg = '#fee2e2'; statusText = '#991b1b'; statusLabel = '✗ Cheating';
+  } else if (isPending) {
+    statusColor = '#f97316'; statusBg = '#ffedd5'; statusText = '#c2410c'; statusLabel = 'Pending';
+  } else {
+    statusColor = '#f59e0b'; statusBg = '#fef3c7'; statusText = '#92400e'; statusLabel = 'Not Work Yet';
+  }
+
+  const statusBadge = `<span class="status-badge" style="background:${statusBg};color:${statusText};border-color:${statusColor};">
+    <span class="dot" style="background:${statusColor};"></span>${statusLabel}
+  </span>`;
+
+  const typeBadge = t.VideoType === 'Short'
+    ? '<span class="status-badge" style="background:#fef3c7;color:#92400e;">⚡ Short</span>'
+    : '<span class="status-badge" style="background:#dbeafe;color:#1e40af;">📐 Long</span>';
+
+  let pairedBadge = '';
+  if (isDone || isVerified) {
+    if (t.PairedStatus === 'Completed' || t.PairedStatus === 'Verified') {
+      pairedBadge = `<span class="status-badge" style="background:#ccfbf1;color:#0f766e;">✓ They Completed Back</span>`;
+    } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+      pairedBadge = `<span class="status-badge" style="background:#ffedd5;color:#c2410c;">⏳ Partner: Pending</span>`;
+    }
+  } else if (isPending) {
+    pairedBadge = `<span class="status-badge" style="background:#dbeafe;color:#1e40af;">🤝 Partner Completed — Your Turn</span>`;
+  }
+
+  const pinnedBadge = isCheating
+    ? `<span class="status-badge" style="background:#dc2626;color:#fff;">📌 Action Required</span>`
+    : '';
+
+  const cheatingBlock = isCheating ? `
+    <div class="cheating-box mt-3">
+      <p class="text-xs text-red-700 font-semibold mb-1">🚫 Cheating Detected</p>
+      <p class="text-xs text-red-700/80 leading-relaxed">
+        This task was flagged for cheating because your comment was not found on the video. 
+        You <strong class="text-red-700">must resolve</strong> this issue before you can continue. Contact support for assistance.
+      </p>
+    </div>` : '';
+
+  let commentSection = '';
+  if (isDone || isVerified || isCheating) {
+    commentSection = `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:6px;">💬 Your Submitted Comment:</div>
+        <div class="comment-suggestion" style="font-style:normal; color:#211F1F;">${escapeHtml(t.CommentText || '—')}</div>
+      </div>
+    `;
+  } else {
+    commentSection = `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:6px;">💬 Write a Genuine Comment:</div>
+        <div class="comment-suggestion">Pick something real from the video and comment naturally. Example: "Really liked the part about X — super helpful!"</div>
+      </div>
+    `;
+  }
+
+  let actionButton = '';
+  if (isDone || isVerified || isCheating) {
+    actionButton = `<button class="btn-green w-full py-2.5 rounded-2xl text-xs" disabled>${isVerified ? '✓ Verified' : (isCheating ? '✗ Flagged as Cheating' : '⏳ Waiting for Admin Verification')}</button>`;
+  } else {
+    actionButton = `<button onclick="markDone('${escapeHtml(t.TaskID)}')" class="btn-purple w-full py-2.5 rounded-2xl text-xs">✅ Mark as Done</button>`;
+  }
+
+  return `
+    <div class="${cardClass}" id="task-${escapeHtml(t.TaskID)}">
+      <div class="video-thumb-wrap">
+        ${t.VideoThumbnail ? `<img src="${escapeHtml(t.VideoThumbnail)}" alt="">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:44px;">🎬</div>`}
+        <span class="task-id-chip">${escapeHtml(t.TaskID)}</span>
+        <span class="duration-chip">${fmtDuration(t.VideoDuration)}</span>
+        <span class="type-chip">${escapeHtml(t.VideoType || 'Long')}</span>
+      </div>
+
+      <div class="p-4" style="flex:1; display:flex; flex-direction:column;">
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          ${statusBadge}
+          ${typeBadge}
+          ${pairedBadge}
+          ${pinnedBadge}
+        </div>
+
+        <div class="text-sm font-semibold mb-2" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+          ${escapeHtml(t.VideoTitle || 'Untitled Video')}
+        </div>
+
+        <div class="text-[11px] text-muted mb-3">
+          🎯 Target: <strong style="color:#211F1F;">${escapeHtml(t.TargetUserCode)}</strong>
+        </div>
+
+        ${commentSection}
+        ${cheatingBlock}
+
+        <div class="flex gap-2 mb-2 mt-auto">
+          <a href="${escapeHtml(t.VideoUrl)}" target="_blank" rel="noopener" class="btn-amber flex-1 py-2.5 rounded-xl text-xs text-center" style="text-decoration:none;">
+            ▶ Open on YouTube
+          </a>
+        </div>
+
+        ${actionButton}
+      </div>
+    </div>
+  `;
+}
+
+/* ════════════════════════════════════════════════════
+   MARK DONE
+   ════════════════════════════════════════════════════ */
+async function markDone(taskID) {
+  const validation = await validateTaskBeforeAction(taskID, 'Mark Done');
+  if (!validation.valid) return;
+
+  const task = validation.task;
+  if (!task) return;
+
+  const minWatch = task.VideoType === 'Short' ? 15 : 30;
+
+  const result = await Swal.fire({
+    icon: 'question',
+    title: 'Mark task as done',
+    html: `
+      <div style="text-align:left; font-size:13px; line-height:1.6; color:#4b5563;">
+        <p style="margin-bottom:10px;">Confirm you completed:</p>
+        <ul style="list-style:none; padding:0; margin:0 0 14px 0;">
+          <li style="padding:4px 0;">✅ Liked the video on YouTube</li>
+          <li style="padding:4px 0;">✅ Watched at least ${minWatch} seconds</li>
+          <li style="padding:4px 0;">✅ Posted a genuine comment</li>
+        </ul>
+
+        <label style="display:block; font-weight:700; font-size:12px; color:#211F1F; margin-bottom:6px;">
+          💬 Paste the exact comment you posted:
+        </label>
+        <textarea id="swal-comment" 
+          placeholder="Type or paste your comment here… (min 5 characters)"
+          style="width:100%; min-height:80px; padding:10px 12px; border:2px solid #211F1F; border-radius:12px; font-size:13px; resize:vertical; font-family:inherit; outline:none;"
+          maxlength="500"
+        ></textarea>
+
+        <div style="background:#F5F4EB; border:2px solid #211F1F; border-radius:12px; padding:10px 12px; margin-top:10px;">
+          <div style="font-size:11px; font-weight:800; color:#6b7280;">TASK ID</div>
+          <div style="font-weight:800; color:#211F1F;">${escapeHtml(taskID)}</div>
+        </div>
+
+        <div style="background:#dbeafe; border:2px solid #1e40af; border-radius:12px; padding:10px 12px; margin-top:10px; font-size:12px; color:#1e3a8a;">
+          ℹ️ <strong>Admin will verify your comment in 7 days</strong> via YouTube API. If not found, task will be marked as Cheating.
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Submit',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#211F1F',
+    didOpen: () => {
+      const ta = document.getElementById('swal-comment');
+      if (ta) ta.focus();
+    },
+    preConfirm: () => {
+      const text = (document.getElementById('swal-comment')?.value || '').trim();
+      if (text.length < 5) {
+        Swal.showValidationMessage('Comment must be at least 5 characters');
+        return false;
+      }
+      if (text.length > 500) {
+        Swal.showValidationMessage('Comment too long (max 500 characters)');
+        return false;
+      }
+      return text;
+    }
+  });
+
+  if (!result.isConfirmed || !result.value) return;
+
+  const commentText = result.value;
+
+  Swal.fire({ title: 'Submitting…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const data = await callPost({
+      action: 'markEngagementTaskDone',
+      userCode: USER_CODE,
+      taskID: taskID,
+      commentText: commentText
+    });
+    Swal.close();
+
+    if (data.success) {
+      if (data.bothCompleted) {
+        showToast('🎉 Both you and your partner completed!');
+      } else {
+        showToast('✅ Task submitted. Admin will verify in 7 days.');
+      }
+      clearCache();
+      await loadTasks();
+    } else {
+      showToast(data.message || 'Could not mark task done.', true);
+    }
+  } catch (e) {
+    Swal.close();
+    showToast('Connection error.', true);
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   GENERATE TASKS
+   ════════════════════════════════════════════════════ */
+async function doGenerateTasks() {
+  const btn = document.getElementById('generateBtn');
+  if (!btn || btn.disabled || isGenerating) return;
+
+  // Block if cheating flags exist
+  if (hasCheating && cheatCount > 0) {
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: '⚠️ Cheating Flags Detected',
+      html: `
+        <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
+          <p style="margin-bottom:10px;">You have <strong style="color:#dc2626;">${cheatCount}</strong> task(s) flagged as cheating.</p>
+          <p style="margin-bottom:10px;">You must resolve these issues before you can generate new tasks.</p>
+          <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:10px 14px;font-size:12px;color:#991b1b;">
+            💡 Please contact support to resolve your cheating flags.
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: '⚠️ View Cheating Tasks',
+      cancelButtonText: 'Close',
+      confirmButtonColor: '#dc2626'
+    });
+    if (result.isConfirmed) {
+      switchTab('cheating');
+    }
+    return;
+  }
+
+  // Block if promo disabled
+  if (promoDisabled) {
+    await Swal.fire({
+      icon: 'info',
+      title: '🔒 Promotion Paused',
+      html: `
+        <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
+          <p style="margin-bottom:10px;">Your promotion is currently paused because you have too many pending tasks or unresolved cheating flags.</p>
+          <p style="margin-bottom:10px;"><strong>What to do:</strong></p>
+          <ul style="margin-left:16px;list-style:disc;margin-bottom:14px;">
+            <li style="margin-bottom:4px;">Complete your existing pending tasks below</li>
+            <li style="margin-bottom:4px;">Wait for partners to complete their side</li>
+            <li style="margin-bottom:4px;">Once your pending count clears, promotion resumes automatically</li>
+          </ul>
+          <div style="background:#fef3c7;border:2px solid #d97706;border-radius:12px;padding:10px 14px;font-size:12px;color:#92400e;">
+            💡 You can still work on your existing tasks and complete them normally.
+          </div>
+        </div>
+      `,
+      confirmButtonText: 'Got it',
+      confirmButtonColor: '#211F1F'
+    });
+    return;
+  }
+
+  const result = await Swal.fire({
+    icon: 'question',
+    title: '⚡ Generate paired tasks?',
+    html: `
+      <div style="text-align:left; font-size:13px; line-height:1.6; color:#4b5563;">
+        <p style="margin-bottom:10px;">This will create <strong>paired tasks</strong> — you work for others, and they work for you in return.</p>
+        <ul style="list-style:none; padding:0; margin:0 0 12px 0;">
+          <li style="padding:4px 0;">✅ Both you and your partner get a task</li>
+          <li style="padding:4px 0;">✅ Duplicate pairs are skipped</li>
+          <li style="padding:4px 0;">✅ Max 20 tasks total per member</li>
+        </ul>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Yes, generate',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#211F1F'
+  });
+  if (!result.isConfirmed) return;
+
+  Swal.fire({
+    title: 'Generating Tasks…',
+    html: `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px 0;">
+        <div style="width:56px;height:56px;border:4px solid rgba(33,31,31,0.15);border-top-color:#211F1F;border-radius:50%;animation:swalSpin 0.9s linear infinite;"></div>
+        <p style="color:#4b5563;font-size:14px;margin:0;">Finding best matches for you…</p>
+        <div style="display:flex;gap:6px;">
+          <span style="width:8px;height:8px;background:#211F1F;border-radius:50%;animation:swalDot 1.4s infinite ease-in-out both;animation-delay:-0.32s;"></span>
+          <span style="width:8px;height:8px;background:#211F1F;border-radius:50%;animation:swalDot 1.4s infinite ease-in-out both;animation-delay:-0.16s;"></span>
+          <span style="width:8px;height:8px;background:#211F1F;border-radius:50%;animation:swalDot 1.4s infinite ease-in-out both;"></span>
+        </div>
+      </div>
+      <style>
+        @keyframes swalSpin { to { transform: rotate(360deg); } }
+        @keyframes swalDot {
+          0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+          40% { transform: scale(1); opacity: 1; }
+        }
+      </style>
+    `,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    customClass: { popup: 'swal2-popup' }
+  });
+
+  isGenerating = true;
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.classList.remove('generate-btn-pulse');
+  btn.innerHTML = '⏳ Generating…';
+
+  try {
+    const data = await callPost({ action: 'generateTasksForMe', userCode: USER_CODE });
+
+    Swal.close();
+
+    if (data.success) {
+      await Swal.fire({
+        icon: 'success',
+        title: '✅ Tasks Generated!',
+        html: `
+          <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
+            <p style="margin-bottom:8px;">${escapeHtml(data.message || 'Paired tasks created successfully.')}</p>
+            <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:12px;padding:10px 14px;font-size:12px;color:#166534;">
+              💡 New tasks are now visible below.
+            </div>
+          </div>
+        `,
+        confirmButtonText: 'Great!',
+        confirmButtonColor: '#211F1F',
+        timer: 3000,
+        timerProgressBar: true
+      });
+
+      clearCache();
+      await loadTasks();
+    } else {
+      if (data.noVideo) {
+        const go = await Swal.fire({
+          icon: 'info',
+          title: 'No video selected',
+          html: `<div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;"><p>${escapeHtml(data.message || 'Please select an engagement video first.')}</p></div>`,
+          showCancelButton: true,
+          confirmButtonText: '🎯 Select a Video',
+          cancelButtonText: 'Later',
+          confirmButtonColor: '#211F1F'
+        });
+        if (go.isConfirmed) window.location.href = 'engagement-videos.html';
+      } else if (data.promoDisabled) {
+        await Swal.fire({
+          icon: 'info',
+          title: '🔒 Promotion Paused',
+          html: `
+            <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
+              <p style="margin-bottom:10px;">${escapeHtml(data.message || 'Your promotion is paused.')}</p>
+              <div style="background:#fef3c7;border:2px solid #d97706;border-radius:12px;padding:10px 14px;font-size:12px;color:#92400e;">
+                💡 Complete your existing tasks to re-enable.
+              </div>
+            </div>
+          `,
+          confirmButtonText: 'Got it',
+          confirmButtonColor: '#211F1F'
+        });
+        clearCache();
+        await loadTasks();
+      } else {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Could Not Generate',
+          html: `<div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;"><p>${escapeHtml(data.message || 'Unable to generate tasks right now.')}</p></div>`,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#211F1F'
+        });
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    Swal.close();
+    await Swal.fire({
+      icon: 'error',
+      title: 'Connection Error',
+      html: '<p style="color:#4b5563;font-size:14px;">Could not reach the server. Please try again.</p>',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#211F1F'
+    });
+  } finally {
+    isGenerating = false;
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+    btn.classList.add('generate-btn-pulse');
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   CLEANUP
+   ════════════════════════════════════════════════════ */
+window.addEventListener('beforeunload', () => {
+  if (validationInterval) clearInterval(validationInterval);
+  if (partnerPollInterval) clearInterval(partnerPollInterval);
+});
+</script>
 </body>
 </html>
