@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-/* ── Not Enrolled Banner ── */
 .not-enrolled-banner {
   background: #F5F4EB;
   border: 3px solid #211F1F;
@@ -37,7 +36,7 @@
 .not-enrolled-banner .banner-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
 .not-enrolled-banner .banner-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px #211F1F; }
 
-:root { --bg:#F5F4EB; --ink:#211F1F; --mint:#ACD1C0; --sand:#DBD4B7; --muted:#6b7280; }
+:root { --bg:#F5F4EB; --ink:#211F1F; --mint:#ACD1C0; --sand:#DBD4B7; --muted:#6b7280; --red:#dc2626; }
 * { font-family:'Inter',sans-serif; box-sizing:border-box; margin:0; padding:0; }
 html { scroll-behavior:smooth; }
 body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
@@ -47,10 +46,12 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 .task-card:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0px 0px #211F1F; }
 .task-card.done-card { background:#f0fdf4; border-color:#16a34a; box-shadow:4px 4px 0px 0px #16a34a; }
 .task-card.done-card:hover { box-shadow:6px 6px 0px 0px #16a34a; transform:none; }
-.task-card.pending-card { background:#fff7ed; border-color:#f97316; box-shadow:4px 4px 0px 0px #f97316; }
-.task-card.pending-card:hover { box-shadow:6px 6px 0px 0px #f97316; }
+.task-card.pending-card { background:#F5F4EB; border-color:#211F1F; box-shadow:4px 4px 0px 0px #211F1F; }
+.task-card.pending-card:hover { box-shadow:6px 6px 0px 0px #211F1F; }
 .task-card.cheating-card { background:#fef2f2; border-color:#dc2626; box-shadow:4px 4px 0px 0px #dc2626; }
 .task-card.cheating-card:hover { box-shadow:6px 6px 0px 0px #dc2626; transform:none; }
+.task-card.notworkyet-card { background:#fff; border-color:#211F1F; box-shadow:4px 4px 0px 0px #211F1F; }
+.task-card.notworkyet-card:hover { box-shadow:6px 6px 0px 0px #211F1F; }
 .text-muted { color:var(--muted); }
 
 .btn-purple { background:#211F1F; color:#DBD4B7; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
@@ -63,7 +64,6 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 
 .btn-green { background:#16a34a; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
 .btn-green:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
-.btn-green:disabled { opacity:.5; cursor:not-allowed; }
 
 .btn-red { background:#ef4444; color:#fff; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
 .btn-red:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
@@ -71,11 +71,43 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 .btn-teal { background:#ACD1C0; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
 .btn-teal:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
 
-.btn-amber { background:#fbbf24; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
+.btn-amber { background:#DBD4B7; color:#211F1F; border:2px solid #211F1F; border-radius:14px; box-shadow:3px 3px 0 0 #211F1F; transition:.15s; cursor:pointer; font-weight:700; }
 .btn-amber:hover:not(:disabled) { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; }
+
+/* ── Retro filter tabs ── */
+.filter-tab {
+  background:#F5F4EB;
+  border:2px solid #211F1F;
+  color:#211F1F;
+  transition:.15s;
+  cursor:pointer;
+  white-space:nowrap;
+  font-weight:700;
+  box-shadow:3px 3px 0 0 #211F1F;
+}
+.filter-tab:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; background:#DBD4B7; }
+.filter-tab.active { background:#211F1F; border-color:#211F1F; color:#DBD4B7; box-shadow:3px 3px 0 0 #211F1F; }
+
+/* NotWorkYet → Mint */
+.filter-tab.tab-notworkyet { background:#ACD1C0; border-color:#211F1F; color:#211F1F; }
+.filter-tab.tab-notworkyet:hover { background:#9cc4b1; }
+.filter-tab.tab-notworkyet.active { background:#211F1F; border-color:#211F1F; color:#ACD1C0; }
+
+/* Pending → Sand */
+.filter-tab.tab-pending { background:#DBD4B7; border-color:#211F1F; color:#211F1F; }
+.filter-tab.tab-pending:hover { background:#cfc7a3; }
+.filter-tab.tab-pending.active { background:#211F1F; border-color:#211F1F; color:#DBD4B7; }
+
+/* Cheating → Red */
+.filter-tab.tab-cheating { background:#fee2e2; border-color:#dc2626; color:#dc2626; box-shadow:3px 3px 0 0 #dc2626; }
+.filter-tab.tab-cheating:hover { background:#fecaca; }
+.filter-tab.tab-cheating.active { background:#dc2626; border-color:#dc2626; color:#fff; box-shadow:3px 3px 0 0 #211F1F; }
 
 .status-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700; border:1px solid #211F1F; }
 .dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
+
+.skeleton { background:linear-gradient(90deg,#eceadd 25%,#ddd9c4 50%,#eceadd 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:20px; border:2px solid #211F1F; }
+@keyframes shimmer { 0% { background-position:200% 0 } 100% { background-position:-200% 0 } }
 
 .spinner { width:44px; height:44px; border-radius:50%; border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F; animation:spin .8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
@@ -86,6 +118,26 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 
 #pageLoader { position:fixed; inset:0; background:var(--bg); z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .4s; }
 #pageLoader.hidden { opacity:0; pointer-events:none; }
+
+/* ── Transparent task validation overlay ── */
+#taskOverlay {
+  position:fixed; inset:0; z-index:400;
+  background:rgba(33,31,31,0.35);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  display:none; align-items:center; justify-content:center;
+  flex-direction:column; gap:14px;
+  opacity:0; transition:opacity .25s ease;
+}
+#taskOverlay.show { opacity:1; }
+#taskOverlay .overlay-box {
+  background:#F5F4EB; border:2px solid #211F1F; border-radius:20px;
+  box-shadow:6px 6px 0 0 #211F1F; padding:26px 34px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+#taskOverlay .overlay-box p {
+  font-weight:800; font-size:13px; color:#211F1F; letter-spacing:.02em;
+}
 
 .video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#e8e5d8; border-bottom:2px solid #211F1F; overflow:hidden; }
 .video-thumb-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -121,38 +173,20 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
   pointer-events:none;
 }
 @keyframes pulseRing { 0% { opacity:.6; transform:scale(1); } 100% { opacity:0; transform:scale(1.12); } }
-
-/* ── Progress Bar ── */
-.progress-wrap { background:#fff; border:2px solid #211F1F; border-radius:16px; box-shadow:4px 4px 0 0 #211F1F; padding:14px 18px; margin-bottom:16px; }
-.progress-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px; }
-.progress-header .title { font-weight:800; font-size:13px; color:#211F1F; }
-.progress-header .count { font-weight:800; font-size:13px; color:#211F1F; background:#F5F4EB; padding:3px 12px; border-radius:999px; border:1.5px solid #211F1F; }
-.progress-bar-track { width:100%; height:14px; background:#F5F4EB; border:2px solid #211F1F; border-radius:999px; overflow:hidden; }
-.progress-bar-fill { height:100%; background:linear-gradient(90deg,#16a34a,#22c55e); transition:width .4s ease; border-radius:999px; }
-.progress-bar-fill.cheating { background:linear-gradient(90deg,#dc2626,#ef4444); }
-.progress-bar-fill.pending { background:linear-gradient(90deg,#f97316,#fb923c); }
-
-/* ── One Task Focus Card ── */
-.focus-container { max-width:720px; margin:0 auto; }
-.focus-task-card { background:#fff; border:3px solid #211F1F; border-radius:24px; box-shadow:8px 8px 0 0 #211F1F; overflow:hidden; }
-.focus-task-card.done-card { background:#f0fdf4; border-color:#16a34a; box-shadow:8px 8px 0 0 #16a34a; }
-.focus-task-card.pending-card { background:#fff7ed; border-color:#f97316; box-shadow:8px 8px 0 0 #f97316; }
-.focus-task-card.cheating-card { background:#fef2f2; border-color:#dc2626; box-shadow:8px 8px 0 0 #dc2626; }
-
-.focus-task-card .video-thumb-wrap { aspect-ratio:16/9; border-bottom:3px solid #211F1F; }
-.focus-task-card .task-id-chip { font-size:12px; padding:5px 12px; }
-.focus-task-card .duration-chip { font-size:12px; padding:3px 10px; }
-.focus-task-card .type-chip { font-size:11px; padding:3px 10px; }
-
-.next-task-btn { animation:floatNext 2.5s ease-in-out infinite; }
-@keyframes floatNext { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-3px); } }
 </style>
 </head>
 <body>
 
 <div id="pageLoader">
   <div class="spinner"></div>
-  <p class="text-muted text-sm">Loading your next task…</p>
+  <p class="text-muted text-sm">Loading your engagement tasks…</p>
+</div>
+
+<div id="taskOverlay">
+  <div class="overlay-box">
+    <div class="spinner"></div>
+    <p id="taskOverlayMsg">Validating task…</p>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -165,7 +199,6 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 <main class="relative z-10 pt-5 pb-5 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- HEADER -->
   <div class="nb-dashboard-header">
     <div class="nb-badge-container">
       <div class="nb-status-card nb-status-static">
@@ -188,7 +221,7 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
     <h1 class="text-4xl font-black text-[#211F1F]">Engagement Tasks</h1>
     <div class="flex items-center justify-between flex-wrap gap-3 mt-2">
       <div class="text-gray-500 text-sm leading-6" style="max-width:640px;">
-        Complete tasks one at a time. Admin will verify via YouTube API in <strong>1 minute</strong>.
+        Like &amp; comment on these videos, then paste your comment here. Admin will verify via YouTube API in <strong>7 days</strong>.
       </div>
       <button id="generateBtn" onclick="doGenerateTasks()"
         class="btn-purple generate-btn-pulse px-5 py-2.5 rounded-2xl text-sm flex items-center gap-2">
@@ -197,87 +230,90 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
     </div>
   </div>
 
-  <!-- PROMOTION PAUSED BANNER -->
-  <div id="promoDisabledBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fef3c7;border:2px solid #d97706;box-shadow:4px 4px 0px 0px #d97706;">
+  <div id="promoDisabledBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#F5F4EB;border:2px solid #211F1F;box-shadow:4px 4px 0px 0px #211F1F;">
     <div class="flex items-start gap-4">
-      <div class="w-10 h-10 rounded-2xl bg-amber-500/25 flex items-center justify-center text-xl flex-shrink-0">🔒</div>
+      <div class="w-10 h-10 rounded-2xl bg-[#DBD4B7] flex items-center justify-center text-xl flex-shrink-0">🔒</div>
       <div class="flex-1">
-        <h3 class="font-semibold text-amber-700 mb-1">Promotion Paused — Complete Your Pending Work</h3>
-        <p class="text-amber-700/90 text-sm leading-relaxed mb-2">
+        <h3 class="font-semibold text-[#211F1F] mb-1">Promotion Paused — Complete Your Pending Work</h3>
+        <p class="text-[#211F1F]/80 text-sm leading-relaxed mb-2">
           Your engagement promotion is paused because you have too many pending tasks (or unresolved cheating flags).
           <strong class="text-[#211F1F]">You can still complete your existing tasks below.</strong>
           Once you finish them, your promotion will automatically resume.
         </p>
-        <p class="text-xs text-amber-700/70">💡 New tasks cannot be generated until your pending work is cleared.</p>
+        <p class="text-xs text-[#211F1F]/60">💡 New tasks cannot be generated until your pending work is cleared.</p>
       </div>
     </div>
   </div>
 
-  <!-- CHEATING WARNING BANNER -->
   <div id="cheatingBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
     <div class="flex items-start gap-4">
       <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
       <div class="flex-1">
         <h3 class="font-semibold text-red-600 mb-1">You Have Cheating Flags!</h3>
-        <p class="text-red-600/80 text-sm leading-relaxed mb-2">
+        <p class="text-red-600/80 text-sm leading-relaxed mb-3">
           You have <strong id="cheatCount" class="text-red-600">0</strong> task(s) flagged as cheating.
           You <strong class="text-[#211F1F]">must resolve</strong> these issues before you can do any other work.
           These tasks are pinned at the top.
         </p>
+        <button onclick="switchTab('cheating')" class="btn-red px-4 py-2 rounded-xl text-xs font-semibold">
+          ⚠️ View Cheating Tasks
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- PROGRESS BAR -->
-  <div id="progressWrap" class="progress-wrap hidden">
-    <div class="progress-header">
-      <span class="title" id="progressTitle">Your Progress</span>
-      <span class="count" id="progressCount">0 / 0</span>
-    </div>
-    <div class="progress-bar-track">
-      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
-    </div>
-    <div class="flex flex-wrap gap-3 mt-3 text-xs">
-      <span class="text-muted">✅ Done: <strong id="pDone" style="color:#16a34a;">0</strong></span>
-      <span class="text-muted">⏳ Remaining: <strong id="pRemaining" style="color:#f97316;">0</strong></span>
-      <span class="text-muted">⚠️ Cheating: <strong id="pCheating" style="color:#dc2626;">0</strong></span>
-      <span class="text-muted">🤝 Pending: <strong id="pPending" style="color:#f59e0b;">0</strong></span>
-    </div>
+  <div id="statsBar" class="stats-bar hidden">
+    <div class="stat"><div class="v" id="statPending">0</div><div class="k">To Do</div></div>
+    <div class="stat"><div class="v" id="statInProgress">0</div><div class="k">Pending</div></div>
+    <div class="stat"><div class="v" id="statDone">0</div><div class="k">Completed</div></div>
+    <div class="stat"><div class="v" id="statVerified">0</div><div class="k">Verified</div></div>
+    <div class="stat"><div class="v" id="statCheating" style="color:#dc2626;">0</div><div class="k">Cheating</div></div>
+    <div class="stat"><div class="v" id="statGained">0</div><div class="k">Likes Received</div></div>
+    <div class="stat"><div class="v" id="statCommentsGained">0</div><div class="k">Comments Received</div></div>
   </div>
 
-  <!-- INSTRUCTIONS -->
-  <div class="card rounded-3xl p-6 mb-6" style="background:#fef3c7; border-color:#d97706; box-shadow:4px 4px 0 0 #d97706;">
+  <div class="card rounded-3xl p-6 mb-6" style="background:#F5F4EB; border-color:#211F1F; box-shadow:4px 4px 0 0 #211F1F;">
     <div style="display:flex; align-items:flex-start; gap:14px;">
       <span style="font-size:28px;">📌</span>
       <div style="flex:1;">
-        <div style="font-weight:800; font-size:15px; color:#78350f; margin-bottom:8px;">How to Complete a Task</div>
+        <div style="font-weight:800; font-size:15px; color:#211F1F; margin-bottom:8px;">How to Complete a Task</div>
         <ol class="step-list">
           <li><span class="num">1</span><span>Click <strong>Open on YouTube</strong> to open the video.</span></li>
           <li><span class="num">2</span><span>Click the <strong>Like</strong> button on YouTube (👍).</span></li>
           <li><span class="num">3</span><span>Post a <strong>genuine comment</strong> related to the video (min 5 words, no spam).</span></li>
           <li><span class="num">4</span><span>Come back here and click <strong>Mark as Done</strong>, then <strong>paste your exact comment</strong>.</span></li>
-          <li><span class="num">5</span><span>Admin will verify your comment via YouTube API in <strong>1 minute</strong>. Fake comments = Cheating.</span></li>
+          <li><span class="num">5</span><span>Admin will verify your comment via YouTube API in <strong>7 days</strong>. Fake comments = Cheating.</span></li>
         </ol>
       </div>
     </div>
   </div>
 
-  <!-- SINGLE TASK FOCUS AREA -->
-  <div class="focus-container" id="focusContainer">
-    <!-- Skeleton while loading -->
-    <div id="focusSkeleton" class="focus-task-card">
-      <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(90deg,#eceadd 25%,#ddd9c4 50%,#eceadd 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;"></div>
-      <div style="padding:20px;">
-        <div style="height:20px;background:#eceadd;border-radius:8px;margin-bottom:12px;width:60%;"></div>
-        <div style="height:14px;background:#eceadd;border-radius:8px;margin-bottom:20px;width:40%;"></div>
-        <div style="height:60px;background:#eceadd;border-radius:12px;margin-bottom:16px;"></div>
-        <div style="height:44px;background:#eceadd;border-radius:14px;"></div>
-      </div>
+  <!-- Retro filter tabs -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button id="tab-all" class="filter-tab active px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('all')">📋 All Tasks</button>
+    <button id="tab-notworkyet" class="filter-tab tab-notworkyet px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('notworkyet')">🔨 Not Work Yet <span id="notWorkYetTabCount" class="ml-1 font-bold"></span></button>
+    <button id="tab-pending" class="filter-tab tab-pending px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('pending')">⏳ Pending Tasks <span id="pendingTabCount" class="ml-1 font-bold"></span></button>
+    <button id="tab-cheating" class="filter-tab tab-cheating px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('cheating')">⚠️ Cheating <span id="cheatingTabCount" class="ml-1 font-bold"></span></button>
+    <button id="tab-done" class="filter-tab px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('done')">✅ Completed</button>
+  </div>
+
+  <div class="mb-5">
+    <div class="relative">
+      <input id="searchInput" type="text" placeholder="Search by Task ID or Target UserCode…" oninput="renderTasks()"
+        style="width:100%;padding:11px 16px 11px 42px;border:2px solid #211F1F;border-radius:14px;background:#fff;font-size:13px;font-weight:600;outline:none;" />
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;opacity:0.6;">🔍</span>
     </div>
   </div>
 
-  <!-- EMPTY STATE -->
-  <div id="emptyState" class="hidden card rounded-3xl p-14 text-center max-w-[720px] mx-auto">
+  <p class="text-muted text-xs font-semibold mb-3" id="taskCounter">Showing 0 tasks</p>
+
+  <div id="taskGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div class="skeleton h-[340px]"></div>
+    <div class="skeleton h-[340px]"></div>
+    <div class="skeleton h-[340px]"></div>
+  </div>
+
+  <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
     <div class="text-6xl mb-4" id="emptyIcon">📭</div>
     <h3 class="text-xl font-semibold mb-2" id="emptyTitle">No Tasks Found</h3>
     <p class="text-muted text-sm mb-6" id="emptyMsg">You have no engagement tasks right now.</p>
@@ -294,40 +330,40 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 <script>
 'use strict';
 
-/* ════════════════════════════════════════════════════
-   AUTH
-   ════════════════════════════════════════════════════ */
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
 const USER_CODE = localStorage.getItem("usercode") || "";
 if (!savedUsername || !savedPassword) window.location.href = "signin.html";
 
-/* ════════════════════════════════════════════════════
-   CONFIG
-   ════════════════════════════════════════════════════ */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxR3JoqDsXhsjgxsp4Aq75NMI4UWGezFzHt87RNURIPfmY20qbRRztUbTenk2Mfm3A/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzx9bf6luXU8UFgb_9oZkWzqtWxJXp7yfNskE3Nl-5Kyeo1FCfkoG4K8TMncHRlWvQhg/exec';
 
-/* ════════════════════════════════════════════════════
-   STATE (NO CACHE — fresh every time)
-   ════════════════════════════════════════════════════ */
-let currentTask = null;
-let progress = { remaining: 0, totalActionable: 0, done: 0, isLast: false };
-let stats = { total:0, notWorkYet:0, pending:0, completed:0, verified:0, cheating:0, rejected:0 };
+const CACHE_KEY_TASKS = 'engagement_tasks_data';
+const CACHE_KEY_STATS = 'engagement_tasks_stats';
+const CACHE_KEY_EXCHANGE = 'engagement_tasks_exchange';
+const CACHE_KEY_FOCUSED = 'engagement_tasks_focused';
+const CACHE_KEY_TIMESTAMP = 'engagement_tasks_timestamp';
+const CACHE_KEY_HAS_CHEAT = 'engagement_tasks_has_cheat';
+const CACHE_KEY_CHEAT_COUNT = 'engagement_tasks_cheat_count';
+const CACHE_KEY_PERF_PRIORITY = 'engagement_tasks_perf_priority';
+const CACHE_KEY_PROMO_DISABLED = 'engagement_tasks_promo_disabled';
+const CACHE_TTL = 5 * 60 * 1000;
+
+let allTasks = [];
 let summary = {};
-let currentMode = 'NotWorkYet';
+let stats = { total:0, notWorkYet:0, pending:0, completed:0, verified:0, cheating:0, rejected:0 };
+let exchangeStats = { awaiting:0, both:0, theirPending:0 };
+let currentStatus = 'NotWorkYet';
 let hasCheating = false;
 let cheatCount = 0;
-let pendingCount = 0;
 let perfPriority = { deletedCount: 0, pendingCount: 0 };
 let promoDisabled = false;
+let activeTab = 'all';
+let searchQuery = '';
 let isGenerating = false;
-let isMarkingDone = false;
 let partnerPollInterval = null;
 let isPolling = false;
+let isTaskBusy = false;
 
-/* ════════════════════════════════════════════════════
-   HELPERS
-   ════════════════════════════════════════════════════ */
 function showToast(msg, isError=false){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -338,15 +374,6 @@ function hideLoader(){
   const l = document.getElementById('pageLoader');
   if (l) { l.classList.add('hidden'); setTimeout(()=>l.style.display='none', 400); }
 }
-function showLoader(msg){
-  const l = document.getElementById('pageLoader');
-  if (l) {
-    l.style.display = 'flex';
-    l.classList.remove('hidden');
-    const p = l.querySelector('p');
-    if (p && msg) p.textContent = msg;
-  }
-}
 function escapeHtml(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
@@ -355,6 +382,19 @@ function fmtDuration(sec){
   if (n < 60) return n + 's';
   const m = Math.floor(n / 60), s = n % 60;
   return s > 0 ? `${m}m ${s}s` : `${m}m`;
+}
+
+function showTaskOverlay(msg='Validating task…'){
+  const o = document.getElementById('taskOverlay');
+  const m = document.getElementById('taskOverlayMsg');
+  if (m) m.textContent = msg;
+  o.style.display = 'flex';
+  requestAnimationFrame(()=> o.classList.add('show'));
+}
+function hideTaskOverlay(){
+  const o = document.getElementById('taskOverlay');
+  o.classList.remove('show');
+  setTimeout(()=> { o.style.display = 'none'; }, 260);
 }
 
 async function callApi(action, params = {}) {
@@ -371,70 +411,117 @@ async function callPost(body) {
   return res.json();
 }
 
-/* ════════════════════════════════════════════════════
-   GROUP VISIBILITY GATE
-   ════════════════════════════════════════════════════ */
-async function checkEngagementGroupVisibility() {
+/* ════════ CACHE ════════ */
+function saveTasksToCache(data) {
   try {
-    const res = await fetch(`${SCRIPT_URL}?action=getSettings`);
-    const data = await res.json();
-
-    if (data.success && data.settings) {
-      const groupSetting = data.settings['LIKE_AND_COMMENTS_GROUP'];
-      const isEnabled = groupSetting === true ||
-                       groupSetting === 'TRUE' ||
-                       groupSetting === 'YES' ||
-                       groupSetting === '1' ||
-                       String(groupSetting).toUpperCase() === 'TRUE';
-      if (!isEnabled) {
-        showEngagementGroupDisabled();
-        return false;
-      }
+    const cachedTasks = (data.tasks || []).filter(t =>
+      t.Status !== 'Completed' && t.Status !== 'Verified'
+    );
+    localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
+    localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(data.fullStats || {}));
+    localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(data.exchangeStats || {}));
+    localStorage.setItem(CACHE_KEY_FOCUSED, data.focusedStatus || 'NotWorkYet');
+    localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(data.hasCheating || false));
+    localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(data.cheatCount || 0));
+    localStorage.setItem(CACHE_KEY_PROMO_DISABLED, String(data.promoDisabled || false));
+    if (data.perfPriority) {
+      localStorage.setItem(CACHE_KEY_PERF_PRIORITY, JSON.stringify(data.perfPriority));
     }
+    localStorage.setItem(CACHE_KEY_TIMESTAMP, String(Date.now()));
+  } catch (e) { console.warn('Cache save failed', e); }
+}
+
+function loadTasksFromCache() {
+  try {
+    const tasksData = localStorage.getItem(CACHE_KEY_TASKS);
+    const timestamp = localStorage.getItem(CACHE_KEY_TIMESTAMP);
+    if (!tasksData || !timestamp) return null;
+    const age = Date.now() - parseInt(timestamp);
+    if (age > CACHE_TTL) return null;
+    return {
+      tasks: JSON.parse(tasksData),
+      stats: JSON.parse(localStorage.getItem(CACHE_KEY_STATS) || '{}'),
+      exchangeStats: JSON.parse(localStorage.getItem(CACHE_KEY_EXCHANGE) || '{}'),
+      focusedStatus: localStorage.getItem(CACHE_KEY_FOCUSED) || 'NotWorkYet',
+      hasCheating: localStorage.getItem(CACHE_KEY_HAS_CHEAT) === 'true',
+      cheatCount: parseInt(localStorage.getItem(CACHE_KEY_CHEAT_COUNT)) || 0,
+      promoDisabled: localStorage.getItem(CACHE_KEY_PROMO_DISABLED) === 'true',
+      perfPriority: JSON.parse(localStorage.getItem(CACHE_KEY_PERF_PRIORITY) || '{"deletedCount":0,"pendingCount":0}')
+    };
+  } catch (e) { return null; }
+}
+
+function clearCache() {
+  [CACHE_KEY_TASKS, CACHE_KEY_STATS, CACHE_KEY_EXCHANGE, CACHE_KEY_FOCUSED,
+   CACHE_KEY_TIMESTAMP, CACHE_KEY_HAS_CHEAT, CACHE_KEY_CHEAT_COUNT,
+   CACHE_KEY_PERF_PRIORITY, CACHE_KEY_PROMO_DISABLED].forEach(k => {
+    localStorage.removeItem(k);
+  });
+}
+
+/* ════════ TABS ════════ */
+function switchTab(tab) {
+  const pendingCount = (stats.pending || 0);
+  if (pendingCount > 0 && tab !== 'pending') {
+    showToast(`⏳ Please complete your ${pendingCount} pending task(s) first.`, true);
+    activeTab = 'pending';
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    const pendBtn = document.getElementById('tab-pending');
+    if (pendBtn) pendBtn.classList.add('active');
+    renderTasks();
+    return;
+  }
+
+  activeTab = tab;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('tab-' + tab);
+  if (btn) btn.classList.add('active');
+  renderTasks();
+}
+
+function enforcePendingTabIfAny() {
+  if ((stats.pending || 0) > 0) {
+    activeTab = 'pending';
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    const pendBtn = document.getElementById('tab-pending');
+    if (pendBtn) pendBtn.classList.add('active');
     return true;
-  } catch (e) {
-    console.error('Group visibility check error:', e);
-    showEngagementGroupDisabled('Could not verify group status. Please try again later.');
-    return false;
   }
+  return false;
 }
 
-function showEngagementGroupDisabled(message) {
-  const container = document.querySelector('main');
-  if (container) {
-    container.innerHTML = `
-      <div class="max-w-[700px] mx-auto text-center py-20 px-4">
-        <div class="not-enrolled-banner">
-          <span class="banner-icon">🚫</span>
-          <h2 class="banner-title" style="color:#d97706;">Group Currently Disabled</h2>
-          <p class="banner-desc">
-            ${escapeHtml(message || 'The Engagement Group is currently not available. Please check back later or contact support for more information.')}
-          </p>
-          <a href="groups.html" class="banner-btn" style="background:#211F1F; border-color:#d97706;">
-            👥 View All Groups
-          </a>
-          <p style="margin-top:12px; font-size:12px; color:#6b7280;">
-            💡 Group availability is managed by administrators.
-          </p>
-        </div>
-      </div>
-    `;
-  }
-  hideLoader();
-}
-
-/* ════════════════════════════════════════════════════
-   INIT
-   ════════════════════════════════════════════════════ */
+/* ════════ INIT (no group-visibility gate) ════════ */
 window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
   try {
-    const visible = await checkEngagementGroupVisibility();
-    if (!visible) return;
+    const cached = loadTasksFromCache();
+    if (cached && cached.tasks && cached.tasks.length > 0) {
+      console.log('📦 Cache hit — instant render');
+      allTasks = cached.tasks;
+      stats = cached.stats;
+      exchangeStats = cached.exchangeStats;
+      currentStatus = cached.focusedStatus;
+      hasCheating = cached.hasCheating;
+      cheatCount = cached.cheatCount;
+      promoDisabled = cached.promoDisabled || false;
+      perfPriority = cached.perfPriority || { deletedCount: 0, pendingCount: 0 };
 
-    console.log('🌐 Fetching next task from server (no cache)');
-    const data = await callApi('getNextEngagementTask');
+      hideLoader();
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateTabCounts();
+      enforcePendingTabIfAny();
+      renderTasks();
+      startPartnerPolling();
+
+      refreshFullDataInBackground();
+      return;
+    }
+
+    console.log('🌐 No cache — fetching from server');
+    const data = await callApi('getMyEngagementTasks');
 
     if (!data.success) {
       handleErrorState(data);
@@ -443,11 +530,31 @@ async function init() {
 
     applyData(data);
     hideLoader();
-    renderFocusTask();
+    renderTasks();
     startPartnerPolling();
-    refreshStatsInBackground();
+    refreshInBackground();
   } catch (e) {
     console.error(e);
+    const cached = loadTasksFromCache();
+    if (cached) {
+      allTasks = cached.tasks;
+      stats = cached.stats;
+      exchangeStats = cached.exchangeStats;
+      currentStatus = cached.focusedStatus;
+      hasCheating = cached.hasCheating;
+      cheatCount = cached.cheatCount;
+      promoDisabled = cached.promoDisabled || false;
+      perfPriority = cached.perfPriority || { deletedCount: 0, pendingCount: 0 };
+      hideLoader();
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateTabCounts();
+      enforcePendingTabIfAny();
+      renderTasks();
+      startPartnerPolling();
+      return;
+    }
     hideLoader();
     showToast('Could not load tasks.', true);
   }
@@ -473,421 +580,157 @@ function handleErrorState(data) {
 }
 
 function applyData(data) {
-  currentTask = data.task || null;
-  progress = data.progress || { remaining: 0, totalActionable: 0, done: 0, isLast: false };
+  allTasks = data.tasks || [];
   stats = data.fullStats || data.stats || {};
   summary = data.summary || {};
-  currentMode = data.focusedStatus || 'NotWorkYet';
+  exchangeStats = data.exchangeStats || {};
+  currentStatus = data.focusedStatus || 'NotWorkYet';
   hasCheating = data.hasCheating || false;
   cheatCount = data.cheatCount || 0;
-  pendingCount = data.pendingCount || 0;
-  perfPriority = data.perfPriority || { deletedCount: 0, pendingCount: 0 };
   promoDisabled = data.promoDisabled || false;
-
-  renderBanners();
-  renderProgress();
+  perfPriority = data.perfPriority || { deletedCount: 0, pendingCount: 0 };
+  saveTasksToCache(data);
+  renderStats();
+  renderCheatingBanner();
+  renderPromoDisabledBanner();
+  updateTabCounts();
+  enforcePendingTabIfAny();
 }
 
-/* ════════════════════════════════════════════════════
-   RENDER BANNERS
-   ════════════════════════════════════════════════════ */
-function renderBanners() {
-  // Cheating banner
-  const cheatBanner = document.getElementById('cheatingBanner');
+function renderStats() {
+  document.getElementById('statPending').textContent = stats.notWorkYet || 0;
+  document.getElementById('statInProgress').textContent = stats.pending || 0;
+  document.getElementById('statDone').textContent = stats.completed || 0;
+  document.getElementById('statVerified').textContent = stats.verified || 0;
+  document.getElementById('statCheating').textContent = stats.cheating || 0;
+  document.getElementById('statGained').textContent = summary.likesReceived || 0;
+  document.getElementById('statCommentsGained').textContent = summary.commentsReceived || 0;
+  document.getElementById('statsBar').classList.remove('hidden');
+}
+
+function renderCheatingBanner() {
+  const banner = document.getElementById('cheatingBanner');
   if (hasCheating && cheatCount > 0) {
-    cheatBanner.classList.remove('hidden');
+    banner.classList.remove('hidden');
     document.getElementById('cheatCount').textContent = cheatCount;
   } else {
-    cheatBanner.classList.add('hidden');
+    banner.classList.add('hidden');
   }
+}
 
-  // Promo disabled banner
-  const promoBanner = document.getElementById('promoDisabledBanner');
+function renderPromoDisabledBanner() {
+  const banner = document.getElementById('promoDisabledBanner');
   if (promoDisabled && !hasCheating) {
-    promoBanner.classList.remove('hidden');
+    banner.classList.remove('hidden');
   } else {
-    promoBanner.classList.add('hidden');
+    banner.classList.add('hidden');
   }
 }
 
-/* ════════════════════════════════════════════════════
-   RENDER PROGRESS
-   ════════════════════════════════════════════════════ */
-function renderProgress() {
-  const wrap = document.getElementById('progressWrap');
-  const bar = document.getElementById('progressBar');
-  const countEl = document.getElementById('progressCount');
-  const titleEl = document.getElementById('progressTitle');
+function updateTabCounts() {
+  const cheating = (stats.cheating || 0);
+  const notWorkYet = (stats.notWorkYet || 0);
+  const pending = (stats.pending || 0);
 
-  const total = progress.totalActionable || 0;
-  const done = progress.done || 0;
-  const remaining = progress.remaining || 0;
+  const cheatTab = document.getElementById('cheatingTabCount');
+  if (cheatTab) cheatTab.textContent = cheating > 0 ? `(${cheating})` : '';
 
-  if (total === 0 && done === 0) {
-    wrap.classList.add('hidden');
-    return;
-  }
+  const nwyTab = document.getElementById('notWorkYetTabCount');
+  if (nwyTab) nwyTab.textContent = notWorkYet > 0 ? `(${notWorkYet})` : '';
 
-  wrap.classList.remove('hidden');
-
-  const pct = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : (done > 0 ? 100 : 0);
-  bar.style.width = pct + '%';
-
-  // Mode-based color
-  bar.classList.remove('cheating', 'pending');
-  if (currentMode === 'Cheating') bar.classList.add('cheating');
-  else if (currentMode === 'Pending') bar.classList.add('pending');
-
-  titleEl.textContent = currentMode === 'Cheating'
-    ? '⚠️ Resolve Cheating Flags'
-    : (currentMode === 'Pending' ? '🤝 Pending Tasks' : '📋 Your Progress');
-
-  countEl.textContent = `${done} / ${total}`;
-
-  document.getElementById('pDone').textContent = done;
-  document.getElementById('pRemaining').textContent = remaining;
-  document.getElementById('pCheating').textContent = stats.cheating || 0;
-  document.getElementById('pPending').textContent = stats.pending || 0;
+  const pendTab = document.getElementById('pendingTabCount');
+  if (pendTab) pendTab.textContent = pending > 0 ? `(${pending})` : '';
 }
 
-/* ════════════════════════════════════════════════════
-   RENDER FOCUS TASK (single task)
-   ════════════════════════════════════════════════════ */
-function renderFocusTask() {
-  const container = document.getElementById('focusContainer');
-  const empty = document.getElementById('emptyState');
-
-  if (!currentTask) {
-    container.innerHTML = '';
-    empty.classList.remove('hidden');
-
-    const icon = document.getElementById('emptyIcon');
-    const title = document.getElementById('emptyTitle');
-    const msg = document.getElementById('emptyMsg');
-
-    if (currentMode === 'Cheating' && cheatCount === 0) {
-      icon.textContent = '🎉';
-      title.textContent = 'No Cheating Flags!';
-      msg.textContent = 'Great job! You have no cheating tasks. Keep posting genuine comments.';
-    } else if (progress.done > 0 && progress.remaining === 0) {
-      icon.textContent = '🏆';
-      title.textContent = 'All Done!';
-      msg.textContent = 'You have completed all your engagement tasks. Generate new tasks or wait for partners.';
-    } else if (stats.total === 0) {
-      icon.textContent = '📭';
-      title.textContent = 'No Tasks Found';
-      msg.textContent = 'You have no engagement tasks right now. Click "Generate Tasks" to create some.';
-    } else {
-      icon.textContent = '📭';
-      title.textContent = 'No Tasks Found';
-      msg.textContent = 'No actionable tasks available right now.';
-    }
-    return;
-  }
-
-  empty.classList.add('hidden');
-  container.innerHTML = focusTaskCard(currentTask);
+async function loadTasks() {
+  const data = await callApi('getMyEngagementTasks');
+  if (!data.success) { handleErrorState(data); return; }
+  applyData(data);
+  renderTasks();
 }
 
-/* ════════════════════════════════════════════════════
-   FOCUS TASK CARD (single large card)
-   ════════════════════════════════════════════════════ */
-function focusTaskCard(t) {
-  const isDone = t.Status === 'Completed';
-  const isVerified = t.Status === 'Verified';
-  const isCheating = t.Status === 'Cheating';
-  const isPending = t.Status === 'Pending';
-
-  let cardClass = 'focus-task-card';
-  if (isVerified) cardClass += ' done-card';
-  else if (isDone) cardClass += ' pending-card';
-  else if (isCheating) cardClass += ' cheating-card';
-  else if (isPending) cardClass += ' pending-card';
-
-  let statusColor, statusBg, statusText, statusLabel;
-  if (isVerified) {
-    statusColor = '#0f766e'; statusBg = '#ccfbf1'; statusText = '#0f766e'; statusLabel = '✓ Verified';
-  } else if (isDone) {
-    statusColor = '#f59e0b'; statusBg = '#fef3c7'; statusText = '#92400e'; statusLabel = '⏳ Pending Verification';
-  } else if (isCheating) {
-    statusColor = '#dc2626'; statusBg = '#fee2e2'; statusText = '#991b1b'; statusLabel = '✗ Cheating';
-  } else if (isPending) {
-    statusColor = '#f97316'; statusBg = '#ffedd5'; statusText = '#c2410c'; statusLabel = '🤝 Pending — Your Turn';
-  } else {
-    statusColor = '#f59e0b'; statusBg = '#fef3c7'; statusText = '#92400e'; statusLabel = 'Not Work Yet';
-  }
-
-  const statusBadge = `<span class="status-badge" style="background:${statusBg};color:${statusText};border-color:${statusColor};font-size:12px;padding:5px 14px;">
-    <span class="dot" style="background:${statusColor};"></span>${statusLabel}
-  </span>`;
-
-  const typeBadge = t.VideoType === 'Short'
-    ? '<span class="status-badge" style="background:#fef3c7;color:#92400e;font-size:12px;padding:5px 14px;">⚡ Short</span>'
-    : '<span class="status-badge" style="background:#dbeafe;color:#1e40af;font-size:12px;padding:5px 14px;">📐 Long</span>';
-
-  let pairedBadge = '';
-  if (isDone || isVerified) {
-    if (t.PairedStatus === 'Completed' || t.PairedStatus === 'Verified') {
-      pairedBadge = `<span class="status-badge" style="background:#ccfbf1;color:#0f766e;font-size:12px;padding:5px 14px;">✓ Partner Completed</span>`;
-    } else {
-      pairedBadge = `<span class="status-badge" style="background:#ffedd5;color:#c2410c;font-size:12px;padding:5px 14px;">⏳ Waiting for Partner</span>`;
-    }
-  } else if (isPending) {
-    pairedBadge = `<span class="status-badge" style="background:#dbeafe;color:#1e40af;font-size:12px;padding:5px 14px;">🤝 They Completed — Your Turn</span>`;
-  }
-
-  const cheatingBlock = isCheating ? `
-    <div class="cheating-box mt-4">
-      <p class="text-sm text-red-700 font-bold mb-2">🚫 Cheating Detected</p>
-      <p class="text-xs text-red-700/90 leading-relaxed">
-        This task was flagged for cheating because your comment was not found on the video.
-        You <strong class="text-red-700">must resolve</strong> this issue before you can continue.
-        Contact support for assistance.
-      </p>
-    </div>` : '';
-
-  let commentSection = '';
-  if (isDone || isVerified || isCheating) {
-    commentSection = `
-      <div style="margin-bottom:16px;">
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:8px;">💬 Your Submitted Comment:</div>
-        <div class="comment-suggestion" style="font-style:normal; color:#211F1F; font-size:13px;">${escapeHtml(t.CommentText || '—')}</div>
-      </div>
-    `;
-  } else {
-    commentSection = `
-      <div style="margin-bottom:16px;">
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:8px;">💬 Write a Genuine Comment:</div>
-        <div class="comment-suggestion" style="font-size:13px;">Pick something real from the video and comment naturally. Example: "Really liked the part about X — super helpful!"</div>
-      </div>
-    `;
-  }
-
-  let actionButton = '';
-  if (isDone || isVerified || isCheating) {
-    actionButton = `<button class="btn-green w-full py-3.5 rounded-2xl text-sm" disabled>${isVerified ? '✓ Verified' : (isCheating ? '✗ Flagged as Cheating' : '⏳ Waiting for Admin Verification')}</button>`;
-  } else {
-    actionButton = `<button onclick="markDone('${escapeHtml(t.TaskID)}')" class="btn-purple w-full py-3.5 rounded-2xl text-sm font-bold">✅ Mark as Done & Get Next Task</button>`;
-  }
-
-  const nextRemaining = progress.remaining > 1 ? ` (${progress.remaining - 1} more after this)` : '';
-
-  return `
-    <div class="${cardClass}" id="focusTask-${escapeHtml(t.TaskID)}">
-      <div class="video-thumb-wrap">
-        ${t.VideoThumbnail ? `<img src="${escapeHtml(t.VideoThumbnail)}" alt="">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:64px;">🎬</div>`}
-        <span class="task-id-chip">${escapeHtml(t.TaskID)}</span>
-        <span class="duration-chip">${fmtDuration(t.VideoDuration)}</span>
-        <span class="type-chip">${escapeHtml(t.VideoType || 'Long')}</span>
-      </div>
-
-      <div style="padding:22px;">
-        <div class="flex flex-wrap items-center gap-2 mb-3">
-          ${statusBadge}
-          ${typeBadge}
-          ${pairedBadge}
-        </div>
-
-        <div class="text-lg font-bold mb-3" style="line-height:1.35;">
-          ${escapeHtml(t.VideoTitle || 'Untitled Video')}
-        </div>
-
-        <div class="text-xs text-muted mb-4">
-          🎯 Target: <strong style="color:#211F1F; font-size:13px;">${escapeHtml(t.TargetUserCode)}</strong>
-          ${nextRemaining ? `<span style="margin-left:10px; color:#f97316; font-weight:700;">${nextRemaining}</span>` : ''}
-        </div>
-
-        ${commentSection}
-        ${cheatingBlock}
-
-        <div style="margin-bottom:10px;">
-          <a href="${escapeHtml(t.VideoUrl)}" target="_blank" rel="noopener" class="btn-amber w-full py-3.5 rounded-2xl text-sm text-center block" style="text-decoration:none; font-weight:800;">
-            ▶ Open on YouTube
-          </a>
-        </div>
-
-        ${actionButton}
-      </div>
-    </div>
-  `;
-}
-
-/* ════════════════════════════════════════════════════
-   MARK DONE → LOAD NEXT TASK
-   ════════════════════════════════════════════════════ */
-async function markDone(taskID) {
-  if (isMarkingDone) return;
-  if (!currentTask || currentTask.TaskID !== taskID) {
-    showToast('Task mismatch. Refresh the page.', true);
-    return;
-  }
-
-  const task = currentTask;
-  const minWatch = task.VideoType === 'Short' ? 15 : 30;
-
-  const result = await Swal.fire({
-    icon: 'question',
-    title: 'Mark task as done',
-    html: `
-      <div style="text-align:left; font-size:13px; line-height:1.6; color:#4b5563;">
-        <p style="margin-bottom:10px;">Confirm you completed:</p>
-        <ul style="list-style:none; padding:0; margin:0 0 14px 0;">
-          <li style="padding:4px 0;">✅ Liked the video on YouTube</li>
-          <li style="padding:4px 0;">✅ Watched at least ${minWatch} seconds</li>
-          <li style="padding:4px 0;">✅ Posted a genuine comment</li>
-        </ul>
-
-        <label style="display:block; font-weight:700; font-size:12px; color:#211F1F; margin-bottom:6px;">
-          💬 Paste the exact comment you posted:
-        </label>
-        <textarea id="swal-comment"
-          placeholder="Type or paste your comment here… (min 5 characters)"
-          style="width:100%; min-height:80px; padding:10px 12px; border:2px solid #211F1F; border-radius:12px; font-size:13px; resize:vertical; font-family:inherit; outline:none;"
-          maxlength="500"
-        ></textarea>
-
-        <div style="background:#F5F4EB; border:2px solid #211F1F; border-radius:12px; padding:10px 12px; margin-top:10px;">
-          <div style="font-size:11px; font-weight:800; color:#6b7280;">TASK ID</div>
-          <div style="font-weight:800; color:#211F1F;">${escapeHtml(taskID)}</div>
-        </div>
-
-        <div style="background:#dbeafe; border:2px solid #1e40af; border-radius:12px; padding:10px 12px; margin-top:10px; font-size:12px; color:#1e3a8a;">
-          ℹ️ <strong>Admin will verify your comment in 1 minute</strong> via YouTube API. If not found, task will be marked as Cheating.
-        </div>
-      </div>
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'Submit & Get Next',
-    cancelButtonText: 'Cancel',
-    confirmButtonColor: '#211F1F',
-    didOpen: () => {
-      const ta = document.getElementById('swal-comment');
-      if (ta) ta.focus();
-    },
-    preConfirm: () => {
-      const text = (document.getElementById('swal-comment')?.value || '').trim();
-      if (text.length < 5) {
-        Swal.showValidationMessage('Comment must be at least 5 characters');
-        return false;
-      }
-      if (text.length > 500) {
-        Swal.showValidationMessage('Comment too long (max 500 characters)');
-        return false;
-      }
-      return text;
-    }
-  });
-
-  if (!result.isConfirmed || !result.value) return;
-
-  const commentText = result.value;
-  isMarkingDone = true;
-
-  Swal.fire({
-    title: 'Submitting…',
-    html: `<p style="color:#4b5563;font-size:14px;">Saving your comment and loading next task…</p>`,
-    allowOutsideClick: false,
-    showConfirmButton: false,
-    didOpen: () => Swal.showLoading()
-  });
-
-  try {
-    const data = await callPost({
-      action: 'markEngagementTaskDone',
-      userCode: USER_CODE,
-      taskID: taskID,
-      commentText: commentText
-    });
-
-    if (!data.success) {
-      Swal.close();
-      showToast(data.message || 'Could not mark task done.', true);
-      isMarkingDone = false;
-      return;
-    }
-
-    if (data.bothCompleted) {
-      showToast('🎉 Both you and your partner completed!');
-    } else {
-      showToast('✅ Task submitted. Loading next task…');
-    }
-
-    // ⭐ Load the NEXT task from server (no cache)
-    await loadNextTask();
-
-  } catch (e) {
-    Swal.close();
-    showToast('Connection error.', true);
-    isMarkingDone = false;
-  }
-}
-
-/* ════════════════════════════════════════════════════
-   LOAD NEXT TASK (fresh fetch)
-   ════════════════════════════════════════════════════ */
-async function loadNextTask() {
-  showLoader('Loading your next task…');
-  try {
-    const data = await callApi('getNextEngagementTask');
-    Swal.close();
-
-    if (!data.success) {
-      hideLoader();
-      handleErrorState(data);
-      isMarkingDone = false;
-      return;
-    }
-
-    applyData(data);
-    hideLoader();
-    renderFocusTask();
-
-    // Scroll to top of task area
-    const container = document.getElementById('focusContainer');
-    if (container) container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    isMarkingDone = false;
-  } catch (e) {
-    Swal.close();
-    hideLoader();
-    showToast('Could not load next task.', true);
-    isMarkingDone = false;
-  }
-}
-
-/* ════════════════════════════════════════════════════
-   BACKGROUND STATS REFRESH (metadata only)
-   ════════════════════════════════════════════════════ */
-async function refreshStatsInBackground() {
+/* ════════ BACKGROUND REFRESH ════════ */
+async function refreshInBackground() {
   try {
     const data = await callApi('getEngagementTaskStatsOnly');
     if (!data.success) return;
 
-    stats = data.stats || stats;
-    if (data.priority) {
-      perfPriority = {
-        deletedCount: data.priority.deletedCount || 0,
-        pendingCount: data.priority.pendingCount || 0
-      };
-      hasCheating = data.priority.hasCheating || false;
-      cheatCount = data.priority.deletedCount || 0;
-      pendingCount = data.priority.pendingCount || 0;
+    const freshStats = data.stats;
+    const hasPriority = (freshStats.cheating > 0 || freshStats.pending > 0);
+
+    if (hasPriority) {
+      await loadTasks();
+    } else {
+      stats = freshStats;
+      hasCheating = freshStats.cheating > 0;
+      cheatCount = freshStats.cheating || 0;
+      if (data.priority) {
+        perfPriority = {
+          deletedCount: data.priority.deletedCount || 0,
+          pendingCount: data.priority.pendingCount || 0
+        };
+      }
+      if (data.promoDisabled !== undefined) {
+        promoDisabled = data.promoDisabled;
+      }
+      localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+      localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(hasCheating));
+      localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(cheatCount));
+      localStorage.setItem(CACHE_KEY_PERF_PRIORITY, JSON.stringify(perfPriority));
+      localStorage.setItem(CACHE_KEY_PROMO_DISABLED, String(promoDisabled));
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateTabCounts();
+      renderTasks();
     }
-    if (data.promoDisabled !== undefined) {
-      promoDisabled = data.promoDisabled;
-    }
-    renderBanners();
-    renderProgress();
-  } catch (e) { console.warn('BG stats refresh failed', e); }
+  } catch (e) { console.warn('BG refresh failed', e); }
 }
 
-/* ════════════════════════════════════════════════════
-   PARTNER POLLING — 15s
-   ════════════════════════════════════════════════════ */
+async function refreshFullDataInBackground() {
+  try {
+    const data = await callApi('getMyEngagementTasks');
+    if (!data.success) return;
+
+    const newTasks = data.tasks || [];
+    const newStats = data.fullStats || data.stats || {};
+    const newHasCheat = data.hasCheating || false;
+    const newCheatCount = data.cheatCount || 0;
+    const newFocused = data.focusedStatus || 'NotWorkYet';
+    const newPromoDisabled = data.promoDisabled || false;
+
+    const priorityChanged =
+      newHasCheat !== hasCheating ||
+      newCheatCount !== cheatCount ||
+      newFocused !== currentStatus ||
+      newPromoDisabled !== promoDisabled;
+
+    if (priorityChanged || newTasks.length !== allTasks.length) {
+      applyData(data);
+      renderTasks();
+    } else {
+      stats = newStats;
+      exchangeStats = data.exchangeStats || exchangeStats;
+      summary = data.summary || summary;
+      hasCheating = newHasCheat;
+      cheatCount = newCheatCount;
+      currentStatus = newFocused;
+      promoDisabled = newPromoDisabled;
+      perfPriority = data.perfPriority || perfPriority;
+      saveTasksToCache(data);
+      renderStats();
+      renderCheatingBanner();
+      renderPromoDisabledBanner();
+      updateTabCounts();
+    }
+  } catch (e) { console.warn('BG full refresh failed', e); }
+}
+
+/* ════════ PARTNER POLLING (15s) ════════ */
 function startPartnerPolling() {
   if (partnerPollInterval) clearInterval(partnerPollInterval);
   partnerPollInterval = setInterval(async () => {
-    if (isPolling || isMarkingDone) return;
+    if (isPolling) return;
     isPolling = true;
     try {
       await checkForPartnerUpdates();
@@ -895,6 +738,13 @@ function startPartnerPolling() {
       isPolling = false;
     }
   }, 15000);
+}
+
+function stopPartnerPolling() {
+  if (partnerPollInterval) {
+    clearInterval(partnerPollInterval);
+    partnerPollInterval = null;
+  }
 }
 
 async function checkForPartnerUpdates() {
@@ -907,34 +757,47 @@ async function checkForPartnerUpdates() {
     const freshPromoDisabled = data.priority.promoDisabled || false;
     const currentPending = perfPriority.pendingCount || 0;
     const currentDeleted = perfPriority.deletedCount || 0;
+    const currentPromoDisabled = promoDisabled;
 
-    // Partner completed → maybe our next task changed
     if (freshPending > currentPending) {
-      showToast(`🤝 Partner completed — loading new task…`);
+      const diff = freshPending - currentPending;
+      showToast(`🤝 ${diff} partner${diff > 1 ? 's' : ''} completed their side — your turn!`, false);
+      clearCache();
+      await loadTasks();
       notifyPartnerUpdate();
-      await loadNextTask();
       return;
     }
 
     if (freshDeleted > currentDeleted) {
-      showToast(`⚠️ New cheating flag detected. Reloading…`, true);
-      await loadNextTask();
+      showToast(`⚠️ You have ${freshDeleted} cheating flag(s). Check your tasks.`, true);
+      clearCache();
+      await loadTasks();
       return;
     }
 
-    // Promo state changed
-    if (freshPromoDisabled !== promoDisabled) {
+    if (freshPromoDisabled !== currentPromoDisabled) {
       if (!freshPromoDisabled) {
-        showToast('🎉 Promotion resumed! You can generate new tasks.', false);
+        showToast('🎉 Promotion resumed! You can now generate new tasks.', false);
       } else {
-        showToast('🔒 Promotion paused — complete pending tasks.', false);
+        showToast('🔒 Promotion paused — complete your pending tasks.', false);
       }
-      promoDisabled = freshPromoDisabled;
-      renderBanners();
+      clearCache();
+      await loadTasks();
       return;
     }
 
     perfPriority = { deletedCount: freshDeleted, pendingCount: freshPending };
+    localStorage.setItem(CACHE_KEY_PERF_PRIORITY, JSON.stringify(perfPriority));
+    localStorage.setItem(CACHE_KEY_PROMO_DISABLED, String(freshPromoDisabled));
+
+    if (data.priority.hasCheating !== hasCheating) {
+      hasCheating = data.priority.hasCheating;
+      cheatCount = freshDeleted;
+      renderCheatingBanner();
+      updateTabCounts();
+      localStorage.setItem(CACHE_KEY_HAS_CHEAT, String(hasCheating));
+      localStorage.setItem(CACHE_KEY_CHEAT_COUNT, String(cheatCount));
+    }
   } catch (e) {
     console.warn('Partner polling failed', e);
   }
@@ -966,16 +829,379 @@ function notifyPartnerUpdate() {
   } catch (e) {}
 }
 
-/* ════════════════════════════════════════════════════
-   GENERATE TASKS
-   ════════════════════════════════════════════════════ */
+/* ════════ VALIDATE BEFORE ACTION ════════ */
+async function validateTaskBeforeAction(taskId, actionName) {
+  const task = allTasks.find(t => t.TaskID === taskId);
+  if (!task) {
+    showToast('❌ Task not found.', true);
+    return { valid: false, task: null, reason: 'not-found' };
+  }
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(task.TargetUserCode)}`);
+    const data = await res.json();
+    if (data.success && data.targets) {
+      const td = data.targets[task.TargetUserCode];
+      if (td && (td.InLikeAndCommentWork !== 'Yes' || td.ViolationFlag === 'Suspended' || td.Status === 'Blocked' || td.EngagementPromotionActive === 'No')) {
+        return { valid: false, task, reason: 'ineligible' };
+      }
+    }
+  } catch (e) {
+    console.warn('Validation network error', e);
+  }
+  return { valid: true, task };
+}
+
+function removeTaskLocally(taskID) {
+  allTasks = allTasks.filter(t => t.TaskID !== taskID);
+  saveTasksToCache({
+    tasks: allTasks, fullStats: stats, exchangeStats,
+    focusedStatus: currentStatus, hasCheating, cheatCount,
+    perfPriority, promoDisabled
+  });
+  renderTasks();
+}
+
+/* ════════ OPEN TASK WITH VALIDATION ════════ */
+async function openTaskValidated(taskID) {
+  if (isTaskBusy) return;
+  isTaskBusy = true;
+  showTaskOverlay('Validating task…');
+
+  try {
+    const validation = await validateTaskBeforeAction(taskID, 'open this task');
+
+    if (!validation.valid) {
+      hideTaskOverlay();
+      if (validation.reason === 'not-found') {
+        removeTaskLocally(taskID);
+      } else if (validation.reason === 'ineligible') {
+        showToast('❌ Target member is no longer eligible. Task removed.', true);
+        removeTaskLocally(taskID);
+      }
+      return;
+    }
+
+    hideTaskOverlay();
+    window.open(validation.task.VideoUrl, '_blank', 'noopener');
+  } finally {
+    isTaskBusy = false;
+  }
+}
+
+/* ════════ RENDER TASKS ════════ */
+function renderTasks() {
+  const grid = document.getElementById('taskGrid');
+  const empty = document.getElementById('emptyState');
+  const counter = document.getElementById('taskCounter');
+  const emptyMsg = document.getElementById('emptyMsg');
+  const emptyIcon = document.getElementById('emptyIcon');
+  const emptyTitle = document.getElementById('emptyTitle');
+
+  searchQuery = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+
+  let list = allTasks.filter(t => {
+    if (activeTab === 'notworkyet') {
+      if (t.Status !== 'NotWorkYet') return false;
+    } else if (activeTab === 'pending') {
+      if (t.Status !== 'Pending') return false;
+    } else if (activeTab === 'cheating') {
+      if (t.Status !== 'Cheating') return false;
+    } else if (activeTab === 'done') {
+      if (!(t.Status === 'Completed' || t.Status === 'Verified')) return false;
+    }
+
+    if (searchQuery) {
+      const hay = (t.TaskID + ' ' + t.VideoID + ' ' + t.TargetUserCode).toLowerCase();
+      if (!hay.includes(searchQuery)) return false;
+    }
+    return true;
+  });
+
+  const ORDER = { 'Cheating': 0, 'Pending': 1, 'NotWorkYet': 2, 'Completed': 3, 'Verified': 4, 'Rejected': 5 };
+  list.sort((a, b) => (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9));
+
+  counter.textContent = `Showing ${list.length} of ${allTasks.length} tasks`;
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+
+    if (activeTab === 'cheating') {
+      emptyIcon.textContent = '🎉';
+      emptyTitle.textContent = 'No Cheating Flags!';
+      emptyMsg.textContent = 'Great job! You have no cheating tasks. Keep posting genuine comments.';
+    } else if (activeTab === 'pending') {
+      emptyIcon.textContent = '⏳';
+      emptyTitle.textContent = 'No Pending Tasks';
+      emptyMsg.textContent = 'No partner has completed their side yet. Check back soon!';
+    } else if (activeTab === 'notworkyet') {
+      emptyIcon.textContent = '🔨';
+      emptyTitle.textContent = 'No Not-Work-Yet Tasks';
+      emptyMsg.textContent = 'All your tasks have been started. Check the Pending or Completed tabs.';
+    } else if (allTasks.length === 0) {
+      emptyIcon.textContent = '📭';
+      emptyTitle.textContent = 'No Tasks Found';
+      emptyMsg.textContent = 'You have no engagement tasks right now. Click "Generate Tasks" to create some.';
+    } else {
+      emptyIcon.textContent = '📭';
+      emptyTitle.textContent = 'No Tasks Found';
+      emptyMsg.textContent = activeTab === 'done'
+        ? 'You have not completed any tasks yet.'
+        : 'No tasks match your filter.';
+    }
+
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  grid.innerHTML = list.map(t => taskCard(t)).join('');
+}
+
+/* ════════ TASK CARD ════════ */
+function taskCard(t) {
+  const isDone = t.Status === 'Completed';
+  const isVerified = t.Status === 'Verified';
+  const isCheating = t.Status === 'Cheating';
+  const isPending = t.Status === 'Pending';
+  const isNotWorkYet = t.Status === 'NotWorkYet';
+
+  let cardClass = 'task-card';
+  if (isVerified) cardClass += ' done-card';
+  else if (isDone) cardClass += ' pending-card';
+  else if (isCheating) cardClass += ' cheating-card';
+  else if (isPending) cardClass += ' pending-card';
+  else if (isNotWorkYet) cardClass += ' notworkyet-card';
+
+  let statusColor, statusBg, statusText, statusLabel;
+  if (isVerified) {
+    statusColor = '#0f766e'; statusBg = '#ccfbf1'; statusText = '#0f766e'; statusLabel = '✓ Verified';
+  } else if (isDone) {
+    statusColor = '#211F1F'; statusBg = '#DBD4B7'; statusText = '#211F1F'; statusLabel = '⏳ Pending Verification';
+  } else if (isCheating) {
+    statusColor = '#dc2626'; statusBg = '#fee2e2'; statusText = '#991b1b'; statusLabel = '✗ Cheating';
+  } else if (isPending) {
+    statusColor = '#211F1F'; statusBg = '#DBD4B7'; statusText = '#211F1F'; statusLabel = 'Pending';
+  } else {
+    statusColor = '#211F1F'; statusBg = '#ACD1C0'; statusText = '#211F1F'; statusLabel = 'Not Work Yet';
+  }
+
+  const statusBadge = `<span class="status-badge" style="background:${statusBg};color:${statusText};border-color:${statusColor};">
+    <span class="dot" style="background:${statusColor};"></span>${statusLabel}
+  </span>`;
+
+  const typeBadge = t.VideoType === 'Short'
+    ? '<span class="status-badge" style="background:#ACD1C0;color:#211F1F;">⚡ Short</span>'
+    : '<span class="status-badge" style="background:#DBD4B7;color:#211F1F;">📐 Long</span>';
+
+  let pairedBadge = '';
+  if (isDone || isVerified) {
+    if (t.PairedStatus === 'Completed' || t.PairedStatus === 'Verified') {
+      pairedBadge = `<span class="status-badge" style="background:#ccfbf1;color:#0f766e;">✓ They Completed Back</span>`;
+    } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
+      pairedBadge = `<span class="status-badge" style="background:#F5F4EB;color:#211F1F;">⏳ Partner: Pending</span>`;
+    }
+  } else if (isPending) {
+    pairedBadge = `<span class="status-badge" style="background:#ACD1C0;color:#211F1F;">🤝 Partner Completed — Your Turn</span>`;
+  }
+
+  const pinnedBadge = isCheating
+    ? `<span class="status-badge" style="background:#dc2626;color:#fff;">📌 Action Required</span>`
+    : '';
+
+  const cheatingBlock = isCheating ? `
+    <div class="cheating-box mt-3">
+      <p class="text-xs text-red-700 font-semibold mb-1">🚫 Cheating Detected</p>
+      <p class="text-xs text-red-700/80 leading-relaxed">
+        This task was flagged for cheating because your comment was not found on the video.
+        You <strong class="text-red-700">must resolve</strong> this issue before you can continue. Contact support for assistance.
+      </p>
+    </div>` : '';
+
+  let commentSection = '';
+  if (isDone || isVerified || isCheating) {
+    commentSection = `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:6px;">💬 Your Submitted Comment:</div>
+        <div class="comment-suggestion" style="font-style:normal; color:#211F1F;">${escapeHtml(t.CommentText || '—')}</div>
+      </div>
+    `;
+  } else {
+    commentSection = `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280; margin-bottom:6px;">💬 Write a Genuine Comment:</div>
+        <div class="comment-suggestion">Pick something real from the video and comment naturally. Example: "Really liked the part about X — super helpful!"</div>
+      </div>
+    `;
+  }
+
+  let actionButton = '';
+  if (isDone || isVerified || isCheating) {
+    actionButton = `<button class="btn-green w-full py-2.5 rounded-2xl text-xs" disabled>${isVerified ? '✓ Verified' : (isCheating ? '✗ Flagged as Cheating' : '⏳ Waiting for Admin Verification')}</button>`;
+  } else {
+    actionButton = `<button onclick="markDone('${escapeHtml(t.TaskID)}')" class="btn-purple w-full py-2.5 rounded-2xl text-xs">✅ Mark as Done</button>`;
+  }
+
+  return `
+    <div class="${cardClass}" id="task-${escapeHtml(t.TaskID)}">
+      <div class="video-thumb-wrap">
+        ${t.VideoThumbnail ? `<img src="${escapeHtml(t.VideoThumbnail)}" alt="">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:44px;">🎬</div>`}
+        <span class="task-id-chip">${escapeHtml(t.TaskID)}</span>
+        <span class="duration-chip">${fmtDuration(t.VideoDuration)}</span>
+        <span class="type-chip">${escapeHtml(t.VideoType || 'Long')}</span>
+      </div>
+
+      <div class="p-4" style="flex:1; display:flex; flex-direction:column;">
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          ${statusBadge}
+          ${typeBadge}
+          ${pairedBadge}
+          ${pinnedBadge}
+        </div>
+
+        <div class="text-sm font-semibold mb-2" style="display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+          ${escapeHtml(t.VideoTitle || 'Untitled Video')}
+        </div>
+
+        <div class="text-[11px] text-muted mb-3">
+          🎯 Target: <strong style="color:#211F1F;">${escapeHtml(t.TargetUserCode)}</strong>
+        </div>
+
+        ${commentSection}
+        ${cheatingBlock}
+
+        <div class="flex gap-2 mb-2 mt-auto">
+          <button onclick="openTaskValidated('${escapeHtml(t.TaskID)}')" class="btn-amber flex-1 py-2.5 rounded-xl text-xs text-center">
+            ▶ Open on YouTube
+          </button>
+        </div>
+
+        ${actionButton}
+      </div>
+    </div>
+  `;
+}
+
+/* ════════ MARK DONE ════════ */
+async function markDone(taskID) {
+  if (isTaskBusy) return;
+  isTaskBusy = true;
+  showTaskOverlay('Validating task…');
+
+  let validation;
+  try {
+    validation = await validateTaskBeforeAction(taskID, 'Mark Done');
+  } finally {
+    hideTaskOverlay();
+    isTaskBusy = false;
+  }
+
+  if (!validation.valid) {
+    if (validation.reason === 'not-found') {
+      removeTaskLocally(taskID);
+    } else if (validation.reason === 'ineligible') {
+      showToast('❌ Target member is no longer eligible. Task removed.', true);
+      removeTaskLocally(taskID);
+    }
+    return;
+  }
+
+  const task = validation.task;
+  if (!task) return;
+
+  const minWatch = task.VideoType === 'Short' ? 15 : 30;
+
+  const result = await Swal.fire({
+    icon: 'question',
+    title: 'Mark task as done',
+    html: `
+      <div style="text-align:left; font-size:13px; line-height:1.6; color:#4b5563;">
+        <p style="margin-bottom:10px;">Confirm you completed:</p>
+        <ul style="list-style:none; padding:0; margin:0 0 14px 0;">
+          <li style="padding:4px 0;">✅ Liked the video on YouTube</li>
+          <li style="padding:4px 0;">✅ Watched at least ${minWatch} seconds</li>
+          <li style="padding:4px 0;">✅ Posted a genuine comment</li>
+        </ul>
+
+        <label style="display:block; font-weight:700; font-size:12px; color:#211F1F; margin-bottom:6px;">
+          💬 Paste the exact comment you posted:
+        </label>
+        <textarea id="swal-comment"
+          placeholder="Type or paste your comment here… (min 5 characters)"
+          style="width:100%; min-height:80px; padding:10px 12px; border:2px solid #211F1F; border-radius:12px; font-size:13px; resize:vertical; font-family:inherit; outline:none;"
+          maxlength="500"
+        ></textarea>
+
+        <div style="background:#F5F4EB; border:2px solid #211F1F; border-radius:12px; padding:10px 12px; margin-top:10px;">
+          <div style="font-size:11px; font-weight:800; color:#6b7280;">TASK ID</div>
+          <div style="font-weight:800; color:#211F1F;">${escapeHtml(taskID)}</div>
+        </div>
+
+        <div style="background:#DBD4B7; border:2px solid #211F1F; border-radius:12px; padding:10px 12px; margin-top:10px; font-size:12px; color:#211F1F;">
+          ℹ️ <strong>Admin will verify your comment in 7 days</strong> via YouTube API. If not found, task will be marked as Cheating.
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Submit',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#211F1F',
+    didOpen: () => {
+      const ta = document.getElementById('swal-comment');
+      if (ta) ta.focus();
+    },
+    preConfirm: () => {
+      const text = (document.getElementById('swal-comment')?.value || '').trim();
+      if (text.length < 5) {
+        Swal.showValidationMessage('Comment must be at least 5 characters');
+        return false;
+      }
+      if (text.length > 500) {
+        Swal.showValidationMessage('Comment too long (max 500 characters)');
+        return false;
+      }
+      return text;
+    }
+  });
+
+  if (!result.isConfirmed || !result.value) return;
+
+  const commentText = result.value;
+
+  Swal.fire({ title: 'Submitting…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const data = await callPost({
+      action: 'markEngagementTaskDone',
+      userCode: USER_CODE,
+      taskID: taskID,
+      commentText: commentText
+    });
+    Swal.close();
+
+    if (data.success) {
+      if (data.bothCompleted) {
+        showToast('🎉 Both you and your partner completed!');
+      } else {
+        showToast('✅ Task submitted. Admin will verify in 7 days.');
+      }
+      clearCache();
+      await loadTasks();
+    } else {
+      showToast(data.message || 'Could not mark task done.', true);
+    }
+  } catch (e) {
+    Swal.close();
+    showToast('Connection error.', true);
+  }
+}
+
+/* ════════ GENERATE TASKS ════════ */
 async function doGenerateTasks() {
   const btn = document.getElementById('generateBtn');
   if (!btn || btn.disabled || isGenerating) return;
 
-  // Block if cheating flags exist
   if (hasCheating && cheatCount > 0) {
-    await Swal.fire({
+    const result = await Swal.fire({
       icon: 'warning',
       title: '⚠️ Cheating Flags Detected',
       html: `
@@ -987,28 +1213,32 @@ async function doGenerateTasks() {
           </div>
         </div>
       `,
-      confirmButtonText: 'Got it',
+      showCancelButton: true,
+      confirmButtonText: '⚠️ View Cheating Tasks',
+      cancelButtonText: 'Close',
       confirmButtonColor: '#dc2626'
     });
+    if (result.isConfirmed) {
+      switchTab('cheating');
+    }
     return;
   }
 
-  // Block if promo disabled
   if (promoDisabled) {
     await Swal.fire({
       icon: 'info',
       title: '🔒 Promotion Paused',
       html: `
         <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
-          <p style="margin-bottom:10px;">Your promotion is currently paused because you have too many pending tasks.</p>
+          <p style="margin-bottom:10px;">Your promotion is currently paused because you have too many pending tasks or unresolved cheating flags.</p>
           <p style="margin-bottom:10px;"><strong>What to do:</strong></p>
           <ul style="margin-left:16px;list-style:disc;margin-bottom:14px;">
-            <li style="margin-bottom:4px;">Complete your existing pending tasks</li>
+            <li style="margin-bottom:4px;">Complete your existing pending tasks below</li>
             <li style="margin-bottom:4px;">Wait for partners to complete their side</li>
             <li style="margin-bottom:4px;">Once your pending count clears, promotion resumes automatically</li>
           </ul>
-          <div style="background:#fef3c7;border:2px solid #d97706;border-radius:12px;padding:10px 14px;font-size:12px;color:#92400e;">
-            💡 You can still work on your existing tasks normally.
+          <div style="background:#DBD4B7;border:2px solid #211F1F;border-radius:12px;padding:10px 14px;font-size:12px;color:#211F1F;">
+            💡 You can still work on your existing tasks and complete them normally.
           </div>
         </div>
       `,
@@ -1073,18 +1303,16 @@ async function doGenerateTasks() {
         html: `
           <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
             <p style="margin-bottom:8px;">${escapeHtml(data.message || 'Paired tasks created successfully.')}</p>
-            <div style="background:#f0fdf4;border:2px solid #16a34a;border-radius:12px;padding:10px 14px;font-size:12px;color:#166534;">
-              💡 Loading your next task now…
-            </div>
           </div>
         `,
         confirmButtonText: 'Great!',
         confirmButtonColor: '#211F1F',
-        timer: 2500,
+        timer: 3000,
         timerProgressBar: true
       });
 
-      await loadNextTask();
+      clearCache();
+      await loadTasks();
     } else {
       if (data.noVideo) {
         const go = await Swal.fire({
@@ -1104,7 +1332,7 @@ async function doGenerateTasks() {
           html: `
             <div style="text-align:left;font-size:13px;line-height:1.7;color:#4b5563;">
               <p style="margin-bottom:10px;">${escapeHtml(data.message || 'Your promotion is paused.')}</p>
-              <div style="background:#fef3c7;border:2px solid #d97706;border-radius:12px;padding:10px 14px;font-size:12px;color:#92400e;">
+              <div style="background:#DBD4B7;border:2px solid #211F1F;border-radius:12px;padding:10px 14px;font-size:12px;color:#211F1F;">
                 💡 Complete your existing tasks to re-enable.
               </div>
             </div>
@@ -1112,7 +1340,8 @@ async function doGenerateTasks() {
           confirmButtonText: 'Got it',
           confirmButtonColor: '#211F1F'
         });
-        await loadNextTask();
+        clearCache();
+        await loadTasks();
       } else {
         await Swal.fire({
           icon: 'warning',
@@ -1141,9 +1370,6 @@ async function doGenerateTasks() {
   }
 }
 
-/* ════════════════════════════════════════════════════
-   CLEANUP
-   ════════════════════════════════════════════════════ */
 window.addEventListener('beforeunload', () => {
   if (partnerPollInterval) clearInterval(partnerPollInterval);
 });

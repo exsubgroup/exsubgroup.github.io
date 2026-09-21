@@ -21,7 +21,7 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 .proof-card:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0px 0px #211F1F; }
 .proof-card.verified { background:#f0fdf4; border-color:#16a34a; box-shadow:4px 4px 0px 0px #16a34a; }
 .proof-card.cheating { background:#fef2f2; border-color:#dc2626; box-shadow:4px 4px 0px 0px #dc2626; }
-.proof-card.waiting { background:#fffbeb; border-color:#f59e0b; box-shadow:4px 4px 0px 0px #f59e0b; }
+.proof-card.waiting { background:#fff; border-color:#211F1F; box-shadow:4px 4px 0px 0px #211F1F; }
 .status-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700; border:1px solid #211F1F; }
 .dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
 .spinner { width:44px; height:44px; border-radius:50%; border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F; animation:spin .8s linear infinite; }
@@ -30,9 +30,27 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 #pageLoader.hidden { opacity:0; pointer-events:none; }
 #toast { position:fixed; bottom:24px; right:24px; z-index:999; background:#211F1F; color:#DBD4B7; padding:13px 22px; border-radius:14px; font-size:13px; font-weight:700; border:2px solid #211F1F; transform:translateY(80px); opacity:0; transition:.3s; pointer-events:none; max-width:340px; }
 #toast.show { transform:translateY(0); opacity:1; }
-.filter-tab { background:#fff; border:2px solid #211F1F; transition:.2s; cursor:pointer; white-space:nowrap; }
-.filter-tab:hover { background:#DBD4B7; }
-.filter-tab.active { background:#211F1F; color:#fff; }
+#toast.error { background:#ef4444; color:#fff; }
+
+.filter-tab { background:#F5F4EB; border:2px solid #211F1F; transition:.15s; cursor:pointer; white-space:nowrap; font-weight:700; box-shadow:3px 3px 0 0 #211F1F; color:#211F1F; }
+.filter-tab:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 #211F1F; background:#DBD4B7; }
+.filter-tab.active { background:#211F1F; color:#DBD4B7; }
+.filter-tab.tab-verified { background:#ACD1C0; border-color:#211F1F; color:#211F1F; }
+.filter-tab.tab-verified:hover { background:#9cc4b1; }
+.filter-tab.tab-verified.active { background:#211F1F; color:#ACD1C0; }
+.filter-tab.tab-cheating { background:#fee2e2; border-color:#dc2626; color:#dc2626; box-shadow:3px 3px 0 0 #dc2626; }
+.filter-tab.tab-cheating:hover { background:#fecaca; }
+.filter-tab.tab-cheating.active { background:#dc2626; border-color:#dc2626; color:#fff; box-shadow:3px 3px 0 0 #211F1F; }
+
+/* ⭐ "Last 20" label */
+.records-label {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#DBD4B7; border:2px solid #211F1F; border-radius:12px;
+  padding:6px 14px; font-size:12px; font-weight:800;
+  color:#211F1F; box-shadow:3px 3px 0 0 #211F1F;
+  letter-spacing:.02em;
+}
+
 .video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#e8e5d8; border-bottom:2px solid #211F1F; overflow:hidden; }
 .video-thumb-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
 .task-id-chip { position:absolute; top:8px; left:8px; background:#211F1F; color:#DBD4B7; font-size:10px; font-weight:800; padding:3px 9px; border-radius:6px; }
@@ -54,12 +72,10 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
 
-
 <main class="page-content relative z-10 pb-5 px-4">
 <main class="relative z-10 pt-5 pb-5 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- HEADER -->
   <div class="nb-dashboard-header">
     <div class="nb-badge-container">
       <div class="nb-status-card nb-status-static">
@@ -75,30 +91,33 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
     <div class="text-gray-500 text-sm mt-1 leading-6 max-w-[720px]">
       These are the like &amp; comment tasks you've submitted. Admin will verify your comments within <strong>7 days</strong> using the YouTube API.
     </div>
+
+    <!-- ⭐ Records label -->
+    <div class="mt-3">
+      <span class="records-label">📌 Showing last 20 records only</span>
+    </div>
   </div>
 
-  <!-- INFO CALLOUT -->
-  <div class="card rounded-3xl p-5 mb-6" style="background:#dbeafe; border-color:#1e40af; box-shadow:4px 4px 0 0 #1e40af;">
+  <div class="card rounded-3xl p-5 mb-6" style="background:#F5F4EB; border-color:#211F1F; box-shadow:4px 4px 0 0 #211F1F;">
     <div style="display:flex; align-items:flex-start; gap:14px;">
       <span style="font-size:26px;">ℹ️</span>
       <div>
-        <div style="font-weight:800; font-size:14px; color:#1e3a8a; margin-bottom:4px;">Verification Happens After 1 Week</div>
-        <div style="font-size:13px; color:#1e40af; line-height:1.6;">
-          Your submitted comments are re-checked by admin via YouTube API <strong>7 days after you mark a task as done</strong>. 
+        <div style="font-weight:800; font-size:14px; color:#211F1F; margin-bottom:4px;">Verification Happens After 1 Week</div>
+        <div style="font-size:13px; color:#4b5563; line-height:1.6;">
+          Your submitted comments are re-checked by admin via YouTube API <strong>7 days after you mark a task as done</strong>.
           Until then, your task shows as <strong>⏳ Pending Verification</strong>. If the comment is not found on the video, the task will be marked as <strong style="color:#dc2626;">❌ Cheating</strong>.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- STATS -->
   <div id="statsBar" class="card rounded-3xl p-4 mb-6 hidden" style="display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-around;">
     <div style="text-align:center; min-width:80px;">
       <div id="stTotal" style="font-size:22px; font-weight:900;">0</div>
       <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280;">Total</div>
     </div>
     <div style="text-align:center; min-width:80px;">
-      <div id="stWaiting" style="font-size:22px; font-weight:900; color:#f59e0b;">0</div>
+      <div id="stWaiting" style="font-size:22px; font-weight:900; color:#211F1F;">0</div>
       <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#6b7280;">Waiting</div>
     </div>
     <div style="text-align:center; min-width:80px;">
@@ -111,27 +130,24 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
     </div>
   </div>
 
-  <!-- FILTER TABS -->
   <div class="flex flex-wrap gap-2 mb-6">
-    <button id="tab-all" class="filter-tab active px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('all')">📋 All</button>
-    <button id="tab-waiting" class="filter-tab px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('waiting')">⏳ Waiting</button>
-    <button id="tab-verified" class="filter-tab px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('verified')">✅ Verified</button>
-    <button id="tab-cheating" class="filter-tab px-5 py-2.5 rounded-2xl text-sm font-medium" onclick="switchTab('cheating')">❌ Cheating</button>
+    <button id="tab-all" class="filter-tab active px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('all')">📋 All</button>
+    <button id="tab-waiting" class="filter-tab px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('waiting')">⏳ Waiting</button>
+    <button id="tab-verified" class="filter-tab tab-verified px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('verified')">✅ Verified</button>
+    <button id="tab-cheating" class="filter-tab tab-cheating px-5 py-2.5 rounded-2xl text-sm" onclick="switchTab('cheating')">❌ Cheating</button>
   </div>
 
-  <!-- GRID -->
   <div id="proofGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
     <div class="card h-[280px]"></div>
     <div class="card h-[280px]"></div>
     <div class="card h-[280px]"></div>
   </div>
 
-  <!-- EMPTY -->
   <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
     <div class="text-6xl mb-4">🎥</div>
     <h3 class="text-xl font-semibold mb-2">No Proofs Yet</h3>
     <p class="text-muted text-sm mb-6">Complete an engagement task to see it here.</p>
-    <a href="engagement-task.html" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block" style="background:#211F1F; color:#DBD4B7; padding:12px 32px; border-radius:14px; text-decoration:none; font-weight:700;">💬 Go to Tasks</a>
+    <a href="engagement-task.html" class="inline-block px-8 py-3 rounded-2xl font-semibold text-sm" style="background:#211F1F; color:#DBD4B7; text-decoration:none; border:2px solid #211F1F; box-shadow:3px 3px 0 0 #211F1F;">💬 Go to Tasks</a>
   </div>
 
 </div>
@@ -144,9 +160,12 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
 const USER_CODE = localStorage.getItem("usercode") || "";
 if (!USER_CODE) window.location.href = "signin.html";
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhPDV2UAlOfOmFuBmRdWB8yzTjYXPq2OKLEYTT73ySVSk0unJdj38iU1Wvc9bzp6VI/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyP3eHOt6x1yRX0aSSqozHBf3QBKXeUYlos0xcargbsn8AEqYTcJ4yxiJDGWwDDMx093A/exec';
+
+const RECORD_LIMIT = 20;   // ⭐ last 20 records
 
 let allProofs = [];
+let totalProofsAll = 0;    // real total (from GS totalCount)
 let activeTab = 'all';
 
 function showToast(msg, isError=false){
@@ -192,10 +211,16 @@ async function init() {
       showToast(data.message || 'Could not load proofs.', true);
       return;
     }
-    allProofs = data.proofs || [];
+
+    // GS already limits to 20 — but slice as a safety net
+    const fullList = data.proofs || [];
+    allProofs = fullList.slice(0, RECORD_LIMIT);
+    totalProofsAll = (typeof data.totalCount === 'number') ? data.totalCount : fullList.length;
+
     renderStats();
     renderProofs();
   } catch (e) {
+    console.error(e);
     hideLoader();
     showToast('Connection error.', true);
   }
@@ -203,7 +228,7 @@ async function init() {
 
 function renderStats() {
   const stats = {
-    total: allProofs.length,
+    total: totalProofsAll || allProofs.length,   // ⭐ real total from GS
     waiting: allProofs.filter(p => p.Status === 'Completed').length,
     verified: allProofs.filter(p => p.Status === 'Verified').length,
     cheating: allProofs.filter(p => p.Status === 'Cheating').length
@@ -241,8 +266,8 @@ function proofCard(p) {
 
   let statusBadge = '';
   if (p.Status === 'Completed') {
-    statusBadge = `<span class="status-badge" style="background:#ffedd5;color:#c2410c;border-color:#f59e0b;">
-      <span class="dot" style="background:#f59e0b;"></span>⏳ Pending Verification
+    statusBadge = `<span class="status-badge" style="background:#DBD4B7;color:#211F1F;border-color:#211F1F;">
+      <span class="dot" style="background:#211F1F;"></span>⏳ Pending Verification
     </span>`;
   } else if (p.Status === 'Verified') {
     statusBadge = `<span class="status-badge" style="background:#dcfce7;color:#166534;border-color:#16a34a;">
@@ -289,8 +314,8 @@ function proofCard(p) {
         ${p.Issue ? `<div style="background:#fef2f2; border:2px solid #dc2626; border-radius:10px; padding:8px 10px; font-size:11px; color:#991b1b; margin-bottom:10px;">${escapeHtml(p.Issue)}</div>` : ''}
 
         <div class="flex gap-2 mt-auto">
-          <a href="${escapeHtml(p.VideoUrl)}" target="_blank" rel="noopener" 
-            style="flex:1; padding:10px 14px; background:#fbbf24; color:#211F1F; border:2px solid #211F1F; border-radius:12px; font-weight:700; font-size:12px; text-decoration:none; text-align:center;">
+          <a href="${escapeHtml(p.VideoUrl)}" target="_blank" rel="noopener"
+            style="flex:1; padding:10px 14px; background:#DBD4B7; color:#211F1F; border:2px solid #211F1F; border-radius:12px; font-weight:700; font-size:12px; text-decoration:none; text-align:center; box-shadow:3px 3px 0 0 #211F1F;">
             ▶ Open Video
           </a>
         </div>
