@@ -209,7 +209,7 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
         <span class="nb-card-icon">🎥</span>
         <span class="nb-card-title">My Proofs</span>
       </a>
-      <a href="engagement-videos.html" class="nb-status-card nb-status-link">
+      <a href="engagementvideos.html" class="nb-status-card nb-status-link">
         <span class="nb-card-icon">🎯</span>
         <span class="nb-card-title">My Video</span>
       </a>
@@ -319,7 +319,7 @@ body { background:var(--bg); color:var(--ink); overflow-x:hidden; }
     <p class="text-muted text-sm mb-6" id="emptyMsg">You have no engagement tasks right now.</p>
     <div class="flex flex-wrap gap-3 justify-center">
       <button onclick="doGenerateTasks()" class="btn-purple px-6 py-3 rounded-2xl font-semibold text-sm">⚡ Generate Tasks</button>
-      <a href="engagement-videos.html" class="btn-outline px-6 py-3 rounded-2xl font-semibold text-sm">🎯 Select a Video</a>
+      <a href="engagementvideos.html" class="btn-outline px-6 py-3 rounded-2xl font-semibold text-sm">🎯 Select a Video</a>
     </div>
   </div>
 
@@ -569,7 +569,7 @@ function handleErrorState(data) {
           <div class="text-6xl mb-4">${data.noVideo ? '🎯' : (data.notEnrolled ? '📢' : (data.suspended ? '🚫' : '⛔'))}</div>
           <h2 class="text-2xl font-bold mb-2">${data.noVideo ? 'No Video Selected' : (data.notEnrolled ? 'Not Enrolled' : (data.suspended ? 'Account Suspended' : 'Account Inactive'))}</h2>
           <p class="text-muted text-sm mb-6">${escapeHtml(data.message || '')}</p>
-          <a href="${data.noVideo ? 'engagement-videos.html' : 'groups.html'}" class="btn-purple px-8 py-3 rounded-2xl inline-block">
+          <a href="${data.noVideo ? 'engagementvideos.html' : 'groups.html'}" class="btn-purple px-8 py-3 rounded-2xl inline-block">
             ${data.noVideo ? '🎯 Select a Video' : '👥 Go to Groups'}
           </a>
         </div>
@@ -1324,7 +1324,7 @@ async function doGenerateTasks() {
           cancelButtonText: 'Later',
           confirmButtonColor: '#211F1F'
         });
-        if (go.isConfirmed) window.location.href = 'engagement-videos.html';
+        if (go.isConfirmed) window.location.href = 'engagementvideos.html';
       } else if (data.promoDisabled) {
         await Swal.fire({
           icon: 'info',
