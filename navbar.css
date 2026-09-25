@@ -74,8 +74,6 @@ svg {
 .sidebar-brand img{ 
   width:28px; 
   height:28px; 
-  border: 2px solid #211F1F;
-  border-radius: 8px;
 }
 .sidebar-brand span{ 
   font-weight: 800; 

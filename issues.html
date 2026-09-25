@@ -15,61 +15,63 @@
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
-<!-- ══════════════════ MAIN ══════════════════ -->
 
-<main class="page-content relative z-10 pb-20 px-4">
-<main class="relative z-10 pt-5 pb-20 px-4">
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main class="page-content relative z-10 pb-5 px-4">
+<main class="relative z-10 pt-5 pb-5 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- LOADING -->
-  <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
-    <div class="spinner"></div>
-    <div class="text-gray-400 text-sm">Loading your issues…</div>
-  </div>
+    <!-- LOADING -->
+    <div id="loadingState" class="flex flex-col items-center justify-center py-32 gap-5">
+      <div class="spinner"></div>
+      <div class="text-gray-400 text-sm">Loading your issues…</div>
+    </div>
 
-  <!-- ERROR -->
-  <div id="errorState" class="hidden text-center py-32">
-    <div class="text-5xl mb-4">⚠️</div>
-    <div class="text-xl font-bold mb-2">Could not load data</div>
-    <div id="errorMsg" class="text-gray-400 text-sm mb-6"></div>
-    <button onclick="loadIssuesPage()" class="btn-retro btn-charcoal">Retry</button>
-  </div>
+    <!-- ERROR -->
+    <div id="errorState" class="hidden text-center py-32">
+      <div class="text-5xl mb-4">⚠️</div>
+      <div class="text-xl font-bold mb-2">Could not load data</div>
+      <div id="errorMsg" class="text-gray-400 text-sm mb-6"></div>
+      <button onclick="loadIssuesPage()" class="btn-retro btn-charcoal">Retry</button>
+    </div>
 
-  <!-- CONTENT -->
-  <div id="pageContent" class="hidden">
+    <!-- CONTENT -->
+    <div id="pageContent" class="hidden">
 
-    <!-- ── HEADER ── -->
-    <div class="nb-dashboard-header">
-      <div class="nb-badge-container">
-        <div class="nb-status-card nb-status-static">
-          <span class="nb-card-title">Issue Center</span>
+      <!-- ── HEADER ── -->
+      <div class="nb-dashboard-header">
+        <div class="nb-badge-container">
+          <div class="nb-status-card nb-status-static">
+            <span class="nb-card-title">Issue Center</span>
+          </div>
+          <div id="issuesCountBadgeWrap" class="nb-status-card hidden" style="background-color:#EBE492;">
+            <span class="nb-card-icon">⚠️</span>
+            <span class="nb-card-title" id="issuesCountBadge">0 issues</span>
+          </div>
         </div>
-        <div id="issuesCountBadgeWrap" class="nb-status-card hidden" style="background-color:#EBE492;">
-          <span class="nb-card-icon">⚠️</span>
-          <span class="nb-card-title" id="issuesCountBadge">0 issues</span>
+
+        <h1 class="text-4xl font-black text-[#211F1F]">Your Issues</h1>
+        <div class="text-gray-500 text-sm mt-1">
+          Track, manage, and respond to all your reported issues.
         </div>
       </div>
 
-      <h1 class="text-4xl font-black text-[#211F1F]">Your Issues</h1>
-      <div class="text-gray-500 text-sm mt-1">
-        Track, manage, and respond to all your reported issues.
+      <!-- ── EMPTY STATE ── -->
+      <div id="noIssuesMsg" class="hidden card p-10 text-center mt-6">
+        <div class="text-5xl mb-4">🗂️</div>
+        <div class="text-xl font-bold mb-2 text-[#211F1F]">No issues reported</div>
+        <div class="text-gray-500 text-sm mb-5">
+          You haven't raised any issues yet. If something needs attention, let us know from the Support page.
+        </div>
+        <a href="support.html" class="btn-retro btn-mint" style="text-decoration:none;">Contact Support</a>
       </div>
-    </div>
 
-    <!-- ── EMPTY STATE ── -->
-    <div id="noIssuesMsg" class="hidden card p-10 text-center mt-6">
-      <div class="text-5xl mb-4">🗂️</div>
-      <div class="text-xl font-bold mb-2 text-[#211F1F]">No issues reported</div>
-      <div class="text-gray-500 text-sm mb-5">You haven't raised any issues yet. If something needs attention, let us know from the Support page.</div>
-      <a href="support.html" class="btn-retro btn-mint" style="text-decoration:none;">Contact Support</a>
-    </div>
+      <!-- ── ISSUES GRID ── -->
+      <div id="issuesGrid" class="issues-grid mt-6"></div>
 
-    <!-- ── ISSUES GRID ── -->
-    <div id="issuesGrid" class="issues-grid mt-6"></div>
+    </div><!-- /pageContent -->
 
-  </div><!-- /pageContent -->
-
-</div>
+  </div>
 </main>
 </main>
 
@@ -79,40 +81,56 @@
 'use strict';
 
 /* ── CONFIG ──
-   Same backend + same action as analytics.html — the dashboard
-   endpoint already returns member.status (for the blocked check)
-   and a full issues[] array pre-filtered by usercode. No separate
-   "issues" action exists on the script, so we reuse this one. */
-var API = "https://script.google.com/macros/s/AKfycbwDRPwD1p02eoB5vkyVnJRBdCFcuWQDXTriOinEO4KxSKWdnh_kyZqy08_O52wz1EG7kA/exec";
+   Uses action=issues → handleGetIssues() on the backend.
+   That handler returns: { error, blocked, member, issues[] } */
+var API = "https://script.google.com/macros/s/AKfycbzPGnMr4Ef_adWfbB_wAct5ik1J7eyitUIq-LMR4i-umLQelYEAUGJlkORLMc9Aphs6nQ/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
 var username = localStorage.getItem("username") || "";
 
-if (!usercode || !username) { window.location.replace("signin.html"); }
+if (!usercode || !username) {
+  window.location.replace("signin.html");
+}
 
 var allIssues = [];
 
 /* ══════════════════ LOAD ══════════════════ */
 async function loadIssuesPage() {
   show("loadingState"); hide("errorState"); hide("pageContent");
+
   try {
-    var res  = await fetch(API + "?action=dashboard&usercode=" + encodeURIComponent(usercode));
-    var data = await res.json();
+    var url = API + "?action=issues&usercode=" + encodeURIComponent(usercode);
+
+    var res = await fetch(url, { method: "GET", redirect: "follow" });
+
+    /* Read as text first — Apps Script sometimes returns an HTML
+       login page instead of JSON when deployment access isn't "Anyone". */
+    var text = await res.text();
+    var data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      throw new Error(
+        "Backend did not return JSON (likely wrong deployment access — " +
+        "set Web app access to 'Anyone' and redeploy). First 120 chars: " +
+        text.slice(0, 120)
+      );
+    }
 
     if (data.error) throw new Error(data.error);
 
     var member = data.member || {};
 
     /* Blocked members are bounced straight back to the dashboard,
-       which already shows the full "Account Blocked" banner + appeal flow */
-    if ((member.status || "").toString().trim().toLowerCase() === "blocked") {
+       which already shows the full "Account Blocked" banner + appeal flow. */
+    if (data.blocked === true ||
+        (member.status || "").toString().trim().toLowerCase() === "blocked") {
       window.location.replace("analytics.html");
       return;
     }
 
-    /* data.issues already comes back scoped to this usercode from makeDashboard() */
-    allIssues = data.issues || [];
+    allIssues = Array.isArray(data.issues) ? data.issues : [];
     renderIssuesGrid(allIssues);
 
     hide("loadingState"); show("pageContent");
@@ -123,7 +141,7 @@ async function loadIssuesPage() {
 }
 
 /* ══════════════════ RENDER ══════════════════ */
-var ISSUE_TYPE_ICON = { bug:"🐛", complaint:"📣", request:"📝", warning:"⚠️" };
+var ISSUE_TYPE_ICON = { bug: "🐛", complaint: "📣", request: "📝", warning: "⚠️" };
 
 function renderIssuesGrid(issues) {
   var grid  = document.getElementById("issuesGrid");
@@ -145,7 +163,9 @@ function renderIssuesGrid(issues) {
 
   grid.innerHTML = issues.map(function (issue, idx) {
     var statusKey = (issue.status || "open").toLowerCase();
-    var pillCls = statusKey === "resolved" ? "pill-resolved" : statusKey === "pending" ? "pill-pending" : "pill-open";
+    var pillCls = statusKey === "resolved" ? "pill-resolved"
+                : statusKey === "pending"  ? "pill-pending"
+                : "pill-open";
     var icon = ISSUE_TYPE_ICON[(issue.type || "").toLowerCase()] || "⚠️";
     var metaBits = [];
     if (issue.createdDate) metaBits.push("🗓 Reported: " + fmtDate(issue.createdDate));
@@ -176,7 +196,9 @@ function showIssueDetails(idx) {
   if (!issue) return;
 
   var statusKey = (issue.status || "open").toLowerCase();
-  var statusColor = statusKey === "resolved" ? "#7fd6c5" : statusKey === "pending" ? "#e7c374" : "#fca5a5";
+  var statusColor = statusKey === "resolved" ? "#7fd6c5"
+                  : statusKey === "pending"  ? "#e7c374"
+                  : "#fca5a5";
 
   var adminBlock = issue.adminReply
     ? '<div style="margin-top:14px;padding:10px 13px;border-radius:10px;background:#F5F4EB;border:1px solid #211F1F;text-align:left;">'

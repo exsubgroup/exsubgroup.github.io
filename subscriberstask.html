@@ -122,29 +122,52 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 .proof-screenshot { cursor: pointer; transition: 0.2s; border: 2px solid rgba(33,31,31,0.15); border-radius: 12px; }
 .proof-screenshot:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-/* ── Invalid Task Card Styles ── */
-.task-card.invalid-task {
-  border-color: #dc2626 !important;
-  background: #fef2f2 !important;
-  opacity: 0.6;
-  filter: grayscale(0.3);
+/* ── Task Overlay (per-task validation gate) ── */
+.task-overlay-wrap { position: relative; }
+.task-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 244, 235, 0.82);
+  backdrop-filter: blur(3px);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 10;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
 }
-.task-card.invalid-task .btn-purple,
-.task-card.invalid-task .btn-outline,
-.task-card.invalid-task .btn-red,
-.task-card.invalid-task .btn-teal {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: not-allowed;
+.task-overlay:hover { background: rgba(245, 244, 235, 0.92); }
+.task-overlay .overlay-icon { font-size: 32px; }
+.task-overlay .overlay-title { font-size: 14px; font-weight: 800; color: #211F1F; }
+.task-overlay .overlay-desc { font-size: 12px; color: #6b7280; max-width: 320px; line-height: 1.5; }
+.task-overlay .overlay-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 20px; background: #211F1F; color: #DBD4B7;
+  border: 2px solid #211F1F; border-radius: 14px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  box-shadow: 3px 3px 0px 0px #211F1F;
+  transition: 0.15s;
 }
-.task-card.invalid-task .invalid-badge {
-  background: #dc2626;
-  color: white;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 700;
+.task-overlay .overlay-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px 0px #211F1F; }
+.task-overlay.validating { cursor: wait; }
+.task-overlay.validating .overlay-btn { opacity: 0.6; pointer-events: none; }
+.task-overlay .overlay-spinner {
+  width: 28px; height: 28px;
+  border: 3px solid rgba(33,31,31,0.15);
+  border-top-color: #211F1F;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
+.task-overlay.hidden { display: none; }
+
+/* Invalid task state */
+.task-card.invalid-task { border-color: #dc2626 !important; background: #fef2f2 !important; opacity: 0.55; filter: grayscale(0.3); }
+.task-card.invalid-task .task-overlay { background: rgba(254, 242, 242, 0.9); }
 </style>
 </head>
 <body>
@@ -186,10 +209,10 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 
     <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- SIDEBAR - Removed Profile Card, only Task Stats and Limit -->
+    <!-- SIDEBAR -->
     <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
 
-        <!-- ACTION BUTTONS: Create Tasks, Match Preferences, Toggle Stats, Limit -->
+        <!-- ACTION BUTTONS -->
         <div class="card rounded-3xl p-5">
             <div class="space-y-3">
                 <button id="createBtn" onclick="openCreateModal()"
@@ -244,53 +267,57 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
         </div>
 
-        <!-- TASK STATS - Hidden by default, toggled by button -->
+        <!-- TASK STATS - Hidden by default, fetched on click -->
         <div id="statsPanel" class="card rounded-3xl p-5 hidden">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="font-semibold text-base">📊 My Task Stats</h2>
                 <button onclick="toggleStats()" class="text-muted hover:text-[#211F1F] text-lg">✕</button>
             </div>
-            <div class="space-y-3 text-sm">
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
-                    <span id="st-nowork" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
-                    <span id="st-pending" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span>
-                    <span id="st-subscribed" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Unsubscribed</span>
-                    <span id="st-unsub" class="font-bold">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
-                    <span id="st-rejected" class="font-bold">—</span>
-                </div>
-                <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
-                    <span class="text-muted">Total Tasks</span>
-                    <span id="st-total" class="font-bold text-purple-700">—</span>
-                </div>
+            <div id="statsLoading" class="text-center py-6">
+                <div class="inline-block animate-spin rounded-full h-6 w-6 border-3 border-purple-500 border-t-transparent"></div>
+                <p class="text-muted text-xs mt-2">Loading stats…</p>
             </div>
-
-            <!-- Exchange status counts -->
-            <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
-                <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Sub Back</span>
-                    <span id="st-awaiting" class="font-bold text-blue-600">—</span>
+            <div id="statsContent" class="hidden">
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
+                        <span id="st-nowork" class="font-bold">—</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
+                        <span id="st-pending" class="font-bold">—</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span>
+                        <span id="st-subscribed" class="font-bold">—</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Unsubscribed</span>
+                        <span id="st-unsub" class="font-bold">—</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
+                        <span id="st-rejected" class="font-bold">—</span>
+                    </div>
+                    <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
+                        <span class="text-muted">Total Tasks</span>
+                        <span id="st-total" class="font-bold text-purple-700">—</span>
+                    </div>
                 </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span>
-                    <span id="st-both" class="font-bold text-teal-600">—</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                    <span id="st-theirpending" class="font-bold text-orange-600">—</span>
+                <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
+                    <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Sub Back</span>
+                        <span id="st-awaiting" class="font-bold text-blue-600">—</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span>
+                        <span id="st-both" class="font-bold text-teal-600">—</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
+                        <span id="st-theirpending" class="font-bold text-orange-600">—</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -346,7 +373,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="step-item">
                     <div class="step-num">1</div>
-                    <div>Open the target channel on YouTube and <strong class="text-[#211F1F]">pick any video</strong> to watch</div>
+                    <div>Click <strong class="text-[#211F1F]">Open Task</strong> on any card to validate and unlock it</div>
                 </div>
                 <div class="step-item">
                     <div class="step-num">2</div>
@@ -530,7 +557,7 @@ if (!savedUsername || !savedPassword) {
 /* ────────────────────────────────────────
    CONFIG
 ──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxByZxYhgPVZjQxRrEqn6J71nl7MY1J9vbV_-qOjobZcQQ1LN-B3SgAbasrk_4lgi-L5g/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJcOdAAXBG0dkVqwe66L17GEYoNmdrh0MqeVkJkYr38syyLp54UIhprKoHtgSHCybb_w/exec';
 const USER_CODE  = savedUserCode;
 
 // ── CACHE KEYS ──
@@ -543,7 +570,7 @@ const CACHE_KEY_FOCUSED_STATUS = 'subscriber_tasks_focusedStatus';
 const CACHE_KEY_UNSUB_COUNT = 'subscriber_tasks_unsubCount';
 const CACHE_KEY_HAS_UNSUB = 'subscriber_tasks_hasUnsub';
 const CACHE_KEY_MEMBER = 'subscriber_tasks_member';
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
+const CACHE_TTL = 5 * 60 * 1000;
 
 /* ────────────────────────────────────────
    STATE
@@ -556,7 +583,6 @@ let hasUnsub    = false;
 let isLoading   = false;
 let currentStatus = 'NotWorkYet';
 let isCacheValid = false;
-let validationInterval = null;
 
 // Server-side stats (ALL tasks, not just focused)
 let stats = {
@@ -579,6 +605,9 @@ let channelNameCache   = {};
 let channelHandleCache = {};
 let channelImageCache  = {};
 let channelIdCache     = {};
+
+// Per-task unlock state (taskId → true if validated)
+let unlockedTasks = new Set();
 
 /* ── MATCHING FEATURE — STATE ──────────── */
 let myPreferences     = { interests: [], countries: [] };
@@ -603,21 +632,12 @@ function saveTasksToCache(data) {
         localStorage.setItem(CACHE_KEY_UNSUB_COUNT, String(data.unsubCount || 0));
         localStorage.setItem(CACHE_KEY_MEMBER, JSON.stringify(data.member || {}));
         
-        if (data.channelNames) {
-            localStorage.setItem('subscriber_tasks_channelNames', JSON.stringify(data.channelNames));
-        }
-        if (data.channelHandles) {
-            localStorage.setItem('subscriber_tasks_channelHandles', JSON.stringify(data.channelHandles));
-        }
-        if (data.channelImages) {
-            localStorage.setItem('subscriber_tasks_channelImages', JSON.stringify(data.channelImages));
-        }
-        if (data.channelIds) {
-            localStorage.setItem('subscriber_tasks_channelIds', JSON.stringify(data.channelIds));
-        }
+        if (data.channelNames) localStorage.setItem('subscriber_tasks_channelNames', JSON.stringify(data.channelNames));
+        if (data.channelHandles) localStorage.setItem('subscriber_tasks_channelHandles', JSON.stringify(data.channelHandles));
+        if (data.channelImages) localStorage.setItem('subscriber_tasks_channelImages', JSON.stringify(data.channelImages));
+        if (data.channelIds) localStorage.setItem('subscriber_tasks_channelIds', JSON.stringify(data.channelIds));
         
         isCacheValid = true;
-        console.log('✅ Tasks saved to cache');
         return true;
     } catch (e) {
         console.warn('Could not save to cache:', e);
@@ -637,16 +657,10 @@ function loadTasksFromCache() {
         const unsubCountStr = localStorage.getItem(CACHE_KEY_UNSUB_COUNT) || '0';
         const memberData = localStorage.getItem(CACHE_KEY_MEMBER);
         
-        if (!tasksData || !timestamp) {
-            console.log('📭 No cache found');
-            return null;
-        }
+        if (!tasksData || !timestamp) return null;
         
         const age = Date.now() - parseInt(timestamp);
-        if (age > CACHE_TTL) {
-            console.log('⏰ Cache expired (age:', Math.round(age/1000), 's)');
-            return null;
-        }
+        if (age > CACHE_TTL) return null;
         
         const tasks = JSON.parse(tasksData);
         const savedStats = JSON.parse(statsData || '{}');
@@ -659,144 +673,87 @@ function loadTasksFromCache() {
         const channelImages = JSON.parse(localStorage.getItem('subscriber_tasks_channelImages') || '{}');
         const channelIds = JSON.parse(localStorage.getItem('subscriber_tasks_channelIds') || '{}');
         
-        console.log('📦 Cache loaded:', tasks.length, 'tasks');
-        
         return {
-            tasks: tasks,
-            stats: savedStats,
-            exchangeStats: savedExchange,
-            perfStats: savedPerf,
-            focusedStatus: focusedStatus,
+            tasks, stats: savedStats, exchangeStats: savedExchange,
+            perfStats: savedPerf, focusedStatus,
             hasUnsub: hasUnsubStr === 'true',
             unsubCount: parseInt(unsubCountStr) || 0,
             member: savedMember,
-            channelNames: channelNames,
-            channelHandles: channelHandles,
-            channelImages: channelImages,
-            channelIds: channelIds,
+            channelNames, channelHandles, channelImages, channelIds,
             isCacheValid: true
         };
     } catch (e) {
-        console.warn('Could not load from cache:', e);
         return null;
     }
 }
 
-function clearCache() {
-    try {
-        localStorage.removeItem(CACHE_KEY_TASKS);
-        localStorage.removeItem(CACHE_KEY_STATS);
-        localStorage.removeItem(CACHE_KEY_EXCHANGE);
-        localStorage.removeItem(CACHE_KEY_PERF);
-        localStorage.removeItem(CACHE_KEY_TIMESTAMP);
-        localStorage.removeItem(CACHE_KEY_FOCUSED_STATUS);
-        localStorage.removeItem(CACHE_KEY_HAS_UNSUB);
-        localStorage.removeItem(CACHE_KEY_UNSUB_COUNT);
-        localStorage.removeItem(CACHE_KEY_MEMBER);
-        localStorage.removeItem('subscriber_tasks_channelNames');
-        localStorage.removeItem('subscriber_tasks_channelHandles');
-        localStorage.removeItem('subscriber_tasks_channelImages');
-        localStorage.removeItem('subscriber_tasks_channelIds');
-        isCacheValid = false;
-        console.log('🗑️ Cache cleared');
-    } catch (e) {
-        console.warn('Could not clear cache:', e);
-    }
-}
-
 /* ────────────────────────────────────────
-   GROUP VISIBILITY CHECK
+   PER-TASK VALIDATION (called from overlay button)
 ──────────────────────────────────────── */
-async function checkGroupVisibility() {
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getSettings`);
-        const data = await res.json();
-        
-        if (data.success && data.settings) {
-            const groupSetting = data.settings['SUBSCRIBERS_GROUP'];
-            
-            const isEnabled = groupSetting === true || 
-                             groupSetting === 'TRUE' || 
-                             groupSetting === 'YES' || 
-                             groupSetting === '1' ||
-                             String(groupSetting).toUpperCase() === 'TRUE';
-            
-            if (!isEnabled) {
-                showGroupDisabled();
-                return false;
-            }
-        }
-        return true;
-    } catch (e) {
-        console.error('Error checking group visibility:', e);
-        showGroupDisabled('Could not verify group status. Please try again later.');
-        return false;
+async function validateAndUnlockTask(taskId, btnEl) {
+    const task = allTasks.find(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+    if (!task) {
+        showToast('❌ Task not found.', true);
+        return;
     }
-}
 
-function showGroupDisabled(message) {
-    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (container) {
-        container.innerHTML = `
-            <div class="w-full flex justify-center items-center min-h-[400px]">
-                <div class="not-enrolled-banner" style="border-color: #211F1F; box-shadow: 8px 8px 0px 0px #211F1F;">
-                    <span class="banner-icon">🚫</span>
-                    <h2 class="banner-title" style="color: #d97706;">Group Currently Disabled</h2>
-                    <p class="banner-desc">
-                        ${message || 'The Subscribers Group is currently not available. Please check back later or contact support for more information.'}
-                    </p>
-                    <a href="groups.html" class="banner-btn" style="background: #211F1F; border-color: #d97706;">
-                        👥 View All Groups
-                    </a>
-                    <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
-                        💡 Group availability is managed by administrators.
-                    </p>
-                </div>
-            </div>
-        `;
+    // Show loading state on overlay
+    const overlay = btnEl ? btnEl.closest('.task-overlay') : null;
+    if (overlay) {
+        overlay.classList.add('validating');
+        const btn = overlay.querySelector('.overlay-btn');
+        const icon = overlay.querySelector('.overlay-icon');
+        const desc = overlay.querySelector('.overlay-desc');
+        if (btn) btn.innerHTML = '<div class="overlay-spinner"></div> Validating…';
+        if (icon) icon.textContent = '🔍';
+        if (desc) desc.textContent = 'Checking if this task is still available…';
     }
-    hideLoader();
-}
 
-/* ────────────────────────────────────────
-   REAL-TIME TASK VALIDATION
-──────────────────────────────────────── */
-
-async function validateSingleTask(task) {
-    if (!task || !task.TargetUserCode) return { valid: true, task: task };
-    
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(task.TargetUserCode)}`);
         
         if (!res.ok) {
-            console.warn('Validation request failed:', res.status);
-            return { valid: true, task: task };
+            showToast('Could not validate task. Please try again.', true);
+            resetOverlay(overlay);
+            return;
         }
-        
+
         const data = await res.json();
         
         if (!data.success || !data.targets) {
-            return { valid: true, task: task };
+            showToast('Could not validate task. Please try again.', true);
+            resetOverlay(overlay);
+            return;
         }
-        
+
         const targetData = data.targets[task.TargetUserCode];
-        if (!targetData) return { valid: true, task: task };
         
+        // If target data not found — treat as valid (be lenient)
+        if (!targetData) {
+            unlockedTasks.add(taskId);
+            hideOverlay(taskId);
+            showToast('✅ Task unlocked!');
+            return;
+        }
+
         const isInvalid = 
             targetData.InSubscribersWork !== 'Yes' ||
             targetData.ViolationFlag === 'Suspended' ||
             targetData.Status === 'Blocked' ||
             targetData.SubscribersPromotionActive === 'No';
-        
-        return {
-            valid: !isInvalid,
-            task: task,
-            targetData: targetData,
-            reason: isInvalid ? getInvalidReason(targetData) : null
-        };
+
+        if (isInvalid) {
+            const reason = getInvalidReason(targetData);
+            showInvalidTaskMessage(taskId, reason);
+        } else {
+            unlockedTasks.add(taskId);
+            hideOverlay(taskId);
+            showToast('✅ Task unlocked!');
+        }
     } catch (e) {
         console.warn('Validation error:', e);
-        return { valid: true, task: task };
+        showToast('Could not validate task. Please try again.', true);
+        resetOverlay(overlay);
     }
 }
 
@@ -808,38 +765,71 @@ function getInvalidReason(targetData) {
     return 'Member is no longer eligible';
 }
 
-function removeInvalidTask(taskId, reason) {
-    const taskIndex = allTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-    if (taskIndex === -1) return false;
-    
-    const removedTask = allTasks[taskIndex];
-    allTasks.splice(taskIndex, 1);
+function resetOverlay(overlay) {
+    if (!overlay) return;
+    overlay.classList.remove('validating');
+    const btn = overlay.querySelector('.overlay-btn');
+    const icon = overlay.querySelector('.overlay-icon');
+    const desc = overlay.querySelector('.overlay-desc');
+    if (btn) btn.innerHTML = '🔓 Open Task';
+    if (icon) icon.textContent = '🔒';
+    if (desc) desc.textContent = 'Click to verify this task is still available';
+}
+
+function hideOverlay(taskId) {
+    const card = document.querySelector(`[data-task-id="${taskId}"]`);
+    if (!card) return;
+    const overlay = card.querySelector('.task-overlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.classList.add('hidden'), 250);
+    }
+}
+
+function showInvalidTaskMessage(taskId, reason) {
+    const card = document.querySelector(`[data-task-id="${taskId}"]`);
+    if (card) card.classList.add('invalid-task');
+
+    Swal.fire({
+        icon: 'error',
+        title: '🚫 Task Not Available',
+        html: `
+            <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+                <p style="margin-bottom:12px;">This task is no longer available.</p>
+                <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:12px 16px;margin-bottom:14px;">
+                    <p style="font-weight:600;color:#dc2626;margin-bottom:4px;">Reason:</p>
+                    <p style="color:#4b5563;">${reason}</p>
+                </div>
+                <p style="font-size:12px;color:#6b7280;">This task will be removed from your list.</p>
+            </div>
+        `,
+        confirmButtonText: 'OK',
+        allowOutsideClick: false
+    }).then(() => {
+        removeTaskFromList(taskId);
+    });
+}
+
+function removeTaskFromList(taskId) {
+    const idx = allTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+    if (idx !== -1) allTasks.splice(idx, 1);
+    unlockedTasks.delete(taskId);
     
     try {
         const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
-        const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-        if (cachedIndex !== -1) {
-            cachedTasks.splice(cachedIndex, 1);
+        const cIdx = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
+        if (cIdx !== -1) {
+            cachedTasks.splice(cIdx, 1);
             localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
         }
-    } catch (e) {
-        console.warn('Could not update cache:', e);
-    }
-    
-    recalculateStats();
-    
-    try {
-        localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
-        localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
     } catch (e) {}
     
+    recalculateStats();
     renderStats();
     renderList();
     checkBlock();
     checkUnsubscribed();
-    
-    showToast(`🗑️ Task ${taskId} removed: ${reason}`, false);
-    return true;
+    showToast(`🗑️ Task ${taskId} removed`);
 }
 
 /* ────────────────────────────────────────
@@ -847,43 +837,22 @@ function removeInvalidTask(taskId, reason) {
 ──────────────────────────────────────── */
 async function checkPerformanceTableForPriority() {
     try {
-        console.log('🔍 Checking Performance Table for priority tasks...');
         const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
-        
-        if (!res.ok) {
-            console.warn('Performance check failed:', res.status);
-            return null;
-        }
-        
+        if (!res.ok) return null;
         const data = await res.json();
-        
-        if (!data.success || !data.stats) {
-            console.warn('Invalid response from performance check');
-            return null;
-        }
+        if (!data.success || !data.stats) return null;
         
         const freshStats = data.stats;
-        const hasUnsub = freshStats.unsubscribed > 0;
+        const hasUnsubLocal = freshStats.unsubscribed > 0;
         const hasPending = freshStats.pending > 0;
         
-        // Determine if we need to fetch priority tasks
         let newFocusedStatus = null;
-        if (hasUnsub) {
-            newFocusedStatus = 'Unsubscribed';
-        } else if (hasPending) {
-            newFocusedStatus = 'Pending';
-        }
+        if (hasUnsubLocal) newFocusedStatus = 'Unsubscribed';
+        else if (hasPending) newFocusedStatus = 'Pending';
         
-        // If there are Unsubscribed or Pending tasks, fetch them
         if (newFocusedStatus) {
-            console.log(`🎯 Found ${newFocusedStatus} tasks, fetching from server...`);
             const tasksRes = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
-            
-            if (!tasksRes.ok) {
-                console.warn('Tasks fetch failed:', tasksRes.status);
-                return null;
-            }
-            
+            if (!tasksRes.ok) return null;
             const tasksData = await tasksRes.json();
             
             if (tasksData.success && tasksData.tasks && tasksData.tasks.length > 0) {
@@ -905,205 +874,25 @@ async function checkPerformanceTableForPriority() {
             }
         }
         
-        // No priority tasks found
-        return {
-            hasUnsub: hasUnsub,
-            hasPending: hasPending,
-            noPriorityTasks: true,
-            stats: freshStats
-        };
+        return { hasUnsub: hasUnsubLocal, hasPending, noPriorityTasks: true, stats: freshStats };
     } catch (e) {
-        console.warn('Performance check error:', e);
         return null;
     }
 }
 
 /* ────────────────────────────────────────
-   VALIDATE ALL TASKS IN BACKGROUND
-──────────────────────────────────────── */
-async function validateAllTasksInBackground() {
-    if (allTasks.length === 0) return;
-    
-    console.log('🔍 Validating all tasks in background...');
-    
-    // ── STEP 1: Validate each cached task's target ──
-    const invalidTasks = [];
-    
-    for (const task of allTasks) {
-        const result = await validateSingleTask(task);
-        if (!result.valid) {
-            invalidTasks.push({
-                taskId: task.TaskID,
-                reason: result.reason || 'Target member is no longer eligible'
-            });
-        }
-    }
-    
-    // ── STEP 2: Remove invalid tasks ──
-    if (invalidTasks.length > 0) {
-        console.log(`🗑️ Removing ${invalidTasks.length} invalid tasks`);
-        invalidTasks.forEach(({ taskId, reason }) => {
-            removeInvalidTask(taskId, reason);
-        });
-        showToast(`🗑️ ${invalidTasks.length} task(s) removed - target members no longer eligible`, false);
-    }
-    
-    // ── STEP 3: Check Performance Table for priority tasks ──
-    const priorityResult = await checkPerformanceTableForPriority();
-    
-    if (priorityResult && priorityResult.fromPriority) {
-        // We have priority tasks (Unsubscribed or Pending) from server
-        console.log(`🔄 Updating to show ${priorityResult.focusedStatus} tasks from server`);
-        
-        // Update all data
-        allTasks = priorityResult.tasks || [];
-        currentStatus = priorityResult.focusedStatus || 'NotWorkYet';
-        stats = priorityResult.stats || stats;
-        exchangeStats = priorityResult.exchangeStats || exchangeStats;
-        hasUnsub = priorityResult.hasUnsub || false;
-        perfStats = priorityResult.perfStats || perfStats;
-        
-        if (priorityResult.channelNames) Object.assign(channelNameCache, priorityResult.channelNames);
-        if (priorityResult.channelHandles) Object.assign(channelHandleCache, priorityResult.channelHandles);
-        if (priorityResult.channelImages) Object.assign(channelImageCache, priorityResult.channelImages);
-        if (priorityResult.channelIds) Object.assign(channelIdCache, priorityResult.channelIds);
-        if (priorityResult.member) member = priorityResult.member;
-        
-        if (priorityResult.unsubCount > 0) {
-            document.getElementById('unsubCount').textContent = priorityResult.unsubCount;
-        }
-        
-        // Save to cache
-        const tempData = {
-            tasks: allTasks,
-            fullStats: stats,
-            exchangeStats: exchangeStats,
-            perfStats: perfStats,
-            focusedStatus: currentStatus,
-            hasUnsub: hasUnsub,
-            unsubCount: priorityResult.unsubCount || 0,
-            member: member,
-            channelNames: channelNameCache,
-            channelHandles: channelHandleCache,
-            channelImages: channelImageCache,
-            channelIds: channelIdCache
-        };
-        saveTasksToCache(tempData);
-        
-        // ── STEP 4: Update UI ──
-        const labelMap = {
-            'Unsubscribed': 'Unsubscribed (Action Required)',
-            'Pending': 'Pending (Waiting for Subscribe Back)',
-            'NotWorkYet': 'Not Started'
-        };
-        document.getElementById('statusLabel').textContent = labelMap[currentStatus] || currentStatus;
-        
-        checkBlock();
-        checkUnsubscribed();
-        renderStats();
-        renderLimitCard();
-        renderList();
-        
-        showToast(`📋 Showing ${labelMap[currentStatus] || currentStatus} tasks`, false);
-        
-    } else if (priorityResult && priorityResult.noPriorityTasks) {
-        // No Unsubscribed or Pending tasks - stay with cached
-        console.log('✅ No priority tasks found, keeping cached tasks');
-        if (priorityResult.stats) {
-            stats = priorityResult.stats;
-            renderStats();
-        }
-    } else {
-        // ── STEP 5: Fallback - fetch fresh stats ──
-        try {
-            const statsRes = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
-            const statsData = await statsRes.json();
-            if (statsData.success && statsData.stats) {
-                stats = statsData.stats;
-                if (statsData.exchangeStats) {
-                    exchangeStats = statsData.exchangeStats;
-                }
-                renderStats();
-                
-                localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
-                localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
-            }
-        } catch (e) {
-            console.warn('Stats update failed:', e);
-        }
-    }
-}
-
-/* ────────────────────────────────────────
-   VALIDATE TASK BEFORE ACTION
-──────────────────────────────────────── */
-async function validateTaskBeforeAction(taskId, actionName) {
-    const task = allTasks.find(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-    if (!task) {
-        showToast('❌ Task not found. It may have been removed.', true);
-        return { valid: false, task: null };
-    }
-    
-    const result = await validateSingleTask(task);
-    
-    if (!result.valid) {
-        removeInvalidTask(taskId, result.reason || 'Target member is no longer eligible');
-        showToast(`❌ Cannot ${actionName}: ${result.reason || 'Target member is no longer eligible'}`, true);
-        return { valid: false, task: null };
-    }
-    
-    return { valid: true, task: task };
-}
-
-/* ────────────────────────────────────────
-   PERIODIC VALIDATION
-──────────────────────────────────────── */
-function startPeriodicValidation() {
-    if (validationInterval) {
-        clearInterval(validationInterval);
-    }
-    validationInterval = setInterval(async () => {
-        if (allTasks.length > 0) {
-            console.log('🔄 Periodic validation check...');
-            await validateAllTasksInBackground();
-        }
-    }, 30000);
-}
-
-function stopPeriodicValidation() {
-    if (validationInterval) {
-        clearInterval(validationInterval);
-        validationInterval = null;
-    }
-}
-
-window.addEventListener('beforeunload', function() {
-    stopPeriodicValidation();
-});
-
-/* ────────────────────────────────────────
-   BOOT
+   BOOT — NO group visibility check, NO auto-validation
 ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', async function() {
-    const isVisible = await checkGroupVisibility();
-    if (!isVisible) {
-        return;
-    }
     await init();
 });
 
-/* ────────────────────────────────────────
-   INIT - Try Cache First, Then Check Performance
-──────────────────────────────────────── */
 async function init() {
     try {
-        // ── STEP 1: Check Performance Table for priority tasks FIRST ──
+        // STEP 1: Check Performance Table for priority tasks
         const priorityResult = await checkPerformanceTableForPriority();
         
         if (priorityResult && priorityResult.fromPriority) {
-            // We have priority tasks (Unsubscribed or Pending) from server
-            console.log(`🎯 Using ${priorityResult.focusedStatus} tasks from server (priority)`);
-            
             allTasks = priorityResult.tasks || [];
             currentStatus = priorityResult.focusedStatus || 'NotWorkYet';
             stats = priorityResult.stats || stats;
@@ -1121,28 +910,18 @@ async function init() {
                 document.getElementById('unsubCount').textContent = priorityResult.unsubCount;
             }
             
-            // Save to cache
-            const tempData = {
-                tasks: allTasks,
-                fullStats: stats,
-                exchangeStats: exchangeStats,
-                perfStats: perfStats,
-                focusedStatus: currentStatus,
-                hasUnsub: hasUnsub,
-                unsubCount: priorityResult.unsubCount || 0,
-                member: member,
-                channelNames: channelNameCache,
-                channelHandles: channelHandleCache,
-                channelImages: channelImageCache,
-                channelIds: channelIdCache
-            };
-            saveTasksToCache(tempData);
+            saveTasksToCache({
+                tasks: allTasks, fullStats: stats, exchangeStats,
+                perfStats, focusedStatus: currentStatus, hasUnsub,
+                unsubCount: priorityResult.unsubCount || 0, member,
+                channelNames: channelNameCache, channelHandles: channelHandleCache,
+                channelImages: channelImageCache, channelIds: channelIdCache
+            });
             
             hideLoader();
             loadPreferenceOptions();
             checkBlock();
             checkUnsubscribed();
-            renderStats();
             renderLimitCard();
             renderList();
             updateStatusLabel();
@@ -1152,17 +931,13 @@ async function init() {
             }
             
             refreshTasksInBackground();
-            startPeriodicValidation();
-            
             return;
         }
         
-        // ── STEP 2: No priority tasks, check cache ──
+        // STEP 2: No priority tasks, check cache
         const cachedData = loadTasksFromCache();
         
         if (cachedData && cachedData.tasks && cachedData.tasks.length > 0) {
-            console.log('📦 Using cached tasks (no priority tasks found)');
-            
             allTasks = cachedData.tasks;
             stats = cachedData.stats;
             exchangeStats = cachedData.exchangeStats;
@@ -1176,43 +951,10 @@ async function init() {
             if (cachedData.channelImages) channelImageCache = cachedData.channelImages;
             if (cachedData.channelIds) channelIdCache = cachedData.channelIds;
             
-            // ── STEP 3: Validate cached tasks ──
-            const validatedTasks = await validateTasksWithServer(allTasks);
-            
-            if (validatedTasks.length !== allTasks.length) {
-                allTasks = validatedTasks;
-                recalculateStats();
-                const tempData = {
-                    tasks: allTasks,
-                    fullStats: stats,
-                    exchangeStats: exchangeStats,
-                    perfStats: perfStats,
-                    focusedStatus: currentStatus,
-                    hasUnsub: hasUnsub,
-                    unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0,
-                    member: member,
-                    channelNames: channelNameCache,
-                    channelHandles: channelHandleCache,
-                    channelImages: channelImageCache,
-                    channelIds: channelIdCache
-                };
-                saveTasksToCache(tempData);
-            }
-            
-            // ── STEP 4: Update stats from performance table ──
-            if (priorityResult && priorityResult.stats) {
-                stats = priorityResult.stats;
-                if (priorityResult.stats.unsubscribed > 0 || priorityResult.stats.pending > 0) {
-                    console.log('⚠️ Performance table shows tasks, refreshing in background...');
-                    refreshTasksInBackground();
-                }
-            }
-            
             hideLoader();
             loadPreferenceOptions();
             checkBlock();
             checkUnsubscribed();
-            renderStats();
             renderLimitCard();
             renderList();
             updateStatusLabel();
@@ -1222,14 +964,11 @@ async function init() {
             }
             
             refreshTasksInBackground();
-            startPeriodicValidation();
-            
             return;
         }
         
-        console.log('🔄 No cache or cache empty, fetching from server...');
+        // STEP 3: No cache → fetch from server
         await fetchTasksFromServer(true);
-        startPeriodicValidation();
         
     } catch (e) {
         hideLoader();
@@ -1240,64 +979,12 @@ async function init() {
 }
 
 /* ────────────────────────────────────────
-   VALIDATE TASKS AGAINST TARGET STATUS
-──────────────────────────────────────── */
-async function validateTasksWithServer(tasks) {
-    if (!tasks || tasks.length === 0) return tasks;
-    
-    try {
-        const targetCodes = tasks
-            .map(t => t.TargetUserCode)
-            .filter(code => code && code !== '');
-        
-        if (targetCodes.length === 0) return tasks;
-        
-        const targetCodesParam = targetCodes.join(',');
-        const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(targetCodesParam)}`);
-        
-        if (!res.ok) {
-            console.warn('Validation request failed:', res.status);
-            return tasks;
-        }
-        
-        const data = await res.json();
-        
-        if (!data.success || !data.targets) {
-            console.warn('Could not validate targets, keeping all tasks');
-            return tasks;
-        }
-        
-        const validTasks = tasks.filter(task => {
-            const targetCode = task.TargetUserCode;
-            const targetData = data.targets[targetCode];
-            if (!targetData) return true;
-            
-            if (targetData.InSubscribersWork !== 'Yes') return false;
-            if (targetData.ViolationFlag === 'Suspended') return false;
-            if (targetData.Status === 'Blocked') return false;
-            if (targetData.SubscribersPromotionActive === 'No') return false;
-            return true;
-        });
-        
-        const removedCount = tasks.length - validTasks.length;
-        if (removedCount > 0) {
-            console.log(`🗑️ Removed ${removedCount} tasks with ineligible targets`);
-        }
-        
-        return validTasks;
-    } catch (e) {
-        console.warn('Task validation error:', e);
-        return tasks;
-    }
-}
-
-/* ────────────────────────────────────────
    RECALCULATE STATS FROM TASKS
 ──────────────────────────────────────── */
 function recalculateStats() {
     const total = allTasks.length;
     stats = {
-        total: total,
+        total,
         notWorkYet: allTasks.filter(t => t.Status === 'NotWorkYet').length,
         pending: allTasks.filter(t => t.Status === 'Pending').length,
         subscribed: allTasks.filter(t => t.Status === 'Subscribed').length,
@@ -1305,31 +992,21 @@ function recalculateStats() {
         rejected: allTasks.filter(t => t.Status === 'Rejected').length
     };
     
-    let awaitingCount = 0;
-    let bothCount = 0;
-    let theirPendingCount = 0;
+    let awaitingCount = 0, bothCount = 0, theirPendingCount = 0;
     
     allTasks.forEach(t => {
         if (t.Status === 'Subscribed') {
-            if (t.PairedStatus === 'Subscribed') {
-                bothCount++;
-            } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
-                theirPendingCount++;
-            } else {
-                awaitingCount++;
-            }
+            if (t.PairedStatus === 'Subscribed') bothCount++;
+            else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') theirPendingCount++;
+            else awaitingCount++;
         }
     });
     
-    exchangeStats = {
-        awaiting: awaitingCount,
-        both: bothCount,
-        theirPending: theirPendingCount
-    };
+    exchangeStats = { awaiting: awaitingCount, both: bothCount, theirPending: theirPendingCount };
 }
 
 /* ────────────────────────────────────────
-   FETCH TASKS FROM SERVER
+   FETCH TASKS FROM SERVER — NO AUTO VALIDATION
 ──────────────────────────────────────── */
 async function fetchTasksFromServer(showLoader = true) {
     if (showLoader) {
@@ -1342,32 +1019,16 @@ async function fetchTasksFromServer(showLoader = true) {
     
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
-        
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         
         const data = await res.json();
-
         if (showLoader) hideLoader();
 
         if (!data.success) {
-            if (data.notEnrolled) {
-                showNotEnrolled(data.message || 'You are not enrolled in the Subscribers Group.');
-                return;
-            }
-            if (data.notActive) {
-                showNotActive(data.message || 'Your account is not active. Please contact support.');
-                return;
-            }
-            if (data.suspended) {
-                showSuspended(data.message || 'Your account is suspended.');
-                return;
-            }
-            if (data.notFound) {
-                showMemberNotFound(data.message || 'Member not found. Please sign in again.');
-                return;
-            }
+            if (data.notEnrolled) { showNotEnrolled(data.message); return; }
+            if (data.notActive) { showNotActive(data.message); return; }
+            if (data.suspended) { showSuspended(data.message); return; }
+            if (data.notFound) { showMemberNotFound(data.message); return; }
             showToast(data.message || 'Error loading data', true);
             clearSkeletons();
             return;
@@ -1375,26 +1036,15 @@ async function fetchTasksFromServer(showLoader = true) {
 
         member = data.member;
         perfStats = data.perfStats || null;
-        
-        let validatedTasks = data.tasks || [];
-        if (validatedTasks.length > 0) {
-            validatedTasks = await validateTasksWithServer(validatedTasks);
-        }
-        
-        allTasks = validatedTasks;
+        allTasks = data.tasks || [];  // NO validation
         currentStatus = data.focusedStatus || 'NotWorkYet';
         
-        if (data.fullStats) {
-            stats = data.fullStats;
-        } else if (data.stats) {
-            stats = data.stats;
-        }
+        if (data.fullStats) stats = data.fullStats;
+        else if (data.stats) stats = data.stats;
         
-        if (data.exchangeStats) {
-            exchangeStats = data.exchangeStats;
-        }
-
+        if (data.exchangeStats) exchangeStats = data.exchangeStats;
         hasUnsub = data.hasUnsub || false;
+        
         if (data.unsubCount > 0) {
             document.getElementById('unsubCount').textContent = data.unsubCount;
         }
@@ -1412,11 +1062,9 @@ async function fetchTasksFromServer(showLoader = true) {
         }
 
         saveTasksToCache(data);
-
         loadPreferenceOptions();
         checkBlock();
         checkUnsubscribed();
-        renderStats();
         renderLimitCard();
         renderList();
         updateStatusLabel();
@@ -1426,37 +1074,24 @@ async function fetchTasksFromServer(showLoader = true) {
         }
 
     } catch (e) {
-        if (showLoader) {
-            hideLoader();
-            clearSkeletons();
-        }
+        if (showLoader) { hideLoader(); clearSkeletons(); }
         showToast('Could not connect to server.', true);
-        console.error('Fetch error:', e);
     }
 }
 
 /* ────────────────────────────────────────
-   BACKGROUND REFRESH - SILENT UPDATE
+   BACKGROUND REFRESH — NO auto validation
 ──────────────────────────────────────── */
 async function refreshTasksInBackground() {
     try {
-        console.log('🔄 Background refresh started...');
         const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
         const data = await res.json();
         
         if (data.success) {
-            let validatedTasks = data.tasks || [];
-            if (validatedTasks.length > 0) {
-                validatedTasks = await validateTasksWithServer(validatedTasks);
-            }
-            
-            // Check if we have priority tasks (Unsubscribed or Pending)
             const hasPriority = data.stats && (data.stats.unsubscribed > 0 || data.stats.pending > 0);
             
-            if (hasPriority && validatedTasks.length > 0) {
-                // We have priority tasks - update everything
-                console.log(`🔄 Background: Updating to show ${data.focusedStatus} tasks`);
-                allTasks = validatedTasks;
+            if (hasPriority && data.tasks && data.tasks.length > 0) {
+                allTasks = data.tasks;
                 currentStatus = data.focusedStatus || 'NotWorkYet';
                 if (data.fullStats) stats = data.fullStats;
                 if (data.exchangeStats) exchangeStats = data.exchangeStats;
@@ -1467,31 +1102,22 @@ async function refreshTasksInBackground() {
                 if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
                 
                 saveTasksToCache(data);
-                
                 checkBlock();
                 checkUnsubscribed();
-                renderStats();
                 renderLimitCard();
                 renderList();
                 updateStatusLabel();
-                
-                console.log('✅ Background refresh complete (priority tasks)');
                 return;
             }
             
-            // No priority tasks, just update stats
             if (data.fullStats) {
                 stats = data.fullStats;
                 if (data.exchangeStats) exchangeStats = data.exchangeStats;
                 if (data.perfStats) perfStats = data.perfStats;
-                renderStats();
-                
                 localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
                 localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
                 localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(perfStats));
             }
-            
-            console.log('✅ Background refresh complete (stats only)');
         }
     } catch (e) {
         console.warn('Background refresh failed:', e);
@@ -1525,74 +1151,55 @@ async function refreshTasks() {
    STATUS PAGE HELPERS
 ──────────────────────────────────────── */
 function showNotEnrolled(message) {
-    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (container) {
-        container.innerHTML = `
-            <div class="w-full flex justify-center items-center min-h-[400px]">
-                <div class="not-enrolled-banner">
-                    <span class="banner-icon">📢</span>
-                    <h2 class="banner-title">Not Enrolled in Subscribers Group</h2>
-                    <p class="banner-desc">
-                        ${message || 'You are not in the Subscribers Group. Join the group to start exchanging subscribers and growing your channel.'}
-                    </p>
-                    <a href="groups.html" class="banner-btn">
-                        👥 Go to Groups
-                    </a>
-                    <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
-                        💡 Once you join the Subscribers Group, come back here to see your tasks.
-                    </p>
-                </div>
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="not-enrolled-banner">
+                <span class="banner-icon">📢</span>
+                <h2 class="banner-title">Not Enrolled in Subscribers Group</h2>
+                <p class="banner-desc">${message || 'You are not in the Subscribers Group. Join the group to start exchanging subscribers.'}</p>
+                <a href="groups.html" class="banner-btn">👥 Go to Groups</a>
             </div>
-        `;
-    }
+        </div>`;
 }
 
 function showNotActive(message) {
-    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (container) {
-        container.innerHTML = `
-            <div class="w-full flex justify-center items-center min-h-[400px]">
-                <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
-                    <span class="banner-icon">⛔</span>
-                    <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
-                    <p class="banner-desc">${message || 'Your account is not active. Please contact support for assistance.'}</p>
-                    <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
-                </div>
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                <span class="banner-icon">⛔</span>
+                <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
+                <p class="banner-desc">${message || 'Your account is not active. Please contact support.'}</p>
+                <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
             </div>
-        `;
-    }
+        </div>`;
 }
 
 function showSuspended(message) {
-    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (container) {
-        container.innerHTML = `
-            <div class="w-full flex justify-center items-center min-h-[400px]">
-                <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
-                    <span class="banner-icon">🚫</span>
-                    <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
-                    <p class="banner-desc">${message || 'Your account has been suspended. Please contact support for more information.'}</p>
-                    <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
-                </div>
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
+                <span class="banner-icon">🚫</span>
+                <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
+                <p class="banner-desc">${message || 'Your account has been suspended.'}</p>
+                <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
             </div>
-        `;
-    }
+        </div>`;
 }
 
 function showMemberNotFound(message) {
-    const container = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (container) {
-        container.innerHTML = `
-            <div class="w-full flex justify-center items-center min-h-[400px]">
-                <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
-                    <span class="banner-icon">❓</span>
-                    <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
-                    <p class="banner-desc">${message || 'We could not find your account. Please sign in again.'}</p>
-                    <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
-                </div>
+    const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
+    if (c) c.innerHTML = `
+        <div class="w-full flex justify-center items-center min-h-[400px]">
+            <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
+                <span class="banner-icon">❓</span>
+                <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
+                <p class="banner-desc">${message || 'We could not find your account. Please sign in again.'}</p>
+                <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
             </div>
-        `;
-    }
+        </div>`;
 }
 
 function hideLoader() {
@@ -1602,13 +1209,57 @@ function hideLoader() {
 }
 
 /* ────────────────────────────────────────
-   TOGGLE STATS PANEL
+   TOGGLE STATS PANEL — ALWAYS FETCH FRESH FROM SERVER
 ──────────────────────────────────────── */
 function toggleStats() {
     const panel = document.getElementById('statsPanel');
     panel.classList.toggle('hidden');
     if (!panel.classList.contains('hidden')) {
-        refreshStats();
+        // Always fetch fresh stats from server
+        fetchStatsFromServer();
+    }
+}
+
+async function fetchStatsFromServer() {
+    const loadingEl = document.getElementById('statsLoading');
+    const contentEl = document.getElementById('statsContent');
+    
+    loadingEl.classList.remove('hidden');
+    contentEl.classList.add('hidden');
+
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
+        
+        if (!res.ok) {
+            loadingEl.innerHTML = '<p class="text-red-600 text-xs">Could not load stats.</p>';
+            return;
+        }
+        
+        const data = await res.json();
+        
+        if (data.success && data.stats) {
+            stats = data.stats;
+            if (data.exchangeStats) exchangeStats = data.exchangeStats;
+            if (data.perfStats) {
+                perfStats = data.perfStats;
+                renderLimitCard();
+            }
+            
+            // Save to cache
+            localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
+            localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
+            if (perfStats) localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(perfStats));
+            
+            // Render fresh values
+            renderStats();
+            
+            loadingEl.classList.add('hidden');
+            contentEl.classList.remove('hidden');
+        } else {
+            loadingEl.innerHTML = '<p class="text-red-600 text-xs">Could not load stats.</p>';
+        }
+    } catch (e) {
+        loadingEl.innerHTML = '<p class="text-red-600 text-xs">Connection error.</p>';
     }
 }
 
@@ -1625,7 +1276,7 @@ function updateStatusLabel() {
 }
 
 /* ────────────────────────────────────────
-   BLOCK CHECK - UPDATED
+   BLOCK CHECK
 ──────────────────────────────────────── */
 function checkBlock() {
     if (!member) return;
@@ -1636,10 +1287,7 @@ function checkBlock() {
     const msgEl = document.getElementById('blockedMsg');
     const createBtn = document.getElementById('createBtn');
 
-    const hasPendingTasks = allTasks.some(t => 
-        t.Status === 'NotWorkYet' || t.Status === 'Pending'
-    );
-
+    const hasPendingTasks = allTasks.some(t => t.Status === 'NotWorkYet' || t.Status === 'Pending');
     const shouldShowBanner = suspended || (disabled && !hasPendingTasks);
 
     if (shouldShowBanner) {
@@ -1698,9 +1346,12 @@ function checkUnsubscribed() {
 }
 
 /* ────────────────────────────────────────
-   RENDER STATS
+   RENDER STATS — only called from toggleStats flow or after mutations
 ──────────────────────────────────────── */
 function renderStats() {
+    const nowork = document.getElementById('st-nowork');
+    if (!nowork) return;
+    
     document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
     document.getElementById('st-pending').textContent = stats.pending || 0;
     document.getElementById('st-subscribed').textContent = stats.subscribed || 0;
@@ -1713,34 +1364,6 @@ function renderStats() {
     document.getElementById('st-theirpending').textContent = exchangeStats.theirPending || 0;
     
     document.getElementById('showingCount').textContent = allTasks.length;
-}
-
-/* ────────────────────────────────────────
-   REFRESH STATS
-──────────────────────────────────────── */
-async function refreshStats() {
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
-        
-        if (!res.ok) {
-            console.warn('Stats refresh failed:', res.status);
-            return;
-        }
-        
-        const data = await res.json();
-        if (data.success && data.stats) {
-            stats = data.stats;
-            if (data.exchangeStats) {
-                exchangeStats = data.exchangeStats;
-            }
-            renderStats();
-            
-            localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
-            localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
-        }
-    } catch (e) {
-        console.warn('Could not refresh stats:', e);
-    }
 }
 
 /* ────────────────────────────────────────
@@ -1802,11 +1425,11 @@ async function showLimitReachedAlert() {
                 <p style="margin-bottom:12px;">To continue creating new tasks, you need to:</p>
                 <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
                     <li style="margin-bottom:6px;">Submit your YouTube subscription list via the <strong style="color:#6d28d9;">Exsub Extension</strong></li>
-                    <li style="margin-bottom:6px;">Click <strong style="color:#0d9488;">Verify My Subscriptions</strong> below to confirm your subscriptions</li>
-                    <li style="margin-bottom:6px;">Our system will verify your subscribed channels and unlock your limit</li>
+                    <li style="margin-bottom:6px;">Click <strong style="color:#0d9488;">Verify My Subscriptions</strong> below</li>
+                    <li style="margin-bottom:6px;">Our system will verify and unlock your limit</li>
                 </ol>
                 <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
-                    ⚠ If any channel is found unsubscribed, that task will be marked <strong>Unsubscribed</strong> and you will be required to re-subscribe before continuing.
+                    ⚠ If any channel is found unsubscribed, that task will be marked <strong>Unsubscribed</strong>.
                 </div>
             </div>
         `,
@@ -1815,7 +1438,6 @@ async function showLimitReachedAlert() {
         confirmButtonText: '🔍 Verify My Subscriptions',
         denyButtonText: '📎 Open Extension',
         cancelButtonText: 'Close',
-        reverseButtons: false,
         allowOutsideClick: true
     });
 
@@ -1878,7 +1500,7 @@ async function doVerifySubscriptions() {
                             <p>✅ Verified subscribed: <strong style="color:#16a34a;">${verifiedSub}</strong></p>
                             <p>❌ Found unsubscribed: <strong style="color:#f87171;">${unsubFound}</strong></p>
                             <div style="margin-top:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
-                                You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed before you can continue working.
+                                You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed.
                             </div>
                         </div>
                     `,
@@ -1910,7 +1532,7 @@ async function doVerifySubscriptions() {
         } else {
             Swal.fire({
                 title: 'Verification Failed',
-                html: `<p style="color:#4b5563;font-size:14px;">${data.message || 'Could not verify subscriptions. Please make sure you have submitted your subscription list via the Exsub Extension.'}</p>`,
+                html: `<p style="color:#4b5563;font-size:14px;">${data.message || 'Could not verify subscriptions.'}</p>`,
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
@@ -1942,9 +1564,7 @@ function renderList() {
     empty.classList.add('hidden');
 
     const ORDER = { 'Unsubscribed': 0, 'Pending': 1, 'NotWorkYet': 2, 'Subscribed': 3, 'Rejected': 4 };
-    const sorted = [...allTasks].sort((a, b) => {
-        return (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9);
-    });
+    const sorted = [...allTasks].sort((a, b) => (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9));
 
     list.innerHTML = sorted.map(taskCard).join('');
     document.getElementById('showingCount').textContent = sorted.length;
@@ -1968,13 +1588,9 @@ const STATUS_CFG = {
 
 function pairedBadge(t) {
     if (t.Status !== 'Subscribed') return '';
-    if (t.PairedStatus === 'Subscribed') {
-        return `<span class="paired-badge bg-teal-500/15 text-teal-600">✓ They Subbed Back</span>`;
-    } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
-        return `<span class="paired-badge bg-orange-500/15 text-orange-600">⏳ Their Sub: Pending</span>`;
-    } else {
-        return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Sub</span>`;
-    }
+    if (t.PairedStatus === 'Subscribed') return `<span class="paired-badge bg-teal-500/15 text-teal-600">✓ They Subbed Back</span>`;
+    else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') return `<span class="paired-badge bg-orange-500/15 text-orange-600">⏳ Their Sub: Pending</span>`;
+    else return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Sub</span>`;
 }
 
 function matchBadge(t) {
@@ -1985,27 +1601,21 @@ function matchBadge(t) {
     return `<span class="match-badge" title="Matched your preferences">🎯 Matched: ${parts}</span>`;
 }
 
-function getChannelKey(t) {
-    return (t && (t.TargetUserCode || t.TargetChannelId)) || '';
-}
-
+function getChannelKey(t) { return (t && (t.TargetUserCode || t.TargetChannelId)) || ''; }
 function getChannelId(t) {
     const key = getChannelKey(t);
     return (t && t.TargetChannelId) || channelIdCache[key] || '';
 }
-
 function getChannelName(t) {
     const key = getChannelKey(t);
     const id = getChannelId(t);
     return (t && t.TargetChannelName) || channelNameCache[key] || channelNameCache[id] || null;
 }
-
 function getChannelHandle(t) {
     const key = getChannelKey(t);
     const id = getChannelId(t);
     return (t && t.TargetChannelHandle) || channelHandleCache[key] || channelHandleCache[id] || null;
 }
-
 function getChannelImage(t) {
     const key = getChannelKey(t);
     const id = getChannelId(t);
@@ -2046,17 +1656,14 @@ function showToast(msg, isError = false) {
 }
 
 /* ────────────────────────────────────────
-   TASK CARD
+   TASK CARD — with per-task overlay
 ──────────────────────────────────────── */
 function taskCard(t) {
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
-
     const isUnsubscribed = t.Status === 'Unsubscribed';
-    
     const isSuspended = member && member.ViolationFlag === 'Suspended';
-    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && 
-                    !isSuspended && 
-                    !hasUnsub;
+    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isSuspended && !hasUnsub;
+    const isUnlocked = unlockedTasks.has(t.TaskID);
 
     const chanId = getChannelId(t);
     const chanName = getChannelName(t);
@@ -2094,7 +1701,6 @@ function taskCard(t) {
             <p class="text-xs text-red-600 font-semibold mb-1">🚫 Action Required — Re-Subscribe</p>
             <p class="text-xs text-red-600/80 leading-relaxed">
                 You have unsubscribed from this channel. You <strong class="text-red-600">must re-subscribe</strong> to it on YouTube and then submit your subscription list via the Exsub Extension to resolve this task.
-                Until resolved, all other actions are locked.
             </p>
             <a href="${chanUrl}" target="_blank" rel="noopener"
                 class="btn-red inline-flex items-center justify-center gap-2 mt-3 px-4 py-2 rounded-xl text-xs font-semibold">
@@ -2117,8 +1723,7 @@ function taskCard(t) {
     let actionButtons = '';
     if (isUnsubscribed) {
         actionButtons = `
-            ${chanId ? `
-            <a href="${chanUrl}" target="_blank" rel="noopener"
+            ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-60">
                 ▶ Open Channel
             </a>` : ''}
@@ -2131,8 +1736,7 @@ function taskCard(t) {
             </div>`;
     } else if (canMark) {
         actionButtons = `
-            ${chanId ? `
-            <a href="${chanUrl}" target="_blank" rel="noopener"
+            ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ▶ Open Channel
             </a>` : ''}
@@ -2146,8 +1750,7 @@ function taskCard(t) {
             </button>`;
     } else {
         actionButtons = `
-            ${chanId ? `
-            <a href="${chanUrl}" target="_blank" rel="noopener"
+            ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
                 class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
                 ▶ Open Channel
             </a>` : ''}
@@ -2165,8 +1768,20 @@ function taskCard(t) {
         ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
         : '';
 
+    // Overlay (only shown when NOT unlocked)
+    const overlay = !isUnlocked ? `
+        <div class="task-overlay">
+            <div class="overlay-icon">🔒</div>
+            <div class="overlay-title">Task Locked</div>
+            <div class="overlay-desc">Click to verify this task is still available before opening it.</div>
+            <button class="overlay-btn" onclick="event.stopPropagation(); validateAndUnlockTask('${t.TaskID}', this)">
+                🔓 Open Task
+            </button>
+        </div>` : '';
+
     return `
-    <div class="task-card ${isUnsubscribed ? 'unsubscribed-card' : ''} rounded-3xl p-5">
+    <div class="task-card ${isUnsubscribed ? 'unsubscribed-card' : ''} task-overlay-wrap rounded-3xl p-5" data-task-id="${t.TaskID}">
+        ${overlay}
         <!-- TOP ROW -->
         <div class="flex flex-wrap items-center gap-2 mb-4">
             <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
@@ -2178,7 +1793,6 @@ function taskCard(t) {
         </div>
 
         <div class="flex flex-col xl:flex-row gap-5">
-            <!-- LEFT: Channel info -->
             <div class="flex-1 min-w-0">
                 <div class="instructions-box mb-3">
                     <p class="text-xs text-purple-700 font-semibold mb-2">📺 ${isUnsubscribed ? 'Re-subscribe to this channel:' : 'Subscribe to this channel:'}</p>
@@ -2204,7 +1818,6 @@ function taskCard(t) {
                 </div>
             </div>
 
-            <!-- RIGHT: Actions -->
             <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[160px] flex-shrink-0">
                 ${actionButtons}
             </div>
@@ -2216,9 +1829,6 @@ function taskCard(t) {
    VIEW WATCHING PROOF
 ──────────────────────────────────────── */
 async function viewWatchingProof(taskId, targetUserCode, btnEl) {
-    const validation = await validateTaskBeforeAction(taskId, 'View Proof');
-    if (!validation.valid) return;
-    
     const modal = document.getElementById('proofModal');
     const content = document.getElementById('proofModalContent');
     
@@ -2236,11 +1846,7 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
         const data = await res.json();
         
         if (!data.success) {
-            content.innerHTML = `
-                <div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center">
-                    <p class="text-red-600">${data.message || 'Could not load proof data.'}</p>
-                </div>
-            `;
+            content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">${data.message || 'Could not load proof data.'}</p></div>`;
             return;
         }
         
@@ -2249,8 +1855,7 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
                 <div class="bg-yellow-500/10 border border-yellow-500/25 rounded-2xl p-6 text-center">
                     <p class="text-yellow-700">📭 No watching proof found for this task.</p>
                     <p class="text-muted text-sm mt-2">Watch a video using the Exsub Extension to generate proof.</p>
-                </div>
-            `;
+                </div>`;
             return;
         }
         
@@ -2262,119 +1867,58 @@ async function viewWatchingProof(taskId, targetUserCode, btnEl) {
             const isSufficient = proof.PlaySeconds >= 120;
             
             let statusBadge = '';
-            if (proof.Checked === 'Valid') {
-                statusBadge = `<span class="bg-green-500/15 text-green-600 px-2 py-1 rounded-lg text-xs font-semibold">✅ Valid</span>`;
-            } else if (proof.Checked === 'Cheating') {
-                statusBadge = `<span class="bg-red-500/15 text-red-600 px-2 py-1 rounded-lg text-xs font-semibold">🚫 Cheating</span>`;
-            } else if (proof.Checked === 'Insufficient') {
-                statusBadge = `<span class="bg-yellow-500/15 text-yellow-700 px-2 py-1 rounded-lg text-xs font-semibold">⏱ Insufficient</span>`;
-            } else {
-                statusBadge = `<span class="bg-gray-500/15 text-gray-600 px-2 py-1 rounded-lg text-xs font-semibold">⏳ Pending</span>`;
-            }
+            if (proof.Checked === 'Valid') statusBadge = `<span class="bg-green-500/15 text-green-600 px-2 py-1 rounded-lg text-xs font-semibold">✅ Valid</span>`;
+            else if (proof.Checked === 'Cheating') statusBadge = `<span class="bg-red-500/15 text-red-600 px-2 py-1 rounded-lg text-xs font-semibold">🚫 Cheating</span>`;
+            else if (proof.Checked === 'Insufficient') statusBadge = `<span class="bg-yellow-500/15 text-yellow-700 px-2 py-1 rounded-lg text-xs font-semibold">⏱ Insufficient</span>`;
+            else statusBadge = `<span class="bg-gray-500/15 text-gray-600 px-2 py-1 rounded-lg text-xs font-semibold">⏳ Pending</span>`;
             
             const proofUrl = proof.ProofScreenshot || '';
-            const isValidImageUrl = proofUrl && (
-                proofUrl.startsWith('http://') ||
-                proofUrl.startsWith('https://') ||
-                proofUrl.startsWith('data:image')
-            );
+            const isValidImageUrl = proofUrl && (proofUrl.startsWith('http://') || proofUrl.startsWith('https://') || proofUrl.startsWith('data:image'));
             
             let screenshotHtml = '';
             if (isValidImageUrl) {
                 const imgId = `screenshot-${taskId}-${index}`;
-                
                 screenshotHtml = `
                     <div class="mt-3 bg-gray-50 rounded-xl p-2 border border-[#211F1F]/10">
-                        <img id="${imgId}" 
-                            src="${proofUrl}" 
-                            alt="Screenshot" 
+                        <img id="${imgId}" src="${proofUrl}" alt="Screenshot" 
                             class="proof-screenshot w-full rounded-lg border-2 border-[#211F1F]/15 max-h-[400px] object-contain cursor-pointer"
                             onclick="window.open('${proofUrl}', '_blank')"
                             onerror="document.getElementById('${imgId}').style.display='none'; document.getElementById('${imgId}-error').style.display='block'">
                         <div id="${imgId}-error" style="display:none;" class="text-center py-4">
-                            <p class="text-xs text-muted mt-1">Open Image Proof</p>
-                            <button onclick="window.open('${proofUrl}', '_blank')" class="mt-2 btn-outline px-3 py-1 rounded-lg text-xs">
-                                🔗 Open Image Directly
-                            </button>
+                            <button onclick="window.open('${proofUrl}', '_blank')" class="mt-2 btn-outline px-3 py-1 rounded-lg text-xs">🔗 Open Image Directly</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             } else {
-                screenshotHtml = `
-                    <div class="mt-3 bg-yellow-50 rounded-xl p-4 border border-yellow-200 text-center">
-                        <p class="text-xs text-yellow-700">📷 No screenshot available for this proof</p>
-                    </div>
-                `;
+                screenshotHtml = `<div class="mt-3 bg-yellow-50 rounded-xl p-4 border border-yellow-200 text-center"><p class="text-xs text-yellow-700">📷 No screenshot available for this proof</p></div>`;
             }
             
             proofsHtml += `
                 <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <span class="font-semibold text-sm text-purple-700">Proof #${index + 1}</span>
-                        <div class="flex items-center gap-2">
-                            ${statusBadge}
-                            <span class="text-xs text-green-600">✓ Task ID matched</span>
-                        </div>
+                        <div class="flex items-center gap-2">${statusBadge}<span class="text-xs text-green-600">✓ Task ID matched</span></div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                        <div>
-                            <span class="text-muted text-xs block">Video Title</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${proof.VideoTitle || '—'}</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Channel</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${proof.ChannelName || '—'}</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Task Type</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${proof.TaskType || '—'}</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Play Seconds</span>
-                            <span class="font-semibold text-[#211F1F] text-sm ${isSufficient ? 'text-green-600' : 'text-red-600'}">${proof.PlaySeconds}s ${isSufficient ? '✅' : '⚠️'}</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Stop Seconds</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${proof.StopSeconds}s</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Percentage</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${proof.Percentage || 0}%</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Video Duration</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${proof.VideoDuration || '—'}</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Video ID</span>
-                            <span class="font-mono text-xs text-purple-700">${proof.VideoId || '—'}</span>
-                        </div>
-                        <div>
-                            <span class="text-muted text-xs block">Timestamp</span>
-                            <span class="font-semibold text-[#211F1F] text-sm">${timestamp}</span>
-                        </div>
+                        <div><span class="text-muted text-xs block">Video Title</span><span class="font-semibold text-[#211F1F] text-sm">${proof.VideoTitle || '—'}</span></div>
+                        <div><span class="text-muted text-xs block">Channel</span><span class="font-semibold text-[#211F1F] text-sm">${proof.ChannelName || '—'}</span></div>
+                        <div><span class="text-muted text-xs block">Task Type</span><span class="font-semibold text-[#211F1F] text-sm">${proof.TaskType || '—'}</span></div>
+                        <div><span class="text-muted text-xs block">Play Seconds</span><span class="font-semibold text-[#211F1F] text-sm ${isSufficient ? 'text-green-600' : 'text-red-600'}">${proof.PlaySeconds}s ${isSufficient ? '✅' : '⚠️'}</span></div>
+                        <div><span class="text-muted text-xs block">Stop Seconds</span><span class="font-semibold text-[#211F1F] text-sm">${proof.StopSeconds}s</span></div>
+                        <div><span class="text-muted text-xs block">Percentage</span><span class="font-semibold text-[#211F1F] text-sm">${proof.Percentage || 0}%</span></div>
+                        <div><span class="text-muted text-xs block">Video Duration</span><span class="font-semibold text-[#211F1F] text-sm">${proof.VideoDuration || '—'}</span></div>
+                        <div><span class="text-muted text-xs block">Video ID</span><span class="font-mono text-xs text-purple-700">${proof.VideoId || '—'}</span></div>
+                        <div><span class="text-muted text-xs block">Timestamp</span><span class="font-semibold text-[#211F1F] text-sm">${timestamp}</span></div>
                     </div>
-                    ${proof.CheckRemarks ? `
-                        <div class="mt-2 p-2 bg-gray-50 rounded-lg border border-[#211F1F]/10">
-                            <span class="text-muted text-xs block">Admin Check</span>
-                            <span class="text-sm text-[#211F1F]">${proof.CheckRemarks}</span>
-                        </div>
-                    ` : ''}
+                    ${proof.CheckRemarks ? `<div class="mt-2 p-2 bg-gray-50 rounded-lg border border-[#211F1F]/10"><span class="text-muted text-xs block">Admin Check</span><span class="text-sm text-[#211F1F]">${proof.CheckRemarks}</span></div>` : ''}
                     ${screenshotHtml}
-                </div>
-            `;
+                </div>`;
         });
         
         proofsHtml += `</div>`;
         content.innerHTML = proofsHtml;
         
     } catch (e) {
-        content.innerHTML = `
-            <div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center">
-                <p class="text-red-600">Connection error. Please try again.</p>
-            </div>
-        `;
-        console.error('Proof fetch error:', e);
+        content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">Connection error. Please try again.</p></div>`;
     }
 }
 
@@ -2386,15 +1930,6 @@ function closeProofModal() {
    MARK SUBSCRIBED
 ──────────────────────────────────────── */
 async function doMarkSubscribed(taskId, btnEl) {
-    const validation = await validateTaskBeforeAction(taskId, 'Mark Subscribed');
-    if (!validation.valid) {
-        if (btnEl) {
-            btnEl.disabled = false;
-            btnEl.innerHTML = '✓ Mark Subscribed';
-        }
-        return;
-    }
-    
     if (hasUnsub) {
         showToast('You must resolve your unsubscribed tasks first.', true);
         return;
@@ -2451,16 +1986,12 @@ async function doMarkSubscribed(taskId, btnEl) {
                 html: `
                     <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
                         <p style="margin-bottom:12px;">No watching proof was found for this task.</p>
-                        <p style="margin-bottom:12px;">Please follow these steps:</p>
                         <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
                             <li style="margin-bottom:6px;">Open the target channel on YouTube</li>
                             <li style="margin-bottom:6px;">Watch a video for at least <strong style="color:#6d28d9;">2 minutes</strong></li>
                             <li style="margin-bottom:6px;">Click the <strong style="color:#0d9488;">Submit Proof</strong> button in the Exsub Extension</li>
                             <li style="margin-bottom:6px;">Then click <strong style="color:#211F1F;">Mark Subscribed</strong> again</li>
                         </ol>
-                        <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
-                            ⚠ The extension captures your watch time. You must watch at least 2 minutes of the video before subscribing.
-                        </div>
                     </div>
                 `,
                 confirmButtonText: 'Got It',
@@ -2488,19 +2019,7 @@ async function doMarkSubscribed(taskId, btnEl) {
                             </p>
                             <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
                                 <p style="font-weight:600;color:#dc2626;margin-bottom:4px;">📋 Requirements:</p>
-                                <p style="color:#4b5563;">You need to watch at least <strong style="color:#6d28d9;">2 minutes (120 seconds)</strong> of the video before subscribing.</p>
-                            </div>
-                            <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
-                                <p style="font-weight:600;color:#16a34a;margin-bottom:4px;">✅ How to fix:</p>
-                                <ol style="margin-left:16px;list-style:decimal;color:#4b5563;">
-                                    <li style="margin-bottom:4px;">Open the channel on YouTube</li>
-                                    <li style="margin-bottom:4px;">Watch the video for <strong style="color:#6d28d9;">at least 2 minutes</strong></li>
-                                    <li style="margin-bottom:4px;">Make sure the Exsub Extension is running</li>
-                                    <li style="margin-bottom:4px;">Click <strong style="color:#0d9488;">Mark Subscribed</strong> again</li>
-                                </ol>
-                            </div>
-                            <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f97316;">
-                                💡 Tip: The extension tracks your watch time automatically. Make sure you're watching the video in an active tab.
+                                <p style="color:#4b5563;">Watch at least <strong style="color:#6d28d9;">2 minutes (120 seconds)</strong> of the video before subscribing.</p>
                             </div>
                         </div>
                     `,
@@ -2525,38 +2044,25 @@ async function doMarkSubscribed(taskId, btnEl) {
    DETAIL MODAL
 ──────────────────────────────────────── */
 async function openDetail(taskId) {
-    const validation = await validateTaskBeforeAction(taskId, 'View Details');
-    if (!validation.valid) return;
-    
-    const t = validation.task;
+    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (!t) { showToast('Task not found.', true); return; }
 
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', label: t.Status };
     const chanId = getChannelId(t);
     const chanName = getChannelName(t);
     const chanHandle = getChannelHandle(t);
-    const chanImage = getChannelImage(t);
     const chanUrl = buildChannelUrl(t);
 
-    const h = chanHandle
-        ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle)
-        : null;
+    const h = chanHandle ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle) : null;
 
     let partnerLabel = '—';
     let partnerClass = 'text-muted';
     if (t.Status === 'Subscribed') {
-        if (t.PairedStatus === 'Subscribed') {
-            partnerLabel = 'Subscribed Back ✓';
-            partnerClass = 'text-teal-600';
-        } else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') {
-            partnerLabel = 'Pending (Not Yet Subscribed)';
-            partnerClass = 'text-orange-600';
-        } else {
-            partnerLabel = 'Not Yet Subscribed';
-            partnerClass = 'text-blue-600';
-        }
+        if (t.PairedStatus === 'Subscribed') { partnerLabel = 'Subscribed Back ✓'; partnerClass = 'text-teal-600'; }
+        else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') { partnerLabel = 'Pending (Not Yet Subscribed)'; partnerClass = 'text-orange-600'; }
+        else { partnerLabel = 'Not Yet Subscribed'; partnerClass = 'text-blue-600'; }
     } else {
         partnerLabel = 'Awaiting Your Action';
-        partnerClass = 'text-muted';
     }
 
     const escapedHandle = h ? h.replace(/'/g, "\\'") : '';
@@ -2572,18 +2078,17 @@ async function openDetail(taskId) {
                 <div class="font-semibold ${sc.text}">${sc.label}</div>
             </div>
             <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">You (Worker)</div>
-                <div class="font-semibold">${t.UserCode || '—'}</div>
-            </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
                 <div class="text-muted text-xs mb-1">Target Member</div>
                 <div class="font-semibold text-purple-700">${t.TargetUserCode || '—'}</div>
+            </div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
+                <div class="text-muted text-xs mb-1">Partner Sub Status</div>
+                <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
             </div>
             <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2">
                 <div class="text-muted text-xs mb-1">Target Channel</div>
                 <div class="font-semibold">${chanName || '—'}</div>
-                ${h ? `
-                <div class="flex items-center gap-1.5 mt-1">
+                ${h ? `<div class="flex items-center gap-1.5 mt-1">
                     <span class="font-mono text-xs text-purple-700">${h}</span>
                     <button class="copy-handle-btn" onclick="copyHandle('${escapedHandle}',this)" title="Copy handle">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2594,18 +2099,9 @@ async function openDetail(taskId) {
                 </div>` : ''}
                 <div class="font-mono text-xs text-muted mt-0.5">${chanId || '—'}</div>
             </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Partner Sub Status</div>
-                <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
-            </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Issue</div>
-                <div class="${t.Issue ? 'text-red-600' : 'text-muted'} text-xs">${t.Issue || 'None'}</div>
-            </div>
         </div>
 
-        ${chanId ? `
-        <a href="${chanUrl}" target="_blank" rel="noopener"
+        ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
             class="btn-purple w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-1">
             ▶ Open Channel on YouTube
         </a>` : ''}
@@ -2619,7 +2115,6 @@ async function openDetail(taskId) {
             <div>Created: ${fmtDate(t.CreatedDate)}</div>
             ${t.WorkedDate ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>` : ''}
             ${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}
-            ${t.LastUpdated ? `<div>Updated: ${fmtDate(t.LastUpdated)}</div>` : ''}
         </div>`;
 
     document.getElementById('detailModal').classList.add('open');
@@ -2641,19 +2136,15 @@ async function loadPreferenceOptions() {
             interestOptions = data.interests || [];
             countryOptions = data.countries || [];
         }
-    } catch (e) {
-        // silent
-    }
+    } catch (e) {}
 }
 
 function openPreferencesModal() {
     selectedInterests = [...myPreferences.interests];
     selectedCountries = [...myPreferences.countries];
-
     document.getElementById('prefsResultBox').classList.add('hidden');
     renderPrefPills();
     document.getElementById('prefsModal').classList.add('open');
-
     if (!interestOptions.length || !countryOptions.length) {
         loadPreferenceOptions().then(renderPrefPills);
     }
@@ -2689,11 +2180,9 @@ function renderPrefPills() {
 
 function togglePrefPill(kind, value) {
     const arr = kind === 'interest' ? selectedInterests : selectedCountries;
-
     const idx = arr.indexOf(value);
-    if (idx !== -1) {
-        arr.splice(idx, 1);
-    } else {
+    if (idx !== -1) arr.splice(idx, 1);
+    else {
         if (arr.length >= MAX_PREF_EACH) {
             showToast(`You can pick up to ${MAX_PREF_EACH} ${kind === 'interest' ? 'interests' : 'countries'}.`, true);
             return;
@@ -2803,21 +2292,13 @@ async function doCreateTasks() {
                 if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
                 if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
                 
-                const tempData = {
-                    tasks: allTasks,
-                    fullStats: stats,
-                    exchangeStats: exchangeStats,
-                    perfStats: perfStats,
-                    focusedStatus: currentStatus,
-                    hasUnsub: hasUnsub,
-                    unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0,
-                    member: member,
-                    channelNames: channelNameCache,
-                    channelHandles: channelHandleCache,
-                    channelImages: channelImageCache,
-                    channelIds: channelIdCache
-                };
-                saveTasksToCache(tempData);
+                saveTasksToCache({
+                    tasks: allTasks, fullStats: stats, exchangeStats,
+                    perfStats, focusedStatus: currentStatus, hasUnsub,
+                    unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0, member,
+                    channelNames: channelNameCache, channelHandles: channelHandleCache,
+                    channelImages: channelImageCache, channelIds: channelIdCache
+                });
                 
                 await refreshTasks();
                 renderStats();
@@ -2847,10 +2328,8 @@ async function doCreateTasks() {
 let selectedIssuePill = '';
 
 async function openIssueModal(taskId) {
-    const validation = await validateTaskBeforeAction(taskId, 'Report Issue');
-    if (!validation.valid) return;
-    
-    const t = validation.task;
+    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (!t) { showToast('Task not found.', true); return; }
     
     selectedIssuePill = '';
     document.getElementById('issueTaskId').value = taskId;
@@ -2859,9 +2338,7 @@ async function openIssueModal(taskId) {
     document.getElementById('issueResultBox').classList.add('hidden');
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
 
-    if (t && t.Issue) {
-        document.getElementById('issueCustomText').value = t.Issue;
-    }
+    if (t.Issue) document.getElementById('issueCustomText').value = t.Issue;
 
     document.getElementById('issueModal').classList.add('open');
 }
