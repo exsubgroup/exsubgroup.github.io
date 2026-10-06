@@ -834,14 +834,15 @@
 var API = "https://script.google.com/macros/s/AKfycbxA53Uevz8uQh1e2-HoUvtlE5Dr4p2xgp1xsTsNKe8McmwFJjEwoYxTiwiUI4lIMIDV6g/exec";
 
 /* ── SESSION ── */
+/* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
 var username = localStorage.getItem("username") || "";
-var userpassword = localStorage.getItem("password") || "";
 
-// CREDENTIAL CHECK: Must have all three
-if (!usercode || !username || !userpassword) { 
+// CREDENTIAL CHECK: Only require usercode + username
+if (!usercode || !username) { 
   window.location.replace("signin.html"); 
 }
+
 
 function hideLoading() {
   const overlay = document.getElementById('loadingOverlay');
