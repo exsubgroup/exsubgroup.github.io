@@ -85,6 +85,23 @@
   text-overflow: ellipsis;
   max-width: 180px;
 }
+.mem-code.mem-new-user{
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 4px;
+  padding: 2px 9px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  background: #F5F4EB;
+  border: 1.5px solid #d8d3c4;
+  border-radius: 999px;
+  white-space: nowrap;
+}
 
 .mem-status-pill{
   margin-left:auto; flex-shrink:0;
@@ -265,7 +282,7 @@
       <div class="mem-search-wrap">
         <span class="mem-search-icon">🔍</span>
         <input id="memSearchInput" class="mem-search-input" type="text"
-          placeholder="Search by name, channel, code, country…" oninput="filterVisibleMembers()">
+          placeholder="Search by name, channel, country…" oninput="filterVisibleMembers()">
       </div>
     </div>
 
@@ -284,7 +301,7 @@
 'use strict';
 
 /* ── CONFIG ── */
-var API = "https://script.google.com/macros/s/AKfycbzx5cV3oqxsAMWwurxaPuI6KMqcco0vhCuyE32Y0wTkOADsbCtAaQyajBMyYszL93_xXg/exec";
+var API = "https://script.google.com/macros/s/AKfycbzEidOlcjI1OZnjwAWiquteM1cwLq5ZL0Njypt-byOoW8tAYseFV6Djstg7Uv6wYd_5Cw/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
@@ -347,20 +364,24 @@ function memberCardHTML(m) {
   var avatar = (m.ProfilePicture && String(m.ProfilePicture).trim()) ? m.ProfilePicture : DEFAULT_AVATAR;
   var status = m.Status || "—";
 
-  /* ── PRIMARY LINE UNDER NAME ── */
-  /* If the member has a channel name → show it (📺 prefix).
-     Otherwise fall back to the user code (#Ex123). */
-  var subtitle = m.ChannelName
-    ? '📺 ' + m.ChannelName
-    : '#' + (m.UserCode || "—");
-  var subtitleClass = m.ChannelName ? "mem-code mem-channel" : "mem-code";
+  /* ── Decide what to show under the username ──
+     - Has ChannelName  → show "📺 Channel Name"
+     - No ChannelName   → show "✨ New User" badge */
+  var hasChannel = m.ChannelName && String(m.ChannelName).trim() !== "";
 
-  /* Search index includes channel name so search works for both. */
+  var subtitle = hasChannel
+    ? '📺 ' + m.ChannelName
+    : '✨ New User';
+
+  var subtitleClass = hasChannel ? "mem-code mem-channel" : "mem-code mem-new-user";
+
+  /* Search index: include username, channel, country.
+     Skip user code entirely since it's no longer displayed. */
   var searchBlob = (
     (m.UserName    || "") + " " +
-    (m.UserCode    || "") + " " +
     (m.Country     || "") + " " +
-    (m.ChannelName || "")
+    (m.ChannelName || "") + " " +
+    (!hasChannel ? "new user" : "")
   ).toLowerCase().replace(/"/g, "");
 
   return '<div class="mem-card" data-search="' + searchBlob + '">' +
