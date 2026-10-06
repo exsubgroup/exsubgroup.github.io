@@ -1,0 +1,34 @@
+name: Generate Sitemap
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'sitemap.xml'
+  workflow_dispatch:   # allows manual trigger from Actions tab
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit sitemap.xml back
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate sitemap.xml
+        run: node .github/scripts/generate-sitemap.js
+
+      - name: Commit and push sitemap.xml
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: auto-update sitemap.xml [skip ci]"
+          git push
