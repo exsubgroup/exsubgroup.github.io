@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Members – Exsub Group</title>
-<link rel="icon" href="images/logo.svg">
+<link rel="icon" href="images/favicon.ico" sizes="any">
+<link rel="icon" type="images/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="images/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="images/android-chrome-192x192.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="navbar.css">
@@ -71,6 +74,17 @@
   font-family:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
   font-size:11px; color:#6b7280; margin-top:2px;
 }
+.mem-code.mem-channel{
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #211F1F;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
 
 .mem-status-pill{
   margin-left:auto; flex-shrink:0;
@@ -127,7 +141,6 @@
 }
 .mem-page-btn:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0px 0px #211F1F; }
 .mem-page-btn.mem-page-active{ background:#211F1F; color:#F5F4EB; }
-/* For mobile screens */
 
 .mem-stat-value {
   font-size: 12.5px;
@@ -145,7 +158,7 @@
   border: 2px solid #211F1F;
   border-radius: 14px;
   padding: 8px 10px;
-  min-width: 0; /* Prevents flex overflow */
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -155,16 +168,10 @@
     white-space: normal;
     word-break: break-word;
   }
-  
-  .mem-stats {
-    gap: 6px;
-  }
-  
-  .mem-stat-box {
-    padding: 6px 8px;
-  }
+  .mem-stats { gap: 6px; }
+  .mem-stat-box { padding: 6px 8px; }
+  .mem-code.mem-channel { max-width: 130px; font-size: 11px; }
 }
-
 </style>
 
 </head>
@@ -258,7 +265,7 @@
       <div class="mem-search-wrap">
         <span class="mem-search-icon">🔍</span>
         <input id="memSearchInput" class="mem-search-input" type="text"
-          placeholder="Search this page by name, code, country…" oninput="filterVisibleMembers()">
+          placeholder="Search by name, channel, code, country…" oninput="filterVisibleMembers()">
       </div>
     </div>
 
@@ -277,7 +284,7 @@
 'use strict';
 
 /* ── CONFIG ── */
-var API = "https://script.google.com/macros/s/AKfycbza0jX4KurePOdMQ26zfEi1R9BTawQXEGEKp05lwhzyz4lFV1PaxROvTFFZ5CLQjuo8lQ/exec";
+var API = "https://script.google.com/macros/s/AKfycbzx5cV3oqxsAMWwurxaPuI6KMqcco0vhCuyE32Y0wTkOADsbCtAaQyajBMyYszL93_xXg/exec";
 
 /* ── SESSION ── */
 var usercode = (localStorage.getItem("usercode") || "").trim().toUpperCase();
@@ -306,7 +313,7 @@ async function loadMembers(page) {
     setText("pageInfo", data.currentPage + " / " + data.totalPages);
 
     renderMembers(lastMembers);
-    renderStats(data.stats); // 👈 ADD THIS LINE
+    renderStats(data.stats);
     renderPagination(data.totalPages, data.currentPage);
 
     hide("loadingState"); show("dashContent");
@@ -340,14 +347,28 @@ function memberCardHTML(m) {
   var avatar = (m.ProfilePicture && String(m.ProfilePicture).trim()) ? m.ProfilePicture : DEFAULT_AVATAR;
   var status = m.Status || "—";
 
-  return '<div class="mem-card" data-search="' +
-      ((m.UserName||"") + " " + (m.UserCode||"") + " " + (m.Country||"")).toLowerCase().replace(/"/g,"") +
-    '">' +
+  /* ── PRIMARY LINE UNDER NAME ── */
+  /* If the member has a channel name → show it (📺 prefix).
+     Otherwise fall back to the user code (#Ex123). */
+  var subtitle = m.ChannelName
+    ? '📺 ' + m.ChannelName
+    : '#' + (m.UserCode || "—");
+  var subtitleClass = m.ChannelName ? "mem-code mem-channel" : "mem-code";
+
+  /* Search index includes channel name so search works for both. */
+  var searchBlob = (
+    (m.UserName    || "") + " " +
+    (m.UserCode    || "") + " " +
+    (m.Country     || "") + " " +
+    (m.ChannelName || "")
+  ).toLowerCase().replace(/"/g, "");
+
+  return '<div class="mem-card" data-search="' + searchBlob + '">' +
     '<div class="mem-card-head">' +
       '<div class="mem-avatar-ring"><img src="' + avatar + '" onerror="this.src=\'' + DEFAULT_AVATAR + '\'"></div>' +
       '<div class="min-w-0">' +
         '<div class="mem-name">' + (m.UserName || "Unknown") + '</div>' +
-        '<div class="mem-code">#' + (m.UserCode || "—") + '</div>' +
+        '<div class="' + subtitleClass + '">' + subtitle + '</div>' +
       '</div>' +
       '<span class="mem-status-pill ' + statusPillClass(status) + '">' + status + '</span>' +
     '</div>' +
@@ -385,39 +406,35 @@ function renderMembers(members) {
 /* ══════════════════ RENDER STATS ══════════════════ */
 function renderStats(stats) {
   if (!stats) return;
-  
-  // Work type counts
-  setText("statSubsWork", fmt(stats.inSubscribersWork || 0));
-  setText("statVideoWork", fmt(stats.inVideoTaskWork || 0));
-  setText("statWatchtimeWork", fmt(stats.inWatchtimeWork || 0));
-  setText("statEngageWork", fmt(stats.inLikeAndCommentWork || 0));
-  
-  // Country stats
+
+  setText("statSubsWork",      fmt(stats.inSubscribersWork    || 0));
+  setText("statVideoWork",     fmt(stats.inVideoTaskWork      || 0));
+  setText("statWatchtimeWork", fmt(stats.inWatchtimeWork      || 0));
+  setText("statEngageWork",    fmt(stats.inLikeAndCommentWork || 0));
+
   renderCountryStats(stats.countries || {});
 }
 
 function renderCountryStats(countries) {
   const container = document.getElementById("countryStats");
   if (!container) return;
-  
+
   const entries = Object.entries(countries);
-  
+
   if (entries.length === 0) {
     container.innerHTML = '<span class="text-gray-400 text-sm">No country data available</span>';
     return;
   }
-  
-  // Show top 10 countries
+
   const topCountries = entries.slice(0, 10);
-  
+
   container.innerHTML = topCountries.map(([country, count]) => {
     return `<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-[#F5F4EB] border-2 border-[#211F1F] rounded-full text-sm font-bold text-[#211F1F]">
       <span>${country}</span>
       <span class="bg-[#211F1F] text-[#F5F4EB] px-2 py-0.5 rounded-full text-xs">${count}</span>
     </span>`;
   }).join("");
-  
-  // Show total countries count
+
   if (entries.length > 10) {
     container.innerHTML += `<span class="inline-flex items-center px-3 py-1.5 bg-[#DBD4B7] border-2 border-[#211F1F] rounded-full text-sm font-bold text-[#211F1F]">
       +${entries.length - 10} more
