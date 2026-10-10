@@ -16,16 +16,10 @@
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
-/* ── Not Enrolled Banner ── */
 .not-enrolled-banner {
-  background: #F5F4EB;
-  border: 3px solid #211F1F;
-  border-radius: 24px;
-  box-shadow: 8px 8px 0px 0px #211F1F;
-  padding: 48px 32px;
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
+  background: #F5F4EB; border: 3px solid #211F1F; border-radius: 24px;
+  box-shadow: 8px 8px 0px 0px #211F1F; padding: 48px 32px;
+  text-align: center; max-width: 700px; margin: 0 auto;
 }
 .not-enrolled-banner .banner-icon { font-size: 64px; margin-bottom: 16px; display: block; }
 .not-enrolled-banner .banner-title { font-size: 24px; font-weight: 900; color: #211F1F; margin-bottom: 8px; }
@@ -45,8 +39,7 @@
 html { scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
-.gradient-text { color: #211F1F; background: none; -webkit-background-clip: unset; -webkit-text-fill-color: unset; background-clip: unset; }
-
+.gradient-text { color: #211F1F; background: none; }
 .card { background: #F5F4EB; border-radius: 20px; border: 2px solid #211F1F; box-shadow: 4px 4px 0px 0px #211F1F; }
 .task-card { background: #F5F4EB; border: 2px solid #211F1F; border-radius: 20px; box-shadow: 4px 4px 0px 0px #211F1F; transition: 0.2s ease; }
 .task-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #211F1F; }
@@ -114,7 +107,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 .copy-handle-btn:hover { background: #9bc2b1; }
 .copy-handle-btn svg { width: 11px; height: 11px; }
 
-/* SweetAlert2 neo-brutalist theme overrides */
 .swal2-popup { background: #F5F4EB !important; border: 2px solid #211F1F !important; color: #211F1F !important; border-radius: 20px !important; box-shadow: 6px 6px 0px 0px #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-title { color: #211F1F !important; font-family: 'Inter', sans-serif !important; }
 .swal2-html-container { color: #4b5563 !important; font-family: 'Inter', sans-serif !important; }
@@ -125,24 +117,13 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
 .proof-screenshot { cursor: pointer; transition: 0.2s; border: 2px solid rgba(33,31,31,0.15); border-radius: 12px; }
 .proof-screenshot:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-/* ── Task Overlay (per-task validation gate) ── */
 .task-overlay-wrap { position: relative; }
 .task-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(245, 244, 235, 0.82);
-  backdrop-filter: blur(3px);
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  z-index: 10;
-  padding: 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: opacity 0.25s ease;
+  position: absolute; inset: 0; background: rgba(245, 244, 235, 0.82);
+  backdrop-filter: blur(3px); border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; z-index: 10; padding: 24px; text-align: center;
+  cursor: pointer; transition: opacity 0.25s ease;
 }
 .task-overlay:hover { background: rgba(245, 244, 235, 0.92); }
 .task-overlay .overlay-icon { font-size: 32px; }
@@ -153,124 +134,210 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
   padding: 8px 20px; background: #211F1F; color: #DBD4B7;
   border: 2px solid #211F1F; border-radius: 14px;
   font-size: 12px; font-weight: 700; cursor: pointer;
-  box-shadow: 3px 3px 0px 0px #211F1F;
-  transition: 0.15s;
+  box-shadow: 3px 3px 0px 0px #211F1F; transition: 0.15s;
 }
 .task-overlay .overlay-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0px 0px #211F1F; }
 .task-overlay.validating { cursor: wait; }
 .task-overlay.validating .overlay-btn { opacity: 0.6; pointer-events: none; }
 .task-overlay .overlay-spinner {
-  width: 28px; height: 28px;
-  border: 3px solid rgba(33,31,31,0.15);
-  border-top-color: #211F1F;
-  border-radius: 50%;
+  width: 28px; height: 28px; border: 3px solid rgba(33,31,31,0.15);
+  border-top-color: #211F1F; border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 .task-overlay.hidden { display: none; }
-
-/* Invalid task state */
 .task-card.invalid-task { border-color: #dc2626 !important; background: #fef2f2 !important; opacity: 0.55; filter: grayscale(0.3); }
 .task-card.invalid-task .task-overlay { background: rgba(254, 242, 242, 0.9); }
+
+/* Simple multi-upload zone */
+.upload-zone {
+  border: 3px dashed #211F1F;
+  border-radius: 20px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  background: #ffffff;
+}
+.upload-zone:hover { background: #f0fdf4; border-color: #22c55e; }
+.upload-zone.has-files { border-style: solid; border-color: #22c55e; background: #f0fdf4; }
+.upload-zone .upload-icon { font-size: 40px; margin-bottom: 8px; }
+.upload-zone .upload-title { font-size: 14px; font-weight: 800; color: #211F1F; margin-bottom: 4px; }
+.upload-zone .upload-desc { font-size: 11px; color: #6b7280; }
+.upload-zone input[type="file"] { display: none; }
+
+.file-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.file-preview-item {
+  position: relative;
+  border: 2px solid rgba(33,31,31,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+  background: #f3f4f6;
+}
+.file-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+.file-preview-item .file-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #211F1F;
+  color: #DBD4B7;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.file-preview-item .file-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px; height: 20px;
+  background: #ef4444;
+  color: #fff;
+  border: 1px solid #211F1F;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.video-thumb-img { width: 100px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(33,31,31,0.15); background: #f3f4f6; flex-shrink: 0; }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Screenshot rules info box */
+.rules-info-box {
+  background: #e0f2fe;
+  border: 2px solid #0284c7;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.rules-info-box .rules-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #075985;
+  margin-bottom: 6px;
+}
+.rules-info-box .rules-item {
+  font-size: 11px;
+  color: #0c4a6e;
+  line-height: 1.6;
+  padding-left: 14px;
+  position: relative;
+}
+.rules-info-box .rules-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #0284c7;
+  font-weight: 800;
+}
+
+/* Detailed rules box (main page) */
+.rules-detail-box {
+  background: linear-gradient(135deg, #F5F4EB 0%, #E8F0EC 100%);
+  border: 2px solid #211F1F;
+  border-radius: 16px;
+  padding: 14px;
+  margin-top: 14px;
+}
+.rules-detail-box .rules-detail-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #211F1F;
+  margin-bottom: 10px;
+}
+.rules-detail-box .rule-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px dashed rgba(33,31,31,0.12);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.rules-detail-box .rule-step:last-child { border-bottom: none; }
+.rule-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: #fff; flex-shrink: 0;
+  border: 1.5px solid #211F1F;
+}
+.rule-num.initial { background: #3b82f6; }
+.rule-num.like { background: #8b5cf6; }
+.rule-num.subscribe { background: #f59e0b; }
+.rule-num.final { background: #ef4444; }
+.watch-req-banner {
+  background: #fef3c7; border: 2px solid #d97706; border-radius: 12px;
+  padding: 8px 12px; font-size: 11px; color: #92400e; font-weight: 600;
+  margin-top: 10px;
+}
 </style>
 </head>
 <body>
 
-<!-- FULL-PAGE LOADER -->
-<div id="pageLoader">
-    <div class="spin"></div>
-    <p style="color: var(--muted); font-size: 14px;">Loading your tasks…</p>
-</div>
-
-<!-- TOAST -->
+<div id="pageLoader"><div class="spin"></div><p style="color: var(--muted); font-size: 14px;">Loading your tasks…</p></div>
 <div id="toast"></div>
-
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
 
-<!-- MAIN -->
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-    <!-- PAGE HEADER -->
     <div class="nb-dashboard-header">
       <div class="nb-badge-container">
-        <div class="nb-status-card nb-status-static">
-          <span class="nb-card-title">📺 Subscriber Tasks</span>
-        </div>
-          <a href="subscribersproofs.html"  target="_blank" rel="noopener noreferrer" class="nb-status-card nb-status-link">
-          <span class="nb-card-icon">🎥</span>
-          <span class="nb-card-title">View Proofs</span>
+        <div class="nb-status-card nb-status-static"><span class="nb-card-title">📺 Subscriber Tasks</span></div>
+        <a href="subscribersproofs.html" target="_blank" rel="noopener noreferrer" class="nb-status-card nb-status-link">
+          <span class="nb-card-icon">🎥</span><span class="nb-card-title">View Proofs</span>
         </a>
       </div>
       <h1 class="text-4xl font-black text-[#211F1F]">Subscriber Tasks</h1>
       <div class="text-gray-400 text-sm mt-1 max-w-[700px]">
-        Subscribe to member channels and earn their subscription back. Watch a video, subscribe, and grow your channel together with creators worldwide.
+        Subscribe to member channels and earn their subscription back. Watch the assigned video, capture screenshots, subscribe, and submit your proof.
       </div>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- SIDEBAR -->
     <aside class="w-full lg:w-[260px] xl:w-[280px] space-y-5 lg:sticky lg:top-28 lg:self-start flex-shrink-0">
-
-        <!-- ACTION BUTTONS -->
         <div class="card rounded-3xl p-5">
             <div class="space-y-3">
-                <button id="createBtn" onclick="openCreateModal()"
-                    class="btn-purple w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
+                <button id="createBtn" onclick="openCreateModal()" class="btn-purple w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
                     Create Tasks
                 </button>
-                <button id="prefsBtn" onclick="openPreferencesModal()"
-                    class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
-                    🎯 Match Preferences
-                </button>
-                <button id="toggleStatsBtn" onclick="toggleStats()"
-                    class="btn-teal w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">
-                    📊 My Task Stats
-                </button>
+                <button id="prefsBtn" onclick="openPreferencesModal()" class="btn-outline w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">🎯 Match Preferences</button>
+                <button id="toggleStatsBtn" onclick="toggleStats()" class="btn-teal w-full py-3 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2">📊 My Task Stats</button>
             </div>
         </div>
 
-        <!-- SUBSCRIPTION LIMIT CARD -->
         <div id="limitCard" class="card rounded-3xl p-5">
             <h2 class="font-semibold text-base mb-3">📈 Subscription Limit</h2>
             <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-muted">Subscribed</span>
-                    <span id="lim-subscribed" class="font-bold">—</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-muted">Limit</span>
-                    <span id="lim-limit" class="font-bold text-purple-700">—</span>
-                </div>
-                <div id="lim-reached-row" class="hidden flex justify-between">
-                    <span class="text-muted">Status</span>
-                    <span class="font-bold text-red-600">⚠ Limit Reached</span>
-                </div>
+                <div class="flex justify-between"><span class="text-muted">Subscribed</span><span id="lim-subscribed" class="font-bold">—</span></div>
+                <div class="flex justify-between"><span class="text-muted">Limit</span><span id="lim-limit" class="font-bold text-purple-700">—</span></div>
+                <div id="lim-reached-row" class="hidden flex justify-between"><span class="text-muted">Status</span><span class="font-bold text-red-600">⚠ Limit Reached</span></div>
             </div>
             <div id="lim-bar-wrap" class="mt-3">
-                <div class="w-full bg-white rounded-full h-2">
-                    <div id="lim-bar" class="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all" style="width:0%"></div>
-                </div>
+                <div class="w-full bg-white rounded-full h-2"><div id="lim-bar" class="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-400 transition-all" style="width:0%"></div></div>
             </div>
-            <p class="text-xs text-muted mt-3 leading-relaxed">
-                📎 Submit your Subscription proof via the
-                <a href="exsubextension.html"  target="_blank" rel="noopener noreferrer" class="text-purple-700 underline hover:text-purple-700">Exsub Extension</a>.
-            </p>
+            <p class="text-xs text-muted mt-3 leading-relaxed">📎 Verify your YouTube subscription list to unlock more slots.</p>
             <div id="lim-verify-wrap" class="hidden mt-3">
-                <button onclick="showLimitReachedAlert()" class="btn-teal w-full py-2.5 rounded-2xl text-sm font-semibold">
-                    🔍 Verify My Subscriptions
-                </button>
+                <button onclick="showLimitReachedAlert()" class="btn-teal w-full py-2.5 rounded-2xl text-sm font-semibold">🔍 Verify My Subscriptions</button>
             </div>
         </div>
 
-        <!-- TASK STATS - Hidden by default, fetched on click -->
         <div id="statsPanel" class="card rounded-3xl p-5 hidden">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="font-semibold text-base">📊 My Task Stats</h2>
@@ -282,55 +349,24 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
             <div id="statsContent" class="hidden">
                 <div class="space-y-3 text-sm">
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span>
-                        <span id="st-nowork" class="font-bold">—</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span>
-                        <span id="st-pending" class="font-bold">—</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span>
-                        <span id="st-subscribed" class="font-bold">—</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Unsubscribed</span>
-                        <span id="st-unsub" class="font-bold">—</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span>
-                        <span id="st-rejected" class="font-bold">—</span>
-                    </div>
-                    <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between">
-                        <span class="text-muted">Total Tasks</span>
-                        <span id="st-total" class="font-bold text-purple-700">—</span>
-                    </div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-yellow-400"></span>Not Started</span><span id="st-nowork" class="font-bold">—</span></div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending</span><span id="st-pending" class="font-bold">—</span></div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-green-400"></span>Subscribed</span><span id="st-subscribed" class="font-bold">—</span></div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-red-400"></span>Unsubscribed</span><span id="st-unsub" class="font-bold">—</span></div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-gray-500"></span>Rejected</span><span id="st-rejected" class="font-bold">—</span></div>
+                    <div class="border-t border-[#211F1F]/15 pt-3 flex items-center justify-between"><span class="text-muted">Total Tasks</span><span id="st-total" class="font-bold text-purple-700">—</span></div>
                 </div>
                 <div class="mt-4 pt-4 border-t border-[#211F1F]/15 space-y-2.5 text-sm">
                     <p class="text-xs text-muted font-semibold uppercase tracking-wider mb-2">Exchange Status</p>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Sub Back</span>
-                        <span id="st-awaiting" class="font-bold text-blue-600">—</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span>
-                        <span id="st-both" class="font-bold text-teal-600">—</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span>
-                        <span id="st-theirpending" class="font-bold text-orange-600">—</span>
-                    </div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-blue-400"></span>Awaiting Sub Back</span><span id="st-awaiting" class="font-bold text-blue-600">—</span></div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-teal-400"></span>Both Subscribed</span><span id="st-both" class="font-bold text-teal-600">—</span></div>
+                    <div class="flex items-center justify-between"><span class="flex items-center gap-2 text-muted"><span class="dot bg-orange-400"></span>Pending (Their Side)</span><span id="st-theirpending" class="font-bold text-orange-600">—</span></div>
                 </div>
             </div>
         </div>
-
     </aside>
 
-    <!-- CONTENT -->
     <main class="flex-1 min-w-0">
-
-        <!-- BLOCKED BANNER -->
         <div id="blockedBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/20 flex items-center justify-center text-xl flex-shrink-0">🚫</div>
@@ -341,7 +377,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
         </div>
 
-        <!-- UNSUBSCRIBED WARNING BANNER -->
         <div id="unsubBanner" class="hidden mb-6 rounded-3xl p-5" style="background:#fee2e2;border:2px solid #dc2626;box-shadow:4px 4px 0px 0px #dc2626;">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 rounded-2xl bg-red-500/25 flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
@@ -356,7 +391,6 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </div>
         </div>
 
-        <!-- TOP BAR -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-7">
             <div>
                 <h2 class="text-2xl font-bold" id="taskSectionTitle">My Tasks</h2>
@@ -364,39 +398,63 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
                 <p id="taskCounter" class="text-xs text-muted mt-1">Showing <span id="showingCount">0</span> tasks</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <button onclick="refreshTasks()" class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">
-                    🔄 Refresh
-                </button>
+                <button onclick="refreshTasks()" class="btn-outline px-5 rounded-2xl font-semibold h-[48px] flex items-center justify-center gap-2 text-sm">🔄 Refresh</button>
             </div>
         </div>
 
-        <!-- HOW IT WORKS BANNER -->
+        <!-- HOW IT WORKS + DETAILED RULES -->
         <div class="card rounded-3xl p-5 mb-6">
             <h3 class="font-semibold text-sm text-purple-700 mb-3">📋 How Subscriber Tasks Work</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="step-item">
-                    <div class="step-num">1</div>
-                    <div>Click <strong class="text-[#211F1F]">Open Task</strong> on any card to validate and unlock it</div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <div class="step-item"><div class="step-num">1</div><div>Click <strong class="text-[#211F1F]">Open Task</strong> to validate and unlock it</div></div>
+                <div class="step-item"><div class="step-num">2</div><div>Watch the assigned video and capture <strong class="text-[#211F1F]">screenshots</strong></div></div>
+                <div class="step-item"><div class="step-num">3</div><div><strong class="text-[#211F1F]">Subscribe</strong>, <strong class="text-[#211F1F]">like</strong> &amp; <strong class="text-[#211F1F]">comment</strong> on the video</div></div>
+                <div class="step-item"><div class="step-num">4</div><div>Click <strong class="text-[#211F1F]">📤 Submit Proof</strong> and upload all screenshots + comment</div></div>
+            </div>
+
+            <!-- Detailed rules box -->
+            <div class="rules-detail-box">
+                <div class="rules-detail-title">📸 Required Screenshots (4 milestones)</div>
+                <div class="rule-step">
+                    <span class="rule-num initial">1</span>
+                    <div class="flex-1">
+                        <strong>Initial Screenshot</strong> <span class="text-muted">(0 sec)</span>
+                        <div class="text-muted" style="font-size:10.5px;">Pause video at start · Do <strong>NOT</strong> subscribe yet · Show video title + player at 0:00</div>
+                    </div>
                 </div>
-                <div class="step-item">
-                    <div class="step-num">2</div>
-                    <div>Watch any video for <strong class="text-[#211F1F]">3 minutes</strong> (minimum 1 min before subscribing)</div>
+                <div class="rule-step">
+                    <span class="rule-num like">2</span>
+                    <div class="flex-1">
+                        <strong>Like Screenshot</strong> <span class="text-muted">(anytime during watch)</span>
+                        <div class="text-muted" style="font-size:10.5px;">Click 👍 Like · Take screenshot showing the Like button <strong>active (blue)</strong></div>
+                    </div>
                 </div>
-                <div class="step-item">
-                    <div class="step-num">3</div>
-                    <div><strong class="text-[#211F1F]">Subscribe</strong> to the channel, then come back and click <em>Mark Subscribed</em></div>
+                <div class="rule-step">
+                    <span class="rule-num subscribe">3</span>
+                    <div class="flex-1">
+                        <strong>Subscribe + Bell Screenshot</strong> <span class="text-muted">(after watching some)</span>
+                        <div class="text-muted" style="font-size:10.5px;">Click <strong>Subscribe</strong> + press <strong>🔔 Bell</strong> · Screenshot showing both icons</div>
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <span class="rule-num final">4</span>
+                    <div class="flex-1">
+                        <strong>Final Screenshot</strong> <span class="text-muted">(near end)</span>
+                        <div class="text-muted" style="font-size:10.5px;">Post comment · Take screenshot at last 5–10s · Red playback line near end · Comment + Like + Subscribe + Bell all visible</div>
+                    </div>
+                </div>
+                <div class="watch-req-banner">
+                    ⏱️ Watch at least 95% of the video · Take screenshots at each milestone · Upload all of them together when you submit proof
                 </div>
             </div>
         </div>
 
-        <!-- TASK LIST -->
         <div id="taskList" class="space-y-4">
             <div class="skeleton h-[200px]"></div>
             <div class="skeleton h-[200px]"></div>
             <div class="skeleton h-[200px]"></div>
         </div>
 
-        <!-- EMPTY STATE -->
         <div id="emptyState" class="hidden card rounded-3xl p-14 text-center">
             <div class="text-5xl mb-4">📋</div>
             <h3 class="text-xl font-semibold mb-2">No Tasks Yet</h3>
@@ -406,34 +464,27 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             </p>
             <button onclick="openCreateModal()" class="btn-purple px-8 py-3 rounded-2xl font-semibold text-sm inline-block">+ Create Tasks</button>
         </div>
-
     </main>
 </div>
-
 </div>
 </main>
 </main>
-
 
 <!-- MATCH PREFERENCES MODAL -->
 <div id="prefsModal" class="modal-bg" onclick="if(event.target===this)closePreferencesModal()">
     <div class="modal-box max-w-[560px]">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">🎯 Match Preferences</h2>
-            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closePreferencesModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            Tell us what kind of subscribers you're looking for. When you create tasks, members whose channel interests or subscriber-country audience overlap with what you pick here are prioritized first (up to <strong class="text-[#211F1F]">5 of each</strong>). This is a soft boost, not a hard filter — you'll still get 20 tasks even if your preferences are rare.
+            Pick what kind of subscribers you want. Matching members are prioritized first (up to 5 of each).
         </p>
-
         <label class="block text-xs text-muted mb-2">Preferred Interests <span id="prefInterestCount" class="text-purple-700">(0/5)</span></label>
         <div id="prefInterestPills" class="flex flex-wrap gap-2 mb-5"></div>
-
         <label class="block text-xs text-muted mb-2">Preferred Countries <span id="prefCountryCount" class="text-purple-700">(0/5)</span></label>
         <div id="prefCountryPills" class="flex flex-wrap gap-2 mb-5"></div>
-
         <div id="prefsResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
-
         <div class="flex gap-3">
             <button onclick="closePreferencesModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
             <button id="doSavePrefsBtn" onclick="doSavePreferences()" class="btn-purple flex-1 py-3 rounded-2xl text-sm font-semibold">Save Preferences</button>
@@ -446,25 +497,17 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     <div class="modal-box">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Create Subscriber Tasks</h2>
-            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeCreateModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
         </div>
         <p class="text-muted text-sm mb-5 leading-relaxed">
-            The system will find up to <strong class="text-[#211F1F]">10 members</strong> you haven't worked with yet and create <strong class="text-[#211F1F]">paired tasks</strong> automatically — one for you to subscribe to them, and one for them to subscribe back to you. Tasks are only generated when your pending count is below 5.
+            System finds up to <strong class="text-[#211F1F]">10 members</strong> you haven't worked with and creates <strong class="text-[#211F1F]">paired tasks</strong>. A 2–10 minute video is auto-assigned to each task.
         </p>
         <div class="instructions-box mb-5">
-            <p class="text-xs text-purple-700 leading-relaxed">
-                🎯 Members matching your <strong>Match Preferences</strong> (interests &amp; countries) are prioritized first. Set your preferences beforehand for better-targeted matches — the rest of the slots are filled with random untouched members as usual.
-            </p>
+            <p class="text-xs text-purple-700 leading-relaxed">🎯 Members matching your <strong>Match Preferences</strong> are prioritized first.</p>
         </div>
         <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 mb-5 space-y-3 text-sm">
-            <div class="flex justify-between items-center">
-                <span class="text-muted">Your Pending (Not Started) Tasks</span>
-                <span id="modalPendingCount" class="font-bold text-lg">—</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-muted">Can Create Tasks</span>
-                <span id="modalCanCreate" class="font-semibold">—</span>
-            </div>
+            <div class="flex justify-between items-center"><span class="text-muted">Your Pending Tasks</span><span id="modalPendingCount" class="font-bold text-lg">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-muted">Can Create Tasks</span><span id="modalCanCreate" class="font-semibold">—</span></div>
         </div>
         <div id="createResultBox" class="hidden rounded-2xl p-4 mb-5 text-sm"></div>
         <div class="flex gap-3">
@@ -479,7 +522,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     <div class="modal-box max-w-[540px]">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">Task Detail</h2>
-            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
         </div>
         <div id="detailBody" class="space-y-4"></div>
     </div>
@@ -490,7 +533,7 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     <div class="modal-box max-w-[720px]">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold">🎥 Watching Proof</h2>
-            <button onclick="closeProofModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] hover:border-purple-500 transition text-lg">✕</button>
+            <button onclick="closeProofModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
         </div>
         <div id="proofModalContent" class="space-y-4">
             <div class="text-center py-8">
@@ -501,16 +544,69 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     </div>
 </div>
 
+<!-- PROOF UPLOAD MODAL (SIMPLIFIED, NO CHECKBOXES) -->
+<div id="proofUploadModal" class="modal-bg" onclick="if(event.target===this)closeProofUploadModal()">
+    <div class="modal-box max-w-[600px]">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">📤 Submit Watching Proof</h2>
+            <button onclick="closeProofUploadModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
+        </div>
+
+        <!-- Task + video meta -->
+        <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-3 mb-4 text-xs space-y-1">
+            <div class="flex justify-between"><span class="text-muted">Task ID:</span> <span id="pu-task-id" class="font-mono font-semibold"></span></div>
+            <div class="flex justify-between"><span class="text-muted">Channel:</span> <span id="pu-channel" class="font-semibold"></span></div>
+            <div class="flex justify-between"><span class="text-muted">Video:</span> <span id="pu-video-title" class="font-semibold"></span></div>
+            <div class="flex justify-between"><span class="text-muted">Duration:</span> <span id="pu-video-duration" class="font-semibold"></span></div>
+        </div>
+
+        <!-- Screenshot guidance -->
+        <div class="rules-info-box mb-4">
+            <p class="rules-title">📸 Required Screenshots</p>
+            <p class="rules-item"><strong>Initial</strong> — Pause at 0s, do NOT subscribe yet</p>
+            <p class="rules-item"><strong>Like</strong> — Click 👍 (thumbs-up blue)</p>
+            <p class="rules-item"><strong>Subscribe + Bell</strong> — Click Subscribe + press 🔔</p>
+            <p class="rules-item"><strong>Final</strong> — Comment + like + sub + bell visible, near end</p>
+            <p class="rules-item" style="color:#dc2626;font-weight:700;">All screenshots needed before submitting — you can upload them together</p>
+        </div>
+
+        <!-- Multi-file upload zone -->
+        <label for="pu-files-input" class="upload-zone block" id="pu-upload-zone">
+            <div class="upload-icon">📸</div>
+            <div class="upload-title">Click to select screenshots</div>
+            <div class="upload-desc">You can select multiple images at once (JPG, PNG, WebP)</div>
+            <input type="file" id="pu-files-input" accept="image/*" multiple onchange="onProofFilesSelected(event)">
+        </label>
+        <div id="pu-files-preview" class="file-preview-grid"></div>
+
+        <!-- Comment section -->
+        <label class="block text-xs text-muted mb-1.5 font-semibold mt-4">💬 Comment you posted on the video:</label>
+        <textarea id="pu-comment" rows="2" placeholder="Paste the exact comment text here…"
+            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-purple-500/60 transition resize-none mb-3"></textarea>
+
+        <!-- Note: no confirmation checkboxes — member must have done all 3 steps to submit proof -->
+
+        <div id="pu-result" class="hidden rounded-2xl p-3 mb-3 text-sm"></div>
+        <div id="pu-progress" class="hidden mb-3">
+            <div class="w-full bg-white border-2 border-[#211F1F] rounded-full h-3 overflow-hidden"><div id="pu-progress-bar" class="h-full bg-[#ACD1C0] transition-all" style="width:0%"></div></div>
+            <p id="pu-progress-text" class="text-xs text-muted mt-1 text-center"></p>
+        </div>
+
+        <div class="flex gap-3 mt-4">
+            <button onclick="closeProofUploadModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
+            <button id="pu-submit" onclick="submitProofUpload()" class="btn-purple flex-1 py-3 rounded-2xl text-sm font-semibold">📤 Submit Proof</button>
+        </div>
+    </div>
+</div>
+
 <!-- REPORT ISSUE MODAL -->
 <div id="issueModal" class="modal-bg" onclick="if(event.target===this)closeIssueModal()">
     <div class="modal-box max-w-[480px]">
         <div class="flex items-center justify-between mb-5">
             <h2 class="text-lg font-bold text-red-600">⚠ Report Issue</h2>
-            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] transition text-lg">✕</button>
+            <button onclick="closeIssueModal()" class="w-9 h-9 rounded-full bg-white border border-[#211F1F]/15 flex items-center justify-center text-muted hover:text-[#211F1F] text-lg">✕</button>
         </div>
-
-        <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message. This will be reviewed by our team.</p>
-
+        <p class="text-muted text-sm mb-4 leading-relaxed">Select the issue type or write a custom message.</p>
         <div class="flex flex-wrap gap-2 mb-4">
             <button class="issue-pill" onclick="toggleIssuePill(this,'Channel not found')">📭 Channel not found</button>
             <button class="issue-pill" onclick="toggleIssuePill(this,'Channel is deleted')">🗑 Channel deleted</button>
@@ -520,16 +616,11 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
             <button class="issue-pill" onclick="toggleIssuePill(this,'Inappropriate content')">🚫 Inappropriate content</button>
             <button class="issue-pill" onclick="toggleIssuePill(this,'Subscription not working')">⚡ Sub not working</button>
         </div>
-
         <label class="block text-xs text-muted mb-1.5">Additional details (optional):</label>
-        <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…"
-            class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
-
+        <textarea id="issueCustomText" rows="3" placeholder="Describe the issue in more detail…" class="w-full bg-white border border-[#211F1F]/15 rounded-2xl px-4 py-3 text-sm outline-none focus:border-red-500/60 transition resize-none mb-4"></textarea>
         <input type="hidden" id="issueTaskId">
         <div id="issuePillSelected" class="text-xs text-red-600 mb-3 min-h-[16px]"></div>
-
         <div id="issueResultBox" class="hidden rounded-2xl p-4 mb-4 text-sm"></div>
-
         <div class="flex gap-3">
             <button onclick="closeIssueModal()" class="btn-outline flex-1 py-3 rounded-2xl text-sm font-medium">Cancel</button>
             <button id="doIssueBtn" onclick="doSubmitIssue()" class="btn-red flex-1 py-3 rounded-2xl text-sm font-semibold">Submit Issue</button>
@@ -537,33 +628,18 @@ input::placeholder, textarea::placeholder { color: #8a8f9e; }
     </div>
 </div>
 
-<!-- SCRIPTS -->
 <script>
-/* ────────────────────────────────────────
-   AUTH + LOGOUT
-──────────────────────────────────────── */
-function logoutUser() {
-    localStorage.clear();
-    window.location.href = "signin.html";
-}
-
+function logoutUser() { localStorage.clear(); window.location.href = "signin.html"; }
 const savedUsername = localStorage.getItem("username") || "";
 const savedPassword = localStorage.getItem("password") || "";
 const savedUserCode = localStorage.getItem("usercode") || "";
-
-if (!savedUsername || !savedPassword) {
-    window.location.href = "signin.html";
-}
+if (!savedUsername || !savedPassword) window.location.href = "signin.html";
 </script>
 
 <script>
-/* ────────────────────────────────────────
-   CONFIG
-──────────────────────────────────────── */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJcOdAAXBG0dkVqwe66L17GEYoNmdrh0MqeVkJkYr38syyLp54UIhprKoHtgSHCybb_w/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzx9fMRWbap0Tv3vrYtk_8q6YQUtR2_4FspAflK4f8E4RvbuJSh904D7-NPIYz7tRNu/exec';
 const USER_CODE  = savedUserCode;
 
-// ── CACHE KEYS ──
 const CACHE_KEY_TASKS = 'subscriber_tasks_data';
 const CACHE_KEY_STATS = 'subscriber_tasks_stats';
 const CACHE_KEY_EXCHANGE = 'subscriber_tasks_exchange';
@@ -575,54 +651,38 @@ const CACHE_KEY_HAS_UNSUB = 'subscriber_tasks_hasUnsub';
 const CACHE_KEY_MEMBER = 'subscriber_tasks_member';
 const CACHE_TTL = 5 * 60 * 1000;
 
-/* ────────────────────────────────────────
-   STATE
-──────────────────────────────────────── */
-let allTasks    = [];
-let member      = null;
-let perfStats   = null;
-let isBlocked   = false;
-let hasUnsub    = false;
-let isLoading   = false;
+let allTasks = [];
+let member = null;
+let perfStats = null;
+let isBlocked = false;
+let hasUnsub = false;
+let isLoading = false;
 let currentStatus = 'NotWorkYet';
 let isCacheValid = false;
 
-// Server-side stats (ALL tasks, not just focused)
-let stats = {
-    total: 0,
-    notWorkYet: 0,
-    pending: 0,
-    subscribed: 0,
-    unsubscribed: 0,
-    rejected: 0
-};
+let stats = { total:0, notWorkYet:0, pending:0, subscribed:0, unsubscribed:0, rejected:0 };
+let exchangeStats = { awaiting:0, both:0, theirPending:0 };
 
-// Exchange status counts (ALL tasks)
-let exchangeStats = {
-    awaiting: 0,
-    both: 0,
-    theirPending: 0
-};
-
-let channelNameCache   = {};
-let channelHandleCache = {};
-let channelImageCache  = {};
-let channelIdCache     = {};
-
-// Per-task unlock state (taskId → true if validated)
+let channelNameCache = {}, channelHandleCache = {}, channelImageCache = {}, channelIdCache = {};
 let unlockedTasks = new Set();
 
-/* ── MATCHING FEATURE — STATE ──────────── */
-let myPreferences     = { interests: [], countries: [] };
-let selectedInterests  = [];
-let selectedCountries  = [];
-let interestOptions    = [];
-let countryOptions     = [];
-const MAX_PREF_EACH    = 5;
+let myPreferences = { interests: [], countries: [] };
+let selectedInterests = [], selectedCountries = [];
+let interestOptions = [], countryOptions = [];
+const MAX_PREF_EACH = 5;
 
-/* ────────────────────────────────────────
-   CACHE HELPERS
-──────────────────────────────────────── */
+// Holds selected proof files
+let proofFiles = [];
+
+function fmtDuration(sec) {
+  sec = parseInt(sec) || 0;
+  if (sec === 0) return '0:00';
+  const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+/* ── Cache ── */
 function saveTasksToCache(data) {
     try {
         localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(data.tasks || []));
@@ -634,73 +694,43 @@ function saveTasksToCache(data) {
         localStorage.setItem(CACHE_KEY_HAS_UNSUB, String(data.hasUnsub || false));
         localStorage.setItem(CACHE_KEY_UNSUB_COUNT, String(data.unsubCount || 0));
         localStorage.setItem(CACHE_KEY_MEMBER, JSON.stringify(data.member || {}));
-        
         if (data.channelNames) localStorage.setItem('subscriber_tasks_channelNames', JSON.stringify(data.channelNames));
         if (data.channelHandles) localStorage.setItem('subscriber_tasks_channelHandles', JSON.stringify(data.channelHandles));
         if (data.channelImages) localStorage.setItem('subscriber_tasks_channelImages', JSON.stringify(data.channelImages));
         if (data.channelIds) localStorage.setItem('subscriber_tasks_channelIds', JSON.stringify(data.channelIds));
-        
         isCacheValid = true;
         return true;
-    } catch (e) {
-        console.warn('Could not save to cache:', e);
-        return false;
-    }
+    } catch (e) { return false; }
 }
 
 function loadTasksFromCache() {
     try {
         const tasksData = localStorage.getItem(CACHE_KEY_TASKS);
-        const statsData = localStorage.getItem(CACHE_KEY_STATS);
-        const exchangeData = localStorage.getItem(CACHE_KEY_EXCHANGE);
-        const perfData = localStorage.getItem(CACHE_KEY_PERF);
         const timestamp = localStorage.getItem(CACHE_KEY_TIMESTAMP);
-        const focusedStatus = localStorage.getItem(CACHE_KEY_FOCUSED_STATUS) || 'NotWorkYet';
-        const hasUnsubStr = localStorage.getItem(CACHE_KEY_HAS_UNSUB) || 'false';
-        const unsubCountStr = localStorage.getItem(CACHE_KEY_UNSUB_COUNT) || '0';
-        const memberData = localStorage.getItem(CACHE_KEY_MEMBER);
-        
         if (!tasksData || !timestamp) return null;
-        
-        const age = Date.now() - parseInt(timestamp);
-        if (age > CACHE_TTL) return null;
-        
-        const tasks = JSON.parse(tasksData);
-        const savedStats = JSON.parse(statsData || '{}');
-        const savedExchange = JSON.parse(exchangeData || '{}');
-        const savedPerf = JSON.parse(perfData || '{}');
-        const savedMember = memberData ? JSON.parse(memberData) : null;
-        
-        const channelNames = JSON.parse(localStorage.getItem('subscriber_tasks_channelNames') || '{}');
-        const channelHandles = JSON.parse(localStorage.getItem('subscriber_tasks_channelHandles') || '{}');
-        const channelImages = JSON.parse(localStorage.getItem('subscriber_tasks_channelImages') || '{}');
-        const channelIds = JSON.parse(localStorage.getItem('subscriber_tasks_channelIds') || '{}');
-        
+        if ((Date.now() - parseInt(timestamp)) > CACHE_TTL) return null;
         return {
-            tasks, stats: savedStats, exchangeStats: savedExchange,
-            perfStats: savedPerf, focusedStatus,
-            hasUnsub: hasUnsubStr === 'true',
-            unsubCount: parseInt(unsubCountStr) || 0,
-            member: savedMember,
-            channelNames, channelHandles, channelImages, channelIds,
+            tasks: JSON.parse(tasksData),
+            stats: JSON.parse(localStorage.getItem(CACHE_KEY_STATS) || '{}'),
+            exchangeStats: JSON.parse(localStorage.getItem(CACHE_KEY_EXCHANGE) || '{}'),
+            perfStats: JSON.parse(localStorage.getItem(CACHE_KEY_PERF) || '{}'),
+            focusedStatus: localStorage.getItem(CACHE_KEY_FOCUSED_STATUS) || 'NotWorkYet',
+            hasUnsub: (localStorage.getItem(CACHE_KEY_HAS_UNSUB) || 'false') === 'true',
+            unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0,
+            member: JSON.parse(localStorage.getItem(CACHE_KEY_MEMBER) || 'null'),
+            channelNames: JSON.parse(localStorage.getItem('subscriber_tasks_channelNames') || '{}'),
+            channelHandles: JSON.parse(localStorage.getItem('subscriber_tasks_channelHandles') || '{}'),
+            channelImages: JSON.parse(localStorage.getItem('subscriber_tasks_channelImages') || '{}'),
+            channelIds: JSON.parse(localStorage.getItem('subscriber_tasks_channelIds') || '{}'),
             isCacheValid: true
         };
-    } catch (e) {
-        return null;
-    }
+    } catch (e) { return null; }
 }
 
-/* ────────────────────────────────────────
-   PER-TASK VALIDATION (called from overlay button)
-──────────────────────────────────────── */
+/* ── Validation ── */
 async function validateAndUnlockTask(taskId, btnEl) {
     const task = allTasks.find(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-    if (!task) {
-        showToast('❌ Task not found.', true);
-        return;
-    }
-
-    // Show loading state on overlay
+    if (!task) { showToast('❌ Task not found.', true); return; }
     const overlay = btnEl ? btnEl.closest('.task-overlay') : null;
     if (overlay) {
         overlay.classList.add('validating');
@@ -711,55 +741,17 @@ async function validateAndUnlockTask(taskId, btnEl) {
         if (icon) icon.textContent = '🔍';
         if (desc) desc.textContent = 'Checking if this task is still available…';
     }
-
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getTargetStatuses&userCode=${USER_CODE}&targetCodes=${encodeURIComponent(task.TargetUserCode)}`);
-        
-        if (!res.ok) {
-            showToast('Could not validate task. Please try again.', true);
-            resetOverlay(overlay);
-            return;
-        }
-
         const data = await res.json();
-        
-        if (!data.success || !data.targets) {
-            showToast('Could not validate task. Please try again.', true);
-            resetOverlay(overlay);
-            return;
-        }
-
+        if (!data.success || !data.targets) { showToast('Could not validate.', true); resetOverlay(overlay); return; }
         const targetData = data.targets[task.TargetUserCode];
-        
-        // If target data not found — treat as valid (be lenient)
-        if (!targetData) {
-            unlockedTasks.add(taskId);
-            hideOverlay(taskId);
-            showToast('✅ Task unlocked!');
-            return;
-        }
-
-        const isInvalid = 
-            targetData.InSubscribersWork !== 'Yes' ||
-            targetData.ViolationFlag === 'Suspended' ||
-            targetData.Status === 'Blocked' ||
-            targetData.SubscribersPromotionActive === 'No';
-
-        if (isInvalid) {
-            const reason = getInvalidReason(targetData);
-            showInvalidTaskMessage(taskId, reason);
-        } else {
-            unlockedTasks.add(taskId);
-            hideOverlay(taskId);
-            showToast('✅ Task unlocked!');
-        }
-    } catch (e) {
-        console.warn('Validation error:', e);
-        showToast('Could not validate task. Please try again.', true);
-        resetOverlay(overlay);
-    }
+        if (!targetData) { unlockedTasks.add(taskId); hideOverlay(taskId); showToast('✅ Task unlocked!'); return; }
+        const isInvalid = targetData.InSubscribersWork !== 'Yes' || targetData.ViolationFlag === 'Suspended' || targetData.Status === 'Blocked' || targetData.SubscribersPromotionActive === 'No';
+        if (isInvalid) showInvalidTaskMessage(taskId, getInvalidReason(targetData));
+        else { unlockedTasks.add(taskId); hideOverlay(taskId); showToast('✅ Task unlocked!'); }
+    } catch (e) { showToast('Could not validate.', true); resetOverlay(overlay); }
 }
-
 function getInvalidReason(targetData) {
     if (targetData.InSubscribersWork !== 'Yes') return 'Member left the Subscribers Group';
     if (targetData.ViolationFlag === 'Suspended') return 'Member is Suspended';
@@ -767,223 +759,115 @@ function getInvalidReason(targetData) {
     if (targetData.SubscribersPromotionActive === 'No') return 'Member has Promotion Disabled';
     return 'Member is no longer eligible';
 }
-
 function resetOverlay(overlay) {
     if (!overlay) return;
     overlay.classList.remove('validating');
     const btn = overlay.querySelector('.overlay-btn');
-    const icon = overlay.querySelector('.overlay-icon');
-    const desc = overlay.querySelector('.overlay-desc');
     if (btn) btn.innerHTML = '🔓 Open Task';
-    if (icon) icon.textContent = '🔒';
-    if (desc) desc.textContent = 'Click to verify this task is still available';
 }
-
 function hideOverlay(taskId) {
     const card = document.querySelector(`[data-task-id="${taskId}"]`);
     if (!card) return;
     const overlay = card.querySelector('.task-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.classList.add('hidden'), 250);
-    }
+    if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.classList.add('hidden'), 250); }
 }
-
 function showInvalidTaskMessage(taskId, reason) {
     const card = document.querySelector(`[data-task-id="${taskId}"]`);
     if (card) card.classList.add('invalid-task');
-
     Swal.fire({
-        icon: 'error',
-        title: '🚫 Task Not Available',
-        html: `
-            <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+        icon: 'error', title: '🚫 Task Not Available',
+        html: `<div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
                 <p style="margin-bottom:12px;">This task is no longer available.</p>
                 <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:12px 16px;margin-bottom:14px;">
                     <p style="font-weight:600;color:#dc2626;margin-bottom:4px;">Reason:</p>
                     <p style="color:#4b5563;">${reason}</p>
-                </div>
-                <p style="font-size:12px;color:#6b7280;">This task will be removed from your list.</p>
-            </div>
-        `,
-        confirmButtonText: 'OK',
-        allowOutsideClick: false
-    }).then(() => {
-        removeTaskFromList(taskId);
-    });
+                </div></div>`,
+        confirmButtonText: 'OK', allowOutsideClick: false
+    }).then(() => removeTaskFromList(taskId));
 }
-
 function removeTaskFromList(taskId) {
     const idx = allTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
     if (idx !== -1) allTasks.splice(idx, 1);
     unlockedTasks.delete(taskId);
-    
-    try {
-        const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
-        const cIdx = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-        if (cIdx !== -1) {
-            cachedTasks.splice(cIdx, 1);
-            localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
-        }
-    } catch (e) {}
-    
-    recalculateStats();
-    renderStats();
-    renderList();
-    checkBlock();
-    checkUnsubscribed();
-    showToast(`🗑️ Task ${taskId} removed`);
+    recalculateStats(); renderStats(); renderList(); checkBlock(); checkUnsubscribed();
 }
 
-/* ────────────────────────────────────────
-   CHECK PERFORMANCE TABLE FOR PRIORITY TASKS
-──────────────────────────────────────── */
+/* ── Priority check ── */
 async function checkPerformanceTableForPriority() {
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
-        if (!res.ok) return null;
         const data = await res.json();
         if (!data.success || !data.stats) return null;
-        
         const freshStats = data.stats;
         const hasUnsubLocal = freshStats.unsubscribed > 0;
         const hasPending = freshStats.pending > 0;
-        
         let newFocusedStatus = null;
         if (hasUnsubLocal) newFocusedStatus = 'Unsubscribed';
         else if (hasPending) newFocusedStatus = 'Pending';
-        
         if (newFocusedStatus) {
             const tasksRes = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
-            if (!tasksRes.ok) return null;
             const tasksData = await tasksRes.json();
-            
             if (tasksData.success && tasksData.tasks && tasksData.tasks.length > 0) {
                 return {
-                    tasks: tasksData.tasks,
-                    focusedStatus: tasksData.focusedStatus || newFocusedStatus,
-                    stats: tasksData.fullStats || freshStats,
-                    exchangeStats: tasksData.exchangeStats || {},
-                    hasUnsub: tasksData.hasUnsub || false,
-                    unsubCount: tasksData.unsubCount || 0,
+                    tasks: tasksData.tasks, focusedStatus: tasksData.focusedStatus || newFocusedStatus,
+                    stats: tasksData.fullStats || freshStats, exchangeStats: tasksData.exchangeStats || {},
+                    hasUnsub: tasksData.hasUnsub || false, unsubCount: tasksData.unsubCount || 0,
                     perfStats: tasksData.perfStats || null,
-                    channelNames: tasksData.channelNames || {},
-                    channelHandles: tasksData.channelHandles || {},
-                    channelImages: tasksData.channelImages || {},
-                    channelIds: tasksData.channelIds || {},
-                    member: tasksData.member || null,
-                    fromPriority: true
+                    channelNames: tasksData.channelNames || {}, channelHandles: tasksData.channelHandles || {},
+                    channelImages: tasksData.channelImages || {}, channelIds: tasksData.channelIds || {},
+                    member: tasksData.member || null, fromPriority: true
                 };
             }
         }
-        
         return { hasUnsub: hasUnsubLocal, hasPending, noPriorityTasks: true, stats: freshStats };
-    } catch (e) {
-        return null;
-    }
+    } catch (e) { return null; }
 }
 
-/* ────────────────────────────────────────
-   BOOT — NO group visibility check, NO auto-validation
-──────────────────────────────────────── */
-window.addEventListener('DOMContentLoaded', async function() {
-    await init();
-});
+/* ── Boot ── */
+window.addEventListener('DOMContentLoaded', async function() { await init(); });
 
 async function init() {
     try {
-        // STEP 1: Check Performance Table for priority tasks
         const priorityResult = await checkPerformanceTableForPriority();
-        
         if (priorityResult && priorityResult.fromPriority) {
-            allTasks = priorityResult.tasks || [];
-            currentStatus = priorityResult.focusedStatus || 'NotWorkYet';
-            stats = priorityResult.stats || stats;
-            exchangeStats = priorityResult.exchangeStats || exchangeStats;
-            hasUnsub = priorityResult.hasUnsub || false;
-            perfStats = priorityResult.perfStats || perfStats;
-            
-            if (priorityResult.channelNames) Object.assign(channelNameCache, priorityResult.channelNames);
-            if (priorityResult.channelHandles) Object.assign(channelHandleCache, priorityResult.channelHandles);
-            if (priorityResult.channelImages) Object.assign(channelImageCache, priorityResult.channelImages);
-            if (priorityResult.channelIds) Object.assign(channelIdCache, priorityResult.channelIds);
-            if (priorityResult.member) member = priorityResult.member;
-            
-            if (priorityResult.unsubCount > 0) {
-                document.getElementById('unsubCount').textContent = priorityResult.unsubCount;
-            }
-            
-            saveTasksToCache({
-                tasks: allTasks, fullStats: stats, exchangeStats,
-                perfStats, focusedStatus: currentStatus, hasUnsub,
-                unsubCount: priorityResult.unsubCount || 0, member,
-                channelNames: channelNameCache, channelHandles: channelHandleCache,
-                channelImages: channelImageCache, channelIds: channelIdCache
-            });
-            
-            hideLoader();
-            loadPreferenceOptions();
-            checkBlock();
-            checkUnsubscribed();
-            renderLimitCard();
-            renderList();
-            updateStatusLabel();
-            
-            if (perfStats && perfStats.LimitReached === 'Yes') {
-                setTimeout(showLimitReachedAlert, 800);
-            }
-            
-            refreshTasksInBackground();
-            return;
+            applyServerData(priorityResult);
+            saveTasksToCache({ tasks: allTasks, fullStats: stats, exchangeStats, perfStats, focusedStatus: currentStatus, hasUnsub, unsubCount: priorityResult.unsubCount || 0, member, channelNames: channelNameCache, channelHandles: channelHandleCache, channelImages: channelImageCache, channelIds: channelIdCache });
+            hideLoader(); loadPreferenceOptions(); checkBlock(); checkUnsubscribed(); renderLimitCard(); renderList(); updateStatusLabel();
+            if (perfStats && perfStats.LimitReached === 'Yes') setTimeout(showLimitReachedAlert, 800);
+            refreshTasksInBackground(); return;
         }
-        
-        // STEP 2: No priority tasks, check cache
         const cachedData = loadTasksFromCache();
-        
         if (cachedData && cachedData.tasks && cachedData.tasks.length > 0) {
-            allTasks = cachedData.tasks;
-            stats = cachedData.stats;
-            exchangeStats = cachedData.exchangeStats;
-            perfStats = cachedData.perfStats;
-            currentStatus = cachedData.focusedStatus;
-            member = cachedData.member;
-            hasUnsub = cachedData.hasUnsub;
-            
+            allTasks = cachedData.tasks; stats = cachedData.stats; exchangeStats = cachedData.exchangeStats;
+            perfStats = cachedData.perfStats; currentStatus = cachedData.focusedStatus; member = cachedData.member; hasUnsub = cachedData.hasUnsub;
             if (cachedData.channelNames) channelNameCache = cachedData.channelNames;
             if (cachedData.channelHandles) channelHandleCache = cachedData.channelHandles;
             if (cachedData.channelImages) channelImageCache = cachedData.channelImages;
             if (cachedData.channelIds) channelIdCache = cachedData.channelIds;
-            
-            hideLoader();
-            loadPreferenceOptions();
-            checkBlock();
-            checkUnsubscribed();
-            renderLimitCard();
-            renderList();
-            updateStatusLabel();
-            
-            if (perfStats && perfStats.LimitReached === 'Yes') {
-                setTimeout(showLimitReachedAlert, 800);
-            }
-            
-            refreshTasksInBackground();
-            return;
+            hideLoader(); loadPreferenceOptions(); checkBlock(); checkUnsubscribed(); renderLimitCard(); renderList(); updateStatusLabel();
+            if (perfStats && perfStats.LimitReached === 'Yes') setTimeout(showLimitReachedAlert, 800);
+            refreshTasksInBackground(); return;
         }
-        
-        // STEP 3: No cache → fetch from server
         await fetchTasksFromServer(true);
-        
-    } catch (e) {
-        hideLoader();
-        clearSkeletons();
-        showToast('Could not connect to server.', true);
-        console.error('Init error:', e);
-    }
+    } catch (e) { hideLoader(); clearSkeletons(); showToast('Could not connect.', true); }
 }
 
-/* ────────────────────────────────────────
-   RECALCULATE STATS FROM TASKS
-──────────────────────────────────────── */
+function applyServerData(data) {
+    allTasks = data.tasks || [];
+    currentStatus = data.focusedStatus || 'NotWorkYet';
+    stats = data.fullStats || data.stats || stats;
+    exchangeStats = data.exchangeStats || exchangeStats;
+    hasUnsub = data.hasUnsub || false;
+    perfStats = data.perfStats || perfStats;
+    if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
+    if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
+    if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
+    if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
+    if (data.member) member = data.member;
+    if (data.preferences) myPreferences = { interests: data.preferences.interests || [], countries: data.preferences.countries || [] };
+    if (data.unsubCount > 0) document.getElementById('unsubCount').textContent = data.unsubCount;
+}
+
 function recalculateStats() {
     const total = allTasks.length;
     stats = {
@@ -994,125 +878,49 @@ function recalculateStats() {
         unsubscribed: allTasks.filter(t => t.Status === 'Unsubscribed').length,
         rejected: allTasks.filter(t => t.Status === 'Rejected').length
     };
-    
-    let awaitingCount = 0, bothCount = 0, theirPendingCount = 0;
-    
+    let a = 0, b = 0, c = 0;
     allTasks.forEach(t => {
         if (t.Status === 'Subscribed') {
-            if (t.PairedStatus === 'Subscribed') bothCount++;
-            else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') theirPendingCount++;
-            else awaitingCount++;
+            if (t.PairedStatus === 'Subscribed') b++;
+            else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') c++;
+            else a++;
         }
     });
-    
-    exchangeStats = { awaiting: awaitingCount, both: bothCount, theirPending: theirPendingCount };
+    exchangeStats = { awaiting: a, both: b, theirPending: c };
 }
 
-/* ────────────────────────────────────────
-   FETCH TASKS FROM SERVER — NO AUTO VALIDATION
-──────────────────────────────────────── */
 async function fetchTasksFromServer(showLoader = true) {
     if (showLoader) {
-        document.getElementById('taskList').innerHTML = `
-            <div class="skeleton h-[200px]"></div>
-            <div class="skeleton h-[200px]"></div>
-            <div class="skeleton h-[200px]"></div>
-        `;
+        document.getElementById('taskList').innerHTML = `<div class="skeleton h-[200px]"></div><div class="skeleton h-[200px]"></div><div class="skeleton h-[200px]"></div>`;
     }
-    
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        
         const data = await res.json();
         if (showLoader) hideLoader();
-
         if (!data.success) {
             if (data.notEnrolled) { showNotEnrolled(data.message); return; }
             if (data.notActive) { showNotActive(data.message); return; }
             if (data.suspended) { showSuspended(data.message); return; }
             if (data.notFound) { showMemberNotFound(data.message); return; }
-            showToast(data.message || 'Error loading data', true);
-            clearSkeletons();
-            return;
+            showToast(data.message || 'Error', true); clearSkeletons(); return;
         }
-
-        member = data.member;
-        perfStats = data.perfStats || null;
-        allTasks = data.tasks || [];  // NO validation
-        currentStatus = data.focusedStatus || 'NotWorkYet';
-        
-        if (data.fullStats) stats = data.fullStats;
-        else if (data.stats) stats = data.stats;
-        
-        if (data.exchangeStats) exchangeStats = data.exchangeStats;
-        hasUnsub = data.hasUnsub || false;
-        
-        if (data.unsubCount > 0) {
-            document.getElementById('unsubCount').textContent = data.unsubCount;
-        }
-
-        if (data.channelNames) channelNameCache = data.channelNames;
-        if (data.channelHandles) channelHandleCache = data.channelHandles;
-        if (data.channelImages) channelImageCache = data.channelImages;
-        if (data.channelIds) channelIdCache = data.channelIds;
-        
-        if (data.preferences) {
-            myPreferences = {
-                interests: data.preferences.interests || [],
-                countries: data.preferences.countries || []
-            };
-        }
-
-        saveTasksToCache(data);
-        loadPreferenceOptions();
-        checkBlock();
-        checkUnsubscribed();
-        renderLimitCard();
-        renderList();
-        updateStatusLabel();
-
-        if (perfStats && perfStats.LimitReached === 'Yes') {
-            setTimeout(showLimitReachedAlert, 800);
-        }
-
-    } catch (e) {
-        if (showLoader) { hideLoader(); clearSkeletons(); }
-        showToast('Could not connect to server.', true);
-    }
+        applyServerData(data); saveTasksToCache(data);
+        loadPreferenceOptions(); checkBlock(); checkUnsubscribed(); renderLimitCard(); renderList(); updateStatusLabel();
+        if (perfStats && perfStats.LimitReached === 'Yes') setTimeout(showLimitReachedAlert, 800);
+    } catch (e) { if (showLoader) { hideLoader(); clearSkeletons(); } showToast('Could not connect.', true); }
 }
 
-/* ────────────────────────────────────────
-   BACKGROUND REFRESH — NO auto validation
-──────────────────────────────────────── */
 async function refreshTasksInBackground() {
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getMemberAndTasks&userCode=${USER_CODE}`);
         const data = await res.json();
-        
         if (data.success) {
             const hasPriority = data.stats && (data.stats.unsubscribed > 0 || data.stats.pending > 0);
-            
             if (hasPriority && data.tasks && data.tasks.length > 0) {
-                allTasks = data.tasks;
-                currentStatus = data.focusedStatus || 'NotWorkYet';
-                if (data.fullStats) stats = data.fullStats;
-                if (data.exchangeStats) exchangeStats = data.exchangeStats;
-                if (data.perfStats) perfStats = data.perfStats;
-                if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
-                if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
-                if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
-                if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
-                
-                saveTasksToCache(data);
-                checkBlock();
-                checkUnsubscribed();
-                renderLimitCard();
-                renderList();
-                updateStatusLabel();
+                applyServerData(data); saveTasksToCache(data);
+                checkBlock(); checkUnsubscribed(); renderLimitCard(); renderList(); updateStatusLabel();
                 return;
             }
-            
             if (data.fullStats) {
                 stats = data.fullStats;
                 if (data.exchangeStats) exchangeStats = data.exchangeStats;
@@ -1122,263 +930,123 @@ async function refreshTasksInBackground() {
                 localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(perfStats));
             }
         }
-    } catch (e) {
-        console.warn('Background refresh failed:', e);
-    }
+    } catch (e) {}
 }
 
-/* ────────────────────────────────────────
-   REFRESH TASKS - User triggered
-──────────────────────────────────────── */
 async function refreshTasks() {
     if (isLoading) return;
     isLoading = true;
-
-    document.getElementById('taskList').innerHTML = `
-        <div class="skeleton h-[200px]"></div>
-        <div class="skeleton h-[200px]"></div>
-        <div class="skeleton h-[200px]"></div>
-    `;
-
-    try {
-        await fetchTasksFromServer(false);
-        showToast('✅ Tasks refreshed!');
-    } catch (e) {
-        showToast('Error loading tasks', true);
-    }
-
+    document.getElementById('taskList').innerHTML = `<div class="skeleton h-[200px]"></div><div class="skeleton h-[200px]"></div><div class="skeleton h-[200px]"></div>`;
+    try { await fetchTasksFromServer(false); showToast('✅ Tasks refreshed!'); } catch (e) { showToast('Error', true); }
     isLoading = false;
 }
 
-/* ────────────────────────────────────────
-   STATUS PAGE HELPERS
-──────────────────────────────────────── */
 function showNotEnrolled(message) {
     const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
-        <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="not-enrolled-banner">
-                <span class="banner-icon">📢</span>
-                <h2 class="banner-title">Not Enrolled in Subscribers Group</h2>
-                <p class="banner-desc">${message || 'You are not in the Subscribers Group. Join the group to start exchanging subscribers.'}</p>
-                <a href="groups.html" class="banner-btn">👥 Go to Groups</a>
-            </div>
-        </div>`;
+    if (c) c.innerHTML = `<div class="w-full flex justify-center items-center min-h-[400px]"><div class="not-enrolled-banner"><span class="banner-icon">📢</span><h2 class="banner-title">Not Enrolled in Subscribers Group</h2><p class="banner-desc">${message || 'Join the group to start.'}</p><a href="groups.html" class="banner-btn">👥 Go to Groups</a></div></div>`;
 }
-
 function showNotActive(message) {
     const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
-        <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
-                <span class="banner-icon">⛔</span>
-                <h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2>
-                <p class="banner-desc">${message || 'Your account is not active. Please contact support.'}</p>
-                <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
-            </div>
-        </div>`;
+    if (c) c.innerHTML = `<div class="w-full flex justify-center items-center min-h-[400px]"><div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;"><span class="banner-icon">⛔</span><h2 class="banner-title" style="color: #dc2626;">Account Inactive</h2><p class="banner-desc">${message || 'Contact support.'}</p><a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a></div></div>`;
 }
-
 function showSuspended(message) {
     const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
-        <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;">
-                <span class="banner-icon">🚫</span>
-                <h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2>
-                <p class="banner-desc">${message || 'Your account has been suspended.'}</p>
-                <a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a>
-            </div>
-        </div>`;
+    if (c) c.innerHTML = `<div class="w-full flex justify-center items-center min-h-[400px]"><div class="not-enrolled-banner" style="border-color: #dc2626; box-shadow: 8px 8px 0px 0px #dc2626;"><span class="banner-icon">🚫</span><h2 class="banner-title" style="color: #dc2626;">Account Suspended</h2><p class="banner-desc">${message || 'Suspended.'}</p><a href="support.html" class="banner-btn" style="background: #dc2626; border-color: #dc2626;">📞 Contact Support</a></div></div>`;
 }
-
 function showMemberNotFound(message) {
     const c = document.querySelector('.flex.flex-col.lg\\:flex-row.gap-6');
-    if (c) c.innerHTML = `
-        <div class="w-full flex justify-center items-center min-h-[400px]">
-            <div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;">
-                <span class="banner-icon">❓</span>
-                <h2 class="banner-title" style="color: #d97706;">Member Not Found</h2>
-                <p class="banner-desc">${message || 'We could not find your account. Please sign in again.'}</p>
-                <button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button>
-            </div>
-        </div>`;
+    if (c) c.innerHTML = `<div class="w-full flex justify-center items-center min-h-[400px]"><div class="not-enrolled-banner" style="border-color: #d97706; box-shadow: 8px 8px 0px 0px #d97706;"><span class="banner-icon">❓</span><h2 class="banner-title" style="color: #d97706;">Member Not Found</h2><p class="banner-desc">${message || 'Please sign in again.'}</p><button onclick="logoutUser()" class="banner-btn" style="background: #d97706; border-color: #d97706;">🔑 Sign In Again</button></div></div>`;
 }
+function hideLoader() { const l = document.getElementById('pageLoader'); l.classList.add('hidden'); setTimeout(() => l.style.display = 'none', 400); }
 
-function hideLoader() {
-    const loader = document.getElementById('pageLoader');
-    loader.classList.add('hidden');
-    setTimeout(() => loader.style.display = 'none', 400);
-}
-
-/* ────────────────────────────────────────
-   TOGGLE STATS PANEL — ALWAYS FETCH FRESH FROM SERVER
-──────────────────────────────────────── */
 function toggleStats() {
     const panel = document.getElementById('statsPanel');
     panel.classList.toggle('hidden');
-    if (!panel.classList.contains('hidden')) {
-        // Always fetch fresh stats from server
-        fetchStatsFromServer();
-    }
+    if (!panel.classList.contains('hidden')) fetchStatsFromServer();
 }
-
 async function fetchStatsFromServer() {
     const loadingEl = document.getElementById('statsLoading');
     const contentEl = document.getElementById('statsContent');
-    
-    loadingEl.classList.remove('hidden');
-    contentEl.classList.add('hidden');
-
+    loadingEl.classList.remove('hidden'); contentEl.classList.add('hidden');
     try {
         const res = await fetch(`${SCRIPT_URL}?action=getTaskStatsOnly&userCode=${USER_CODE}`);
-        
-        if (!res.ok) {
-            loadingEl.innerHTML = '<p class="text-red-600 text-xs">Could not load stats.</p>';
-            return;
-        }
-        
         const data = await res.json();
-        
         if (data.success && data.stats) {
             stats = data.stats;
             if (data.exchangeStats) exchangeStats = data.exchangeStats;
-            if (data.perfStats) {
-                perfStats = data.perfStats;
-                renderLimitCard();
-            }
-            
-            // Save to cache
+            if (data.perfStats) { perfStats = data.perfStats; renderLimitCard(); }
             localStorage.setItem(CACHE_KEY_STATS, JSON.stringify(stats));
             localStorage.setItem(CACHE_KEY_EXCHANGE, JSON.stringify(exchangeStats));
             if (perfStats) localStorage.setItem(CACHE_KEY_PERF, JSON.stringify(perfStats));
-            
-            // Render fresh values
             renderStats();
-            
-            loadingEl.classList.add('hidden');
-            contentEl.classList.remove('hidden');
-        } else {
-            loadingEl.innerHTML = '<p class="text-red-600 text-xs">Could not load stats.</p>';
-        }
-    } catch (e) {
-        loadingEl.innerHTML = '<p class="text-red-600 text-xs">Connection error.</p>';
-    }
+            loadingEl.classList.add('hidden'); contentEl.classList.remove('hidden');
+        } else loadingEl.innerHTML = '<p class="text-red-600 text-xs">Could not load stats.</p>';
+    } catch (e) { loadingEl.innerHTML = '<p class="text-red-600 text-xs">Connection error.</p>'; }
 }
 
-/* ────────────────────────────────────────
-   UPDATE STATUS LABEL
-──────────────────────────────────────── */
 function updateStatusLabel() {
-    const labelMap = {
-        'Unsubscribed': 'Unsubscribed (Action Required)',
-        'Pending': 'Pending (Waiting for Subscribe Back)',
-        'NotWorkYet': 'Not Started'
-    };
+    const labelMap = { 'Unsubscribed': 'Unsubscribed (Action Required)', 'Pending': 'Pending (Waiting for Subscribe Back)', 'NotWorkYet': 'Not Started' };
     document.getElementById('statusLabel').textContent = labelMap[currentStatus] || currentStatus;
 }
 
-/* ────────────────────────────────────────
-   BLOCK CHECK
-──────────────────────────────────────── */
 function checkBlock() {
     if (!member) return;
     const suspended = member.ViolationFlag === 'Suspended';
     const disabled = member.SubscribersPromotionActive === 'No';
-
     const banner = document.getElementById('blockedBanner');
     const msgEl = document.getElementById('blockedMsg');
     const createBtn = document.getElementById('createBtn');
-
     const hasPendingTasks = allTasks.some(t => t.Status === 'NotWorkYet' || t.Status === 'Pending');
-    const shouldShowBanner = suspended || (disabled && !hasPendingTasks);
-
-    if (shouldShowBanner) {
+    if (suspended || (disabled && !hasPendingTasks)) {
         isBlocked = true;
         banner.classList.remove('hidden');
-        
-        if (suspended) {
-            msgEl.textContent = `Your account is suspended until ${member.SuspendedUntil || 'further notice'}. Reason: ${member.ViolationReason || 'Policy violation.'}`;
-            if (createBtn) {
-                createBtn.disabled = true;
-                createBtn.classList.add('opacity-40', 'cursor-not-allowed');
-                createBtn.title = 'Your account is suspended.';
-            }
-        } else if (disabled && !hasPendingTasks) {
-            msgEl.textContent = '⚠️ Subscriber group promotion is currently disabled. To re-enable, submit your subscription list via the Exsub Extension.';
-            if (createBtn) {
-                createBtn.disabled = true;
-                createBtn.classList.add('opacity-40', 'cursor-not-allowed');
-                createBtn.title = 'Submit your subscription list to re-enable promotion.';
-            }
-        }
+        if (suspended) msgEl.textContent = `Your account is suspended until ${member.SuspendedUntil || 'further notice'}. Reason: ${member.ViolationReason || 'Policy violation.'}`;
+        else msgEl.textContent = '⚠️ Subscriber group promotion is currently disabled. Verify your subscription list to re-enable.';
+        if (createBtn) { createBtn.disabled = true; createBtn.classList.add('opacity-40', 'cursor-not-allowed'); }
     } else {
         isBlocked = false;
         banner.classList.add('hidden');
-        if (createBtn) {
-            createBtn.disabled = false;
-            createBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-            createBtn.title = '';
-        }
+        if (createBtn) { createBtn.disabled = false; createBtn.classList.remove('opacity-40', 'cursor-not-allowed'); }
     }
 }
 
-/* ────────────────────────────────────────
-   CHECK UNSUBSCRIBED
-──────────────────────────────────────── */
 function checkUnsubscribed() {
     const myTasks = allTasks.filter(t => t.UserCode === USER_CODE);
     const unsubTasks = myTasks.filter(t => t.Status === 'Unsubscribed');
     hasUnsub = unsubTasks.length > 0;
-
     const banner = document.getElementById('unsubBanner');
+    const btn = document.getElementById('createBtn');
     if (hasUnsub) {
         banner.classList.remove('hidden');
         document.getElementById('unsubCount').textContent = unsubTasks.length;
-        const btn = document.getElementById('createBtn');
-        btn.disabled = true;
-        btn.classList.add('opacity-40', 'cursor-not-allowed');
-        btn.title = 'You must re-subscribe to your unsubscribed channels first.';
+        btn.disabled = true; btn.classList.add('opacity-40', 'cursor-not-allowed');
     } else {
         banner.classList.add('hidden');
-        const btn = document.getElementById('createBtn');
-        btn.disabled = false;
-        btn.classList.remove('opacity-40', 'cursor-not-allowed');
-        btn.title = '';
+        btn.disabled = false; btn.classList.remove('opacity-40', 'cursor-not-allowed');
     }
 }
 
-/* ────────────────────────────────────────
-   RENDER STATS — only called from toggleStats flow or after mutations
-──────────────────────────────────────── */
 function renderStats() {
     const nowork = document.getElementById('st-nowork');
     if (!nowork) return;
-    
     document.getElementById('st-nowork').textContent = stats.notWorkYet || 0;
     document.getElementById('st-pending').textContent = stats.pending || 0;
     document.getElementById('st-subscribed').textContent = stats.subscribed || 0;
     document.getElementById('st-unsub').textContent = stats.unsubscribed || 0;
     document.getElementById('st-rejected').textContent = stats.rejected || 0;
     document.getElementById('st-total').textContent = stats.total || 0;
-
     document.getElementById('st-awaiting').textContent = exchangeStats.awaiting || 0;
     document.getElementById('st-both').textContent = exchangeStats.both || 0;
     document.getElementById('st-theirpending').textContent = exchangeStats.theirPending || 0;
-    
     document.getElementById('showingCount').textContent = allTasks.length;
 }
 
-/* ────────────────────────────────────────
-   LIMIT CARD
-──────────────────────────────────────── */
 function renderLimitCard() {
     const subscribedEl = document.getElementById('lim-subscribed');
     const limitEl = document.getElementById('lim-limit');
     const barEl = document.getElementById('lim-bar');
     const reachedRowEl = document.getElementById('lim-reached-row');
     const verifyWrapEl = document.getElementById('lim-verify-wrap');
-    
     if (!perfStats) {
         if (subscribedEl) subscribedEl.textContent = '—';
         if (limitEl) limitEl.textContent = '—';
@@ -1387,215 +1055,89 @@ function renderLimitCard() {
         if (verifyWrapEl) verifyWrapEl.classList.add('hidden');
         return;
     }
-
     const subscribed = parseInt(perfStats.TotalSubscribeChannels) || 0;
     const limit = parseInt(perfStats.SubscribersLimit) || 50;
     const reached = perfStats.LimitReached === 'Yes';
     const pct = Math.min(100, Math.round((subscribed / limit) * 100));
-
     if (subscribedEl) subscribedEl.textContent = subscribed;
     if (limitEl) limitEl.textContent = limit;
     if (barEl) barEl.style.width = pct + '%';
-
     if (reached) {
         if (reachedRowEl) reachedRowEl.classList.remove('hidden');
         if (verifyWrapEl) verifyWrapEl.classList.remove('hidden');
-        if (barEl) {
-            barEl.classList.add('bg-red-500');
-            barEl.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
-        }
+        if (barEl) { barEl.classList.add('bg-red-500'); barEl.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-purple-400'); }
     } else {
         if (reachedRowEl) reachedRowEl.classList.add('hidden');
         if (verifyWrapEl) verifyWrapEl.classList.add('hidden');
-        if (barEl) {
-            barEl.classList.remove('bg-red-500');
-            barEl.classList.add('bg-gradient-to-r', 'from-purple-500', 'to-purple-400');
-        }
+        if (barEl) { barEl.classList.remove('bg-red-500'); barEl.classList.add('bg-gradient-to-r', 'from-purple-500', 'to-purple-400'); }
     }
 }
 
-/* ────────────────────────────────────────
-   LIMIT REACHED ALERT
-──────────────────────────────────────── */
 async function showLimitReachedAlert() {
     const limit = perfStats ? (parseInt(perfStats.SubscribersLimit) || 50) : 50;
-
     const result = await Swal.fire({
         title: '🔒 Subscription Limit Reached',
-        html: `
-            <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
-                <p style="margin-bottom:12px;">You have reached your subscription limit of <strong style="color:#211F1F;">${limit} channels</strong>.</p>
-                <p style="margin-bottom:12px;">To continue creating new tasks, you need to:</p>
-                <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
-                    <li style="margin-bottom:6px;">Submit your YouTube subscription list via the <strong style="color:#6d28d9;">Exsub Extension</strong></li>
-                    <li style="margin-bottom:6px;">Click <strong style="color:#0d9488;">Verify My Subscriptions</strong> below</li>
-                    <li style="margin-bottom:6px;">Our system will verify and unlock your limit</li>
-                </ol>
-                <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
-                    ⚠ If any channel is found unsubscribed, that task will be marked <strong>Unsubscribed</strong>.
-                </div>
-            </div>
-        `,
-        showCancelButton: true,
-        showDenyButton: true,
-        confirmButtonText: '🔍 Verify My Subscriptions',
-        denyButtonText: '📎 Open Extension',
-        cancelButtonText: 'Close',
-        allowOutsideClick: true
+        html: `<div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
+            <p style="margin-bottom:12px;">Reached limit of <strong>${limit} channels</strong>.</p>
+            <p style="margin-bottom:12px;">To continue:</p>
+            <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
+                <li style="margin-bottom:6px;">Verify your YouTube subscription list below</li>
+                <li style="margin-bottom:6px;">System re-checks all your subscribed channels</li>
+                <li style="margin-bottom:6px;">If all good, limit unlocks</li>
+            </ol></div>`,
+        showCancelButton: true, confirmButtonText: '🔍 Verify My Subscriptions', cancelButtonText: 'Close', allowOutsideClick: true
     });
-
-    if (result.isConfirmed) {
-        await doVerifySubscriptions();
-    } else if (result.isDenied) {
-        window.open('exsubextension.html', '_blank');
-    }
+    if (result.isConfirmed) await doVerifySubscriptions();
 }
 
-/* ────────────────────────────────────────
-   VERIFY SUBSCRIPTIONS
-──────────────────────────────────────── */
 async function doVerifySubscriptions() {
-    Swal.fire({
-        title: 'Verifying Subscriptions…',
-        html: '<p style="color:#4b5563;font-size:14px;">Checking your subscription list against all your tasks. This may take a moment.</p>',
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        didOpen: () => Swal.showLoading()
-    });
-
+    Swal.fire({ title: 'Verifying…', html: '<p style="color:#4b5563;">Checking your subscription list…</p>', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'verifySubscriptions', userCode: USER_CODE })
-        });
+        const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'verifySubscriptions', userCode: USER_CODE }) });
         const data = await res.json();
-
         if (data.success) {
-            if (data.results) {
-                data.results.forEach(r => {
-                    const t = allTasks.find(x => x.TaskID === r.taskId && x.UserCode === USER_CODE);
-                    if (t) {
-                        t.Status = r.newStatus;
-                        t.CheckedDate = r.checkedDate || new Date().toISOString();
-                    }
-                });
-            }
-
-            if (data.updatedPerfStats) {
-                perfStats = data.updatedPerfStats;
-                renderLimitCard();
-            }
-
-            checkUnsubscribed();
-            await refreshTasks();
-            renderStats();
-            renderList();
-
+            if (data.results) data.results.forEach(r => { const t = allTasks.find(x => x.TaskID === r.taskId && x.UserCode === USER_CODE); if (t) { t.Status = r.newStatus; t.CheckedDate = r.checkedDate || new Date().toISOString(); } });
+            if (data.updatedPerfStats) { perfStats = data.updatedPerfStats; renderLimitCard(); }
+            checkUnsubscribed(); await refreshTasks(); renderStats(); renderList();
             const unsubFound = data.unsubscribedCount || 0;
             const verifiedSub = data.verifiedCount || 0;
-
             if (unsubFound > 0) {
-                Swal.fire({
-                    title: '⚠ Verification Complete — Issues Found',
-                    html: `
-                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
-                            <p>✅ Verified subscribed: <strong style="color:#16a34a;">${verifiedSub}</strong></p>
-                            <p>❌ Found unsubscribed: <strong style="color:#f87171;">${unsubFound}</strong></p>
-                            <div style="margin-top:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:10px 14px;font-size:12px;color:#f87171;">
-                                You must re-subscribe to the <strong>${unsubFound}</strong> channel(s) marked as Unsubscribed.
-                            </div>
-                        </div>
-                    `,
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
+                Swal.fire({ title: '⚠ Issues Found', html: `<div style="text-align:left;line-height:1.7;"><p>✅ Verified: <strong style="color:#16a34a;">${verifiedSub}</strong></p><p>❌ Unsubscribed: <strong style="color:#f87171;">${unsubFound}</strong></p></div>`, icon: 'warning', confirmButtonText: 'OK' });
             } else {
-                if (data.newLimit && perfStats) {
-                    perfStats.LimitReached = 'No';
-                    perfStats.SubscribersLimit = String(data.newLimit);
-                    renderLimitCard();
-                }
-
-                Swal.fire({
-                    title: '🎉 All Subscriptions Verified!',
-                    html: `
-                        <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
-                            <p>✅ All <strong style="color:#16a34a;">${verifiedSub}</strong> subscriptions confirmed.</p>
-                            ${data.newLimit ? `<p style="margin-top:8px;">🚀 Your limit has been increased to <strong style="color:#6d28d9;">${data.newLimit}</strong> channels.</p>` : ''}
-                            <p style="margin-top:8px;">You can now create new tasks!</p>
-                        </div>
-                    `,
-                    icon: 'success',
-                    confirmButtonText: 'Great!'
-                });
+                if (data.newLimit && perfStats) { perfStats.LimitReached = 'No'; perfStats.SubscribersLimit = String(data.newLimit); renderLimitCard(); }
+                Swal.fire({ title: '🎉 All Verified!', html: `<div style="text-align:left;line-height:1.7;"><p>✅ All <strong>${verifiedSub}</strong> subscriptions confirmed.</p>${data.newLimit ? `<p>🚀 Limit: <strong>${data.newLimit}</strong></p>` : ''}</div>`, icon: 'success', confirmButtonText: 'Great!' });
             }
-            
             await refreshTasks();
-        } else {
-            Swal.fire({
-                title: 'Verification Failed',
-                html: `<p style="color:#4b5563;font-size:14px;">${data.message || 'Could not verify subscriptions.'}</p>`,
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-    } catch (e) {
-        Swal.fire({
-            title: 'Connection Error',
-            html: '<p style="color:#4b5563;font-size:14px;">Could not reach the server. Please try again.</p>',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    }
+        } else Swal.fire({ title: 'Verification Failed', html: `<p>${data.message || 'Error'}</p>`, icon: 'error', confirmButtonText: 'OK' });
+    } catch (e) { Swal.fire({ title: 'Connection Error', html: '<p>Could not reach server.</p>', icon: 'error', confirmButtonText: 'OK' }); }
 }
 
-/* ────────────────────────────────────────
-   RENDER LIST
-──────────────────────────────────────── */
 function renderList() {
     const list = document.getElementById('taskList');
     const empty = document.getElementById('emptyState');
-
-    if (allTasks.length === 0) {
-        list.innerHTML = '';
-        empty.classList.remove('hidden');
-        document.getElementById('showingCount').textContent = '0';
-        return;
-    }
-
+    if (allTasks.length === 0) { list.innerHTML = ''; empty.classList.remove('hidden'); document.getElementById('showingCount').textContent = '0'; return; }
     empty.classList.add('hidden');
-
     const ORDER = { 'Unsubscribed': 0, 'Pending': 1, 'NotWorkYet': 2, 'Subscribed': 3, 'Rejected': 4 };
     const sorted = [...allTasks].sort((a, b) => (ORDER[a.Status] ?? 9) - (ORDER[b.Status] ?? 9));
-
     list.innerHTML = sorted.map(taskCard).join('');
     document.getElementById('showingCount').textContent = sorted.length;
 }
+function clearSkeletons() { document.getElementById('taskList').innerHTML = ''; document.getElementById('emptyState').classList.remove('hidden'); }
 
-function clearSkeletons() {
-    document.getElementById('taskList').innerHTML = '';
-    document.getElementById('emptyState').classList.remove('hidden');
-}
-
-/* ────────────────────────────────────────
-   HELPERS
-──────────────────────────────────────── */
 const STATUS_CFG = {
     'NotWorkYet': { bg: 'bg-yellow-500/15', text: 'text-yellow-700', dot: 'bg-yellow-400', label: 'Not Started' },
     'Pending': { bg: 'bg-orange-500/15', text: 'text-orange-600', dot: 'bg-orange-400', label: 'Pending' },
     'Subscribed': { bg: 'bg-green-500/15', text: 'text-green-600', dot: 'bg-green-400', label: 'Subscribed' },
     'Unsubscribed': { bg: 'bg-red-500/15', text: 'text-red-600', dot: 'bg-red-400', label: 'Unsubscribed' },
-    'Rejected': { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: 'Rejected' },
+    'Rejected': { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: 'Rejected' }
 };
 
 function pairedBadge(t) {
     if (t.Status !== 'Subscribed') return '';
     if (t.PairedStatus === 'Subscribed') return `<span class="paired-badge bg-teal-500/15 text-teal-600">✓ They Subbed Back</span>`;
     else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') return `<span class="paired-badge bg-orange-500/15 text-orange-600">⏳ Their Sub: Pending</span>`;
-    else return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Sub</span>`;
+    return `<span class="paired-badge bg-blue-500/15 text-blue-600">⏳ Awaiting Their Sub</span>`;
 }
-
 function matchBadge(t) {
     const interests = t.MatchedInterests || [];
     const countries = t.MatchedCountries || [];
@@ -1603,54 +1145,47 @@ function matchBadge(t) {
     const parts = [...interests, ...countries].join(', ');
     return `<span class="match-badge" title="Matched your preferences">🎯 Matched: ${parts}</span>`;
 }
-
 function getChannelKey(t) { return (t && (t.TargetUserCode || t.TargetChannelId)) || ''; }
-function getChannelId(t) {
-    const key = getChannelKey(t);
-    return (t && t.TargetChannelId) || channelIdCache[key] || '';
-}
-function getChannelName(t) {
-    const key = getChannelKey(t);
-    const id = getChannelId(t);
-    return (t && t.TargetChannelName) || channelNameCache[key] || channelNameCache[id] || null;
-}
-function getChannelHandle(t) {
-    const key = getChannelKey(t);
-    const id = getChannelId(t);
-    return (t && t.TargetChannelHandle) || channelHandleCache[key] || channelHandleCache[id] || null;
-}
-function getChannelImage(t) {
-    const key = getChannelKey(t);
-    const id = getChannelId(t);
-    return (t && t.TargetChannelImage) || channelImageCache[key] || channelImageCache[id] || '';
-}
-
+function getChannelId(t) { return (t && t.TargetChannelId) || channelIdCache[getChannelKey(t)] || ''; }
+function getChannelName(t) { const key = getChannelKey(t), id = getChannelId(t); return (t && t.TargetChannelName) || channelNameCache[key] || channelNameCache[id] || null; }
+function getChannelHandle(t) { const key = getChannelKey(t), id = getChannelId(t); return (t && t.TargetChannelHandle) || channelHandleCache[key] || channelHandleCache[id] || null; }
+function getChannelImage(t) { const key = getChannelKey(t), id = getChannelId(t); return (t && t.TargetChannelImage) || channelImageCache[key] || channelImageCache[id] || ''; }
 function buildChannelUrl(t) {
     const channelId = getChannelId(t);
     const handle = getChannelHandle(t);
-    if (handle) {
-        const h = handle.startsWith('@') ? handle : '@' + handle;
-        return `https://www.youtube.com/results?search_query=${encodeURIComponent(h)}`;
-    }
+    if (handle) { const h = handle.startsWith('@') ? handle : '@' + handle; return `https://www.youtube.com/results?search_query=${encodeURIComponent(h)}`; }
     return `https://www.youtube.com/channel/${channelId}`;
 }
+function buildVideoUrl(t) { return t.TargetVideoId ? `https://www.youtube.com/watch?v=${t.TargetVideoId}` : ''; }
+function buildVideoThumb(t) {
+    const vId = t.TargetVideoId || '';
+    return t.TargetVideoThumbnail || (vId ? `https://i.ytimg.com/vi/${vId}/mqdefault.jpg` : '');
+}
 
-function copyHandle(handle, btn) {
-    const h = handle.startsWith('@') ? handle : '@' + handle;
-    navigator.clipboard.writeText(h).then(() => {
+function copyText(text, label, btn) {
+    navigator.clipboard.writeText(text).then(() => {
         const orig = btn.innerHTML;
         btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
         setTimeout(() => { btn.innerHTML = orig; }, 1500);
-    }).catch(() => showToast('Could not copy handle.', true));
+        showToast(`📋 ${label} copied`);
+    }).catch(() => showToast('Could not copy.', true));
 }
-
+function copyHandle(handle, btn) {
+    const h = handle.startsWith('@') ? handle : '@' + handle;
+    copyText(h, 'Handle', btn);
+}
+function copyVideoTitle(title, btn) {
+    copyText(title, 'Video title', btn);
+}
+function copyVideoId(videoId, btn) {
+    copyText(videoId, 'Video ID', btn);
+}
 function fmtDate(v) {
     if (!v) return '—';
     const d = new Date(v);
     if (isNaN(d)) return v;
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
-
 function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -1658,67 +1193,101 @@ function showToast(msg, isError = false) {
     setTimeout(() => { t.className = ''; }, 3200);
 }
 
-/* ────────────────────────────────────────
-   TASK CARD — with per-task overlay
-──────────────────────────────────────── */
+/* ════════════════════════════════════════
+   TASK CARD
+════════════════════════════════════════ */
 function taskCard(t) {
     const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', dot: 'bg-gray-400', label: t.Status };
     const isUnsubscribed = t.Status === 'Unsubscribed';
     const isSuspended = member && member.ViolationFlag === 'Suspended';
-    const canMark = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isSuspended && !hasUnsub;
+    const canSubmit = (t.Status === 'NotWorkYet' || t.Status === 'Pending') && !isSuspended && !hasUnsub;
     const isUnlocked = unlockedTasks.has(t.TaskID);
 
-    const chanId = getChannelId(t);
-    const chanName = getChannelName(t);
+    const chanId     = getChannelId(t);
+    const chanName   = getChannelName(t);
     const chanHandle = getChannelHandle(t);
-    const chanImage = getChannelImage(t);
-    const chanUrl = buildChannelUrl(t);
+    const chanImage  = getChannelImage(t);
+    const chanUrl    = buildChannelUrl(t);
+
+    const videoId       = t.TargetVideoId || '';
+    const videoTitle    = t.TargetVideoTitle || '';
+    const videoDuration = parseInt(t.TargetVideoDuration) || 0;
+    const videoThumb    = buildVideoThumb(t);
 
     const chanDisplay = chanName
-        ? `<span class="font-semibold text-[#211F1F]">${chanName}</span>`
-        : `<span class="font-mono text-purple-700 text-sm">${chanId || '—'}</span>`;
+        ? `<span class="font-semibold text-[#211F1F] text-sm">${chanName}</span>`
+        : `<span class="font-mono text-purple-700 text-xs">${chanId || '—'}</span>`;
 
-    const handleRow = chanHandle
-        ? (() => {
-            const h = chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle;
-            const escaped = h.replace(/'/g, "\\'");
-            return `
-            <div class="flex items-center gap-1.5 mt-0.5">
-                <span class="text-xs text-purple-700 font-mono">${h}</span>
-                <button class="copy-handle-btn" onclick="copyHandle('${escaped}',this)" title="Copy handle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                </button>
-            </div>`;
-        })()
-        : (chanId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${chanId}</div>` : '');
+    const cleanHandle = chanHandle ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle) : '';
+    const escapedHandle = cleanHandle.replace(/'/g, "\\'");
+    const escapedVideoTitle = videoTitle.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
-    const issueRow = t.Issue
-        ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>`
-        : '';
+    const issueRow = t.Issue ? `<span class="text-xs text-red-600 bg-red-500/10 px-2.5 py-1 rounded-lg">⚠ ${t.Issue}</span>` : '';
+
+    const channelCard = `
+        <div class="instructions-box mb-3">
+            <p class="text-xs text-purple-700 font-semibold mb-2">📺 ${isUnsubscribed ? 'Re-subscribe to this channel:' : 'Subscribe to this channel:'}</p>
+            <div class="flex items-center gap-3">
+                ${chanImage
+                    ? `<img src="${chanImage}" alt="" class="w-12 h-12 rounded-xl object-cover bg-white border-2 border-[#211F1F]/20 flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-12 h-12 rounded-xl bg-white border-2 border-[#211F1F]/20 flex items-center justify-center text-lg flex-shrink-0&quot;>?</div>'">`
+                    : `<div class="w-12 h-12 rounded-xl bg-white border-2 border-[#211F1F]/20 flex items-center justify-center text-lg flex-shrink-0">?</div>`}
+                <div class="min-w-0 flex-1">
+                    <div class="text-sm">${chanDisplay}</div>
+                    ${cleanHandle ? `<div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="text-xs text-purple-700 font-mono">${cleanHandle}</span>
+                        <button class="copy-handle-btn" onclick="copyHandle('${escapedHandle}', this)" title="Copy channel handle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>` : (chanId ? `<div class="text-xs text-muted font-mono mt-0.5 truncate">${chanId}</div>` : '')}
+                </div>
+            </div>
+        </div>`;
+
+    const videoCard = videoId ? `
+        <div class="bg-white border-2 border-[#211F1F]/20 rounded-2xl p-3 mb-3">
+            <p class="text-xs text-purple-700 font-semibold mb-2">🎬 Watch this video:</p>
+            <div class="flex items-start gap-3">
+                ${videoThumb
+                    ? `<img src="${videoThumb}" alt="Video thumbnail" class="video-thumb-img" onerror="this.style.display='none'">`
+                    : `<div class="video-thumb-img flex items-center justify-center text-xs text-muted">No thumb</div>`}
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-start gap-2">
+                        <p class="text-sm font-semibold text-[#211F1F] leading-snug flex-1" style="word-break:break-word;">${videoTitle || '(Untitled video)'}</p>
+                        <button class="copy-handle-btn" onclick="copyVideoTitle('${escapedVideoTitle}', this)" title="Copy video title" style="flex-shrink:0;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#6d28d9">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1 flex-wrap text-xs">
+                        <span class="text-muted">⏱ ${fmtDuration(videoDuration)}</span>
+                        <span class="text-muted">·</span>
+                        <span class="font-mono text-muted">${videoId}</span>
+                    </div>
+                </div>
+            </div>
+        </div>` : `
+        <div class="bg-yellow-500/10 border-2 border-yellow-500/30 rounded-2xl p-3 mb-3">
+            <p class="text-xs text-yellow-700 font-semibold">⚠ No video assigned</p>
+            <p class="text-xs text-yellow-700/80 mt-1">Watch any 2–10 min video on the channel, then submit proof.</p>
+        </div>`;
 
     const punishmentBlock = isUnsubscribed ? `
         <div class="punishment-box mt-3">
             <p class="text-xs text-red-600 font-semibold mb-1">🚫 Action Required — Re-Subscribe</p>
-            <p class="text-xs text-red-600/80 leading-relaxed">
-                You have unsubscribed from this channel. You <strong class="text-red-600">must re-subscribe</strong> to it on YouTube and then submit your subscription list via the Exsub Extension to resolve this task.
-            </p>
-            <a href="${chanUrl}" target="_blank" rel="noopener"
-                class="btn-red inline-flex items-center justify-center gap-2 mt-3 px-4 py-2 rounded-xl text-xs font-semibold">
-                ▶ Re-Subscribe Now
-            </a>
+            <p class="text-xs text-red-600/80 leading-relaxed">You must re-subscribe to this channel and then verify your subscription list.</p>
+            <a href="${chanUrl}" target="_blank" rel="noopener" class="btn-red inline-flex items-center justify-center gap-2 mt-3 px-4 py-2 rounded-xl text-xs font-semibold">▶ Re-Subscribe Now</a>
         </div>` : '';
 
     const issueSection = !isUnsubscribed ? `
         <div class="issue-box mt-3">
             <div class="flex items-center justify-between">
                 <span class="text-xs text-red-600/80 font-medium">⚠ Report Issue with this task</span>
-                <button onclick="openIssueModal('${t.TaskID}')"
-                    class="text-xs text-red-600 hover:text-red-600 underline transition">
-                    ${t.Issue ? 'Update Issue' : 'Report'}
-                </button>
+                <button onclick="openIssueModal('${t.TaskID}')" class="text-xs text-red-600 underline transition">${t.Issue ? 'Update Issue' : 'Report'}</button>
             </div>
             ${t.Issue ? `<p class="text-xs text-red-600/70 mt-1">Current: ${t.Issue}</p>` : ''}
         </div>` : '';
@@ -1726,706 +1295,430 @@ function taskCard(t) {
     let actionButtons = '';
     if (isUnsubscribed) {
         actionButtons = `
-            ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none opacity-60">
-                ▶ Open Channel
-            </a>` : ''}
-            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #ACD1C0;">
-                🎥 Working Proof
-            </button>
-            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-600">
-                🔒 Actions Locked
-            </div>`;
-    } else if (canMark) {
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #ACD1C0;">🎥 View Proof</button>
+            <div class="px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none bg-red-500/10 border border-red-500/20 text-red-600">🔒 Actions Locked</div>`;
+    } else if (canSubmit) {
         actionButtons = `
-            ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                ▶ Open Channel
-            </a>` : ''}
-            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none" style="background: #ACD1C0;">
-                🎥 Working Proof
-            </button>
-            <button onclick="doMarkSubscribed('${t.TaskID}', this)"
-                class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                ✓ Mark Subscribed
-            </button>`;
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">🎥 My Proof</button>
+            <button onclick="openProofUploadModal('${t.TaskID}')" class="btn-purple px-4 py-2.5 rounded-2xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">📤 Submit Proof</button>`;
     } else {
         actionButtons = `
-            ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                ▶ Open Channel
-            </a>` : ''}
-            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">
-                🎥 Proof
-            </button>
-            <button onclick="openDetail('${t.TaskID}')"
-                class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">
-                View Details
-            </button>`;
+            <button onclick="viewWatchingProof('${t.TaskID}', '${t.TargetUserCode}', this)" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center gap-1.5 flex-1 xl:flex-none">🎥 Proof</button>
+            <button onclick="openDetail('${t.TaskID}')" class="btn-outline px-4 py-2.5 rounded-2xl text-xs font-medium text-center flex items-center justify-center flex-1 xl:flex-none">Details</button>`;
     }
 
-    const pinnedBadge = isUnsubscribed
-        ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>`
-        : '';
+    const pinnedBadge = isUnsubscribed ? `<span class="text-xs bg-red-500/20 text-red-600 border border-red-500/30 px-2 py-0.5 rounded-lg font-semibold">📌 Pinned</span>` : '';
 
-    // Overlay (only shown when NOT unlocked)
     const overlay = !isUnlocked ? `
         <div class="task-overlay">
             <div class="overlay-icon">🔒</div>
             <div class="overlay-title">Task Locked</div>
             <div class="overlay-desc">Click to verify this task is still available before opening it.</div>
-            <button class="overlay-btn" onclick="event.stopPropagation(); validateAndUnlockTask('${t.TaskID}', this)">
-                🔓 Open Task
-            </button>
+            <button class="overlay-btn" onclick="event.stopPropagation(); validateAndUnlockTask('${t.TaskID}', this)">🔓 Open Task</button>
         </div>` : '';
 
     return `
     <div class="task-card ${isUnsubscribed ? 'unsubscribed-card' : ''} task-overlay-wrap rounded-3xl p-5" data-task-id="${t.TaskID}">
         ${overlay}
-        <!-- TOP ROW -->
         <div class="flex flex-wrap items-center gap-2 mb-4">
             <code class="text-xs text-muted font-mono bg-white px-2.5 py-1 rounded-lg">${t.TaskID}</code>
             <span class="status-badge ${sc.bg} ${sc.text}"><span class="dot ${sc.dot}"></span>${sc.label}</span>
-            ${pairedBadge(t)}
-            ${matchBadge(t)}
-            ${issueRow}
-            ${pinnedBadge}
+            ${pairedBadge(t)} ${matchBadge(t)} ${issueRow} ${pinnedBadge}
         </div>
 
         <div class="flex flex-col xl:flex-row gap-5">
             <div class="flex-1 min-w-0">
-                <div class="instructions-box mb-3">
-                    <p class="text-xs text-purple-700 font-semibold mb-2">📺 ${isUnsubscribed ? 'Re-subscribe to this channel:' : 'Subscribe to this channel:'}</p>
-                    <div class="flex items-center gap-3">
-                        ${chanImage
-                            ? `<img src="${chanImage}" alt="" class="w-11 h-11 rounded-xl object-cover bg-white border border-[#211F1F]/15 flex-shrink-0" onerror="this.outerHTML='<div class=&quot;w-11 h-11 rounded-xl bg-white flex items-center justify-center text-lg flex-shrink-0&quot;>?</div>'">`
-                            : `<div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-lg flex-shrink-0">?</div>`}
-                        <div class="min-w-0 flex-1">
-                            <div class="text-sm">${chanDisplay}</div>
-                            ${handleRow}
-                        </div>
-                    </div>
-                </div>
-
+                ${channelCard}
+                ${videoCard}
                 ${punishmentBlock}
                 ${issueSection}
-
                 <div class="flex flex-wrap gap-4 text-xs text-muted mt-3">
-                    <span>Member: <span class="text-[#211F1F]/70">${t.TargetUserCode || '—'}</span></span>
+                    <span>Member: <span class="text-[#211F1F]/70 font-mono">${t.TargetUserCode || '—'}</span></span>
                     <span>Created: <span class="text-[#211F1F]/70">${fmtDate(t.CreatedDate)}</span></span>
                     ${t.WorkedDate ? `<span>Worked: <span class="text-[#211F1F]/70">${fmtDate(t.WorkedDate)}</span></span>` : ''}
                     ${t.CheckedDate ? `<span>Checked: <span class="text-[#211F1F]/70">${fmtDate(t.CheckedDate)}</span></span>` : ''}
                 </div>
             </div>
-
-            <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[160px] flex-shrink-0">
+            <div class="flex xl:flex-col items-center xl:items-stretch gap-2 xl:w-[170px] flex-shrink-0">
                 ${actionButtons}
             </div>
         </div>
     </div>`;
 }
 
-/* ────────────────────────────────────────
-   VIEW WATCHING PROOF
-──────────────────────────────────────── */
+/* ════════════════════════════════════════
+   PROOF UPLOAD — Simplified multi-file
+════════════════════════════════════════ */
+let currentProofTask = null;
+
+function openProofUploadModal(taskId) {
+    const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
+    if (!t) { showToast('Task not found.', true); return; }
+    if (hasUnsub) { showToast('Resolve unsubscribed tasks first.', true); return; }
+    if (perfStats && perfStats.LimitReached === 'Yes') { showLimitReachedAlert(); return; }
+    currentProofTask = t;
+
+    const durationSec = parseInt(t.TargetVideoDuration) || 180;
+
+    document.getElementById('pu-task-id').textContent = t.TaskID;
+    document.getElementById('pu-channel').textContent = t.TargetChannelName || '—';
+    document.getElementById('pu-video-title').textContent = t.TargetVideoTitle || '(any video)';
+    document.getElementById('pu-video-duration').textContent = fmtDuration(durationSec);
+
+    // Reset
+    proofFiles = [];
+    renderProofFilesPreview();
+    document.getElementById('pu-files-input').value = '';
+    document.getElementById('pu-result').classList.add('hidden');
+    document.getElementById('pu-progress').classList.add('hidden');
+    document.getElementById('pu-comment').value = '';
+
+    document.getElementById('proofUploadModal').classList.add('open');
+}
+
+function onProofFilesSelected(event) {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+
+    files.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            proofFiles.push({
+                file,
+                dataUrl: e.target.result,
+                name: file.name
+            });
+            renderProofFilesPreview();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    setTimeout(() => { event.target.value = ''; }, 100);
+}
+
+function renderProofFilesPreview() {
+    const preview = document.getElementById('pu-files-preview');
+    const zone = document.getElementById('pu-upload-zone');
+
+    if (proofFiles.length === 0) {
+        preview.innerHTML = '';
+        zone.classList.remove('has-files');
+        return;
+    }
+
+    zone.classList.add('has-files');
+    preview.innerHTML = proofFiles.map((f, i) => `
+        <div class="file-preview-item">
+            <img src="${f.dataUrl}" alt="preview">
+            <span class="file-badge">${i + 1}</span>
+            <button class="file-remove" onclick="removeProofFile(${i})" title="Remove">✕</button>
+        </div>
+    `).join('');
+}
+
+function removeProofFile(index) {
+    proofFiles.splice(index, 1);
+    renderProofFilesPreview();
+}
+
+function closeProofUploadModal() {
+    document.getElementById('proofUploadModal').classList.remove('open');
+    currentProofTask = null;
+    proofFiles = [];
+}
+
+async function submitProofUpload() {
+    if (!currentProofTask) return;
+    const t = currentProofTask;
+    const btn = document.getElementById('pu-submit');
+
+    if (proofFiles.length === 0) {
+        showToast('Please upload at least one screenshot.', true);
+        return;
+    }
+
+    if (proofFiles.length < 3) {
+        showToast('Please upload at least 3 screenshots (Initial, Like/Subscribe, Final).', true);
+        return;
+    }
+
+    const commentText = document.getElementById('pu-comment').value.trim();
+    if (!commentText) {
+        showToast('Please paste the comment you posted on the video.', true);
+        return;
+    }
+
+    const durationSec = parseInt(t.TargetVideoDuration) || 180;
+
+    const screenshots = proofFiles.map((f, idx) => {
+        let type;
+        if (idx === 0) type = 'initial';
+        else if (idx === proofFiles.length - 1) type = 'final';
+        else type = 'progress';
+
+        return {
+            dataUrl: f.dataUrl,
+            positionSeconds: 0,
+            type
+        };
+    });
+
+    // Frontend sends liked/subscribed/commented = true by default
+    // (member had to complete all 3 to submit proof — they're no longer checkboxes)
+    const payload = {
+        action: 'submitTaskProof',
+        taskId: t.TaskID, userCode: USER_CODE, targetUserCode: t.TargetUserCode,
+        taskType: 'Subscribers', channelName: t.TargetChannelName || '',
+        videoTitle: t.TargetVideoTitle || '', videoId: t.TargetVideoId || '',
+        videoDuration: durationSec, playlistId: '',
+        commentText, commentProofDataUrl: '',
+        liked: true, subscribed: true, commented: true,
+        screenshots
+    };
+
+    btn.disabled = true; btn.textContent = 'Uploading…';
+    const progressWrap = document.getElementById('pu-progress');
+    const progressBar = document.getElementById('pu-progress-bar');
+    const progressText = document.getElementById('pu-progress-text');
+    progressWrap.classList.remove('hidden');
+    progressBar.style.width = '20%';
+    progressText.textContent = `Uploading ${screenshots.length} screenshots…`;
+
+    try {
+        const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+        progressBar.style.width = '80%';
+        progressText.textContent = 'Processing…';
+        const data = await res.json();
+        progressBar.style.width = '100%';
+        if (data.success) {
+            showToast(`✅ Proof submitted — ${data.screenshotsUploaded || screenshots.length} screenshots`);
+            closeProofUploadModal();
+            await refreshTasks(); renderList();
+        } else if (data.limitReached) {
+            closeProofUploadModal(); showLimitReachedAlert();
+        } else {
+            const box = document.getElementById('pu-result');
+            box.classList.remove('hidden');
+            box.textContent = data.message || 'Upload failed.';
+            box.className = 'rounded-2xl p-3 mb-3 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
+            showToast(data.message || 'Upload failed', true);
+        }
+    } catch (e) { showToast('Connection error.', true); }
+
+    btn.disabled = false; btn.textContent = '📤 Submit Proof';
+}
+
+/* VIEW PROOF */
 async function viewWatchingProof(taskId, targetUserCode, btnEl) {
     const modal = document.getElementById('proofModal');
     const content = document.getElementById('proofModalContent');
-    
-    content.innerHTML = `
-        <div class="text-center py-8">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div>
-            <p class="text-muted text-sm mt-3">Loading proof data...</p>
-        </div>
-    `;
+    content.innerHTML = `<div class="text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-500 border-t-transparent"></div><p class="text-muted text-sm mt-3">Loading proof…</p></div>`;
     modal.classList.add('open');
-    
     try {
         const url = `${SCRIPT_URL}?action=getWatchingProof&taskId=${encodeURIComponent(taskId)}&userCode=${encodeURIComponent(USER_CODE)}&targetUserCode=${encodeURIComponent(targetUserCode)}`;
         const res = await fetch(url);
         const data = await res.json();
-        
-        if (!data.success) {
-            content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">${data.message || 'Could not load proof data.'}</p></div>`;
-            return;
-        }
-        
-        if (data.count === 0) {
-            content.innerHTML = `
-                <div class="bg-yellow-500/10 border border-yellow-500/25 rounded-2xl p-6 text-center">
-                    <p class="text-yellow-700">📭 No watching proof found for this task.</p>
-                    <p class="text-muted text-sm mt-2">Watch a video using the Exsub Extension to generate proof.</p>
-                </div>`;
-            return;
-        }
-        
-        let proofsHtml = `<div class="space-y-4">`;
-        proofsHtml += `<p class="text-sm text-muted">Found <strong class="text-purple-700">${data.count}</strong> proof(s) for Task: <span class="font-mono">${taskId}</span></p>`;
-        
+        if (!data.success) { content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">${data.message || 'Could not load.'}</p></div>`; return; }
+        if (data.count === 0) { content.innerHTML = `<div class="bg-yellow-500/10 border border-yellow-500/25 rounded-2xl p-6 text-center"><p class="text-yellow-700">📭 No proof found.</p></div>`; return; }
+        let html = `<div class="space-y-4"><p class="text-sm text-muted">Found <strong class="text-purple-700">${data.count}</strong> proof(s) for <span class="font-mono">${taskId}</span></p>`;
         data.proofs.forEach((proof, index) => {
-            const timestamp = proof.Timestamp ? new Date(proof.Timestamp).toLocaleString() : '—';
-            const isSufficient = proof.PlaySeconds >= 120;
-            
+            const timestamp = proof.SubmittedAt ? new Date(proof.SubmittedAt).toLocaleString() : '—';
             let statusBadge = '';
             if (proof.Checked === 'Valid') statusBadge = `<span class="bg-green-500/15 text-green-600 px-2 py-1 rounded-lg text-xs font-semibold">✅ Valid</span>`;
             else if (proof.Checked === 'Cheating') statusBadge = `<span class="bg-red-500/15 text-red-600 px-2 py-1 rounded-lg text-xs font-semibold">🚫 Cheating</span>`;
             else if (proof.Checked === 'Insufficient') statusBadge = `<span class="bg-yellow-500/15 text-yellow-700 px-2 py-1 rounded-lg text-xs font-semibold">⏱ Insufficient</span>`;
             else statusBadge = `<span class="bg-gray-500/15 text-gray-600 px-2 py-1 rounded-lg text-xs font-semibold">⏳ Pending</span>`;
-            
-            const proofUrl = proof.ProofScreenshot || '';
-            const isValidImageUrl = proofUrl && (proofUrl.startsWith('http://') || proofUrl.startsWith('https://') || proofUrl.startsWith('data:image'));
-            
-            let screenshotHtml = '';
-            if (isValidImageUrl) {
-                const imgId = `screenshot-${taskId}-${index}`;
-                screenshotHtml = `
-                    <div class="mt-3 bg-gray-50 rounded-xl p-2 border border-[#211F1F]/10">
-                        <img id="${imgId}" src="${proofUrl}" alt="Screenshot" 
-                            class="proof-screenshot w-full rounded-lg border-2 border-[#211F1F]/15 max-h-[400px] object-contain cursor-pointer"
-                            onclick="window.open('${proofUrl}', '_blank')"
-                            onerror="document.getElementById('${imgId}').style.display='none'; document.getElementById('${imgId}-error').style.display='block'">
-                        <div id="${imgId}-error" style="display:none;" class="text-center py-4">
-                            <button onclick="window.open('${proofUrl}', '_blank')" class="mt-2 btn-outline px-3 py-1 rounded-lg text-xs">🔗 Open Image Directly</button>
-                        </div>
-                    </div>`;
-            } else {
-                screenshotHtml = `<div class="mt-3 bg-yellow-50 rounded-xl p-4 border border-yellow-200 text-center"><p class="text-xs text-yellow-700">📷 No screenshot available for this proof</p></div>`;
-            }
-            
-            proofsHtml += `
-                <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                        <span class="font-semibold text-sm text-purple-700">Proof #${index + 1}</span>
-                        <div class="flex items-center gap-2">${statusBadge}<span class="text-xs text-green-600">✓ Task ID matched</span></div>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                        <div><span class="text-muted text-xs block">Video Title</span><span class="font-semibold text-[#211F1F] text-sm">${proof.VideoTitle || '—'}</span></div>
-                        <div><span class="text-muted text-xs block">Channel</span><span class="font-semibold text-[#211F1F] text-sm">${proof.ChannelName || '—'}</span></div>
-                        <div><span class="text-muted text-xs block">Task Type</span><span class="font-semibold text-[#211F1F] text-sm">${proof.TaskType || '—'}</span></div>
-                        <div><span class="text-muted text-xs block">Play Seconds</span><span class="font-semibold text-[#211F1F] text-sm ${isSufficient ? 'text-green-600' : 'text-red-600'}">${proof.PlaySeconds}s ${isSufficient ? '✅' : '⚠️'}</span></div>
-                        <div><span class="text-muted text-xs block">Stop Seconds</span><span class="font-semibold text-[#211F1F] text-sm">${proof.StopSeconds}s</span></div>
-                        <div><span class="text-muted text-xs block">Percentage</span><span class="font-semibold text-[#211F1F] text-sm">${proof.Percentage || 0}%</span></div>
-                        <div><span class="text-muted text-xs block">Video Duration</span><span class="font-semibold text-[#211F1F] text-sm">${proof.VideoDuration || '—'}</span></div>
-                        <div><span class="text-muted text-xs block">Video ID</span><span class="font-mono text-xs text-purple-700">${proof.VideoId || '—'}</span></div>
-                        <div><span class="text-muted text-xs block">Timestamp</span><span class="font-semibold text-[#211F1F] text-sm">${timestamp}</span></div>
-                    </div>
-                    ${proof.CheckRemarks ? `<div class="mt-2 p-2 bg-gray-50 rounded-lg border border-[#211F1F]/10"><span class="text-muted text-xs block">Admin Check</span><span class="text-sm text-[#211F1F]">${proof.CheckRemarks}</span></div>` : ''}
-                    ${screenshotHtml}
-                </div>`;
-        });
-        
-        proofsHtml += `</div>`;
-        content.innerHTML = proofsHtml;
-        
-    } catch (e) {
-        content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">Connection error. Please try again.</p></div>`;
-    }
-}
-
-function closeProofModal() {
-    document.getElementById('proofModal').classList.remove('open');
-}
-
-/* ────────────────────────────────────────
-   MARK SUBSCRIBED
-──────────────────────────────────────── */
-async function doMarkSubscribed(taskId, btnEl) {
-    if (hasUnsub) {
-        showToast('You must resolve your unsubscribed tasks first.', true);
-        return;
-    }
-
-    if (perfStats && perfStats.LimitReached === 'Yes') {
-        showLimitReachedAlert();
-        return;
-    }
-
-    const originalHTML = btnEl.innerHTML;
-    btnEl.disabled = true;
-    btnEl.innerHTML = `
-        <span class="inline-flex items-center gap-2">
-            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-            </svg>
-            Checking...
-        </span>`;
-
-    try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'markSubscribed', taskId, userCode: USER_CODE })
-        });
-        const data = await res.json();
-
-        if (data.success) {
-            const now = new Date().toISOString();
-            const myTask = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
-            if (myTask) {
-                myTask.Status = 'Subscribed';
-                myTask.WorkedDate = now;
-                myTask.PairedStatus = data.pairedStatus || (data.bothSubscribed ? 'Subscribed' : 'NotWorkYet');
-            }
-            showToast(data.bothSubscribed ? '🎉 Both subscribed! Exchange complete!' : '✅ Task marked as Subscribed!');
-            
-            const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
-            const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-            if (cachedIndex !== -1) {
-                cachedTasks[cachedIndex] = myTask || cachedTasks[cachedIndex];
-                localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
-            }
-            
-            await refreshTasks();
-            renderStats();
-            renderList();
-        } else if (data.proofMissing) {
-            Swal.fire({
-                icon: 'warning',
-                title: '⚠️ Proof Not Found',
-                html: `
-                    <div style="text-align:left;line-height:1.7;font-size:14px;color:#4b5563;">
-                        <p style="margin-bottom:12px;">No watching proof was found for this task.</p>
-                        <ol style="margin-left:16px;list-style:decimal;margin-bottom:14px;">
-                            <li style="margin-bottom:6px;">Open the target channel on YouTube</li>
-                            <li style="margin-bottom:6px;">Watch a video for at least <strong style="color:#6d28d9;">2 minutes</strong></li>
-                            <li style="margin-bottom:6px;">Click the <strong style="color:#0d9488;">Submit Proof</strong> button in the Exsub Extension</li>
-                            <li style="margin-bottom:6px;">Then click <strong style="color:#211F1F;">Mark Subscribed</strong> again</li>
-                        </ol>
-                    </div>
-                `,
-                confirmButtonText: 'Got It',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            });
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        } else if (data.limitReached) {
-            showLimitReachedAlert();
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        } else {
-            if (data.message && data.message.includes('You only watched')) {
-                const match = data.message.match(/You only watched (\d+) seconds/);
-                const watchedSeconds = match ? match[1] : '0';
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: '⏱️ Insufficient Watch Time',
-                    html: `
-                        <div style="text-align:left;line-height:1.8;font-size:14px;color:#4b5563;">
-                            <p style="margin-bottom:16px;font-size:16px;color:#dc2626;font-weight:600;">
-                                You only watched <strong style="font-size:20px;">${watchedSeconds}</strong> seconds
-                            </p>
-                            <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
-                                <p style="font-weight:600;color:#dc2626;margin-bottom:4px;">📋 Requirements:</p>
-                                <p style="color:#4b5563;">Watch at least <strong style="color:#6d28d9;">2 minutes (120 seconds)</strong> of the video before subscribing.</p>
-                            </div>
-                        </div>
-                    `,
-                    confirmButtonText: 'Close',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
+            let shotsHtml = '';
+            if (Array.isArray(proof.Screenshots) && proof.Screenshots.length > 0) {
+                shotsHtml = `<div class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">`;
+                proof.Screenshots.forEach((s, i) => {
+                    const imgUrl = s.ThumbnailUrl || s.ScreenshotUrl;
+                    shotsHtml += `<div class="bg-gray-50 rounded-xl p-1.5 border border-[#211F1F]/10">
+                        <div class="text-[10px] text-muted mb-1 font-semibold flex justify-between"><span>#${s.ScreenshotIndex || i+1} ${s.ScreenshotType || ''}</span></div>
+                        <img src="${imgUrl}" class="proof-screenshot w-full rounded-lg max-h-[180px] object-contain cursor-pointer" onclick="window.open('${s.ScreenshotUrl}', '_blank')" onerror="this.style.display='none'"></div>`;
                 });
-            } else {
-                showToast(data.message || 'Update failed.', true);
+                shotsHtml += `</div>`;
             }
-            btnEl.disabled = false;
-            btnEl.innerHTML = originalHTML;
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-        btnEl.disabled = false;
-        btnEl.innerHTML = originalHTML;
-    }
+            html += `<div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3"><span class="font-semibold text-sm text-purple-700">Proof #${index + 1} — ${proof.ProofID || ''}</span><div class="flex items-center gap-2">${statusBadge}</div></div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                    <div><span class="text-muted text-xs block">Video Title</span><span class="font-semibold text-sm">${proof.VideoTitle || '—'}</span></div>
+                    <div><span class="text-muted text-xs block">Channel</span><span class="font-semibold text-sm">${proof.ChannelName || '—'}</span></div>
+                    <div><span class="text-muted text-xs block">Duration</span><span class="font-semibold text-sm">${fmtDuration(proof.VideoDuration)}</span></div>
+                    <div><span class="text-muted text-xs block">Screenshots</span><span class="font-semibold text-sm">${proof.ScreenshotCount || 0}</span></div>
+                    <div><span class="text-muted text-xs block">Liked</span><span class="font-semibold text-sm">${proof.Liked || '—'}</span></div>
+                    <div><span class="text-muted text-xs block">Subscribed</span><span class="font-semibold text-sm">${proof.Subscribed || '—'}</span></div>
+                    <div><span class="text-muted text-xs block">Commented</span><span class="font-semibold text-sm">${proof.Commented || '—'}</span></div>
+                    <div class="md:col-span-3"><span class="text-muted text-xs block">Comment</span><span class="text-sm">${proof.CommentText || '—'}</span></div>
+                    <div class="md:col-span-3"><span class="text-muted text-xs block">Submitted</span><span class="font-semibold text-sm">${timestamp}</span></div>
+                </div>${shotsHtml}</div>`;
+        });
+        html += `</div>`;
+        content.innerHTML = html;
+    } catch (e) { content.innerHTML = `<div class="bg-red-500/10 border border-red-500/25 rounded-2xl p-6 text-center"><p class="text-red-600">Connection error.</p></div>`; }
 }
 
-/* ────────────────────────────────────────
-   DETAIL MODAL
-──────────────────────────────────────── */
+function closeProofModal() { document.getElementById('proofModal').classList.remove('open'); }
+
+/* DETAIL MODAL */
 async function openDetail(taskId) {
     const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
     if (!t) { showToast('Task not found.', true); return; }
-
-    const sc = STATUS_CFG[t.Status] || { bg: 'bg-gray-500/15', text: 'text-gray-600', label: t.Status };
+    const sc = STATUS_CFG[t.Status] || { label: t.Status, text: '' };
     const chanId = getChannelId(t);
     const chanName = getChannelName(t);
     const chanHandle = getChannelHandle(t);
     const chanUrl = buildChannelUrl(t);
-
     const h = chanHandle ? (chanHandle.startsWith('@') ? chanHandle : '@' + chanHandle) : null;
-
-    let partnerLabel = '—';
-    let partnerClass = 'text-muted';
-    if (t.Status === 'Subscribed') {
-        if (t.PairedStatus === 'Subscribed') { partnerLabel = 'Subscribed Back ✓'; partnerClass = 'text-teal-600'; }
-        else if (t.PairedStatus === 'NotWorkYet' || t.PairedStatus === 'Pending') { partnerLabel = 'Pending (Not Yet Subscribed)'; partnerClass = 'text-orange-600'; }
-        else { partnerLabel = 'Not Yet Subscribed'; partnerClass = 'text-blue-600'; }
-    } else {
-        partnerLabel = 'Awaiting Your Action';
-    }
-
     const escapedHandle = h ? h.replace(/'/g, "\\'") : '';
-
     document.getElementById('detailBody').innerHTML = `
         <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Task ID</div>
-                <div class="font-mono font-semibold text-purple-700">${t.TaskID}</div>
-            </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Your Status</div>
-                <div class="font-semibold ${sc.text}">${sc.label}</div>
-            </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Target Member</div>
-                <div class="font-semibold text-purple-700">${t.TargetUserCode || '—'}</div>
-            </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4">
-                <div class="text-muted text-xs mb-1">Partner Sub Status</div>
-                <div class="font-semibold ${partnerClass}">${partnerLabel}</div>
-            </div>
-            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2">
-                <div class="text-muted text-xs mb-1">Target Channel</div>
-                <div class="font-semibold">${chanName || '—'}</div>
-                ${h ? `<div class="flex items-center gap-1.5 mt-1">
-                    <span class="font-mono text-xs text-purple-700">${h}</span>
-                    <button class="copy-handle-btn" onclick="copyHandle('${escapedHandle}',this)" title="Copy handle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                    </button>
-                </div>` : ''}
-                <div class="font-mono text-xs text-muted mt-0.5">${chanId || '—'}</div>
-            </div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4"><div class="text-muted text-xs mb-1">Task ID</div><div class="font-mono font-semibold text-purple-700">${t.TaskID}</div></div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4"><div class="text-muted text-xs mb-1">Status</div><div class="font-semibold ${sc.text}">${sc.label}</div></div>
+            <div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2"><div class="text-muted text-xs mb-1">Target Channel</div><div class="font-semibold">${chanName || '—'}</div>${h ? `<div class="flex items-center gap-1.5 mt-1"><span class="font-mono text-xs text-purple-700">${h}</span><button class="copy-handle-btn" onclick="copyHandle('${escapedHandle}',this)"><svg viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2" style="width:11px;height:11px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div>` : ''}<div class="font-mono text-xs text-muted mt-0.5">${chanId || '—'}</div></div>
+            ${t.TargetVideoTitle ? `<div class="bg-white border border-[#211F1F]/15 rounded-2xl p-4 col-span-2"><div class="text-muted text-xs mb-1">Assigned Video</div><div class="font-semibold">${t.TargetVideoTitle}</div><div class="text-xs text-muted mt-1">Duration: ${fmtDuration(t.TargetVideoDuration)}</div></div>` : ''}
         </div>
-
-        ${chanId ? `<a href="${chanUrl}" target="_blank" rel="noopener"
-            class="btn-purple w-full py-3 rounded-2xl text-sm font-semibold text-center block mt-1">
-            ▶ Open Channel on YouTube
-        </a>` : ''}
-
-        <button onclick="closeDetailModal(); openIssueModal('${t.TaskID}')"
-            class="btn-red w-full py-3 rounded-2xl text-sm font-semibold text-center mt-2">
-            ⚠ Report / Update Issue
-        </button>
-
-        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#211F1F]/15">
-            <div>Created: ${fmtDate(t.CreatedDate)}</div>
-            ${t.WorkedDate ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>` : ''}
-            ${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}
-        </div>`;
-
+        <button onclick="closeDetailModal(); openIssueModal('${t.TaskID}')" class="btn-red w-full py-3 rounded-2xl text-sm font-semibold text-center mt-2">⚠ Report / Update Issue</button>
+        <div class="text-xs text-muted space-y-1.5 pt-4 border-t border-[#211F1F]/15"><div>Created: ${fmtDate(t.CreatedDate)}</div>${t.WorkedDate ? `<div>Worked: ${fmtDate(t.WorkedDate)}</div>` : ''}${t.CheckedDate ? `<div>Checked: ${fmtDate(t.CheckedDate)}</div>` : ''}</div>`;
     document.getElementById('detailModal').classList.add('open');
 }
+function closeDetailModal() { document.getElementById('detailModal').classList.remove('open'); }
 
-function closeDetailModal() {
-    document.getElementById('detailModal').classList.remove('open');
-}
-
-/* ────────────────────────────────────────
-   MATCH PREFERENCES MODAL
-──────────────────────────────────────── */
+/* PREFERENCES */
 async function loadPreferenceOptions() {
     if (interestOptions.length && countryOptions.length) return;
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getPreferenceOptions`);
-        const data = await res.json();
-        if (data.success) {
-            interestOptions = data.interests || [];
-            countryOptions = data.countries || [];
-        }
-    } catch (e) {}
+    try { const res = await fetch(`${SCRIPT_URL}?action=getPreferenceOptions`); const data = await res.json(); if (data.success) { interestOptions = data.interests || []; countryOptions = data.countries || []; } } catch (e) {}
 }
-
 function openPreferencesModal() {
     selectedInterests = [...myPreferences.interests];
     selectedCountries = [...myPreferences.countries];
     document.getElementById('prefsResultBox').classList.add('hidden');
     renderPrefPills();
     document.getElementById('prefsModal').classList.add('open');
-    if (!interestOptions.length || !countryOptions.length) {
-        loadPreferenceOptions().then(renderPrefPills);
-    }
+    if (!interestOptions.length || !countryOptions.length) loadPreferenceOptions().then(renderPrefPills);
 }
-
-function closePreferencesModal() {
-    document.getElementById('prefsModal').classList.remove('open');
-}
-
+function closePreferencesModal() { document.getElementById('prefsModal').classList.remove('open'); }
 function renderPrefPills() {
-    const interestBox = document.getElementById('prefInterestPills');
-    const countryBox = document.getElementById('prefCountryPills');
-
-    interestBox.innerHTML = interestOptions.map(opt => {
-        const isSel = selectedInterests.includes(opt);
-        const atCap = !isSel && selectedInterests.length >= MAX_PREF_EACH;
-        const escaped = opt.replace(/'/g, "\\'");
-        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''}
-            onclick="togglePrefPill('interest','${escaped}')">${isSel ? '✓ ' : ''}${opt}</button>`;
+    document.getElementById('prefInterestPills').innerHTML = interestOptions.map(opt => {
+        const isSel = selectedInterests.includes(opt); const atCap = !isSel && selectedInterests.length >= MAX_PREF_EACH;
+        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''} onclick="togglePrefPill('interest','${opt.replace(/'/g, "\\'")}')">${isSel ? '✓ ' : ''}${opt}</button>`;
     }).join('');
-
-    countryBox.innerHTML = countryOptions.map(opt => {
-        const isSel = selectedCountries.includes(opt);
-        const atCap = !isSel && selectedCountries.length >= MAX_PREF_EACH;
-        const escaped = opt.replace(/'/g, "\\'");
-        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''}
-            onclick="togglePrefPill('country','${escaped}')">${isSel ? '✓ ' : ''}${opt}</button>`;
+    document.getElementById('prefCountryPills').innerHTML = countryOptions.map(opt => {
+        const isSel = selectedCountries.includes(opt); const atCap = !isSel && selectedCountries.length >= MAX_PREF_EACH;
+        return `<button type="button" class="pref-pill ${isSel ? 'selected' : ''}" ${atCap ? 'disabled' : ''} onclick="togglePrefPill('country','${opt.replace(/'/g, "\\'")}')">${isSel ? '✓ ' : ''}${opt}</button>`;
     }).join('');
-
     document.getElementById('prefInterestCount').textContent = `(${selectedInterests.length}/${MAX_PREF_EACH})`;
     document.getElementById('prefCountryCount').textContent = `(${selectedCountries.length}/${MAX_PREF_EACH})`;
 }
-
 function togglePrefPill(kind, value) {
     const arr = kind === 'interest' ? selectedInterests : selectedCountries;
     const idx = arr.indexOf(value);
     if (idx !== -1) arr.splice(idx, 1);
-    else {
-        if (arr.length >= MAX_PREF_EACH) {
-            showToast(`You can pick up to ${MAX_PREF_EACH} ${kind === 'interest' ? 'interests' : 'countries'}.`, true);
-            return;
-        }
-        arr.push(value);
-    }
+    else { if (arr.length >= MAX_PREF_EACH) { showToast(`Max ${MAX_PREF_EACH}.`, true); return; } arr.push(value); }
     renderPrefPills();
 }
-
 async function doSavePreferences() {
     const btn = document.getElementById('doSavePrefsBtn');
-    btn.textContent = 'Saving…';
-    btn.disabled = true;
-
+    btn.textContent = 'Saving…'; btn.disabled = true;
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'savePreferences',
-                userCode: USER_CODE,
-                interests: selectedInterests,
-                countries: selectedCountries
-            })
-        });
+        const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'savePreferences', userCode: USER_CODE, interests: selectedInterests, countries: selectedCountries }) });
         const data = await res.json();
         const box = document.getElementById('prefsResultBox');
         box.classList.remove('hidden');
-
         if (data.success) {
             myPreferences = { interests: data.interests || [], countries: data.countries || [] };
-            box.textContent = '✅ Preferences saved! New tasks will now prioritize matching members.';
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
-            showToast('Match preferences saved!');
+            box.textContent = '✅ Saved!'; box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
+            showToast('Preferences saved!');
             setTimeout(closePreferencesModal, 1400);
-        } else {
-            box.textContent = data.message || 'Could not save preferences.';
-            box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-    }
-
-    btn.textContent = 'Save Preferences';
-    btn.disabled = false;
+        } else { box.textContent = data.message || 'Error'; box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600'; }
+    } catch (e) { showToast('Connection error.', true); }
+    btn.textContent = 'Save Preferences'; btn.disabled = false;
 }
 
-/* ────────────────────────────────────────
-   CREATE TASKS MODAL
-──────────────────────────────────────── */
+/* CREATE TASKS */
 function openCreateModal() {
-    if (isBlocked) { showToast('Your account is restricted from this group.', true); return; }
-    if (hasUnsub) { showToast('Resolve your unsubscribed tasks first.', true); return; }
-
-    if (perfStats && perfStats.LimitReached === 'Yes') {
-        showLimitReachedAlert();
-        return;
-    }
-
+    if (isBlocked) { showToast('Account restricted.', true); return; }
+    if (hasUnsub) { showToast('Resolve unsubscribed first.', true); return; }
+    if (perfStats && perfStats.LimitReached === 'Yes') { showLimitReachedAlert(); return; }
     const pending = allTasks.filter(t => (t.Status === 'NotWorkYet' || t.Status === 'Pending') && t.UserCode === USER_CODE).length;
     document.getElementById('modalPendingCount').textContent = pending;
-
     const canCreate = pending < 5;
     const canEl = document.getElementById('modalCanCreate');
-    canEl.textContent = canCreate ? 'Yes — tasks will be created' : 'No — complete your pending tasks first';
+    canEl.textContent = canCreate ? 'Yes — tasks will be created' : 'No — complete pending first';
     canEl.className = `font-semibold ${canCreate ? 'text-green-600' : 'text-red-600'}`;
-
     const btn = document.getElementById('doCreateBtn');
     btn.disabled = !canCreate;
     btn.classList.toggle('opacity-40', !canCreate);
-
     document.getElementById('createResultBox').classList.add('hidden');
     document.getElementById('createModal').classList.add('open');
 }
-
-function closeCreateModal() {
-    document.getElementById('createModal').classList.remove('open');
-}
-
+function closeCreateModal() { document.getElementById('createModal').classList.remove('open'); }
 async function doCreateTasks() {
     const btn = document.getElementById('doCreateBtn');
-    btn.textContent = 'Creating…';
-    btn.disabled = true;
-
+    btn.textContent = 'Creating…'; btn.disabled = true;
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'createSubscriberTasks', userCode: USER_CODE })
-        });
+        const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'createSubscriberTasks', userCode: USER_CODE }) });
         const data = await res.json();
         const box = document.getElementById('createResultBox');
         box.classList.remove('hidden');
-
         if (data.success) {
-            const msg = data.createdOnlyTop10 
-                ? `✅ ${data.created} new task(s) created (only top ${data.created} eligible members)`
-                : `✅ ${data.created} new task(s) created!`;
-            
-            box.textContent = msg + (data.totalEligible ? ` (${data.totalEligible} total eligible found)` : '');
+            box.textContent = `✅ ${data.created} new task(s) created!`;
             box.className = 'rounded-2xl p-4 mb-5 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
-            
-            if (data.newTasks?.length) {
-                allTasks = [...allTasks, ...data.newTasks];
-                if (data.channelNames) Object.assign(channelNameCache, data.channelNames);
-                if (data.channelHandles) Object.assign(channelHandleCache, data.channelHandles);
-                if (data.channelImages) Object.assign(channelImageCache, data.channelImages);
-                if (data.channelIds) Object.assign(channelIdCache, data.channelIds);
-                
-                saveTasksToCache({
-                    tasks: allTasks, fullStats: stats, exchangeStats,
-                    perfStats, focusedStatus: currentStatus, hasUnsub,
-                    unsubCount: parseInt(localStorage.getItem(CACHE_KEY_UNSUB_COUNT)) || 0, member,
-                    channelNames: channelNameCache, channelHandles: channelHandleCache,
-                    channelImages: channelImageCache, channelIds: channelIdCache
-                });
-                
-                await refreshTasks();
-                renderStats();
-                renderList();
-            }
+            await refreshTasks(); renderStats(); renderList();
             showToast(`${data.created} task(s) created!`);
         } else {
-            if (data.limitReached) {
-                closeCreateModal();
-                showLimitReachedAlert();
-            } else {
-                box.textContent = data.message || 'Could not create tasks.';
-                box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
-            }
+            if (data.limitReached) { closeCreateModal(); showLimitReachedAlert(); }
+            else { box.textContent = data.message || 'Error'; box.className = 'rounded-2xl p-4 mb-5 text-sm bg-red-500/10 border border-red-500/25 text-red-600'; }
         }
-    } catch (e) {
-        showToast('Connection error.', true);
-    }
-
-    btn.textContent = 'Generate Tasks';
-    btn.disabled = false;
+    } catch (e) { showToast('Connection error.', true); }
+    btn.textContent = 'Generate Tasks'; btn.disabled = false;
 }
 
-/* ────────────────────────────────────────
-   REPORT ISSUE MODAL
-──────────────────────────────────────── */
+/* REPORT ISSUE */
 let selectedIssuePill = '';
-
 async function openIssueModal(taskId) {
     const t = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
     if (!t) { showToast('Task not found.', true); return; }
-    
     selectedIssuePill = '';
     document.getElementById('issueTaskId').value = taskId;
     document.getElementById('issueCustomText').value = '';
     document.getElementById('issuePillSelected').textContent = '';
     document.getElementById('issueResultBox').classList.add('hidden');
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
-
     if (t.Issue) document.getElementById('issueCustomText').value = t.Issue;
-
     document.getElementById('issueModal').classList.add('open');
 }
-
-function closeIssueModal() {
-    document.getElementById('issueModal').classList.remove('open');
-}
-
+function closeIssueModal() { document.getElementById('issueModal').classList.remove('open'); }
 function toggleIssuePill(btn, label) {
     const wasSelected = btn.classList.contains('selected');
     document.querySelectorAll('.issue-pill').forEach(p => p.classList.remove('selected'));
-
-    if (wasSelected) {
-        selectedIssuePill = '';
-        document.getElementById('issuePillSelected').textContent = '';
-    } else {
-        btn.classList.add('selected');
-        selectedIssuePill = label;
-        document.getElementById('issuePillSelected').textContent = `Selected: ${label}`;
-    }
+    if (wasSelected) { selectedIssuePill = ''; document.getElementById('issuePillSelected').textContent = ''; }
+    else { btn.classList.add('selected'); selectedIssuePill = label; document.getElementById('issuePillSelected').textContent = `Selected: ${label}`; }
 }
-
 async function doSubmitIssue() {
     const taskId = document.getElementById('issueTaskId').value;
     const customText = (document.getElementById('issueCustomText').value || '').trim();
     const issueTitle = selectedIssuePill || customText;
     const issueDescription = selectedIssuePill ? customText : '';
-
-    if (!issueTitle) {
-        showToast('Please select an issue type or write a description.', true);
-        return;
-    }
-
+    if (!issueTitle) { showToast('Select or write an issue.', true); return; }
     const task = allTasks.find(x => x.TaskID === taskId && x.UserCode === USER_CODE);
     if (!task) { showToast('Task not found.', true); return; }
-
-    const targetUserCode = task.TargetUserCode;
     const btn = document.getElementById('doIssueBtn');
-    btn.textContent = 'Submitting…';
-    btn.disabled = true;
-
+    btn.textContent = 'Submitting…'; btn.disabled = true;
     try {
-        const res = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                action: 'reportIssue',
-                taskId,
-                reporterCode: USER_CODE,
-                targetUserCode,
-                issueTitle,
-                issueDescription,
-                issueType: selectedIssuePill || 'Custom'
-            })
-        });
+        const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'reportIssue', taskId, reporterCode: USER_CODE, targetUserCode: task.TargetUserCode, issueTitle, issueDescription, issueType: selectedIssuePill || 'Custom' }) });
         const data = await res.json();
         const box = document.getElementById('issueResultBox');
         box.classList.remove('hidden');
-
         if (data.success) {
             box.textContent = `✅ Issue reported: "${issueTitle}"`;
             box.className = 'rounded-2xl p-4 mb-4 text-sm bg-green-500/10 border border-green-500/25 text-green-700';
             task.Issue = issueTitle + (issueDescription ? ` — ${issueDescription}` : '');
-            showToast('Issue reported successfully.');
-            renderList();
-            
-            const cachedTasks = JSON.parse(localStorage.getItem(CACHE_KEY_TASKS) || '[]');
-            const cachedIndex = cachedTasks.findIndex(t => t.TaskID === taskId && t.UserCode === USER_CODE);
-            if (cachedIndex !== -1) {
-                cachedTasks[cachedIndex] = task;
-                localStorage.setItem(CACHE_KEY_TASKS, JSON.stringify(cachedTasks));
-            }
-            
-            setTimeout(closeIssueModal, 1600);
-        } else {
-            box.textContent = data.message || 'Could not submit issue.';
-            box.className = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600';
-        }
-    } catch (e) {
-        showToast('Connection error.', true);
-    }
-
-    btn.textContent = 'Submit Issue';
-    btn.disabled = false;
+            renderList(); setTimeout(closeIssueModal, 1600);
+        } else { box.textContent = data.message || 'Error'; box.className = 'rounded-2xl p-4 mb-4 text-sm bg-red-500/10 border border-red-500/25 text-red-600'; }
+    } catch (e) { showToast('Connection error.', true); }
+    btn.textContent = 'Submit Issue'; btn.disabled = false;
 }
 </script>
 </body>

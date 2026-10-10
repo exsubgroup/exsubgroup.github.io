@@ -5,173 +5,250 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Subscribers Proof – Exsub Group</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="navbar.css">
 <link rel="stylesheet" href="style.css">
 <style>
+:root { --cream:#F5F4EB; --mint:#ACD1C0; --sand:#DBD4B7; --ink:#211F1F; }
+* { font-family:'Inter',sans-serif; box-sizing:border-box; }
+body { background:var(--cream); color:var(--ink); overflow-x:hidden; }
+.card { background:#F5F4EB; border-radius:20px; border:2px solid #211F1F; box-shadow:4px 4px 0px 0px #211F1F; }
 
-  /* ──────────────────────────────────────────────────────────────
-   NEO-BRUTALIST BACKGROUND DESIGN
-   Paste this into style.css
-   ────────────────────────────────────────────────────────────── */
+/* Tabs */
+.tabbar-container { background:#F5F4EB; border:3px solid #211F1F; border-radius:20px; padding:12px 16px; box-shadow:6px 6px 0px 0px #211F1F; margin-bottom:1.5rem; }
+.tabbar { display:flex; gap:14px; overflow-x:auto; padding:4px 2px 8px; }
+.tabbar::-webkit-scrollbar { height:8px; }
+.tabbar::-webkit-scrollbar-thumb { background:#211F1F; border-radius:8px; }
+.tab { position:relative; flex:0 0 auto; cursor:pointer; padding-top:10px; }
+.tab .flap { position:absolute; top:0; left:14px; right:14px; height:16px; border:3px solid #211F1F; border-bottom:none; border-radius:8px 8px 0 0; }
+.tab .card-tab { position:relative; display:flex; align-items:center; gap:10px; background:#F5F4EB; border:3px solid #211F1F; border-radius:14px; padding:10px 16px; box-shadow:6px 6px 0px 0px #211F1F; transition:transform 0.12s, box-shadow 0.12s; white-space:nowrap; }
+.tab .swatch { width:34px; height:34px; border:2.5px solid #211F1F; border-radius:9px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; font-size:16px; }
+.tab .meta { display:flex; flex-direction:column; align-items:flex-start; }
+.tab .name { font-weight:800; font-size:14px; color:#211F1F; }
+.tab .count { font-size:11px; font-weight:700; color:#6a6a6a; }
+.tab:hover .card-tab { transform:translate(-2px,-2px); box-shadow:8px 8px 0px 0px #211F1F; }
+.tab.active .card-tab { transform:translate(-3px,-3px); box-shadow:9px 9px 0px 0px #211F1F; background:#DBD4B7; }
 
-/* ── ROOT VARIABLES ── */
-:root {
-  --cream: #F5F4EB;
-  --mint: #ACD1C0;
-  --sand: #DBD4B7;
-}
+/* Proof cards */
+.proof-card { background:#F5F4EB; border:2px solid #211F1F; border-radius:20px; box-shadow:4px 4px 0px 0px #211F1F; margin-bottom:22px; overflow:hidden; }
+.proof-header { display:flex; align-items:center; gap:12px; padding:12px 16px; background:#ACD1C0; border-bottom:2px solid #211F1F; flex-wrap:wrap; }
+.proof-header .proof-id { font-family:monospace; font-size:11px; font-weight:700; background:#F5F4EB; padding:3px 10px; border-radius:8px; border:1.5px solid #211F1F; }
+.proof-header .proof-date { font-size:12px; color:#4b5563; font-weight:600; margin-left:auto; }
 
-/* ── BODY BACKGROUND ── */
-body {
-  background: var(--cream);
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
+.badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700; border:1.5px solid #211F1F; }
+.badge-valid { background:#d1fae5; color:#065f46; }
+.badge-pending { background:#fef3c7; color:#92400e; }
+.badge-cheating { background:#fee2e2; color:#991b1b; }
+.badge-insufficient { background:#fde68a; color:#78350f; }
+.badge-default { background:#e5e7eb; color:#374151; }
 
-/* ── FLOATING BLOBS ── */
-.blob-mint {
-  position: fixed;
-  width: 340px;
-  height: 340px;
-  background: var(--mint);
-  border-radius: 50%;
-  left: -80px;
-  top: 200px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.6;
-}
+/* Card body */
+.proof-body { padding:16px; display:flex; flex-direction:column; gap:14px; }
+.proof-title { font-size:16px; font-weight:800; color:#211F1F; line-height:1.35; word-break:break-word; }
 
-.blob-sand {
-  position: fixed;
-  width: 420px;
-  height: 420px;
-  background: var(--sand);
-  border-radius: 40% 60% 55% 45%;
-  right: -180px;
-  bottom: -160px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.7;
-}
+.proof-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 18px; font-size:12px; }
+@media (min-width:700px) { .proof-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+.proof-grid .item { display:flex; flex-direction:column; gap:2px; }
+.proof-grid .item .k { color:#6b7280; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+.proof-grid .item .v { color:#211F1F; font-weight:700; font-size:12.5px; word-break:break-word; }
+.proof-grid .item .v.mono { font-family:monospace; font-size:11.5px; }
+.proof-grid .item .v.green { color:#3f9d6f; }
+.proof-grid .item .v.red { color:#dc2626; }
 
-.blob-mint-small {
-  position: fixed;
-  width: 180px;
-  height: 180px;
-  background: var(--mint);
-  border-radius: 50%;
-  right: 100px;
-  top: 100px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.4;
+/* Screenshot gallery */
+.shots-section { border-top:1.5px dashed #d1d5db; padding-top:12px; }
+.shots-title {
+  font-size:11px; font-weight:800; color:#6b7280; text-transform:uppercase;
+  letter-spacing:0.05em; margin-bottom:10px;
+  display:flex; align-items:center; gap:6px;
 }
-/* ── Neo Brutalist Tab Styles ── */
-.tabbar-container {
-  background: #F5F4EB;
-  border: 3px solid #211F1F;
-  border-radius: 20px;
-  padding: 12px 16px;
-  box-shadow: 6px 6px 0px 0px #211F1F;
-  margin-bottom: 1.5rem;
+.shots-title .shots-count {
+  background:#ACD1C0; color:#211F1F; padding:1px 8px;
+  border-radius:999px; font-size:10px; font-weight:800;
 }
+.shots-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+  gap:10px;
+}
+.shot-tile {
+  position:relative;
+  background:#1a1a1a;
+  border:2px solid #211F1F;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.15s ease;
+  aspect-ratio:16/10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.shot-tile:hover { transform:translate(-2px,-2px); box-shadow:4px 4px 0px 0px #211F1F; }
+.shot-tile img {
+  width:100%; height:100%; object-fit:contain; display:block; background:#2a2a2a;
+}
+.shot-tile .shot-type {
+  position:absolute; top:6px; left:6px;
+  background:rgba(33,31,31,0.85);
+  color:#F5F4EB;
+  font-size:10px; font-weight:700;
+  padding:2px 8px;
+  border-radius:6px;
+  text-transform:capitalize;
+  border:1px solid #F5F4EB;
+}
+.shot-tile .shot-index {
+  position:absolute; top:6px; right:6px;
+  background:#ACD1C0;
+  color:#211F1F;
+  font-size:10px; font-weight:800;
+  padding:2px 8px;
+  border-radius:6px;
+  border:1.5px solid #211F1F;
+}
+.shot-tile .shot-error {
+  color:#fca5a5; font-size:11px; text-align:center; padding:12px;
+  line-height:1.4;
+}
+.shot-tile .shot-error a { color:#ACD1C0; text-decoration:underline; }
 
-.tabbar {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  padding: 4px 2px 8px;
-  scroll-snap-type: x proximity;
-}
-.tabbar::-webkit-scrollbar {
-  height: 8px;
-}
-.tabbar::-webkit-scrollbar-thumb {
-  background: #211F1F;
-  border-radius: 8px;
-}
-.tabbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.tab {
-  position: relative;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  cursor: pointer;
-  padding-top: 10px;
-}
-.tab .flap {
-  position: absolute;
-  top: 0;
-  left: 14px;
-  right: 14px;
-  height: 16px;
-  border: 3px solid #211F1F;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-}
-.tab .card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #F5F4EB;
-  border: 3px solid #211F1F;
-  border-radius: 14px;
-  padding: 10px 16px;
-  box-shadow: 6px 6px 0px 0px #211F1F;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-  white-space: nowrap;
-}
-.tab .swatch {
-  width: 34px;
-  height: 34px;
-  border: 2.5px solid #211F1F;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  font-size: 16px;
-}
-.tab .meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.tab .name {
-  font-weight: 800;
-  font-size: 14px;
-  color: #211F1F;
-}
-.tab .count {
-  font-size: 11px;
-  font-weight: 700;
-  color: #6a6a6a;
-}
-.tab:hover .card {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0px 0px #211F1F;
-}
-.tab.active .card {
-  transform: translate(-3px, -3px);
-  box-shadow: 9px 9px 0px 0px #211F1F;
-  background: #DBD4B7;
+.no-shots {
+  background:#fef3c7;
+  border:1.5px solid #92400e;
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:12px;
+  color:#78350f;
+  font-weight:600;
+  text-align:center;
 }
 
-@media (max-width: 600px) {
-  .tab .card { padding: 8px 12px; }
-  .tab .name { font-size: 12px; }
+/* Remark / issue boxes */
+.proof-remarks {
+  background:#fef3c7; border:1.5px solid #92400e; border-radius:10px;
+  padding:8px 12px; font-size:12px; color:#78350f; font-weight:600;
 }
+.proof-issue {
+  background:#fee2e2; border:1.5px solid #991b1b; border-radius:10px;
+  padding:8px 12px; font-size:12px; color:#991b1b; font-weight:600;
+}
+
+/* Comment */
+.proof-comment {
+  background:#f0fdf4; border:1.5px solid #16a34a; border-radius:10px;
+  padding:10px 12px; font-size:12.5px; color:#166534;
+  display:flex; gap:8px; align-items:flex-start;
+}
+.proof-comment .label { font-weight:800; flex-shrink:0; }
+
+/* Meta pills (Liked / Subscribed / Commented) */
+.pill-row { display:flex; flex-wrap:wrap; gap:6px; }
+.pill {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1.5px solid #211F1F;
+  background:#F5F4EB;
+  color:#211F1F;
+}
+.pill.yes { background:#d1fae5; color:#065f46; border-color:#065f46; }
+.pill.no  { background:#f3f4f6; color:#6b7280; border-color:#9ca3af; }
+
+/* Actions */
+.proof-actions { display:flex; flex-wrap:wrap; gap:8px; padding-top:10px; border-top:1.5px dashed #d1d5db; }
+.btn-mini {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11.5px; font-weight:700;
+  padding:6px 14px;
+  border-radius:10px;
+  border:2px solid #211F1F;
+  background:#F5F4EB; color:#211F1F;
+  cursor:pointer; text-decoration:none;
+  transition:0.12s;
+  box-shadow:2.5px 2.5px 0px 0px #211F1F;
+}
+.btn-mini:hover { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0px 0px #211F1F; }
+.btn-mini.dark { background:#211F1F; color:#DBD4B7; }
+.btn-mini.mint { background:#ACD1C0; }
+
+/* Pagination */
+.pagination-wrap { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:6px; margin-top:20px; padding:16px; }
+.page-btn {
+  min-width:36px; height:36px; padding:0 10px;
+  border-radius:10px; border:2px solid #211F1F;
+  background:#F5F4EB; color:#211F1F;
+  font-weight:700; font-size:13px; cursor:pointer;
+  box-shadow:2.5px 2.5px 0px 0px #211F1F; transition:0.12s;
+}
+.page-btn:hover:not(:disabled) { transform:translate(1.5px,1.5px); box-shadow:1px 1px 0px 0px #211F1F; }
+.page-btn:disabled { opacity:0.35; cursor:not-allowed; }
+.page-btn.active { background:#211F1F; color:#DBD4B7; }
+
+.spinner { width:44px; height:44px; border:3px solid rgba(33,31,31,0.15); border-top-color:#211F1F; border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.empty-state { background:#F5F4EB; border:2px solid #211F1F; border-radius:20px; box-shadow:4px 4px 0px 0px #211F1F; padding:60px 20px; text-align:center; }
+
+.btn-retro { padding:10px 24px; border-radius:14px; border:2px solid #211F1F; box-shadow:4px 4px 0px 0px #211F1F; font-weight:700; cursor:pointer; transition:0.12s; }
+.btn-charcoal { background:#211F1F; color:#DBD4B7; }
+.btn-retro:hover { transform:translate(2px,2px); box-shadow:2px 2px 0px 0px #211F1F; }
+
+/* Lightbox */
+.lightbox {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.92);
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  flex-direction:column;
+  gap:14px;
+}
+.lightbox.open { display:flex; }
+.lightbox img {
+  max-width:min(95vw, 1400px);
+  max-height:80vh;
+  border-radius:12px;
+  box-shadow:0 0 40px rgba(172,209,192,0.3);
+  background:#111;
+  object-fit:contain;
+}
+.lightbox .lb-meta {
+  color:#ACD1C0; font-size:13px; font-weight:600;
+  background:rgba(33,31,31,0.9);
+  padding:8px 16px; border-radius:10px;
+  border:1.5px solid #ACD1C0;
+}
+.lightbox .lb-close {
+  position:absolute; top:20px; right:24px;
+  width:44px; height:44px;
+  background:#F5F4EB; color:#211F1F;
+  border:2px solid #211F1F;
+  border-radius:12px;
+  font-size:22px; font-weight:800;
+  cursor:pointer;
+  box-shadow:3px 3px 0px 0px #ACD1C0;
+}
+.lightbox .lb-close:hover { transform:translate(2px,2px); box-shadow:1px 1px 0px 0px #ACD1C0; }
+.lightbox .lb-nav {
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:52px; height:52px;
+  background:#F5F4EB; color:#211F1F;
+  border:2px solid #211F1F;
+  border-radius:12px;
+  font-size:26px; font-weight:900;
+  cursor:pointer;
+  box-shadow:3px 3px 0px 0px #ACD1C0;
+  display:flex; align-items:center; justify-content:center;
+}
+.lightbox .lb-nav:hover { transform:translateY(-50%) translate(2px,2px); box-shadow:1px 1px 0px 0px #ACD1C0; }
+.lightbox .lb-prev { left:24px; }
+.lightbox .lb-next { right:24px; }
 </style>
 </head>
 <body>
@@ -179,25 +256,25 @@ body {
 <div id="navbar-root"></div>
 <script src="navbar.js"></script>
 <script src="session-manager.js"></script>
-<!-- ══════════════════ MAIN ══════════════════ -->
+
 <main class="page-content relative z-10 pb-20 px-4">
 <main class="relative z-10 pt-5 pb-20 px-4">
 <div class="max-w-[1200px] mx-auto">
 
-  <!-- ── HEADER ── -->
+  <!-- HEADER -->
   <div class="nb-dashboard-header">
     <div class="nb-badge-container">
       <div class="nb-status-card nb-status-static">
         <span class="nb-card-icon">📸</span>
         <span class="nb-card-title">Subscribers Proof</span>
       </div>
-      <a href="subscriberstask.html" class="nb-status-card nb-status-link">
+      <a href="subscriberstask.html" target="_blank" rel="noopener noreferrer" class="nb-status-card nb-status-link">
         <span class="nb-card-icon">📋</span>
         <span class="nb-card-title">Back to Tasks</span>
       </a>
     </div>
     <h1 class="text-4xl font-black text-[#211F1F]">Subscribers Work Proof</h1>
-    <div class="text-gray-400 text-sm mt-1">Track every watch proof submitted by you or for your content.</div>
+    <div class="text-gray-400 text-sm mt-1">Showing your last 20 subscriber proofs · 5 per page</div>
   </div>
 
   <!-- LOADING -->
@@ -217,135 +294,109 @@ body {
   <!-- DASHBOARD -->
   <div id="dashContent" class="hidden">
 
-    <!-- ── BLOCKED BANNER ── -->
-    <div id="blockedBanner" class="hidden" style="background-color: #F5F4EB; padding: 1.25rem; border: 2px solid #211F1F; border-radius: 16px; margin-bottom: 1.5rem;">
-      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-        <span style="font-size: 1.75rem;">⛔</span>
-        <h1 style="font-size: 1.25rem; font-weight: 800; color: #1f2937; margin: 0;">Account Not Active</h1>
+    <!-- BLOCKED -->
+    <div id="blockedBanner" class="hidden" style="background:#F5F4EB;padding:1.25rem;border:2px solid #211F1F;border-radius:16px;margin-bottom:1.5rem;box-shadow:4px 4px 0px 0px #211F1F;">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+        <span style="font-size:1.75rem;">⛔</span>
+        <h2 style="font-size:1.25rem;font-weight:800;color:#1f2937;margin:0;">Account Not Active</h2>
       </div>
-      <p id="blockedMsg" style="font-size: 0.9rem; color: #4b5563; margin: 0 0 1rem 0; line-height: 1.4;">
-        Your account isn't active, so watching-proof records aren't available right now.
-      </p>
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.75rem; border-top: 1px solid #EAE9DF;">
-        <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Please provide your User Code when appealing.</span>
-        <div style="display: flex; gap: 0.5rem;">
-          <a href="support.html" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #dc2626; color: #ffffff; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-radius: 8px;">Contact Support</a>
-          <button onclick="logoutUser()" style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #d1d5db; color: #4b5563; font-weight: 600; font-size: 0.85rem; border-radius: 8px; cursor: pointer;">Logout</button>
+      <p id="blockedMsg" style="font-size:0.9rem;color:#4b5563;margin:0 0 1rem 0;line-height:1.4;"></p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;padding-top:0.75rem;border-top:1px solid #EAE9DF;">
+        <span style="font-size:0.8rem;color:#6b7280;font-weight:500;">Please provide your User Code when appealing.</span>
+        <div style="display:flex;gap:0.5rem;">
+          <a href="support.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;padding:0.5rem 1rem;background:#dc2626;color:#fff;font-weight:600;font-size:0.85rem;text-decoration:none;border-radius:8px;">Contact Support</a>
+          <button onclick="logoutUser()" style="padding:0.5rem 1rem;background:transparent;border:1px solid #d1d5db;color:#4b5563;font-weight:600;font-size:0.85rem;border-radius:8px;cursor:pointer;">Logout</button>
         </div>
       </div>
     </div>
 
-    <!-- ── ACTIVE CONTENT ── -->
+    <!-- ACTIVE -->
     <div id="activeContent">
 
-      <!-- VIEW TABS - Neo Brutalist Style -->
       <div class="tabbar-container">
-        <div class="tabbar" id="tabbar">
-          <!-- Tabs rendered by JavaScript -->
-        </div>
+        <div class="tabbar" id="tabbar"></div>
       </div>
 
       <!-- STATS -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">🎬</div>
-          <div class="text-xs text-gray-500 mb-1">Unique Videos</div>
-          <div id="statTotal" class="font-bold text-2xl text-[#211F1F]">0</div>
-        </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">🧾</div>
-          <div class="text-xs text-gray-500 mb-1">Total Proofs</div>
-          <div id="statEntries" class="font-bold text-2xl text-[#211F1F]">0</div>
-        </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">✅</div>
-          <div class="text-xs text-gray-500 mb-1">Valid Proofs</div>
-          <div id="statValid" class="font-bold text-2xl" style="color:#3f9d6f;">0</div>
-        </div>
-        <div class="card p-5 text-center">
-          <div class="text-2xl mb-1">🚩</div>
-          <div class="text-xs text-gray-500 mb-1">Cheating Flags</div>
-          <div id="statCheat" class="font-bold text-2xl" style="color:#dc2626;">0</div>
-        </div>
+        <div class="card p-5 text-center"><div class="text-2xl mb-1">🧾</div><div class="text-xs text-gray-500 mb-1">Total Proofs</div><div id="statTotal" class="font-bold text-2xl">0</div></div>
+        <div class="card p-5 text-center"><div class="text-2xl mb-1">✅</div><div class="text-xs text-gray-500 mb-1">Valid</div><div id="statValid" class="font-bold text-2xl" style="color:#3f9d6f;">0</div></div>
+        <div class="card p-5 text-center"><div class="text-2xl mb-1">⏳</div><div class="text-xs text-gray-500 mb-1">Pending</div><div id="statPending" class="font-bold text-2xl" style="color:#c9a227;">0</div></div>
+        <div class="card p-5 text-center"><div class="text-2xl mb-1">🚩</div><div class="text-xs text-gray-500 mb-1">Cheating</div><div id="statCheat" class="font-bold text-2xl" style="color:#dc2626;">0</div></div>
       </div>
 
-      <!-- PROOF LIST -->
-      <div id="proofList" class="wproof-list"></div>
-
-      <!-- EMPTY STATE -->
-      <div id="emptyState" class="hidden card p-10 text-center">
+      <div id="proofList"></div>
+      <div id="emptyState" class="hidden empty-state">
         <div class="text-5xl mb-4">📭</div>
-        <div class="text-xl font-bold mb-2">No Proof Records Found</div>
-        <div class="text-gray-400 text-sm">No proof records found for this view.</div>
+        <div class="text-xl font-bold mb-2">No Proof Records</div>
+        <div class="text-gray-400 text-sm">No subscriber proofs found for this view.</div>
       </div>
+      <div id="pagination" class="pagination-wrap"></div>
 
-      <!-- PAGINATION -->
-      <div id="pagination" class="wproof-pagination"></div>
-
-    </div><!-- /activeContent -->
-  </div><!-- /dashContent -->
+    </div>
+  </div>
 
 </div>
 </main>
 </main>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-nav lb-prev" onclick="event.stopPropagation(); navLightbox(-1)">‹</button>
+  <img id="lightboxImg" src="" alt="Proof" onclick="event.stopPropagation()">
+  <div id="lightboxMeta" class="lb-meta"></div>
+  <button class="lb-nav lb-next" onclick="event.stopPropagation(); navLightbox(1)">›</button>
+</div>
+
 <script>
 'use strict';
 
-/* ══════════════════ CONFIG ══════════════════ */
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjK-iRCYZrCQ5TATzsYJt-GoTafbnWPUcv0uF3aPJX7W2eljLEgpo1fHaSueAEZK7a6g/exec';
-const PAGE_SIZE = 15;
+const GAS_URL   = 'https://script.google.com/macros/s/AKfycbx3BKmJcJx3Lt_1XayzjIJywDXEBy7uBqhK_VlKQ57GMl6PJRFjVru7Ja-m_-AU4oQT/exec';
+const PAGE_SIZE = 5;
 
-/* ══════════════════ SESSION ══════════════════ */
 const usercode = (localStorage.getItem("usercode") || "").trim();
 const username = localStorage.getItem("username") || "";
+if (!usercode || !username) window.location.replace("signin.html");
 
-if (!usercode || !username) { 
-  window.location.replace("signin.html"); 
-}
-
-/* ══════════════════ STATE ══════════════════ */
-let currentTab  = 'subscriberWatched';
+let currentTab = 'subscriberWatched';
 let subscriberWatchedData = [];
 let subscriberMineData = [];
 let currentPage = 1;
 
-/* ── TAB CONFIG ── */
+// Lightbox state
+let lbImages = [];
+let lbIndex  = 0;
+
 const TABS = [
-  { id: 'subscriberWatched', label: '📋 My Subscribers Work', color: '#4ADE80', flap: '#3fce78' },
-  { id: 'subscriberMine', label: '📋 Other Subscribe Me', color: '#FF4D8D', flap: '#f13b7f' }
+  { id:'subscriberWatched', label:'My Subscribers Work', emoji:'📋', color:'#4ADE80', flap:'#3fce78' },
+  { id:'subscriberMine',    label:'Others Subscribed Me', emoji:'👁️', color:'#FF4D8D', flap:'#f13b7f' }
 ];
 
-/* ══════════════════ LOAD ══════════════════ */
+/* ── LOAD ── */
 async function loadProofData() {
-  show("loadingState"); 
-  hide("errorState"); 
-  hide("dashContent");
-  
+  show("loadingState"); hide("errorState"); hide("dashContent");
+
   try {
     const url = `${GAS_URL}?action=getProofData&userCode=${encodeURIComponent(usercode)}`;
     console.log('Fetching:', url);
-    
+
     const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const ct = response.headers.get('content-type');
+    if (!ct || !ct.includes('application/json')) {
       const text = await response.text();
-      console.error('Received non-JSON response:', text.substring(0, 200));
-      throw new Error('Server returned HTML instead of JSON. Please check the GAS URL.');
+      console.error('Non-JSON response:', text.substring(0, 200));
+      throw new Error('Server returned HTML instead of JSON.');
     }
-    
+
     const json = await response.json();
     console.log('Response:', json);
-    
+
     if (!json.success) throw new Error(json.message || 'Server error.');
 
     const m = json.member || {};
-
     if ((m.Status || '').trim() !== 'Active') {
       let msg = `Your account status is <strong>${esc(m.Status || '—')}</strong>.`;
       if (m.ViolationReason) msg += ` Reason: ${esc(m.ViolationReason)}.`;
@@ -354,52 +405,43 @@ async function loadProofData() {
       show("blockedBanner");
       const ac = document.getElementById("activeContent");
       if (ac) ac.style.display = "none";
-      hide("loadingState"); 
-      show("dashContent");
+      hide("loadingState"); show("dashContent");
       return;
     }
 
-    // Store only subscriber data
-    subscriberWatchedData = groupByTitle(json.subscriberWatched || []);
-    subscriberMineData = groupByTitle(json.subscriberMine || []);
+    subscriberWatchedData = json.subscriberWatched || [];
+    subscriberMineData    = json.subscriberMine    || [];
 
-    console.log('Subscriber Watched:', subscriberWatchedData.length);
-    console.log('Subscriber Mine:', subscriberMineData.length);
+    console.log('Watched:', subscriberWatchedData.length, 'Mine:', subscriberMineData.length);
+    if (subscriberWatchedData[0]) {
+      console.log('Sample proof:', subscriberWatchedData[0]);
+      console.log('Screenshots in sample:', (subscriberWatchedData[0].Screenshots || []).length);
+    }
 
-    // Render tabs
     renderTabs();
-
-    hide("loadingState"); 
-    show("dashContent");
+    hide("loadingState"); show("dashContent");
     renderTab();
 
   } catch (err) {
     console.error('Load error:', err);
-    hide("loadingState"); 
-    show("errorState");
-    setText("errorMsg", err.message || "Network error. Please try again.");
+    hide("loadingState"); show("errorState");
+    setText("errorMsg", err.message || "Network error.");
   }
 }
 
-/* ── RENDER TABS ── */
+/* ── TABS ── */
 function renderTabs() {
   const tabbar = document.getElementById('tabbar');
-  
-  tabbar.innerHTML = TABS.map((t) => {
+  tabbar.innerHTML = TABS.map(t => {
     let count = 0;
-    switch(t.id) {
-      case 'subscriberWatched': count = subscriberWatchedData.length; break;
-      case 'subscriberMine': count = subscriberMineData.length; break;
-    }
-    
-    const isActive = t.id === currentTab;
-    const emoji = t.id === 'subscriberWatched' ? '📋' : '👁️';
-    
+    if (t.id === 'subscriberWatched') count = subscriberWatchedData.length;
+    if (t.id === 'subscriberMine')    count = subscriberMineData.length;
+    const active = t.id === currentTab;
     return `
-    <div class="tab ${isActive ? 'active' : ''}" data-tab="${t.id}">
+    <div class="tab ${active ? 'active' : ''}" data-tab="${t.id}">
       <div class="flap" style="background:${t.flap}"></div>
-      <div class="card">
-        <div class="swatch" style="background:${t.color}">${emoji}</div>
+      <div class="card-tab">
+        <div class="swatch" style="background:${t.color}">${t.emoji}</div>
         <div class="meta">
           <span class="name">${t.label}</span>
           <span class="count">${count} ${count === 1 ? 'proof' : 'proofs'}</span>
@@ -408,102 +450,36 @@ function renderTabs() {
     </div>`;
   }).join('');
 
-  // Add click listeners
   tabbar.querySelectorAll('.tab').forEach(el => {
-    el.addEventListener('click', () => {
-      const tabId = el.dataset.tab;
-      switchTab(tabId);
-    });
+    el.addEventListener('click', () => switchTab(el.dataset.tab));
   });
 }
 
-/* ══════════════════ GROUP by VideoTitle ══════════════════ */
-function groupByTitle(records) {
-  const map = {};
-  
-  records.forEach(r => {
-    const key = (r.VideoTitle || '').trim() || r.VideoId || '_unknown';
-    
-    if (!map[key]) {
-      map[key] = {
-        VideoTitle           : r.VideoTitle || 'Unknown Title',
-        VideoId              : r.VideoId || '',
-        ChannelName          : r.ChannelName || '',
-        VideoDurationSeconds : Number(r.VideoDurationSeconds) || 0,
-        VideoDurationText    : r.VideoDuration || '',
-        TaskType             : r.TaskType || 'Subscribers',
-        entries              : [],
-        highestPercentage    : 0
-      };
-    }
-    map[key].entries.push(r);
-  });
-  
-  const result = Object.values(map);
-  result.forEach(g => {
-    g.entries.sort((a, b) => new Date(b.Timestamp || 0) - new Date(a.Timestamp || 0));
-    let highestPct = 0;
-    g.entries.forEach(e => {
-      const pct = Number(e.Percentage) || 0;
-      if (pct > highestPct) {
-        highestPct = pct;
-      }
-    });
-    g.highestPercentage = highestPct;
-  });
-  
-  return result;
-}
-
-/* ══════════════════ TAB SWITCH ══════════════════ */
-function switchTab(tabId) {
-  currentTab = tabId; 
-  currentPage = 1;
-  
-  // Update tab active states
-  document.querySelectorAll('.tab').forEach(el => {
-    el.classList.toggle('active', el.dataset.tab === tabId);
-  });
-  
+function switchTab(id) {
+  currentTab = id; currentPage = 1;
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.dataset.tab === id));
   renderTab();
 }
 
 function renderTab() {
   let data = [];
-  let label = '';
-  
-  switch(currentTab) {
-    case 'subscriberWatched':
-      data = subscriberWatchedData;
-      label = 'My Subscribers Work';
-      break;
-    case 'subscriberMine':
-      data = subscriberMineData;
-      label = 'Other Subscribe Me';
-      break;
-    default:
-      data = subscriberWatchedData;
-  }
-  
+  if (currentTab === 'subscriberWatched') data = subscriberWatchedData;
+  else                                    data = subscriberMineData;
   renderStats(data);
-  renderList(data, label);
+  renderList(data);
 }
 
-/* ══════════════════ STATS ══════════════════ */
+/* ── STATS ── */
 function renderStats(data) {
-  const total   = data.length;
-  const entries = data.reduce((s, g) => s + g.entries.length, 0);
-  const valid   = data.reduce((s, g) => s + g.entries.filter(e => e.Checked === 'Valid').length, 0);
-  const cheat   = data.reduce((s, g) => s + g.entries.filter(e => e.Checked === 'Cheating').length, 0);
-  setText("statTotal",   total);
-  setText("statEntries", entries);
-  setText("statValid",   valid);
-  setText("statCheat",   cheat);
+  setText("statTotal",   data.length);
+  setText("statValid",   data.filter(e => (e.Checked || '').toLowerCase() === 'valid').length);
+  setText("statPending", data.filter(e => !e.Checked || (e.Checked || '').toLowerCase() === 'pending').length);
+  setText("statCheat",   data.filter(e => (e.Checked || '').toLowerCase() === 'cheating').length);
 }
 
-/* ══════════════════ CARD LIST ══════════════════ */
-function renderList(data, label) {
-  const isW  = currentTab === 'subscriberWatched';
+/* ── LIST ── */
+function renderList(data) {
+  const isW = currentTab === 'subscriberWatched';
   const list = document.getElementById('proofList');
 
   if (!data || !data.length) {
@@ -517,139 +493,193 @@ function renderList(data, label) {
   const start = (currentPage - 1) * PAGE_SIZE;
   const page  = data.slice(start, start + PAGE_SIZE);
 
-  let html = '';
-  
-  page.forEach((group, idx) => {
-    const n    = start + idx + 1;
-    const id   = 'sr-' + n;
-    const best = bestStatus(group.entries);
-
-    const last     = group.entries[0] || {};
-    const playS    = Number(last.PlaySeconds) || 0;
-    const stopS    = Number(last.StopSeconds) || 0;
-    const duration = group.VideoDurationSeconds || 0;
-    
-    const percentage = Number(last.Percentage) || 0;
-    const finalPct = percentage > 100 ? 100 : percentage;
-    const barColor = finalPct >= 80 ? '#3f9d6f' : finalPct >= 50 ? '#c9a227' : '#dc2626';
-
-    const thumb  = group.VideoId ? `https://img.youtube.com/vi/${group.VideoId}/mqdefault.jpg` : '';
-    const ytLink = group.VideoId ? `https://www.youtube.com/watch?v=${group.VideoId}` : '#';
-    const sideLabel = isW ? 'Channel' : 'Worker';
-    const sideValue = isW ? esc(group.ChannelName || '—') : esc(last.UserCode || '—');
-
-    const taskTypeLabel = group.TaskType || 'Subscribers';
-    const isSubscriber = taskTypeLabel.toLowerCase() === 'subscribers';
-
-    html += `
-    <div class="wproof-card">
-      <div class="wproof-card-head">
-        <a class="wproof-thumb-link" href="${ytLink}" target="_blank" rel="noopener">
-          <img class="wproof-thumb" src="${esc(thumb)}" alt="" onerror="this.style.opacity='.15'"/>
-        </a>
-        <div class="wproof-info">
-          <div class="wproof-title" title="${esc(group.VideoTitle)}">${esc(group.VideoTitle)}</div>
-          <div class="wproof-sub">${esc(group.VideoId || '—')} · Duration ${fmtDuration(duration)}</div>
-          <div class="wproof-badges">
-            ${taskBadge(taskTypeLabel)}
-            ${badgeHtml(best)}
-          </div>
-        </div>
-        <div class="wproof-side-stats">
-          <div class="wproof-mini-stat"><span class="k">${sideLabel}</span><span class="v">${sideValue}</span></div>
-          <div class="wproof-mini-stat"><span class="k">Proofs</span><span class="v">${group.entries.length}</span></div>
-          <div class="wproof-mini-stat"><span class="k">Best %</span>  <span class="v">${group.highestPercentage || 0}%</span></div>
-        </div>
-      </div>
-
-      <div class="wproof-ratio">
-        <div class="wproof-ratio-row">
-          <span style="color:#3f9d6f;">▶ ${fmtSec(playS)} watched</span>
-          <span style="color:#dc2626;">⏸ ${fmtSec(stopS)} paused</span>
-          <span><strong>${finalPct}%</strong> watched</span>
-        </div>
-        <div class="wproof-bar-track">
-          <div class="wproof-bar-fill" style="width:${finalPct}%;background:${barColor}"></div>
-        </div>
-      </div>
-
-      <button class="wproof-expand-btn" id="btn-${id}" onclick="toggleSub('${id}')">▼ View ${group.entries.length} Proof ${group.entries.length === 1 ? 'Entry' : 'Entries'}</button>
-
-      <div class="wproof-details" id="${id}">
-        <div class="wproof-entries">
-          ${group.entries.map((e, i) => buildEntryCard(e, i, isW)).join('')}
-        </div>
-      </div>
-    </div>`;
-  });
-
-  list.innerHTML = html;
+  list.innerHTML = page.map((p, idx) => buildProofCard(p, start + idx + 1, isW)).join('');
   renderPagination(data.length);
 }
 
-/* ══════════════════ ENTRY CARD ══════════════════ */
-function buildEntryCard(e, i, isW) {
-  const playS  = Number(e.PlaySeconds) || 0;
-  const stopS  = Number(e.StopSeconds) || 0;
-  
-  const percentage = Number(e.Percentage) || 0;
-  const finalPct = percentage > 100 ? 100 : percentage;
-  const bar    = finalPct >= 80 ? '#3f9d6f' : finalPct >= 50 ? '#c9a227' : '#dc2626';
-  const isLast = i === 0;
-  const screenshotHtml = e.ProofScreenshot
-    ? `<a class="wproof-link" href="${esc(e.ProofScreenshot)}" target="_blank" rel="noopener">📸 View Screenshot</a>`
-    : '<span style="color:#9ca3af;font-size:11.5px;">No screenshot attached</span>';
+/* ── PROOF CARD ── */
+function buildProofCard(p, n, isW) {
+  const shots     = p.Screenshots || [];
+  const shotCount = shots.length;
+
+  const ytLink = p.VideoId ? `https://www.youtube.com/watch?v=${encodeURIComponent(p.VideoId)}` : '';
+
+  const checkedBadge = badgeHtml(p.Checked);
+  const sideLabel = isW ? 'Target Member' : 'Worker';
+  const sideValue = isW ? (p.TargetUserCode || '—') : (p.UserCode || '—');
+
+  // Sub / Like / Comment pills
+  const pills = [];
+  if (p.Subscribed) pills.push(pill('Subscribed', p.Subscribed));
+  if (p.Liked)      pills.push(pill('Liked', p.Liked));
+  if (p.Commented)  pills.push(pill('Commented', p.Commented));
+
+  // Screenshots block
+  let shotsBlock = '';
+  if (shotCount > 0) {
+    shotsBlock = `
+      <div class="shots-section">
+        <div class="shots-title">
+          📸 Screenshots <span class="shots-count">${shotCount}</span>
+        </div>
+        <div class="shots-grid">
+          ${shots.map((s, i) => buildShotTile(s, i, p)).join('')}
+        </div>
+      </div>`;
+  } else {
+    shotsBlock = `
+      <div class="shots-section">
+        <div class="shots-title">📸 Screenshots <span class="shots-count">0</span></div>
+        <div class="no-shots">No screenshots were attached to this proof.</div>
+      </div>`;
+  }
 
   return `
-  <div class="wproof-entry ${isLast ? 'is-last' : ''}">
-    <div class="wproof-entry-top">
-      <span class="wproof-entry-tag">${isLast ? '⭐ Latest' : '#' + (i + 1)}</span>
-      <span class="wproof-entry-date">${fmtDate(e.Timestamp)}</span>
-      ${badgeHtml(e.Checked)}
-      <span style="font-size:0.7rem;color:#6b7280;margin-left:auto;">${finalPct}% watched</span>
+  <div class="proof-card" data-proof-id="${esc(p.ProofID || '')}">
+    <div class="proof-header">
+      <span class="proof-id">#${n} · ${esc(p.ProofID || 'NO-PROOF')}</span>
+      ${checkedBadge}
+      <span class="proof-date">${fmtDate(p.SubmittedAt)}</span>
     </div>
-    <div class="wproof-entry-grid">
-      <div><span class="k">${isW ? 'Target' : 'Worker'}</span><span class="v">${esc(isW ? (e.TargetUserCode || '—') : (e.UserCode || '—'))}</span></div>
-      <div><span class="k">Watched</span><span class="v" style="color:#3f9d6f;">${fmtSec(playS)}</span></div>
-      <div><span class="k">Paused</span><span class="v" style="color:#dc2626;">${fmtSec(stopS)}</span></div>
-      <div><span class="k">Task ID</span><span class="v">${esc(e.TaskID || '—')}</span></div>
-      <div><span class="k">Task Type</span><span class="v">${esc(e.TaskType || '—')}</span></div>
+
+    <div class="proof-body">
+      <div class="proof-title">${esc(p.VideoTitle || 'Unknown Video Title')}</div>
+
+      <div class="proof-grid">
+        <div class="item"><span class="k">Task ID</span><span class="v mono">${esc(p.TaskID || '—')}</span></div>
+        <div class="item"><span class="k">Channel</span><span class="v">${esc(p.ChannelName || '—')}</span></div>
+        <div class="item"><span class="k">Video ID</span><span class="v mono">${esc(p.VideoId || '—')}</span></div>
+        <div class="item"><span class="k">Duration</span><span class="v">${fmtSec(p.VideoDurationSec)}</span></div>
+        <div class="item"><span class="k">${sideLabel}</span><span class="v mono">${esc(sideValue)}</span></div>
+        <div class="item"><span class="k">Task Type</span><span class="v">${esc(p.TaskType || '—')}</span></div>
+        <div class="item"><span class="k">Checked On</span><span class="v">${p.CheckedDate ? fmtDate(p.CheckedDate) : '—'}</span></div>
+        <div class="item"><span class="k">Screenshot Count</span><span class="v">${shotCount}</span></div>
+      </div>
+
+      ${pills.length ? `<div class="pill-row">${pills.join('')}</div>` : ''}
+
+      ${p.CommentText ? `
+        <div class="proof-comment">
+          <span class="label">💬 Comment:</span>
+          <span>${esc(p.CommentText)}</span>
+        </div>` : ''}
+
+      ${shotsBlock}
+
+      ${p.CheckRemarks ? `<div class="proof-remarks">📋 ${esc(p.CheckRemarks)}</div>` : ''}
+      ${p.Issue ? `<div class="proof-issue">⚠️ ${esc(p.Issue)}</div>` : ''}
+
+      <div class="proof-actions">
+        ${ytLink ? `<a class="btn-mini dark" href="${escAttr(ytLink)}" target="_blank" rel="noopener noreferrer">▶ Watch Video</a>` : ''}
+        ${shotCount > 0 ? `<button class="btn-mini mint" onclick="openLightboxForProof('${escAttr(p.ProofID || '')}')">📸 View All ${shotCount} Screenshot${shotCount === 1 ? '' : 's'}</button>` : ''}
+      </div>
     </div>
-    <div class="wproof-bar-track" style="margin-bottom:8px;">
-      <div class="wproof-bar-fill" style="width:${finalPct}%;background:${bar}"></div>
-    </div>
-    ${e.CheckRemarks ? `<div class="wproof-entry-remarks">📋 ${esc(e.CheckRemarks)}</div>` : ''}
-    ${screenshotHtml}
   </div>`;
 }
 
-/* ══════════════════ HELPERS ══════════════════ */
-function toggleSub(id) {
-  const row = document.getElementById(id);
-  const btn = document.getElementById('btn-' + id);
-  if (!row) return;
-  const open = row.classList.toggle('open');
-  const count = row.querySelectorAll('.wproof-entry').length;
-  if (btn) btn.textContent = open
-    ? '▲ Hide Details'
-    : `▼ View ${count} Proof ${count === 1 ? 'Entry' : 'Entries'}`;
+/* ── Screenshot tile ── */
+function buildShotTile(shot, i, proof) {
+  const url = shot.Url || '';
+  const original = shot.Original || url;
+  const typeLabel = shot.Type ? shot.Type : `Shot ${i + 1}`;
+
+  if (!url) {
+    return `
+      <div class="shot-tile">
+        <div class="shot-error">⚠️ No image URL<br><br><a href="${escAttr(original)}" target="_blank" rel="noopener noreferrer">Open original</a></div>
+      </div>`;
+  }
+
+  const safeUrl = url.replace(/'/g, "\\'");
+  const safeOriginal = original.replace(/'/g, "\\'");
+
+  return `
+    <div class="shot-tile" onclick="openLightboxForProof('${escAttr(proof.ProofID || '')}', ${i})">
+      <span class="shot-index">#${shot.Index || (i + 1)}</span>
+      <span class="shot-type">${esc(typeLabel)}</span>
+      <img src="${escAttr(url)}" alt="Proof screenshot" loading="lazy"
+           onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;shot-error&quot;>⚠️ Image failed to load.<br><br><a href=&quot;${escAttr(safeOriginal)}&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;>Open original</a></div>'">
+    </div>`;
 }
 
+/* ── Lightbox ── */
+function openLightboxForProof(proofId, startIdx = 0) {
+  const allData = currentTab === 'subscriberWatched' ? subscriberWatchedData : subscriberMineData;
+  const proof = allData.find(p => (p.ProofID || '') === proofId);
+  if (!proof || !proof.Screenshots || !proof.Screenshots.length) return;
+
+  lbImages = proof.Screenshots.map(s => ({
+    url: s.Url || '',
+    original: s.Original || s.Url || '',
+    type: s.Type || '',
+    index: s.Index || 0
+  }));
+  lbIndex = Math.max(0, Math.min(startIdx, lbImages.length - 1));
+
+  showLightboxImage();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function showLightboxImage() {
+  const img = document.getElementById('lightboxImg');
+  const meta = document.getElementById('lightboxMeta');
+  const cur = lbImages[lbIndex];
+  if (!cur) return;
+
+  img.src = cur.url || cur.original;
+  const parts = [];
+  if (cur.type) parts.push(cur.type);
+  if (cur.index) parts.push(`#${cur.index}`);
+  parts.push(`${lbIndex + 1} / ${lbImages.length}`);
+  meta.textContent = parts.join(' · ');
+}
+
+function navLightbox(dir) {
+  if (!lbImages.length) return;
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  showLightboxImage();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft')  navLightbox(-1);
+  if (e.key === 'ArrowRight') navLightbox(1);
+});
+
+/* ── Pill helper ── */
+function pill(label, value) {
+  const v = String(value || '').trim().toLowerCase();
+  const isYes = v === 'yes' || v === 'true' || v === '1';
+  const isNo  = v === 'no'  || v === 'false' || v === '0';
+  const cls   = isYes ? 'yes' : isNo ? 'no' : '';
+  const icon  = isYes ? '✓' : isNo ? '✗' : '·';
+  return `<span class="pill ${cls}">${icon} ${esc(label)}: ${esc(value || '—')}</span>`;
+}
+
+/* ── Pagination ── */
 function renderPagination(total) {
   const pages = Math.ceil(total / PAGE_SIZE);
-  const pg    = document.getElementById('pagination');
+  const pg = document.getElementById('pagination');
   if (pages <= 1) { pg.innerHTML = ''; return; }
 
-  let h = `<button class="wproof-page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goPage(${currentPage - 1})">‹</button>`;
+  let h = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goPage(${currentPage - 1})">‹</button>`;
   for (let i = 1; i <= pages; i++) {
     if (pages > 8 && i > 2 && i < pages - 1 && Math.abs(i - currentPage) > 2) {
       if (i === 3 || i === pages - 2) h += `<span style="color:#9ca3af;padding:0 4px;">…</span>`;
       continue;
     }
-    h += `<button class="wproof-page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+    h += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
   }
-  h += `<button class="wproof-page-btn" ${currentPage === pages ? 'disabled' : ''} onclick="goPage(${currentPage + 1})">›</button>`;
-  h += `<span class="text-gray-400 text-xs ml-2">Page ${currentPage} / ${pages} · ${total} groups</span>`;
+  h += `<button class="page-btn" ${currentPage === pages ? 'disabled' : ''} onclick="goPage(${currentPage + 1})">›</button>`;
+  h += `<span style="font-size:12px;color:#6b7280;margin-left:8px;">Page ${currentPage} / ${pages} · ${total} records</span>`;
   pg.innerHTML = h;
 }
 
@@ -659,87 +689,65 @@ function goPage(p) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ══════════════════ BADGES & FORMATTERS ══════════════════ */
-function bestStatus(entries) {
-  for (const s of ['Valid', 'Pending', 'Insufficient', 'Cheating'])
-    if (entries.some(e => e.Checked === s)) return s;
-  return entries[0]?.Checked || '—';
-}
-
+/* ── Helpers ── */
 function badgeHtml(s) {
+  const key = String(s || '').trim();
   const cls = {
-    Valid: 'wproof-badge-valid', Pending: 'wproof-badge-pending',
-    Cheating: 'wproof-badge-cheating', Insufficient: 'wproof-badge-insufficient'
-  }[s] || 'wproof-badge-default';
-  return `<span class="wproof-badge ${cls}">${esc(s || '—')}</span>`;
+    Valid:'badge-valid', Pending:'badge-pending',
+    Cheating:'badge-cheating', Insufficient:'badge-insufficient',
+    Yes:'badge-valid', No:'badge-pending'
+  }[key] || 'badge-default';
+  return `<span class="badge ${cls}">${esc(key || '—')}</span>`;
 }
 
-function taskBadge(t) {
-  if (!t) return '';
-  const isSub = t.toLowerCase() === 'subscribers';
-  const label = isSub ? '📋 ' + t : '🎬 ' + t;
-  return `<span class="wproof-badge wproof-badge-tasktype">${esc(label)}</span>`;
+function fmtSec(s) {
+  const n = Number(s) || 0;
+  if (n <= 0) return '0s';
+  if (n < 60) return n + 's';
+  const m = Math.floor(n / 60), sec = n % 60;
+  if (m < 60) return `${m}m ${sec}s`;
+  return `${Math.floor(m / 60)}h ${m % 60}m ${sec}s`;
 }
 
-function fmtDuration(d) {
-  if (!d || d <= 0) return '—';
-  const h = Math.floor(d / 3600);
-  const m = Math.floor((d % 3600) / 60);
-  const s = Math.floor(d % 60);
-  if (h > 0) {
-    const padM = String(m).padStart(2, '0');
-    const padS = String(s).padStart(2, '0');
-    return `${h}h ${padM}m ${padS}s`;
-  } else if (m > 0) {
-    const padS = String(s).padStart(2, '0');
-    return `${m}m ${padS}s`;
-  } else {
-    return `${s}s`;
-  }
+function fmtDate(s) {
+  if (!s) return '—';
+  try { const d = new Date(s); return isNaN(d) ? String(s) : d.toLocaleString(); }
+  catch { return String(s); }
 }
 
-function fmtDate(s) { 
-  if (!s) return '—'; 
-  try { 
-    return new Date(s).toLocaleString(); 
-  } catch { 
-    return s; 
-  } 
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function escAttr(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 }
 
-function fmtSec(s) { 
-  const n = Number(s) || 0; 
-  if (n < 60) return n + 's'; 
-  return Math.floor(n / 60) + 'm ' + (n % 60) + 's'; 
-}
+/* ── DOM helpers ── */
+function show(id) { const el = document.getElementById(id); if (!el) return; el.classList.remove("hidden"); if (el.style.display === "none") el.style.display = ""; }
+function hide(id) { const el = document.getElementById(id); if (!el) return; el.classList.add("hidden"); }
+function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+function setHtml(id, v) { const el = document.getElementById(id); if (el) el.innerHTML = v; }
 
-function esc(s) { 
-  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); 
-}
-
-/* ══════════════════ DOM HELPERS ══════════════════ */
-function show(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove("hidden");
-  if (el.style.display === "none") el.style.display = "";
-}
-function hide(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add("hidden");
-}
-function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
-function setHtml(id, val) { const el = document.getElementById(id); if (el) el.innerHTML = val; }
-
-/* ══════════════════ LOGOUT ══════════════════ */
 function logoutUser() {
   if (!confirm("Are you sure you want to logout?")) return;
   localStorage.clear(); sessionStorage.clear();
   window.location.replace("signin.html");
 }
 
-/* ── KICK OFF ── */
+/* Open internal/external links in new tab */
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a');
+  if (!link || link.hasAttribute('target')) return;
+  const href = link.getAttribute('href') || '';
+  if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+  if (href.startsWith('http') || href.endsWith('.html')) {
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+  }
+});
+
 loadProofData();
 </script>
 </body>

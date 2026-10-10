@@ -1,0 +1,499 @@
+════════════════════════════════════════════════════════════
+  EX GROUP – GOOGLE SHEETS DATA DICTIONARY
+  31 sheets in 9 categories · every sheet tab is "Sheet1" unless noted
+  UserCode = worker (member doing the task)
+  TargetUserCode = target (member receiving the benefit)
+════════════════════════════════════════════════════════════
+
+CATEGORIES
+  1. Members & Accounts ............. 8 sheets
+  2. Subscriber Exchange ............ 3 sheets
+  3. Video Watch Exchange ........... 3 sheets
+  4. Playlist Watch Exchange ........ 4 sheets
+  5. Like & Comment Exchange ........ 2 sheets
+  6. Shorts Exchange ................ 4 sheets
+  7. Ad Watching .................... 1 sheet
+  8. Proof & Verification ........... 2 sheets
+  9. Admin, Support & Settings ...... 4 sheets
+
+
+████████████████████████████████████████████████████████████
+ 1. MEMBERS & ACCOUNTS
+████████████████████████████████████████████████████████████
+
+📑 MEMBERS MASTER  (Ex-Members Sheet1)
+Sheet ID: 1m-V1Iqkstv8cnR2QDxOLYk16GrgS3h9pEqPcHoj_LV4
+────────────────────────────────────────────────────────────
+UserCode → Unique member code: "Ex" followed by 3 random digits
+UserName → Unique username, 5–7 characters
+ProfilePicture → Valid picture URL, or the default avatar
+Bio → Member bio. Default: "YouTube creator focused on growing channels, engagement and community support."
+WhatsappNumber → WhatsApp number including country code
+FacebookId → Valid Facebook profile link
+Password → Unique password, 5–7 characters
+Status → Account status. Default: Active on join
+DateOfJoin → Date the member joined
+Country → Member's country
+AccountCompleted → Whether profile setup is complete. Default: No
+InSubscribersWork → In the subscriber exchange. Default: No
+InVideoTaskWork → In the video-watch exchange. Default: No
+InWatchtimeWork → In the watch-time exchange. Default: No
+InLikeAndCommentWork → In the like and comment exchange. Default: No
+InShortsViralWork → In the Shorts exchange. Default: No
+InAdWatchingWork → In the ad-watching exchange. Default: No
+SubscribersPromotionActive → Member's channel is active for subscriber exchange: Yes / No
+VideoPromotionActive → Member's videos are active for watch exchange: Yes / No
+PlaylistPromotionActive → Member's playlists are active for watch exchange: Yes / No
+EngagementPromotionActive → Member's videos are active for like/comment exchange: Yes / No
+ShortsPromotionActive → Member's Shorts are active for Shorts-watching exchange: Yes / No
+AdWatchingPromotionActive → Member's channel is active for ad-watching exchange: Yes / No
+ViolationFlag → Current violation level: None / Warning / Suspended
+ViolationReason → Why the violation was flagged
+SuspendedUntil → Date the suspension ends and the member becomes active again
+BlockedReason → Reason recorded when the account is blocked
+ExtensionReady → Whether the member is logged in to the browser extension: Yes / No
+
+
+📺 MEMBER CHANNELS  (Ex-MembersChannels Sheet1)
+Sheet ID: 1VWYIfAcGoHgapBI1_DPGF7tNrQn-Zm10YRaxcKvJFNU
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+ChannelId → YouTube channel ID
+ChannelName → Channel name
+ChannelHandle → YouTube handle (@username)
+ChannelLink → Full channel URL
+ChannelImage → Channel profile image URL
+ChannelType → Channel type or category
+ChannelFound → Channel verified and found: Yes / No
+TotalSubscribers → Total subscribers gained historically
+CurrentSubscribers → Current subscriber count
+LastUpdated → Timestamp of the last update
+Issue → Any issue flagged on the channel
+VideosReady → Channel's videos are loaded and ready: Yes / No
+LastTimeVideoUpdated → Timestamp of the last video refresh
+Monetized → Channel is monetized: Yes / No
+
+
+📊 WORKING ACCOUNTS  (Ex‑7MembersWorkingAccountsTbl)
+Sheet ID: 1lRXaQUHqfYX5LXaBjvBk-gkY2SXoI0S-Wfw2zHGdTYM
+────────────────────────────────────────────────────────────
+UserCode → Links to the member (identifier used across all sheets)
+ChannelId → YouTube channel ID of the working account
+ChannelName → Name of the working channel
+ChannelImage → Profile image of the working channel
+ChannelHandle → YouTube handle (e.g. @username)
+ChannelType → Channel category (e.g. Entertainment, Education, Gaming)
+Issue → Any issue flagged (errors, restrictions, missing data)
+TotalSubscription → Total subscriptions made by this account
+ChannelFound → Channel verified and found: Yes / No
+LastTimeFetch → Timestamp of the last data fetch
+SheetUpdate → Timestamp of the last update to this record
+
+
+🎥 CHANNEL VIDEOS  (Ex-11MembersChannelVideosTbl)
+Sheet ID: 1Bg-0helM9_kzz4yZ4xvyeZXoNkRjBYyJSQhMWGrMDH0
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+VideoID → Unique YouTube video ID
+VideoTitle → Video title
+VideoUrl → Full YouTube video URL
+VideoThumbnail → Thumbnail image URL
+VideoDuration → Length in seconds (e.g. 120)
+VideoStatus → Active, Private, Deleted, Error, etc.
+AddingDate → Date and time the video was added to the system
+Issue → Error or validation problem found with the video
+VideoType → Short or Long
+ViewCount → Total views
+LikeCount → Total likes
+CommentCount → Total comments
+Category → YouTube category
+Tags → Keywords and tags on the video
+Privacy → Public, Unlisted or Private
+MadeForKids → Marked as made for kids: Yes / No
+
+
+🎯 CHANNEL INTERESTS  (Ex-9ChannelInterestsTbl)
+Sheet ID: 1RBXUy2V3A-4QhaF033sEjvJzrnI_dcSkLU-sDu14ARE
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+ChannelId → YouTube channel ID
+InterestName → Interest category of the channel's audience (one row per interest)
+
+
+🌍 SUBSCRIBER COUNTRIES  (Ex-10SubscribersCountriesTbl)
+Sheet ID: 1Drbh0WpT02Ud_Ji7WP1t5KdM2HCjJ2G1jXKyIUzPDwk
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+CountryName → A country the member wants subscribers from (one row per country)
+
+
+⚙️ MEMBER PREFERENCES  (Ex-11MemberPreferencesTbl)
+Sheet ID: 1-Ta68HdOjY-eQY2WSA2xkto9JwrPG4--sFa-JxjE098
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+PrefType → Setting name or type
+PrefValue → Value chosen for that setting
+UpdatedDate → Date the preference was last changed
+
+
+🗂️ MEMBER OWN CATEGORIES  (Ex-MembersOwnCatgory)
+Sheet ID: 15YGkPLjiwOScOUtfFdKLS6_UPvli0jFl0OT8it-csqY
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+Catgory → Content category the member assigns to their own channel
+
+
+████████████████████████████████████████████████████████████
+ 2. SUBSCRIBER EXCHANGE
+████████████████████████████████████████████████████████████
+
+📈 SUBSCRIBERS PERFORMANCE  (Ex-SubscribersPerformanceTbl)
+Sheet ID: 10MFqp3LjDG26ZJAXVbYFd5e4YI9wYznErwItqOcMRbQ
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+TotalSubscribersGet → Total subscribers the member has gained
+TotalSubscribeChannels → Total channels the member has subscribed to
+TotalUnsubscribByYou → Subscriptions the member later removed
+PendingSubscribeToOthers → Subscriptions the member still owes to others
+PendingSubscribeFromOthers → Subscriptions others still owe to the member
+TotalUnsubscribeByOthers → Times others unsubscribed from the member's channel
+LimitReached → Member has hit the limit: Yes / No
+SubscribersLimit → Maximum subscriptions allowed per period
+LasttimeWork → Timestamp of the member's last subscriber work
+DateJoined → Timestamp the member joined the subscriber exchange
+GroupRemovalRequest → Member asked to leave the group: Yes / No
+
+
+📋 SUBSCRIBERS TASKS  (Ex-SubscribersTasksTbl)
+Sheet ID: 1MOY-AQKfrPznXNMkTBInEqHnfl0hcytYPmrDhFdLKbc
+────────────────────────────────────────────────────────────
+TaskID → Unique task ID
+UserCode → Worker: the member who must subscribe
+TargetUserCode → Target: the member whose channel is subscribed to
+Status → Task status, e.g. NotWorkYet / Subscribed / Rejected
+CreatedDate → When the task was created
+WorkedDate → When the worker completed the task
+CheckedDate → When the system or admin verified the task
+LastUpdated → Last status-change timestamp
+Issue → Any issue or violation note
+VideoId → Video linked to the task
+VideoTitle → Title of that video
+VideoDuration → Duration of that video
+VideoThumbnail → Thumbnail URL of that video
+
+
+📝 MEMBERS SUBSCRIPTION LIST  (Ex-Members Subscription List)
+Sheet ID: 18Q_tEv09LNbR63jQdxgZuvYIlvukSMWETHe4gOwfbP8
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+Username → Member's username
+SubscriptionList → The channels the member is currently subscribed to
+DateofSubmit → Date the member submitted the list
+
+
+████████████████████████████████████████████████████████████
+ 3. VIDEO WATCH EXCHANGE
+████████████████████████████████████████████████████████████
+
+📹 VIDEO PERFORMANCE  (Ex-4VideoPerformanceTbl)
+Sheet ID: 1W6khbo6D8KwoJRTKYjd45k2n57zHWBccBpueDvdjQPM
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+TotalVideoWatched → Total videos the member has watched for others
+TotalVideoWatchedPendingFromOthers → Watches others still owe to the member
+TotalVideoWatchedPendingByOthers → Watches the member still owes to others
+TotalYourVideoWatchingRejects → Member's own videos whose watches were rejected
+TotalVideoWatchingRejectsOfOthers → Member's watches of others' videos that were rejected
+LasttimeWork → Timestamp of the member's last video work
+DateJoined → Timestamp the member joined the video exchange
+GroupRemovalRequest → Member asked to leave the group: Yes / No
+
+
+📋 VIDEO TASKS  (Ex-Videotasks)
+Sheet ID: 1FiCuVc_boXpZKTHke0usdCK5uKqLgyzXmD-CdJNEdkQ
+────────────────────────────────────────────────────────────
+TaskID → Unique task ID
+ComboID → ID of the matched pair (two members watching each other's videos)
+UserCode → Worker: the member who must watch the video
+TargetUserCode → Target: the member who owns the video
+VideoID → YouTube video to be watched
+MatchedGapMinutes → Difference in minutes between the two matched videos
+MatchType → How the pair was matched, e.g. exact or within the allowed gap
+Status → Task status, e.g. NotWorkYet / Watched / Rejected
+WatchedMinutes → Minutes the worker actually watched
+CreatedDate → When the task was created
+WorkedDate → When the worker completed the task
+CheckedDate → When the system or admin verified the task
+Issue → Any issue or violation note
+
+
+🎚️ VIDEO TASK SETTINGS  (Ex-VideoTaskSettings)
+Sheet ID: 1p6_D5vEkE_3duLmrKDQGh9As7IWnKL5xQKSAkW6tTAU
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+MinVideoMinutes → Shortest video length the member accepts to watch
+MaxVideoMinutes → Longest video length the member accepts to watch
+AllowedGapMinutes → Largest length difference allowed when pairing videos
+MaxPairsPerRun → Maximum pairs created for the member per matching run
+
+
+████████████████████████████████████████████████████████████
+ 4. PLAYLIST WATCH EXCHANGE
+████████████████████████████████████████████████████████████
+
+🎶 PLAYLIST PERFORMANCE  (Ex-5PlaylistPerformanceTbl)
+Sheet ID: 1gsm_AKksT4FW6XMyoCW5z7MvN0JMKqq5-y4TDWKYw04
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+TotalPlaylistWatched → Total playlists the member has watched for others
+TotalPlaylistWatchedPendingToOthers → Playlist watches the member still owes to others
+TotalPlaylistWatchedPendingFromOthers → Playlist watches others still owe to the member
+TotalPlaylistWatchingCheatingByYou → Times the member was flagged for cheating
+TotalPlaylistWatchingCheatingByOthers → Times others were flagged for cheating on the member's playlists
+LasttimeWork → Timestamp of the member's last playlist work
+DateJoined → Timestamp the member joined the playlist exchange
+GroupRemovalRequest → Member asked to leave the group: Yes / No
+
+
+🎵 MEMBER PLAYLISTS  (Ex-MembersPlaylist)
+Sheet ID: 1Efj5RbK8UsG-K0cA4NtdDkFBv5ZViI4gL9tZxMi2Eb0
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+PlaylistId → YouTube playlist ID
+PlaylistName → Playlist name
+HasPlaylistReady → Playlist is loaded and ready for tasks: Yes / No
+PlaylistSize → Number of videos in the playlist
+VideoCount → Number of videos counted in the playlist
+RequiredMinutes → Total minutes needed to watch the whole playlist
+PlaylistCategory → Category of the playlist
+
+
+🎬 MEMBER PLAYLIST VIDEOS  (Ex-MembersPlaylistVideos)
+Sheet ID: 1GiYuvUtrGi7SHU7VnDh-FL7PpN1Fs8BfkPGjdzrljoI
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+VideoUrl → Link to the video in the playlist
+VideoMinutes → Video duration in minutes
+PlaylistCategory → Category of the playlist the video belongs to
+
+
+📋 PLAYLIST TASKS  (Ex-PlaylistTasksTbl)
+Sheet ID: 19zDsdnFP4RO7qAOw1wREowzqwGliXYVIsBn5blAeWAk
+────────────────────────────────────────────────────────────
+TaskID → Unique task ID (e.g. PLY-0001), auto-incremented
+UserCode → Worker: the member who must watch the playlist
+TargetUserCode → Target: the member who owns the playlist
+PlaylistId → YouTube playlist ID to be watched
+Status → Worker-side status: NotWorkYet / Watched / Cheating / Rejected
+CreatedDate → When the task was created
+WorkedDate → When the worker completed the task
+CheckedDate → When the system or admin verified the task
+LastUpdated → Last status-change timestamp
+Issue → Any flagged issue or violation note
+
+
+████████████████████████████████████████████████████████████
+ 5. LIKE & COMMENT EXCHANGE
+████████████████████████████████████████████████████████████
+
+💬 ENGAGEMENT PERFORMANCE  (Ex-6EngagementPerformanceTbl)
+Sheet ID: 1sd4CvBliPSkkcUkKiReCP-1TUL-_0A5na7hVTEocLDU
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+TotalComtLikeDone → Total likes and comments the member has given to others
+TotalComtLikeGet → Total likes and comments the member has received
+TotalComtLikeDeletedByYou → Likes and comments the member deleted after posting
+TotalComtLikeDeleteByOthers → Likes and comments on the member's videos that others deleted
+PendingComtLiketoOthers → Likes and comments the member still owes to others
+PendingComtLikeFromOthers → Likes and comments others still owe to the member
+LasttimeWork → Timestamp of the member's last engagement work
+DateJoined → Timestamp the member joined the engagement exchange
+GroupRemovalRequest → Member asked to leave the group: Yes / No
+
+
+📋 ENGAGEMENT TASKS  (Ex‑EngagementTasksTbl)
+Sheet ID: 1WTD8okiJH6x8cC7IzvMb5zSWCXWIPyhOu-FwtQmqSEI
+────────────────────────────────────────────────────────────
+TaskID → Unique task ID (e.g. ENG‑0001)
+UserCode → Worker: the member assigned to like and comment
+TargetUserCode → Target: the member whose video receives the engagement
+VideoID → Video that needs the like and comment
+CommentText → Exact comment text the worker must post
+Status → Task status: NotWorkYet / InProgress / Completed
+CreatedDate → When the task was created
+WorkedDate → When the worker completed the task
+CheckedDate → When the system or admin verified the task
+LastUpdated → Timestamp of the most recent change
+Issue → Problem flagged, e.g. comment not posted, video unavailable
+VideoStatus → State of the video itself: Active, Deleted or Private
+
+
+████████████████████████████████████████████████████████████
+ 6. SHORTS EXCHANGE
+████████████████████████████████████████████████████████████
+
+📺 SHORTS PERFORMANCE  (Ex‑ShortsPerformance Sheet)
+Sheet ID: 1Spy91GPHP88iu10ipa2PBZjuQj7PO1ACqsspqRyZduc
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+TotalShortsWatchingGain → Total views the member's Shorts received from others
+TotalShortsWatched → Total Shorts the member has watched for others
+Pending → Shorts the member still owes to others
+PendingFromOthers → Shorts others still owe to the member
+DateJoined → Timestamp the member joined the Shorts exchange
+LasttimeWork → Timestamp of the member's last Shorts work
+GroupRemovalRequest → Member asked to leave the group: Yes / No
+
+
+📋 SHORTS TASKS  (Ex‑ShortsTasksTbl)
+Sheet ID: 1dnoKW9EbdPtBHX6FAWx2e4MQIKcOvxN6Kadoe8-FxaY
+────────────────────────────────────────────────────────────
+TaskID → Unique task ID (e.g. SHRT‑001)
+UserCode → Worker: the member assigned to watch
+TargetUserCode → Target: the member whose Shorts are watched
+ShortPlaylistId → ID of the Shorts playlist for the task
+PlaylistCategory → Playlist category (e.g. Entertainment, Education, Gaming)
+Status → Task status: NotWorkYet / InProgress / Completed
+CreatedDate → When the task was created
+WorkedDate → When the worker completed the task
+CheckedDate → When the system or admin verified the task
+LastUpdated → Timestamp of the most recent change
+Issue → Problem flagged, e.g. playlist not found, Shorts missing, incomplete work
+
+
+🎞️ MEMBER SHORTS PLAYLISTS  (Ex‑MembersShortsPlaylist)
+Sheet ID: 1cbkggGhkPpWzN_m7BjlypAIAaSnZI8_qwp4qQQcXERc
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+ShortPlaylistid → Unique ID of the member's Shorts playlist
+ShortPlaylistName → Playlist name
+HasPlaylistReady → Playlist is ready for tasks: Yes / No
+ShortPlaylistSize → Number of Shorts in the playlist
+VideoCount → Total Shorts counted in the playlist
+RequiredMinutes → Total minutes needed to watch the whole playlist
+ShortPlaylistCategory → Playlist category code (e.g. E, D)
+
+
+🎬 MEMBER SHORTS PLAYLIST VIDEOS  (Ex‑MembersShortsPlaylistVideos)
+Sheet ID: 10d-Dbeb8Zp9LuH6svA2_uvVbgu7lrk-MBP5ChgEAPO8
+────────────────────────────────────────────────────────────
+UserCode → Links to the member
+VideoUrl → Full URL of the Short in the playlist
+VideoMinutes → Duration in minutes, used to calculate required watch time
+PlaylistCategory → Playlist category code (e.g. E, D)
+
+
+████████████████████████████████████████████████████████████
+ 7. AD WATCHING
+████████████████████████████████████████████████████████████
+
+📺 AD WATCHING PERFORMANCE  (Ex‑2. AdWatchingPerformance Sheet)
+Sheet ID: 1imLZzb6Paz_GcovNMQqWo7Ni7Rh_IBYbd9s1HiK3ELw
+────────────────────────────────────────────────────────────
+UserCode → Links to the member (identifier used across all sheets)
+PendingAdViewsToOthers → Ads the member still needs to watch for other members
+PendingAdViewsFromOthers → Ads other members still owe to this member
+TotalAdViewsGiven → Total ads the member has watched for others
+TotalAdViewsReceived → Total ads others have watched for this member
+AdEarnings → Earnings from ad views (points, credits or currency)
+LasttimeWork → Timestamp of the member's last ad-watching activity
+DateJoined → Date the member joined ad-watching tracking
+GroupRemovalRequest → Member asked to leave the group: Yes / No
+
+
+████████████████████████████████████████████████████████████
+ 8. PROOF & VERIFICATION
+████████████████████████████████████████████████████████████
+
+📸 WATCHING PROOF SCREENSHOTS  (Ex-WatchingProofScreenshotsTbl)
+Sheet ID: 1gCwJBFNS4CC0f6ZEZFmnB8mirPKLINOU2xC7UGf8vKo
+────────────────────────────────────────────────────────────
+ProofID → Unique proof ID; links each screenshot to its proof record
+TaskID → Task the screenshot belongs to
+UserCode → Worker who uploaded the screenshot
+ScreenshotIndex → Order number of the screenshot within the proof (1, 2, 3…)
+ScreenshotType → Kind of screenshot, e.g. start, middle, end, comment
+ScreenshotUrl → Link to the full-size image
+UploadedAt → When the screenshot was uploaded
+
+
+🧾 WATCHING PROOFS  (Ex-WatchingProofsTbl New)
+Sheet ID: 1qTIxoXGUEZ3aEdldFnUdQVcvm1ZZBKssD2h2EhBfOp4
+────────────────────────────────────────────────────────────
+ProofID → Unique proof ID
+TaskID → Task this proof is for
+UserCode → Worker who submitted the proof
+TargetUserCode → Member who owns the video or playlist
+TaskType → Kind of task: Subscribe, Video, Playlist, Engagement, Shorts or Ad
+ChannelName → Name of the target channel
+VideoTitle → Title of the video watched
+VideoId → YouTube video ID
+VideoDuration → Length of the video
+PlaylistId → YouTube playlist ID, for playlist tasks
+ScreenshotCount → Number of screenshots submitted
+CommentText → Comment the worker posted
+CommentProofUrl → Screenshot link proving the comment
+Liked → Worker liked the video: Yes / No
+Subscribed → Worker subscribed: Yes / No
+Commented → Worker commented: Yes / No
+SubmittedAt → When the proof was submitted
+Checked → Proof has been reviewed: Yes / No
+CheckedDate → When the proof was reviewed
+CheckRemarks → Reviewer's notes on the result
+Issue → Problem found with the proof
+
+
+████████████████████████████████████████████████████████████
+ 9. ADMIN, SUPPORT & SETTINGS
+████████████████████████████████████████████████████████████
+
+🔑 API KEYS  (Ex-Api)
+Sheet ID: 134I7FJ4M-FsU792lHJnisnrhGu2CgPj6qtOO256oJqY
+────────────────────────────────────────────────────────────
+Id → API record ID
+ApiKey → The API key itself (keep this sheet private)
+
+
+🛠️ ISSUES  (Ex‑Issues)
+Sheet ID: 1KR3c40qahWw_JIkmQtxFhVl-8VMS3PmrlFJ_1lC6Cso
+────────────────────────────────────────────────────────────
+UserCode → Links to the member who raised the issue
+IssueTitle → Short summary of the issue
+IssueDescription → Detailed explanation of the problem
+IssueType → Category, e.g. Technical, Performance, Account, Playlist
+IssueStatus → Open, InProgress, Resolved or Closed
+AdminReply → Admin's response to the issue
+CreatedDate → When the issue was logged
+UpdatedDate → When the issue was last updated
+
+
+💬 CHATS  (EX-Chats)
+Sheet ID: 1dkmRqCazGOttKlJdt1CYwbM-ch-k17Yw82qEhgaYw20
+────────────────────────────────────────────────────────────
+Time → When the message was sent
+UserCode → Member the conversation belongs to
+Sender → Who sent it: Member or Admin
+Type → Message type: Text, Image, File
+Message → Message content
+Category → Topic of the chat
+AdminReply → Admin's reply to the member's message
+Status → Message status, e.g. Sent, Read, Replied
+Edited → Message was edited: Yes / No
+Deleted → Message was deleted: Yes / No
+FileName → Name of the attached file
+FileUrl → Link to the attached file
+
+
+🎛️ GROUP LIMIT SETTINGS  (Ex-GroupLimitSettings)
+Sheet ID: 1TEaAS1C0B13qol2PCg-IT0AhBCudmaidNSg8tGCFA4M
+────────────────────────────────────────────────────────────
+SettingCategory → Group the setting belongs to, e.g. Subscribers, Video, Playlist
+SettingKey → Unique name of the setting
+SettingValue → Current value
+SettingDescription → What the setting controls
+DataType → Type of value: Number, Text, Yes/No
+MinValue → Lowest allowed value
+MaxValue → Highest allowed value
+IsActive → Setting is in force: Yes / No
+UpdatedDate → When the setting last changed
+UpdatedBy → Who changed it
